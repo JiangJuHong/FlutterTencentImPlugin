@@ -29,22 +29,13 @@ buildTypes {
     }
 }
 ```
-### 2. 配置权限
-```
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-```
-
-### 3. 设置混淆规则
+### 2. 设置混淆规则
 ```
 -keep class com.tencent.** { *; }
 ```
+
+### 3. 如果启动报错，请修改 AndroidManifest.xml 文件
+在 manifest 标签上增加:``xmlns:tools="http://schemas.android.com/tools"``
+在 application 标签上增加:``tools:replace="android:label"``
 
 ## IOS端集成
