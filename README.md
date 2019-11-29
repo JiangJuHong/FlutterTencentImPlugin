@@ -4,6 +4,8 @@
 
 ## Getting Started
 
+## Android 端集成
+
 ### 1. 修改 defaultConfig ndk 配置
 ```
 defaultConfig {
@@ -44,3 +46,5 @@ buildTypes {
 ```
 -keep class com.tencent.** { *; }
 ```
+
+## IOS端集成
