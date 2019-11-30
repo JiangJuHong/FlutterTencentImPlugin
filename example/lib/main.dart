@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
+import 'dart:convert';
 
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
+
+import 'page/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,43 +13,70 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await TencentImPlugin.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+    // 初始化
+    TencentImPlugin.init(appid: "1400290273");
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    // 初始化本地存储
+    TencentImPlugin.initStorage(identifier: "98a6f9541f1b455480bf460aa5208497");
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
+  /// 登录
+  onLogin() {
+    TencentImPlugin.login(
+      identifier: "98a6f9541f1b455480bf460aa5208497",
+      userSig:
+          "eJw1jrsOgjAYhd*lK4b8vVMSB000KuqgLo4ttKYxYoOIEOO7S0DHc-lOzhudtsfYtsFXFqWSAMBksBpboRSRGNCoH8VVh*ALlGIGQBQQScfEF7asvfMDoBItnOIMO2wY5ywB45gArTmBhCn5X-OXvjzfHPJOrDC-N6*zqbWh1O3LNW2yLpwW4plFu9BGM50v2fQH1v7W-8RcciCggH**las2nA__",
+    ).then((_) {
+      Navigator.push(
+        context,
+        new MaterialPageRoute(builder: (context) => new HomePage()),
+      );
+    });
+  }
+
+  /// 退出登录
+  onLogout() {
+    TencentImPlugin.logout();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("登录页面"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              onPressed: onLogin,
+              child: Text("点击登录"),
+            ),
+            RaisedButton(
+              onPressed: onLogout,
+              child: Text("退出登录"),
+            )
+          ],
         ),
       ),
     );
