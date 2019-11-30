@@ -38,6 +38,22 @@ class TencentImPlugin {
     return id;
   }
 
+  /// 获得群信息
+  /// @return 群ID
+  static Future<String> getGroupInfo({id}) async {
+    final String result =
+        await _channel.invokeMethod('getGroupInfo', {"id": id});
+    return result;
+  }
+
+  /// 获得用户信息
+  /// @return 用户ID
+  static Future<String> getUserInfo({id}) async {
+    final String result =
+        await _channel.invokeMethod('getUserInfo', {"id": id});
+    return result;
+  }
+
   /// 获得当前登录用户会话列表
   /// @return 会话列表集合
   static Future<List<SessionEntity>> getConversationList() async {
@@ -104,7 +120,8 @@ class TencentImPluginListener {
 
           // 根据类型初始化参数
           if (type == ListenerTypeEnum.NewMessages) {
-            params = ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
+            params =
+                ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
           }
 
           // 回调触发

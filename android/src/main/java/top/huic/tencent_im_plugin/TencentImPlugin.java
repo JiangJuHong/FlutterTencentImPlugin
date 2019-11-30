@@ -118,6 +118,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getConversationList":
                 this.getConversationList(call, result);
                 break;
+            case "getGroupInfo":
+                this.getGroupInfo(call, result);
+                break;
+            case "getUserInfo":
+                this.getUserInfo(call, result);
+                break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
                 result.notImplemented();
@@ -282,6 +288,28 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 result.error(String.valueOf(code), desc, null);
             }
         }, TIMManager.getInstance().getConversationList());
+    }
+
+    /**
+     * 腾讯云 获得群信息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupInfo(MethodCall methodCall, final Result result) {
+        // 群ID
+        String id = this.getParam(methodCall, result, "id");
+    }
+
+    /**
+     * 腾讯云 获得用户信息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getUserInfo(MethodCall methodCall, final Result result) {
+        // 用户ID
+        String id = this.getParam(methodCall, result, "id");
     }
 
     /**

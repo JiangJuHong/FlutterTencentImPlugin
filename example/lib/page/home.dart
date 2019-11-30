@@ -88,7 +88,12 @@ class HomePageState extends State<HomePage> {
   onClick(item) {
     Navigator.push(
       context,
-      new MaterialPageRoute(builder: (context) => new ImPage(id: item.id)),
+      new MaterialPageRoute(
+        builder: (context) => new ImPage(
+          id: item.id,
+          type: item.type,
+        ),
+      ),
     );
   }
 
