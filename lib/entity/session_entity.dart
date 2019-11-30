@@ -1,3 +1,5 @@
+import 'package:tencent_im_plugin/entity/message_entity.dart';
+
 /// 会话实体
 class SessionEntity {
   // 封面(头像)
@@ -15,8 +17,17 @@ class SessionEntity {
   // 会话类型
   SessionType type;
 
-  SessionEntity(
-      {this.faceUrl, this.unreadMessageNum, this.nickname, this.id, this.type});
+  // 最近一条消息
+  MessageEntity message;
+
+  SessionEntity({
+    this.faceUrl,
+    this.unreadMessageNum,
+    this.nickname,
+    this.id,
+    this.type,
+    this.message,
+  });
 
   SessionEntity.fromJson(Map<String, dynamic> json) {
     faceUrl = json['faceUrl'];
@@ -28,6 +39,9 @@ class SessionEntity {
         type = item;
       }
     }
+    message = json["message"] != null
+        ? MessageEntity.fromJson(json["message"])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +51,7 @@ class SessionEntity {
     data['nickname'] = this.nickname;
     data['id'] = this.id;
     data['type'] = this.type.toString();
+    data['message'] = this.message.toJson();
     return data;
   }
 }

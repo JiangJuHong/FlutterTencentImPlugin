@@ -5,6 +5,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMManager;
@@ -49,6 +50,7 @@ public class GetSessionList {
     private void appendIndex(final MethodChannel.Result result, List<SessionEntity> data) {
         if (++index == MAX_INDEX) {
             index = 0;
+            Log.i(TencentImPlugin.TAG, "追加: " + JSON.toJSONString(data));
             result.success(JSON.toJSONString(data));
         }
     }
@@ -89,7 +91,8 @@ public class GetSessionList {
                 // 封装消息信息
                 MessageEntity messageEntity = new MessageEntity();
                 messageEntity.setId(lastMsg.getMsgId());
-                messageEntity.setContent(lastMsg.getCustomStr());
+                messageEntity.setTimestamp(lastMsg.timestamp());
+                messageEntity.setElemList(TencentImUtils.getArrrElement(lastMsg));
                 entity.setMessage(messageEntity);
             }
             resultData.add(entity);

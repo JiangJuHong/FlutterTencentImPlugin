@@ -60,5 +60,6 @@ buildTypes {
 
 ### 获得当前登录用户会话列表
 ``TencentImPlugin.getConversationList();`` 返回值为``List<SessionEntity>``
+对象内的 message 对象仅包含: id、elemList、timestamp 字段
 
 ## 对象实体说明

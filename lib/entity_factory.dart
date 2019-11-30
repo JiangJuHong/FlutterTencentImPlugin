@@ -1,4 +1,8 @@
 import 'package:tencent_im_plugin/entity/session_entity.dart';
+import 'package:tencent_im_plugin/entity/node_entity.dart';
+import 'package:tencent_im_plugin/entity/node_text_entity.dart';
+import 'package:tencent_im_plugin/entity/message_entity.dart';
+import 'package:tencent_im_plugin/entity/node_image_entity.dart';
 
 class EntityFactory {
   static T generateOBJ<T>(json) {
@@ -6,6 +10,14 @@ class EntityFactory {
       return null;
     } else if (T.toString() == "SessionEntity") {
       return SessionEntity.fromJson(json) as T;
+    } else if (T.toString() == "NodeEntity") {
+      return NodeEntity.fromJson(json) as T;
+    } else if (T.toString() == "NodeTextEntity") {
+      return NodeTextEntity.fromJson(json) as T;
+    } else if (T.toString() == "MessageEntity") {
+      return MessageEntity.fromJson(json) as T;
+    } else if (T.toString() == "NodeImageEntity") {
+      return NodeImageEntity.fromJson(json) as T;
     } else {
       return null;
     }
