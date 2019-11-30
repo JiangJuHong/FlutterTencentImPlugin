@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+
 import 'node_entity.dart';
 
 /// 消息实体
@@ -37,6 +39,15 @@ class MessageEntity {
   // 对方是否已读
   bool peerReaded;
 
+  // 消息发送方
+  String sender;
+
+  // 会话ID
+  String sessionId;
+
+  // 用户信息
+  UserInfoEntity userInfo;
+
   MessageEntity({
     this.rand,
     this.customInt,
@@ -49,6 +60,9 @@ class MessageEntity {
     this.customStr,
     this.timestamp,
     this.peerReaded,
+    this.sender,
+    this.sessionId,
+    this.userInfo,
   });
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
@@ -69,6 +83,11 @@ class MessageEntity {
     customStr = json['customStr'];
     timestamp = json['timestamp'];
     peerReaded = json['peerReaded'];
+    sender = json['sender'];
+    sessionId = json['sessionId'];
+    userInfo = json['userInfo'] == null
+        ? null
+        : UserInfoEntity.fromJson(json['userInfo']);
   }
 
   Map<String, dynamic> toJson() {
@@ -86,6 +105,9 @@ class MessageEntity {
     data['customStr'] = this.customStr;
     data['timestamp'] = this.timestamp;
     data['peerReaded'] = this.peerReaded;
+    data['sender'] = this.sender;
+    data['sessionId'] = this.sessionId;
+    data['userInfo'] = this.userInfo == null ? null : this.userInfo.toJson();
     return data;
   }
 }

@@ -11,7 +11,7 @@ class SessionEntity {
   // 昵称(用户:用户昵称，群:群昵称，系统:空)
   String nickname;
 
-  // 会话ID
+  // 会话ID(C2C：对方账号；Group：群组Id)
   String id;
 
   // 会话类型
