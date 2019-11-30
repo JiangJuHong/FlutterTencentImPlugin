@@ -24,7 +24,7 @@ class SessionEntity {
     nickname = json['nickname'];
     id = json['id'];
     for (var item in SessionType.values) {
-      if (item.toString() == json['type']) {
+      if (item.toString().replaceFirst("SessionType.", "") == json['type']) {
         type = item;
       }
     }
