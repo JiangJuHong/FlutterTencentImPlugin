@@ -2,7 +2,10 @@ package top.huic.tencent_im_plugin.entity;
 
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMGroupMemberInfo;
+import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMUserProfile;
+
+import top.huic.tencent_im_plugin.util.*;
 
 import java.util.List;
 
@@ -63,6 +66,16 @@ public class MessageEntity {
     private Long timestamp;
 
     /**
+     * 消息发送方
+     */
+    private String sender;
+
+    /**
+     * 会话ID
+     */
+    private String sessionId;
+
+    /**
      * 发送人->用户信息
      */
     private TIMUserProfile userInfo;
@@ -76,6 +89,26 @@ public class MessageEntity {
      * 节点内容
      */
     private List<TIMElem> elemList;
+
+    public MessageEntity() {
+    }
+
+    public MessageEntity(TIMMessage message) {
+        this.id = message.getMsgId();
+        this.uniqueId = message.getMsgUniqueId();
+        this.rand = message.getRand();
+        this.seq = message.getSeq();
+        this.peerReaded = message.isPeerReaded();
+        this.read = message.isRead();
+        this.self = message.isSelf();
+        this.customInt = message.getCustomInt();
+        this.customStr = message.getCustomStr();
+        this.timestamp = message.timestamp();
+        this.elemList = TencentImUtils.getArrrElement(message);
+        this.groupMemberInfo = message.getSenderGroupMemberProfile();
+        this.sender = message.getSender();
+        this.sessionId = message.getConversation().getPeer();
+    }
 
     public String getId() {
         return id;
@@ -179,5 +212,21 @@ public class MessageEntity {
 
     public void setElemList(List<TIMElem> elemList) {
         this.elemList = elemList;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

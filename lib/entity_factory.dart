@@ -2,6 +2,7 @@ import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
+import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
 
 class EntityFactory {
@@ -16,6 +17,8 @@ class EntityFactory {
       return NodeTextEntity.fromJson(json) as T;
     } else if (T.toString() == "MessageEntity") {
       return MessageEntity.fromJson(json) as T;
+    } else if (T.toString() == "UserInfoEntity") {
+      return UserInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeImageEntity") {
       return NodeImageEntity.fromJson(json) as T;
     } else {

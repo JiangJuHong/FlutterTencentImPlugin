@@ -3,9 +3,12 @@ package top.huic.tencent_im_plugin;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMLogLevel;
@@ -16,11 +19,19 @@ import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
+import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
+import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.session.SessionWrapper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -28,6 +39,9 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import top.huic.tencent_im_plugin.entity.MessageEntity;
+import top.huic.tencent_im_plugin.entity.SessionEntity;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 
 /**
  * TencentImPlugin
@@ -37,21 +51,35 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     /**
      * 日志签名
      */
-    public static String TAG = "TencentImPlugin";
+    static String TAG = "TencentImPlugin";
 
+    /**
+     * 全局上下文
+     */
     private Context context;
+
+    /**
+     * 与Flutter的通信管道
+     */
+    private MethodChannel channel;
+
+    /**
+     * 监听器回调的方法名
+     */
+    private final static String LISTENER_FUNC_NAME = "onListener";
 
     public TencentImPlugin() {
     }
 
-    public TencentImPlugin(Context context) {
+    private TencentImPlugin(Context context, MethodChannel channel) {
         this.context = context;
+        this.channel = channel;
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "tencent_im_plugin");
-        channel.setMethodCallHandler(new TencentImPlugin(flutterPluginBinding.getApplicationContext()));
+        channel.setMethodCallHandler(new TencentImPlugin(flutterPluginBinding.getApplicationContext(), channel));
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -65,7 +93,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "tencent_im_plugin");
-        channel.setMethodCallHandler(new TencentImPlugin(registrar.context()));
+        channel.setMethodCallHandler(new TencentImPlugin(registrar.context(), channel));
     }
 
     @Override
@@ -230,7 +258,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
             @Override
             public void onSuccess() {
-                Log.i(TAG, "initStorage success!");
+                Log.d(TAG, "initStorage success!");
                 result.success(null);
             }
         });
@@ -243,7 +271,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
-        new GetSessionList().getConversationList(result);
+        new GetSessionList().getConversationInfo(new GetConversationInfoCallback() {
+            @Override
+            public void success(List<SessionEntity> data) {
+                result.success(JSON.toJSONString(data));
+            }
+
+            @Override
+            public void error(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+        }, TIMManager.getInstance().getConversationList());
     }
 
     /**
@@ -264,6 +302,19 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 调用监听器
+     *
+     * @param type   类型
+     * @param params 参数
+     */
+    private void invokeListener(ListenerTypeEnum type, Object params) {
+        Map<String, Object> resultParams = new HashMap<>(2, 1);
+        resultParams.put("type", type);
+        resultParams.put("params", params == null ? null : JSON.toJSONString(params));
+        channel.invokeMethod(LISTENER_FUNC_NAME, JSON.toJSONString(resultParams));
+    }
+
+    /**
      * 腾讯云IM监听器
      */
     class TencentImPluginListener implements
@@ -276,7 +327,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
          */
         @Override
         public void log(int i, String s, String s1) {
-//            Log.println(i, TAG + "[" + s + "]", s1);
+            Log.println(i, "Tencent Im:[" + s + "]", s1);
         }
 
         /**
@@ -285,6 +336,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onForceOffline() {
             Log.d(TAG, "onForceOffline: ");
+            invokeListener(ListenerTypeEnum.ForceOffline, null);
         }
 
         /**
@@ -293,6 +345,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onUserSigExpired() {
             Log.d(TAG, "onUserSigExpired: ");
+            invokeListener(ListenerTypeEnum.UserSigExpired, null);
         }
 
         /**
@@ -301,6 +354,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onConnected() {
             Log.d(TAG, "onConnected: ");
+            invokeListener(ListenerTypeEnum.Connected, null);
         }
 
         /**
@@ -309,6 +363,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onDisconnected(int i, String s) {
             Log.d(TAG, "onDisconnected: ");
+            invokeListener(ListenerTypeEnum.Disconnected, null);
         }
 
         /**
@@ -317,6 +372,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onWifiNeedAuth(String s) {
             Log.d(TAG, "onWifiNeedAuth: ");
+            invokeListener(ListenerTypeEnum.WifiNeedAuth, null);
         }
 
         /**
@@ -325,6 +381,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
             Log.d(TAG, "onGroupTipsEvent: ");
+            invokeListener(ListenerTypeEnum.GroupTips, null);
         }
 
         /**
@@ -333,6 +390,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onRefresh() {
             Log.d(TAG, "onRefresh: ");
+            invokeListener(ListenerTypeEnum.Refresh, null);
         }
 
         /**
@@ -341,6 +399,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onRefreshConversation(List<TIMConversation> list) {
             Log.d(TAG, "onRefreshConversation: ");
+            // 获取资料后调用回调
+            new GetSessionList().getConversationInfo(new GetConversationInfoCallback() {
+                @Override
+                public void success(List<SessionEntity> data) {
+                    invokeListener(ListenerTypeEnum.RefreshConversation, null);
+                }
+
+                @Override
+                public void error(int code, String desc) {
+                }
+            }, list);
         }
 
         /**
@@ -349,6 +418,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onMessageRevoked(TIMMessageLocator timMessageLocator) {
             Log.d(TAG, "onMessageRevoked: ");
+            invokeListener(ListenerTypeEnum.MessageRevoked, null);
         }
 
         /**
@@ -360,6 +430,36 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public boolean onNewMessages(List<TIMMessage> list) {
             Log.d(TAG, "onNewMessages: " + list.toString());
+
+            // 需要被获取用户信息的数据集
+            final Map<String, MessageEntity> userInfo = new HashMap<>();
+            for (TIMMessage timMessage : list) {
+                userInfo.put(timMessage.getSender(), new MessageEntity(timMessage));
+            }
+
+            // 获取用户资料
+            TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                }
+
+                @Override
+                public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                    // 赋值用户信息并疯转返回集合
+                    List<MessageEntity> messageEntities = new ArrayList<>();
+                    for (TIMUserProfile timUserProfile : timUserProfiles) {
+                        MessageEntity message = userInfo.get(timUserProfile.getIdentifier());
+                        if (message != null) {
+                            message.setUserInfo(timUserProfile);
+                            messageEntities.add(message);
+                        }
+                    }
+
+                    // 调用回调
+                    invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
+                }
+            });
             return false;
         }
     }

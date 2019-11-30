@@ -2,13 +2,10 @@ package top.huic.tencent_im_plugin;
 
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
@@ -20,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.flutter.plugin.common.MethodChannel;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
+import top.huic.tencent_im_plugin.util.*;
 
 /**
  * 获取会话列表类(此类仅用来获得用户会话列表)
@@ -44,23 +41,23 @@ public class GetSessionList {
     /**
      * 追加计数，如果已到了末尾，则进行返回回调
      *
-     * @param result 返回对象
-     * @param data   数据对象
+     * @param callback 回调对象
+     * @param data     数据对象
      */
-    private void appendIndex(final MethodChannel.Result result, List<SessionEntity> data) {
+    private void appendIndex(final GetConversationInfoCallback callback, List<SessionEntity> data) {
         if (++index == MAX_INDEX) {
             index = 0;
-            Log.i(TencentImPlugin.TAG, "追加: " + JSON.toJSONString(data));
-            result.success(JSON.toJSONString(data));
+            callback.success(data);
         }
     }
 
     /**
-     * 获取会话列表
+     * 获得会话信息
      *
-     * @param result Flutter返回对象
+     * @param callback      回调对象
+     * @param conversations 原生会话列表
      */
-    public void getConversationList(final MethodChannel.Result result) {
+    public void getConversationInfo(final GetConversationInfoCallback callback, final List<TIMConversation> conversations) {
         final List<SessionEntity> resultData = new ArrayList<>();
 
         // 需要获取用户信息的列表
@@ -70,7 +67,7 @@ public class GetSessionList {
         final Map<String, SessionEntity> groupInfo = new HashMap<>();
 
         // 获取会话列表
-        for (final TIMConversation timConversation : TIMManager.getInstance().getConversationList()) {
+        for (final TIMConversation timConversation : conversations) {
             // 封装会话信息
             SessionEntity entity = new SessionEntity();
             entity.setId(timConversation.getPeer());
@@ -103,7 +100,7 @@ public class GetSessionList {
             @Override
             public void onError(int code, String desc) {
                 Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
-                result.error(desc, String.valueOf(code), null);
+                callback.error(code, desc);
             }
 
             @Override
@@ -115,7 +112,7 @@ public class GetSessionList {
                         sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
                     }
                 }
-                appendIndex(result, resultData);
+                appendIndex(callback, resultData);
             }
         });
 
@@ -124,7 +121,7 @@ public class GetSessionList {
             @Override
             public void onError(int code, String desc) {
                 Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
-                result.error(desc, String.valueOf(code), null);
+                callback.error(code, desc);
             }
 
             @Override
@@ -136,8 +133,28 @@ public class GetSessionList {
                         sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
                     }
                 }
-                appendIndex(result, resultData);
+                appendIndex(callback, resultData);
             }
         });
     }
+}
+
+/**
+ * 获得会话信息回调
+ */
+interface GetConversationInfoCallback {
+    /**
+     * 会话获取成功
+     *
+     * @param data 会话数据
+     */
+    void success(List<SessionEntity> data);
+
+    /**
+     * 会话获取失败
+     *
+     * @param code 错误码
+     * @param desc 错误描述
+     */
+    void error(int code, String desc);
 }

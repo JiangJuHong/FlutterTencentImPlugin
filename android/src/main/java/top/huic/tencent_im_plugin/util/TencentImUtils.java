@@ -1,4 +1,4 @@
-package top.huic.tencent_im_plugin;
+package top.huic.tencent_im_plugin.util;
 
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMMessage;

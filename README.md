@@ -60,6 +60,10 @@ buildTypes {
 
 ### 获得当前登录用户会话列表
 ``TencentImPlugin.getConversationList();`` 返回值为``List<SessionEntity>``
-对象内的 message 对象仅包含: id、elemList、timestamp 字段
+会话列表时，对象内的 message 对象仅包含: id、elemList、timestamp 字段
+
+### 添加和移除监听
+``TencentImPlugin.addListener((type,params){....})`` ``TencentImPlugin.removeListener((type,params){....})``
+当事件被触发时调用，但是注意，不同类型所返回的参数值也有所不同
 
 ## 对象实体说明

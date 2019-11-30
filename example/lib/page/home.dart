@@ -7,6 +7,7 @@ import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:tencent_im_plugin_example/page/im.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -27,6 +28,34 @@ class HomePageState extends State<HomePage> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       refreshIndicator.currentState.show();
     });
+
+    // 添加监听器
+    TencentImPlugin.addListener(listener);
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    TencentImPlugin.removeListener(listener);
+  }
+
+  /// 监听器
+  listener(type, params) {
+    // 新消息时更新会话列表最近的聊天记录
+    if (type == ListenerTypeEnum.NewMessages) {
+      // 更新消息列表
+      for (var p in params) {
+        for (var item in data) {
+          if (item.id == p.sessionId) {
+            this.setState(() {
+              item.message = p;
+              item.unreadMessageNum++;
+            });
+            break;
+          }
+        }
+      }
+    }
   }
 
   Future<void> onRefresh() {
@@ -55,6 +84,14 @@ class HomePageState extends State<HomePage> {
     return "";
   }
 
+  /// 点击事件
+  onClick(item) {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new ImPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,58 +109,61 @@ class HomePageState extends State<HomePage> {
                   ? DateTime.fromMillisecondsSinceEpoch(
                       item.message.timestamp * 1000)
                   : null;
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: item.faceUrl == null
-                      ? null
-                      : Image.network(
-                          item.faceUrl,
-                          fit: BoxFit.cover,
-                        ).image,
-                ),
-                title: Text(
-                  item.nickname == null
-                      ? (item.type == SessionType.System ? "系统账号" : "")
-                      : item.nickname,
-                ),
-                subtitle: Text(this.onGetMessageDesc(item.message)),
-                trailing: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      dateTime == null
-                          ? ""
-                          : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
-                      style: TextStyle(
-                        color: Colors.grey,
+              return InkWell(
+                onTap: () => onClick(item),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: item.faceUrl == null
+                        ? null
+                        : Image.network(
+                            item.faceUrl,
+                            fit: BoxFit.cover,
+                          ).image,
+                  ),
+                  title: Text(
+                    item.nickname == null
+                        ? (item.type == SessionType.System ? "系统账号" : "")
+                        : item.nickname,
+                  ),
+                  subtitle: Text(this.onGetMessageDesc(item.message)),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        dateTime == null
+                            ? ""
+                            : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    item.unreadMessageNum != 0
-                        ? Container(
-                            margin: EdgeInsets.only(top: 5),
-                            padding: EdgeInsets.only(
-                              top: 2,
-                              bottom: 2,
-                              left: 6,
-                              right: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(100),
+                      item.unreadMessageNum != 0
+                          ? Container(
+                              margin: EdgeInsets.only(top: 5),
+                              padding: EdgeInsets.only(
+                                top: 2,
+                                bottom: 2,
+                                left: 6,
+                                right: 6,
                               ),
-                            ),
-                            child: Text(
-                              "${item.unreadMessageNum}",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                              decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
                               ),
-                            ),
-                          )
-                        : Text(""),
-                  ],
+                              child: Text(
+                                "${item.unreadMessageNum}",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
+                          : Text(""),
+                    ],
+                  ),
                 ),
               );
             },
