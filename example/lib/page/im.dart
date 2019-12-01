@@ -106,6 +106,8 @@ class ImPageState extends State<ImPage> {
             () => scrollController
                 .jumpTo(scrollController.position.maxScrollExtent));
       });
+      // 设置已读
+      TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
     }
   }
 
