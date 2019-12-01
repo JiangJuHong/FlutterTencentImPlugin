@@ -3,10 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
+import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/session_entity.dart';
+import 'entity/user_info_entity.dart';
 
 class TencentImPlugin {
   static const MethodChannel _channel =
@@ -40,18 +43,24 @@ class TencentImPlugin {
 
   /// 获得群信息
   /// @return 群ID
-  static Future<String> getGroupInfo({id}) async {
+  static Future<GroupInfoEntity> getGroupInfo({id}) async {
     final String result =
         await _channel.invokeMethod('getGroupInfo', {"id": id});
-    return result;
+    if (result != null) {
+      return EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
+    }
+    return null;
   }
 
   /// 获得用户信息
   /// @return 用户ID
-  static Future<String> getUserInfo({id}) async {
+  static Future<UserInfoEntity> getUserInfo({id}) async {
     final String result =
         await _channel.invokeMethod('getUserInfo', {"id": id});
-    return result;
+    if (result != null) {
+      return EntityFactory.generateOBJ<UserInfoEntity>(jsonDecode(result));
+    }
+    return null;
   }
 
   /// 获得当前登录用户会话列表

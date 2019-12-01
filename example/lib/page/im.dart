@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
+import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -24,13 +26,27 @@ class ImPage extends StatefulWidget {
 class ImPageState extends State<ImPage> {
   TextEditingController controller = TextEditingController();
 
+  // 用户信息对象
+  UserInfoEntity userInfo;
+
+  // 群信息对象
+  GroupInfoEntity groupInfoEntity;
+
   @override
   initState() {
     super.initState();
     if (widget.type == SessionType.Group) {
-      TencentImPlugin.getGroupInfo(id: widget.id);
+      TencentImPlugin.getGroupInfo(id: widget.id).then((data) {
+        this.setState(() {
+          groupInfoEntity = data;
+        });
+      });
     } else if (widget.type == SessionType.C2C) {
-      TencentImPlugin.getUserInfo(id: widget.id);
+      TencentImPlugin.getUserInfo(id: widget.id).then((data) {
+        this.setState(() {
+          userInfo = data;
+        });
+      });
     }
   }
 
@@ -40,7 +56,15 @@ class ImPageState extends State<ImPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          userInfo != null
+              ? userInfo.nickName
+              : (groupInfoEntity != null
+                  ? "${groupInfoEntity.groupName}(${groupInfoEntity.memberNum})"
+                  : ""),
+        ),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(

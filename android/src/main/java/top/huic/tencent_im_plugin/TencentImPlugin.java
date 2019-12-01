@@ -10,6 +10,7 @@ import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
+import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMLogListener;
@@ -22,12 +23,14 @@ import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.session.SessionWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -299,6 +302,21 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getGroupInfo(MethodCall methodCall, final Result result) {
         // 群ID
         String id = this.getParam(methodCall, result, "id");
+        TIMGroupManager.getInstance().getGroupInfo(Collections.singletonList(id), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                if (timGroupDetailInfoResults != null && timGroupDetailInfoResults.size() >= 1) {
+                    result.success(JSON.toJSONString(timGroupDetailInfoResults.get(0)));
+                } else {
+                    result.success(null);
+                }
+            }
+        });
     }
 
     /**
@@ -310,6 +328,21 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getUserInfo(MethodCall methodCall, final Result result) {
         // 用户ID
         String id = this.getParam(methodCall, result, "id");
+        TIMFriendshipManager.getInstance().getUsersProfile(Collections.singletonList(id), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                if (timUserProfiles != null && timUserProfiles.size() >= 1) {
+                    result.success(JSON.toJSONString(timUserProfiles.get(0)));
+                } else {
+                    result.success(null);
+                }
+            }
+        });
     }
 
     /**
