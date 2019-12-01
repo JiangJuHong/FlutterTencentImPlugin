@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,18 +40,29 @@ class ImPageState extends State<ImPage> {
 
   TextEditingController controller = TextEditingController();
 
-  // 用户信息对象
+  /// 用户信息对象
   UserInfoEntity userInfo;
 
-  // 群信息对象
+  /// 获取当前登录用户的UserInfoEntity
+  UserInfoEntity loginUserInfo;
+
+  /// 群信息对象
   GroupInfoEntity groupInfoEntity;
 
-  // 当前消息列表
-  List<MessageEntity> messageData = [];
+  /// 当前消息列表
+  List<DataEntity> data = [];
 
   @override
   initState() {
     super.initState();
+
+    // 获得当前登录用户
+    TencentImPlugin.getLoginUserInfo().then((data) {
+      this.setState(() {
+        loginUserInfo = data;
+      });
+    });
+
     // 获取对话信息
     if (widget.type == SessionType.Group) {
       TencentImPlugin.getGroupInfo(id: widget.id).then((data) {
@@ -74,11 +86,7 @@ class ImPageState extends State<ImPage> {
         sessionType: widget.type,
         number: 30,
       ).then((res) {
-        this.setState(() => messageData = res);
-        Timer(
-            Duration(milliseconds: 200),
-            () => scrollController
-                .jumpTo(scrollController.position.maxScrollExtent));
+        resetDate(res);
       });
 
       refreshIndicator.currentState.show();
@@ -100,11 +108,7 @@ class ImPageState extends State<ImPage> {
     if (type == ListenerTypeEnum.NewMessages) {
       // 更新消息列表
       this.setState(() {
-        messageData.addAll(params);
-        Timer(
-            Duration(milliseconds: 200),
-            () => scrollController
-                .jumpTo(scrollController.position.maxScrollExtent));
+        addData(params);
       });
       // 设置已读
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
@@ -112,24 +116,89 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 发送事件
-  onSend() {}
+  onSend() {
+    if (controller.text == null || controller.text.trim() == "") {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('不能发送空值!'), duration: Duration(milliseconds: 2000)));
+      return;
+    }
+    int id = Random().nextInt(999999);
+
+    // 封装数据对象
+    DataEntity dataEntity = DataEntity(
+      id: id.toString(),
+      userInfo: loginUserInfo,
+      widget: MessageText(text: controller.text),
+      self: true,
+    );
+
+    this.setState(() {
+      data.add(dataEntity);
+    });
+
+    // 发送消息
+    TencentImPlugin.sendTextMessage(
+      sessionId: widget.id,
+      sessionType: widget.type,
+      content: controller.text,
+    );
+    controller.text = "";
+
+    Timer(
+        Duration(milliseconds: 200),
+        () =>
+            scrollController.jumpTo(scrollController.position.maxScrollExtent));
+  }
 
   /// 获取消息列表事件
   Future<void> onRefresh() {
     return TencentImPlugin.getMessages(
       sessionId: widget.id,
       sessionType: widget.type,
-      number: messageData.length + 30,
+      number: data.length + 30,
     ).then((res) {
-      this.setState(() => messageData = res);
-      // 拉到最下面
-      Timer(
-          Duration(milliseconds: 200),
-          () => scrollController
-              .jumpTo(scrollController.position.maxScrollExtent));
+      resetDate(res);
       // 设置已读
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
     });
+  }
+
+  /// 更新显示的数据
+  resetDate(List<MessageEntity> messageEntity) {
+    this.data = [];
+    addData(messageEntity);
+  }
+
+  /// 添加显示数据
+  addData(List<MessageEntity> messageEntity) {
+    List<DataEntity> dataEntity = this.data;
+    for (var item in messageEntity) {
+      dataEntity.add(new DataEntity(
+        userInfo: item.userInfo,
+        self: item.self,
+        widget: getComponent(item.elemList),
+      ));
+    }
+    this.setState(() {});
+    Timer(
+        Duration(milliseconds: 200),
+        () =>
+            scrollController.jumpTo(scrollController.position.maxScrollExtent));
+  }
+
+  /// 获得组件
+  getComponent(List elems) {
+    if (elems == null || elems.length == 0) {
+      return Text("");
+    }
+
+    // 只取第一个
+    var node = elems[0];
+    if (node.type == NodeType.Text) {
+      return MessageText(text: node.text);
+    } else if (node.type == NodeType.Image) {
+      return MessageImage(url: node.imageData[ImageType.Original].url);
+    }
   }
 
   @override
@@ -154,9 +223,8 @@ class ImPageState extends State<ImPage> {
                 key: refreshIndicator,
                 child: ListView(
                   controller: scrollController,
-                  children: messageData
-                      .map((item) => MessageItem(message: item))
-                      .toList(),
+                  children:
+                      data.map((item) => MessageItem(data: item)).toList(),
                 ),
               ),
             ),
@@ -193,28 +261,28 @@ class ImPageState extends State<ImPage> {
   }
 }
 
+/// 数据实体
+class DataEntity {
+  /// id，可自定义
+  final String id;
+
+  /// 用户信息
+  final UserInfoEntity userInfo;
+
+  /// 是否是自己
+  final bool self;
+
+  /// 显示组件
+  final Widget widget;
+
+  DataEntity({this.id, this.userInfo, this.self, this.widget});
+}
+
 /// 消息条目
 class MessageItem extends StatelessWidget {
-  final MessageEntity message;
+  final DataEntity data;
 
-  const MessageItem({Key key, this.message}) : super(key: key);
-
-  /// 获得消息描述
-  onGetMessageDesc(MessageEntity message) {
-    if (message == null ||
-        message.elemList == null ||
-        message.elemList.length == 0) {
-      return Text("");
-    }
-
-    NodeEntity node = message.elemList[0];
-    if (node is NodeTextEntity) {
-      return Text(node.text);
-    } else if (node is NodeImageEntity) {
-      return Image.network(node.imageData[ImageType.Original].url);
-    }
-    return Container();
-  }
+  const MessageItem({Key key, this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -224,14 +292,14 @@ class MessageItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          !message.self
+          !data.self
               ? Row(
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: message.userInfo.faceUrl == null
+                      backgroundImage: data.userInfo.faceUrl == null
                           ? null
                           : Image.network(
-                              message.userInfo.faceUrl,
+                              data.userInfo.faceUrl,
                               fit: BoxFit.cover,
                             ).image,
                     ),
@@ -242,11 +310,10 @@ class MessageItem extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: message.self
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  data.self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: <Widget>[
-                Text(message.userInfo.nickName ?? ""),
+                Text(data.userInfo.nickName ?? ""),
                 Container(height: 5),
                 Container(
                   padding: EdgeInsets.only(
@@ -258,20 +325,20 @@ class MessageItem extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(3))),
-                  child: this.onGetMessageDesc(message),
+                  child: data.widget,
                 ),
               ],
             ),
           ),
-          message.self
+          data.self
               ? Row(
                   children: <Widget>[
                     Container(width: 5),
                     CircleAvatar(
-                      backgroundImage: message.userInfo.faceUrl == null
+                      backgroundImage: data.userInfo.faceUrl == null
                           ? null
                           : Image.network(
-                              message.userInfo.faceUrl,
+                              data.userInfo.faceUrl,
                               fit: BoxFit.cover,
                             ).image,
                     ),
@@ -281,5 +348,29 @@ class MessageItem extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// 消息文本
+class MessageText extends StatelessWidget {
+  final String text;
+
+  const MessageText({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text);
+  }
+}
+
+/// 消息图片
+class MessageImage extends StatelessWidget {
+  final String url;
+
+  const MessageImage({Key key, this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(url);
   }
 }

@@ -1,7 +1,6 @@
 package top.huic.tencent_im_plugin;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -10,7 +9,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
@@ -22,6 +20,7 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
@@ -32,16 +31,12 @@ import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.session.SessionWrapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -53,8 +48,6 @@ import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
-
-import com.tencent.imsdk.conversation.Msg;
 
 /**
  * TencentImPlugin
@@ -138,6 +131,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getUserInfo":
                 this.getUserInfo(call, result);
                 break;
+            case "getLoginUserInfo":
+                this.getLoginUserInfo(call, result);
+                break;
             case "getMessages":
                 this.getMessages(call, result);
                 break;
@@ -146,6 +142,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "setRead":
                 this.setRead(call, result);
+                break;
+            case "sendTextMessage":
+                this.sendTextMessage(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -156,7 +155,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        Log.d(TAG, "onDetachedFromEngine: 123");
+        Log.d(TAG, "onDetachedFromEngine: ");
     }
 
     /**
@@ -369,6 +368,32 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 腾讯云 获得登录用户信息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getLoginUserInfo(MethodCall methodCall, final Result result) {
+        // 用户ID
+        String id = TIMManager.getInstance().getLoginUser();
+        TIMFriendshipManager.getInstance().getUsersProfile(Collections.singletonList(id), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                if (timUserProfiles != null && timUserProfiles.size() >= 1) {
+                    result.success(JSON.toJSONString(timUserProfiles.get(0)));
+                } else {
+                    result.success(null);
+                }
+            }
+        });
+    }
+
+    /**
      * 腾讯云 设置会话消息为已读
      *
      * @param methodCall 方法调用对象
@@ -485,6 +510,43 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 腾讯云 获得本地消息列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendTextMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "sendTextMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 消息数量
+        String content = this.getParam(methodCall, result, "content");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+
+        // 封装文本对象
+        TIMMessage message = new TIMMessage();
+        TIMTextElem textElem = new TIMTextElem();
+        textElem.setText(content);
+        message.addElement(textElem);
+
+        // 发送文本消息
+        conversation.sendMessage(message, new TIMValueCallBack<TIMMessage>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(TIMMessage message) {
+                result.success(null);
+            }
+        });
+    }
+
+    /**
      * 通用方法，获得参数值，如未找到参数，则直接中断
      *
      * @param methodCall 方法调用对象
@@ -508,7 +570,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param params 参数
      */
     private void invokeListener(ListenerTypeEnum type, Object params) {
-        Log.i(TAG, "invokeListener: 调用回调:" + type);
         Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
         resultParams.put("params", params == null ? null : JSON.toJSONString(params));

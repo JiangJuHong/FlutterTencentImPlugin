@@ -69,6 +69,9 @@ buildTypes {
 ### 根据用户ID获取用户信息
 ``TencentImPlugin.getUserInfo();``
 
+### 获得当前登录用户信息
+``TencentImPlugin.getLoginUserInfo();``
+
 ### 获取消息列表
 ``TencentImPlugin.getMessages(sessionId:"",sessionType:SessionType.xxx,number:100,);``
 
@@ -81,5 +84,8 @@ buildTypes {
 ### 添加和移除监听
 ``TencentImPlugin.addListener((type,params){....})`` ``TencentImPlugin.removeListener((type,params){....})``
 当事件被触发时调用，但是注意，不同类型所返回的参数值也有所不同
+
+### 发送文本消息
+``TencentImPlugin.sendTextMessage(sessionId:"",sessionType:SessionType.xxx,content:"xxxxxx")``
 
 ## 对象实体说明

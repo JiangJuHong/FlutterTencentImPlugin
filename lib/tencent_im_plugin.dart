@@ -63,6 +63,16 @@ class TencentImPlugin {
     return null;
   }
 
+  /// 获得当前登录用户信息
+  /// @return 用户ID
+  static Future<UserInfoEntity> getLoginUserInfo() async {
+    final String result = await _channel.invokeMethod('getLoginUserInfo');
+    if (result != null) {
+      return EntityFactory.generateOBJ<UserInfoEntity>(jsonDecode(result));
+    }
+    return null;
+  }
+
   /// 获得当前登录用户会话列表
   /// @return 会话列表集合
   static Future<List<SessionEntity>> getConversationList() async {
@@ -119,6 +129,16 @@ class TencentImPlugin {
     await _channel.invokeMethod('setRead', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+    });
+  }
+
+  /// 发送文本消息
+  static Future<void> sendTextMessage(
+      {String sessionId, SessionType sessionType, String content}) async {
+    await _channel.invokeMethod('sendTextMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "content": content,
     });
   }
 
