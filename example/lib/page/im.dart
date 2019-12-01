@@ -75,11 +75,38 @@ class ImPageState extends State<ImPage> {
         number: 30,
       ).then((res) {
         this.setState(() => messageData = res);
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        Timer(
+            Duration(milliseconds: 200),
+            () => scrollController
+                .jumpTo(scrollController.position.maxScrollExtent));
       });
 
       refreshIndicator.currentState.show();
     });
+
+    // 添加监听器
+    TencentImPlugin.addListener(listener);
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    TencentImPlugin.removeListener(listener);
+  }
+
+  /// 监听器
+  listener(type, params) {
+    // 新消息时更新会话列表最近的聊天记录
+    if (type == ListenerTypeEnum.NewMessages) {
+      // 更新消息列表
+      this.setState(() {
+        messageData.addAll(params);
+        Timer(
+            Duration(milliseconds: 200),
+            () => scrollController
+                .jumpTo(scrollController.position.maxScrollExtent));
+      });
+    }
   }
 
   /// 发送事件
@@ -93,7 +120,13 @@ class ImPageState extends State<ImPage> {
       number: messageData.length + 30,
     ).then((res) {
       this.setState(() => messageData = res);
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      // 拉到最下面
+      Timer(
+          Duration(milliseconds: 200),
+          () => scrollController
+              .jumpTo(scrollController.position.maxScrollExtent));
+      // 设置已读
+      TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
     });
   }
 
@@ -110,7 +143,7 @@ class ImPageState extends State<ImPage> {
         ),
       ),
       body: Container(
-        color: Colors.grey[300],
+        color: Colors.grey[200],
         child: Column(
           children: <Widget>[
             Expanded(
@@ -119,7 +152,9 @@ class ImPageState extends State<ImPage> {
                 key: refreshIndicator,
                 child: ListView(
                   controller: scrollController,
-                  children: List.generate(messageData.length, (index)=>MessageItem(message: messageData[messageData.length - index - 1])),
+                  children: messageData
+                      .map((item) => MessageItem(message: item))
+                      .toList(),
                 ),
               ),
             ),

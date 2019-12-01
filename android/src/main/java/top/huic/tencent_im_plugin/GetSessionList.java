@@ -28,6 +28,9 @@ import top.huic.tencent_im_plugin.util.*;
  * @author 蒋具宏
  */
 public class GetSessionList {
+
+    private final Object sync = new Object();
+
     /**
      * 获取会话列表计数
      */
@@ -36,7 +39,7 @@ public class GetSessionList {
     /**
      * 最大计数
      */
-    private final static int MAX_INDEX = 2;
+    private int maxIndex = 0;
 
 
     /**
@@ -46,9 +49,11 @@ public class GetSessionList {
      * @param data     数据对象
      */
     private void appendIndex(final ValueCallBack<List<SessionEntity>> callback, List<SessionEntity> data) {
-        if (++index == MAX_INDEX) {
-            index = 0;
-            callback.success(data);
+        synchronized (sync){
+            if (++index == maxIndex) {
+                index = 0;
+                callback.success(data);
+            }
         }
     }
 
@@ -96,6 +101,16 @@ public class GetSessionList {
             resultData.add(entity);
         }
 
+        // 如果有用户信息
+        if(userInfo.size() >= 1){
+            maxIndex++;
+        }
+
+        // 如果有群信息
+        if(groupInfo.size() >= 1){
+            maxIndex++;
+        }
+
         // 获取群资料
         TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
             @Override
@@ -113,6 +128,7 @@ public class GetSessionList {
                         sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
                     }
                 }
+                Log.i("测试", "onSuccess:获得群信息 ");
                 appendIndex(callback, resultData);
             }
         });

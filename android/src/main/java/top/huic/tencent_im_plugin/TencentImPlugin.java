@@ -1,6 +1,7 @@
 package top.huic.tencent_im_plugin;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -34,11 +35,13 @@ import com.tencent.imsdk.session.SessionWrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -140,6 +143,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "getLocalMessages":
                 this.getLocalMessages(call, result);
+                break;
+            case "setRead":
+                this.setRead(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -363,6 +369,35 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 腾讯云 设置会话消息为已读
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setRead(MethodCall methodCall, final Result result) {
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        // 设置已读
+        conversation.setReadMessage(null, new TIMCallBack() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess() {
+                result.success(null);
+            }
+        });
+
+    }
+
+
+    /**
      * 腾讯云 获得消息列表
      *
      * @param methodCall 方法调用对象
@@ -396,28 +431,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        TIMConversationType sessionType = null;
-        for (TIMConversationType value : TIMConversationType.values()) {
-            if (sessionTypeStr.equals(value.name())) {
-                sessionType = value;
-                break;
-            }
-        }
-        // 验证sessionType
-        if (sessionType == null) {
-            Log.w(TAG, "init: Cannot find parameter `sessionType` or `sessionType` is null!");
-            result.error("Missing parameter", "Cannot find parameter `sessionType` or `sessionType` is null!", 5);
-            throw new RuntimeException("Cannot find parameter `sessionType` or `sessionType` is null!");
-        }
         // 消息数量
         Integer number = this.getParam(methodCall, result, "number");
-
         // 获得会话信息
-        TIMConversation conversation = TIMManager.getInstance().getConversation(sessionType, sessionId);
-        if (conversation == null) {
-            result.error("Not Conversation", "Cannot find Conversation" + sessionId + "-" + sessionTypeStr, 5);
-            return;
-        }
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
         // 获得聊天记录
         if (local) {
@@ -491,6 +508,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param params 参数
      */
     private void invokeListener(ListenerTypeEnum type, Object params) {
+        Log.i(TAG, "invokeListener: 调用回调:" + type);
         Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
         resultParams.put("params", params == null ? null : JSON.toJSONString(params));
@@ -586,7 +604,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
                 @Override
                 public void success(List<SessionEntity> data) {
-                    invokeListener(ListenerTypeEnum.RefreshConversation, null);
+                    invokeListener(ListenerTypeEnum.RefreshConversation, data);
                 }
 
                 @Override

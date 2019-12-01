@@ -111,6 +111,17 @@ class TencentImPlugin {
     await _channel.invokeMethod('initStorage', {"identifier": identifier});
   }
 
+  /// 设置会话消息为已读
+  static Future<void> setRead({
+    String sessionId,
+    SessionType sessionType,
+  }) async {
+    await _channel.invokeMethod('setRead', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+    });
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {
@@ -167,6 +178,9 @@ class TencentImPluginListener {
           if (type == ListenerTypeEnum.NewMessages) {
             params =
                 ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
+          } else if (type == ListenerTypeEnum.RefreshConversation) {
+            params =
+                ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
           }
 
           // 回调触发

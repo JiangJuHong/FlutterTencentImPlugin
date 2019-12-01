@@ -42,26 +42,42 @@ class HomePageState extends State<HomePage> {
   /// 监听器
   listener(type, params) {
     // 新消息时更新会话列表最近的聊天记录
-    if (type == ListenerTypeEnum.NewMessages) {
-      // 更新消息列表
-      for (var p in params) {
-        for (var item in data) {
-          if (item.id == p.sessionId) {
-            this.setState(() {
-              item.message = p;
-              item.unreadMessageNum++;
-            });
-            break;
+    if (type == ListenerTypeEnum.RefreshConversation) {
+      this.setState(() {
+        for (var item in params) {
+          bool exist = false;
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].id == item.id) {
+              data[i] = item;
+              exist = true;
+              break;
+            }
+          }
+          if (!exist) {
+            data.add(item);
           }
         }
-      }
+        this.sort();
+      });
     }
+  }
+
+  /// list排序
+  sort() {
+    data.sort(
+      (i1, i2) => i1.message == null
+          ? 0
+          : i2.message == null
+              ? -1
+              : i2.message.timestamp.compareTo(i1.message.timestamp),
+    );
   }
 
   Future<void> onRefresh() {
     return TencentImPlugin.getConversationList().then((res) {
       this.setState(() {
         data = res;
+        this.sort();
       });
     });
   }
