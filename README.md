@@ -62,10 +62,10 @@ buildTypes {
 ``TencentImPlugin.getConversationList();`` 返回值为``List<SessionEntity>``
 会话列表时，对象内的 message 对象仅包含: id、elemList、timestamp 字段
 
-### 获得群ID
+### 根据群ID获取群信息
 ``TencentImPlugin.getGroupInfo();``
 
-### 获得用户ID
+### 根据用户ID获取用户信息
 ``TencentImPlugin.getUserInfo();``
 
 ### 添加和移除监听
