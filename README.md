@@ -64,9 +64,16 @@ buildTypes {
 
 ### 根据群ID获取群信息
 ``TencentImPlugin.getGroupInfo();``
+会优先读取本地数据，如果本地没有数据，则走云端拉取
 
 ### 根据用户ID获取用户信息
 ``TencentImPlugin.getUserInfo();``
+
+### 获取消息列表
+``TencentImPlugin.getMessages(sessionId:"",sessionType:SessionType.xxx,number:100,);``
+
+### 获取本地消息列表
+``TencentImPlugin.getLocalMessages(sessionId:"",sessionType:SessionType.xxx,number:100,);``
 
 ### 添加和移除监听
 ``TencentImPlugin.addListener((type,params){....})`` ``TencentImPlugin.removeListener((type,params){....})``

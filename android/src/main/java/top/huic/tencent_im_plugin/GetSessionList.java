@@ -19,6 +19,7 @@ import java.util.Map;
 
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
+import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
 import top.huic.tencent_im_plugin.util.*;
 
 /**
@@ -44,7 +45,7 @@ public class GetSessionList {
      * @param callback 回调对象
      * @param data     数据对象
      */
-    private void appendIndex(final GetConversationInfoCallback callback, List<SessionEntity> data) {
+    private void appendIndex(final ValueCallBack<List<SessionEntity>> callback, List<SessionEntity> data) {
         if (++index == MAX_INDEX) {
             index = 0;
             callback.success(data);
@@ -57,7 +58,7 @@ public class GetSessionList {
      * @param callback      回调对象
      * @param conversations 原生会话列表
      */
-    public void getConversationInfo(final GetConversationInfoCallback callback, final List<TIMConversation> conversations) {
+    public void getConversationInfo(final ValueCallBack<List<SessionEntity>> callback, final List<TIMConversation> conversations) {
         final List<SessionEntity> resultData = new ArrayList<>();
 
         // 需要获取用户信息的列表
@@ -139,22 +140,3 @@ public class GetSessionList {
     }
 }
 
-/**
- * 获得会话信息回调
- */
-interface GetConversationInfoCallback {
-    /**
-     * 会话获取成功
-     *
-     * @param data 会话数据
-     */
-    void success(List<SessionEntity> data);
-
-    /**
-     * 会话获取失败
-     *
-     * @param code 错误码
-     * @param desc 错误描述
-     */
-    void error(int code, String desc);
-}

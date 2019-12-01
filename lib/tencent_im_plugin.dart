@@ -70,6 +70,42 @@ class TencentImPlugin {
     return ListUtil.generateOBJList<SessionEntity>(jsonDecode(data));
   }
 
+  /// 根据会话ID获得消息列表
+  /// @param sessionId 会话ID
+  /// @param sessionType 会话类型
+  /// @param number 拉取消息数量
+  /// @return 消息列表集合
+  static Future<List<MessageEntity>> getMessages({
+    String sessionId,
+    SessionType sessionType,
+    int number,
+  }) async {
+    final String data = await _channel.invokeMethod('getMessages', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "number": number,
+    });
+    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(data));
+  }
+
+  /// 根据会话ID获得本地消息列表
+  /// @param sessionId 会话ID
+  /// @param sessionType 会话类型
+  /// @param number 拉取消息数量
+  /// @return 消息列表集合
+  static Future<List<MessageEntity>> getLocalMessages({
+    String sessionId,
+    SessionType sessionType,
+    int number,
+  }) async {
+    final String data = await _channel.invokeMethod('getLocalMessages', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "number": number,
+    });
+    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(data));
+  }
+
   /// 初始化本地存储
   static Future<void> initStorage({String identifier}) async {
     await _channel.invokeMethod('initStorage', {"identifier": identifier});

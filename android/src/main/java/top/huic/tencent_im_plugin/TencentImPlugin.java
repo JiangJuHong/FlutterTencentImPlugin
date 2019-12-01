@@ -5,9 +5,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
@@ -23,6 +25,7 @@ import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
@@ -45,6 +48,10 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
+import top.huic.tencent_im_plugin.util.TencentImUtils;
+
+import com.tencent.imsdk.conversation.Msg;
 
 /**
  * TencentImPlugin
@@ -54,7 +61,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     /**
      * 日志签名
      */
-    static String TAG = "TencentImPlugin";
+    public static String TAG = "TencentImPlugin";
 
     /**
      * 全局上下文
@@ -77,6 +84,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private TencentImPlugin(Context context, MethodChannel channel) {
         this.context = context;
         this.channel = channel;
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.mask;
     }
 
     @Override
@@ -127,6 +135,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getUserInfo":
                 this.getUserInfo(call, result);
                 break;
+            case "getMessages":
+                this.getMessages(call, result);
+                break;
+            case "getLocalMessages":
+                this.getLocalMessages(call, result);
+                break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
                 result.notImplemented();
@@ -168,8 +182,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     .setGroupEventListener(listener)
                     .setRefreshListener(listener)
                     .setMessageRevokedListener(listener);
-            // # 禁用本地所有存储
-//            userConfig.disableStorage();
             // # 开启消息已读回执
             userConfig.enableReadReceipt(true);
             TIMManager.getInstance().setUserConfig(userConfig);
@@ -280,7 +292,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
-        new GetSessionList().getConversationInfo(new GetConversationInfoCallback() {
+        new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
             @Override
             public void success(List<SessionEntity> data) {
                 result.success(JSON.toJSONString(data));
@@ -294,7 +306,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
-     * 腾讯云 获得群信息
+     * 腾讯云 获得群信息（先获取本地的，如果本地没有，则获取云端的）
      *
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
@@ -302,21 +314,26 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getGroupInfo(MethodCall methodCall, final Result result) {
         // 群ID
         String id = this.getParam(methodCall, result, "id");
-        TIMGroupManager.getInstance().getGroupInfo(Collections.singletonList(id), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
-            @Override
-            public void onError(int code, String desc) {
-                result.error(String.valueOf(code), desc, null);
-            }
-
-            @Override
-            public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
-                if (timGroupDetailInfoResults != null && timGroupDetailInfoResults.size() >= 1) {
-                    result.success(JSON.toJSONString(timGroupDetailInfoResults.get(0)));
-                } else {
-                    result.success(null);
+        TIMGroupDetailInfo groupDetailInfo = TIMGroupManager.getInstance().queryGroupInfo(id);
+        if (groupDetailInfo == null) {
+            TIMGroupManager.getInstance().getGroupInfo(Collections.singletonList(id), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    result.error(String.valueOf(code), desc, null);
                 }
-            }
-        });
+
+                @Override
+                public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                    if (timGroupDetailInfoResults != null && timGroupDetailInfoResults.size() >= 1) {
+                        result.success(JSON.toJSONString(timGroupDetailInfoResults.get(0)));
+                    } else {
+                        result.success(null);
+                    }
+                }
+            });
+        } else {
+            result.success(JSON.toJSONString(groupDetailInfo));
+        }
     }
 
     /**
@@ -343,6 +360,111 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
             }
         });
+    }
+
+    /**
+     * 腾讯云 获得消息列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getMessages(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getMessages: ");
+        this.getMessages(methodCall, result, false);
+    }
+
+    /**
+     * 腾讯云 获得本地消息列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getLocalMessages(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getLocalMessage: ");
+        this.getMessages(methodCall, result, true);
+    }
+
+    /**
+     * 获得消息列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     * @param local      是否是获取本地消息
+     */
+    private void getMessages(MethodCall methodCall, final Result result, boolean local) {
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        TIMConversationType sessionType = null;
+        for (TIMConversationType value : TIMConversationType.values()) {
+            if (sessionTypeStr.equals(value.name())) {
+                sessionType = value;
+                break;
+            }
+        }
+        // 验证sessionType
+        if (sessionType == null) {
+            Log.w(TAG, "init: Cannot find parameter `sessionType` or `sessionType` is null!");
+            result.error("Missing parameter", "Cannot find parameter `sessionType` or `sessionType` is null!", 5);
+            throw new RuntimeException("Cannot find parameter `sessionType` or `sessionType` is null!");
+        }
+        // 消息数量
+        Integer number = this.getParam(methodCall, result, "number");
+
+        // 获得会话信息
+        TIMConversation conversation = TIMManager.getInstance().getConversation(sessionType, sessionId);
+        if (conversation == null) {
+            result.error("Not Conversation", "Cannot find Conversation" + sessionId + "-" + sessionTypeStr, 5);
+            return;
+        }
+
+        // 获得聊天记录
+        if (local) {
+            conversation.getLocalMessage(number, null, new TIMValueCallBack<List<TIMMessage>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    result.error(String.valueOf(code), desc, null);
+                }
+
+                @Override
+                public void onSuccess(List<TIMMessage> timMessages) {
+                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>() {
+                        @Override
+                        public void success(List<MessageEntity> messageEntities) {
+                            result.success(JSON.toJSONString(messageEntities));
+                        }
+
+                        @Override
+                        public void error(int code, String desc) {
+                            Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                        }
+                    });
+                }
+            });
+        } else {
+            conversation.getMessage(number, null, new TIMValueCallBack<List<TIMMessage>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    result.error(String.valueOf(code), desc, null);
+                }
+
+                @Override
+                public void onSuccess(List<TIMMessage> timMessages) {
+                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>() {
+                        @Override
+                        public void success(List<MessageEntity> messageEntities) {
+                            result.success(JSON.toJSONString(messageEntities));
+                        }
+
+                        @Override
+                        public void error(int code, String desc) {
+                            Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -461,7 +583,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         public void onRefreshConversation(List<TIMConversation> list) {
             Log.d(TAG, "onRefreshConversation: ");
             // 获取资料后调用回调
-            new GetSessionList().getConversationInfo(new GetConversationInfoCallback() {
+            new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
                 @Override
                 public void success(List<SessionEntity> data) {
                     invokeListener(ListenerTypeEnum.RefreshConversation, null);
@@ -469,6 +591,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
                 @Override
                 public void error(int code, String desc) {
+                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
                 }
             }, list);
         }
@@ -491,34 +614,16 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public boolean onNewMessages(List<TIMMessage> list) {
             Log.d(TAG, "onNewMessages: " + list.toString());
-
-            // 需要被获取用户信息的数据集
-            final Map<String, MessageEntity> userInfo = new HashMap<>();
-            for (TIMMessage timMessage : list) {
-                userInfo.put(timMessage.getSender(), new MessageEntity(timMessage));
-            }
-
-            // 获取用户资料
-            TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+            TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>() {
                 @Override
-                public void onError(int code, String desc) {
-                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                public void success(List<MessageEntity> messageEntities) {
+                    invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
                 }
 
-                @Override
-                public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                    // 赋值用户信息并疯转返回集合
-                    List<MessageEntity> messageEntities = new ArrayList<>();
-                    for (TIMUserProfile timUserProfile : timUserProfiles) {
-                        MessageEntity message = userInfo.get(timUserProfile.getIdentifier());
-                        if (message != null) {
-                            message.setUserInfo(timUserProfile);
-                            messageEntities.add(message);
-                        }
-                    }
 
-                    // 调用回调
-                    invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
+                @Override
+                public void error(int code, String desc) {
+                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
                 }
             });
             return false;
