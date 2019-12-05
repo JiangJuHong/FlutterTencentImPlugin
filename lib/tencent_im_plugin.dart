@@ -142,6 +142,20 @@ class TencentImPlugin {
     });
   }
 
+  /// 发送语音消息
+  static Future<void> sendSoundMessage(
+      {String sessionId,
+      SessionType sessionType,
+      String path,
+      int duration}) async {
+    await _channel.invokeMethod('sendSoundMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "path": path,
+      "duration": duration,
+    });
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {

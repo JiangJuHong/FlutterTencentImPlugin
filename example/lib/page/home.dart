@@ -6,6 +6,7 @@ import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
+import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
 import 'package:tencent_im_plugin_example/page/im.dart';
 
@@ -95,6 +96,8 @@ class HomePageState extends State<HomePage> {
       return node.text;
     } else if (node is NodeImageEntity) {
       return "[图片]";
+    } else if (node is NodeSoundEntity) {
+      return "[语音]";
     }
 
     return "";
@@ -141,47 +144,58 @@ class HomePageState extends State<HomePage> {
                             fit: BoxFit.cover,
                           ).image,
                   ),
-                  title: Text(
-                    item.nickname == null
-                        ? (item.type == SessionType.System ? "系统账号" : "")
-                        : item.nickname,
-                  ),
-                  subtitle: Text(this.onGetMessageDesc(item.message)),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  title: Row(
                     children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          item.nickname == null
+                              ? (item.type == SessionType.System ? "系统账号" : "")
+                              : item.nickname,
+                        ),
+                      ),
                       Text(
                         dateTime == null
                             ? ""
                             : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
                         style: TextStyle(
                           color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          this.onGetMessageDesc(item.message),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       item.unreadMessageNum != 0
                           ? Container(
-                              margin: EdgeInsets.only(top: 5),
-                              padding: EdgeInsets.only(
-                                top: 2,
-                                bottom: 2,
-                                left: 6,
-                                right: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.redAccent,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                              ),
-                              child: Text(
-                                "${item.unreadMessageNum}",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            )
+                        margin: EdgeInsets.only(top: 5),
+                        padding: EdgeInsets.only(
+                          top: 2,
+                          bottom: 2,
+                          left: 6,
+                          right: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                        ),
+                        child: Text(
+                          "${item.unreadMessageNum}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
                           : Text(""),
                     ],
                   ),

@@ -20,6 +20,7 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
@@ -145,6 +146,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "sendTextMessage":
                 this.sendTextMessage(call, result);
+                break;
+            case "sendSoundMessage":
+                this.sendSoundMessage(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -510,7 +514,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
-     * 腾讯云 获得本地消息列表
+     * 腾讯云 发送文本消息
      *
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
@@ -521,7 +525,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 消息数量
+        // 消息内容
         String content = this.getParam(methodCall, result, "content");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
@@ -532,6 +536,49 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         textElem.setText(content);
         message.addElement(textElem);
 
+        // 发送消息
+        this.sendMessage(conversation, message, result);
+    }
+
+
+    /**
+     * 腾讯云 发送语音消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendSoundMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "sendSoundMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 语音路径
+        String path = this.getParam(methodCall, result, "path");
+        // 语音时长
+        Integer duration = this.getParam(methodCall, result, "duration");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+
+        // 封装文本对象
+        TIMMessage message = new TIMMessage();
+        TIMSoundElem soundElem = new TIMSoundElem();
+        soundElem.setPath(path);
+        soundElem.setDuration(duration);
+        message.addElement(soundElem);
+
+        // 发送消息
+        this.sendMessage(conversation, message, result);
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param conversation 会话
+     * @param message      消息内容
+     * @param result       Flutter返回对象
+     */
+    private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result) {
         // 发送文本消息
         conversation.sendMessage(message, new TIMValueCallBack<TIMMessage>() {
             @Override

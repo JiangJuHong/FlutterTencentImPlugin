@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_sound:
+    dependency: "direct main"
+    description:
+      name: flutter_sound
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.5.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -109,6 +116,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.8.0+1"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.0"
   petitparser:
     dependency: transitive
     description:
