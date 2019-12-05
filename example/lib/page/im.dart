@@ -145,7 +145,7 @@ class ImPageState extends State<ImPage> {
   init() async {
     Map<PermissionGroup, PermissionStatus> permissions =
         await PermissionHandler().requestPermissions(
-            [PermissionGroup.microphone, PermissionGroup.storage]);
+            [PermissionGroup.storage,PermissionGroup.storage,PermissionGroup.microphone]);
   }
 
   /// 监听器
