@@ -1,17 +1,24 @@
 package top.huic.tencent_im_plugin.util;
 
+import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,14 +44,35 @@ public class TencentImUtils {
     public static List<TIMElem> getArrrElement(TIMMessage message) {
         List<TIMElem> elems = new ArrayList<>();
         for (int i = 0; i < message.getElementCount(); i++) {
-            elems.add(message.getElement(i));
+            TIMElem elem = message.getElement(i);
+            // 如果是语音，就下载保存
+            if (elem.getType() == TIMElemType.Sound) {
+                TIMSoundElem soundElem = (TIMSoundElem) elem;
+                final File file = new File(getSystemFilePath(TencentImPlugin.context) + "/" + ((TIMSoundElem) elem).getUuid());
+                if (!file.exists()) {
+                    soundElem.getSoundToFile(file.getPath(), new TIMCallBack() {
+                        @Override
+                        public void onError(int code, String desc) {
+                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TencentImPlugin.TAG, "download success,path:" + file.getPath());
+                        }
+                    });
+                }
+                soundElem.setPath(file.getPath());
+            }
+            elems.add(elem);
         }
         return elems;
     }
 
     /**
      * 根据会话ID和会话类型获得会话对象
-     * @param sessionId 会话ID
+     *
+     * @param sessionId      会话ID
      * @param sessionTypeStr 会话类型字符串模式
      * @return 会话对象
      */
@@ -118,5 +146,22 @@ public class TencentImUtils {
                 callBack.success(messageEntities);
             }
         });
+    }
+
+    /**
+     * 获得系统目录
+     *
+     * @param context 全局上下文
+     * @return 获得结果
+     */
+    private static String getSystemFilePath(Context context) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        } else {
+            cachePath = context.getFilesDir().getAbsolutePath();
+        }
+        return cachePath;
     }
 }

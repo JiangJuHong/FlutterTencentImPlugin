@@ -128,7 +128,6 @@ public class GetSessionList {
                         sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
                     }
                 }
-                Log.i("测试", "onSuccess:获得群信息 ");
                 appendIndex(callback, resultData);
             }
         });

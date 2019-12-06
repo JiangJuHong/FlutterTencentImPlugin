@@ -63,7 +63,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     /**
      * 全局上下文
      */
-    private Context context;
+    public static Context context;
 
     /**
      * 与Flutter的通信管道
@@ -79,7 +79,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     private TencentImPlugin(Context context, MethodChannel channel) {
-        this.context = context;
+        TencentImPlugin.context = context;
         this.channel = channel;
         JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.mask;
     }
