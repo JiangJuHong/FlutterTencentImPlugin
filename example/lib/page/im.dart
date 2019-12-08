@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
@@ -144,8 +145,11 @@ class ImPageState extends State<ImPage> {
   /// 初始化
   init() async {
     Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions(
-            [PermissionGroup.storage,PermissionGroup.storage,PermissionGroup.microphone]);
+        await PermissionHandler().requestPermissions([
+      PermissionGroup.storage,
+      PermissionGroup.storage,
+      PermissionGroup.microphone
+    ]);
   }
 
   /// 监听器
@@ -219,11 +223,14 @@ class ImPageState extends State<ImPage> {
   addData(List<MessageEntity> messageEntity) {
     List<DataEntity> dataEntity = this.data;
     for (var item in messageEntity) {
-      dataEntity.add(new DataEntity(
-        userInfo: item.userInfo,
-        self: item.self,
-        widget: getComponent(item.elemList),
-      ));
+      Widget widget = getComponent(item.elemList);
+      if (widget != null) {
+        dataEntity.add(new DataEntity(
+          userInfo: item.userInfo,
+          self: item.self,
+          widget: widget,
+        ));
+      }
     }
     this.setState(() {});
     Timer(
@@ -240,6 +247,9 @@ class ImPageState extends State<ImPage> {
 
     // 只取第一个
     var node = elems[0];
+    if (node == null) {
+      return null;
+    }
     if (node.type == NodeType.Text) {
       return MessageText(text: node.text);
     } else if (node.type == NodeType.Image) {
@@ -364,6 +374,32 @@ class ImPageState extends State<ImPage> {
         path: voicePath);
   }
 
+  /// 选择图片
+  onSelectImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      int id = Random().nextInt(999999);
+
+      // 封装数据对象
+      DataEntity dataEntity = DataEntity(
+        id: id.toString(),
+        userInfo: loginUserInfo,
+        widget: MessageImage(path: image.path),
+        self: true,
+      );
+
+      this.setState(() {
+        data.add(dataEntity);
+      });
+
+      TencentImPlugin.sendImageMessage(
+        sessionId: widget.id,
+        sessionType: widget.type,
+        path: image.path,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -406,6 +442,15 @@ class ImPageState extends State<ImPage> {
                       child: Icon(
                         Icons.mic,
                         color: voiceWindow ? Colors.blueAccent : Colors.black,
+                      ),
+                      padding: EdgeInsets.only(left: 5, right: 5),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: onSelectImage,
+                    child: Container(
+                      child: Icon(
+                        Icons.image,
                       ),
                       padding: EdgeInsets.only(left: 5, right: 5),
                     ),
@@ -606,18 +651,18 @@ class MessageText extends StatelessWidget {
 /// 消息图片
 class MessageImage extends StatelessWidget {
   final String url;
+  final String path;
 
-  const MessageImage({Key key, this.url}) : super(key: key);
+  const MessageImage({Key key, this.url, this.path}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(url);
+    return path != null ? Image.asset(path) : Image.network(url);
   }
 }
 
 /// 消息语音
 class MessageVoice extends StatelessWidget {
-
   // 路径
   final String path;
 
@@ -630,10 +675,10 @@ class MessageVoice extends StatelessWidget {
   MessageVoice({Key key, this.path, this.duration}) : super(key: key);
 
   // 播放语音
-  onPlayerOrStop(){
-    if(flutterSound.isPlaying){
+  onPlayerOrStop() {
+    if (flutterSound.isPlaying) {
       flutterSound.stopPlayer();
-    }else{
+    } else {
       flutterSound.startPlayer(path);
     }
   }

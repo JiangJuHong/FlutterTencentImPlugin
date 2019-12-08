@@ -16,6 +16,8 @@ dependencies:
   flutter_sound: ^1.5.2
   # 权限请求(https://github.com/BaseflowIT/flutter-permission-handler)
   permission_handler: ^4.0.0
+  # 图片选择器(https://pub.dev/packages/image_picker)
+  image_picker: ^0.6.1+11
 
 dev_dependencies:
   flutter_test:

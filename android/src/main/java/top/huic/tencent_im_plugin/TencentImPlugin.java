@@ -13,6 +13,7 @@ import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupTipsElem;
+import com.tencent.imsdk.TIMImageElem;
 import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMLogListener;
 import com.tencent.imsdk.TIMManager;
@@ -149,6 +150,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "sendSoundMessage":
                 this.sendSoundMessage(call, result);
+                break;
+            case "sendImageMessage":
+                this.sendImageMessage(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -566,6 +570,33 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         soundElem.setPath(path);
         soundElem.setDuration(duration);
         message.addElement(soundElem);
+
+        // 发送消息
+        this.sendMessage(conversation, message, result);
+    }
+
+    /**
+     * 腾讯云 发送图片消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendImageMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "sendImageMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 语音路径
+        String path = this.getParam(methodCall, result, "path");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+
+        // 封装文本对象
+        TIMMessage message = new TIMMessage();
+        TIMImageElem imageElem = new TIMImageElem();
+        imageElem.setPath(path);
+        message.addElement(imageElem);
 
         // 发送消息
         this.sendMessage(conversation, message, result);

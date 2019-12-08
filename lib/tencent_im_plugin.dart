@@ -156,6 +156,19 @@ class TencentImPlugin {
     });
   }
 
+  /// 发送图片消息
+  static Future<void> sendImageMessage({
+    String sessionId,
+    SessionType sessionType,
+    String path,
+  }) async {
+    await _channel.invokeMethod('sendImageMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "path": path,
+    });
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {
