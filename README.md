@@ -92,4 +92,8 @@ buildTypes {
 ``TencentImPlugin.sendSoundMessage(sessionId:"",sessionType:SessionType.xxx,duration:时长，整型,path:"语音资源路径")``
 Example中，录音插件使用: flutter_sound，权限请求插件使用: permission_handler
 
+### 发送图片消息
+``TencentImPlugin.sendImageMessage(sessionId:"",sessionType:SessionType.xxx,path:"图片资源路径")``
+Example中，图片选择插件使用：image_picker
+
 ## 对象实体说明
