@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
+import 'entity/friend_entity.dart';
+import 'entity/group_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/session_entity.dart';
@@ -190,6 +191,18 @@ class TencentImPlugin {
       "snapshotHeight": snapshotHeight,
       "snapshotPath": snapshotPath,
     });
+  }
+
+  /// 获得好友列表
+  static Future<List<FriendEntity>> getFriendList() async {
+    String data = await _channel.invokeMethod('getFriendList');
+    return ListUtil.generateOBJList<FriendEntity>(jsonDecode(data));
+  }
+
+  /// 获得群列表
+  static Future<List<GroupEntity>> getGroupList() async {
+    String data = await _channel.invokeMethod('getGroupList');
+    return ListUtil.generateOBJList<GroupEntity>(jsonDecode(data));
   }
 
   /// 添加消息监听

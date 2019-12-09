@@ -104,4 +104,10 @@ Example中，视频选择插件使用：image_picker，视频播放和信息获�
 下载视频封面和视频时为异步，有可能出现界面渲染但是还没下载结束的问题，再次，可通过监听器类型:DownloadSuccess和DownloadFail监听，以uuid作为唯一标识符
 视频下载拥有缓存，只会在第一次时下载
 
+### 获得好友列表
+``TencentImPlugin.getFriendList()``
+
+### 获得群组列表
+``TencentImPlugin.getGroupList()``
+
 ## 对象实体说明

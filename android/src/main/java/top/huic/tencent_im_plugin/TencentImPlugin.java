@@ -30,10 +30,12 @@ import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
+import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.imsdk.session.SessionWrapper;
 
 import java.util.Collections;
@@ -159,6 +161,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "sendVideoMessage":
                 this.sendVideoMessage(call, result);
+                break;
+            case "getFriendList":
+                this.getFriendList(call, result);
+                break;
+            case "getGroupList":
+                this.getGroupList(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -677,6 +685,48 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(TIMMessage message) {
                 result.success(null);
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 获得好友列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getFriendList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getFriendList: ");
+        TIMFriendshipManager.getInstance().getFriendList(new TIMValueCallBack<List<TIMFriend>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMFriend> timFriends) {
+                result.success(JSON.toJSONString(timFriends));
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 获得群组列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getGroupList: ");
+        TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMGroupBaseInfo> groupBaseInfos) {
+                result.success(JSON.toJSONString(groupBaseInfos));
             }
         });
     }

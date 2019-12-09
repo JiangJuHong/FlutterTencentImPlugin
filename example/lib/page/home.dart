@@ -1,15 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:tencent_im_plugin/tencent_im_plugin.dart';
-import 'package:tencent_im_plugin/entity/session_entity.dart';
-import 'package:tencent_im_plugin/entity/message_entity.dart';
-import 'package:tencent_im_plugin/entity/node_entity.dart';
-import 'package:tencent_im_plugin/entity/node_text_entity.dart';
-import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
-import 'package:tencent_im_plugin/entity/node_image_entity.dart';
-import 'package:tencent_im_plugin/entity/node_video_entity.dart';
-import 'package:tencent_im_plugin_example/page/im.dart';
+import 'package:tencent_im_plugin_example/page/friend_list.dart';
+import 'package:tencent_im_plugin_example/page/group_list.dart';
+import 'package:tencent_im_plugin_example/page/im_list.dart';
 
 /// 首页
 class HomePage extends StatefulWidget {
@@ -18,105 +11,42 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  /// 刷新加载器
-  GlobalKey<RefreshIndicatorState> refreshIndicator = GlobalKey();
+  final List<NavigationBarData> data = [
+    NavigationBarData(
+      widget: ImList(),
+      title: "会话",
+      selectedIcon: Icon(Icons.message),
+      unselectedIcon: Icon(Icons.message),
+    ),
+    NavigationBarData(
+      widget: FriendList(),
+      title: "好友",
+      selectedIcon: Icon(Icons.supervised_user_circle),
+      unselectedIcon: Icon(Icons.supervised_user_circle),
+    ),
+    NavigationBarData(
+      widget: GroupList(),
+      title: "群组",
+      selectedIcon: Icon(Icons.group),
+      unselectedIcon: Icon(Icons.group),
+    ),
+  ];
 
-  /// 会话列表
-  List<SessionEntity> data = [];
+  /// 当前选择下标
+  int currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      refreshIndicator.currentState.show();
-    });
-
-    // 添加监听器
-    TencentImPlugin.addListener(listener);
+  ///关闭
+  close() {
+    Navigator.of(context).pop();
   }
 
-  @override
-  dispose() {
-    super.dispose();
-    TencentImPlugin.removeListener(listener);
-  }
-
-  /// 监听器
-  listener(type, params) {
-    // 新消息时更新会话列表最近的聊天记录
-    if (type == ListenerTypeEnum.RefreshConversation) {
-      this.setState(() {
-        for (var item in params) {
-          bool exist = false;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].id == item.id) {
-              data[i] = item;
-              exist = true;
-              break;
-            }
-          }
-          if (!exist) {
-            data.add(item);
-          }
-        }
-        this.sort();
+  //如果点击的导航页不是当前项，切换
+  void _changePage(int index) {
+    if (index != currentIndex) {
+      setState(() {
+        currentIndex = index;
       });
     }
-  }
-
-  /// list排序
-  sort() {
-    data.sort(
-      (i1, i2) => i1.message == null
-          ? 0
-          : i2.message == null
-              ? -1
-              : i2.message.timestamp.compareTo(i1.message.timestamp),
-    );
-  }
-
-  Future<void> onRefresh() {
-    return TencentImPlugin.getConversationList().then((res) {
-      this.setState(() {
-        data = res;
-        this.sort();
-      });
-    });
-  }
-
-  /// 获得消息描述
-  onGetMessageDesc(MessageEntity message) {
-    if (message == null ||
-        message.elemList == null ||
-        message.elemList.length == 0) {
-      return "";
-    }
-
-    NodeEntity node = message.elemList[0];
-    if (node is NodeTextEntity) {
-      return node.text;
-    } else if (node is NodeImageEntity) {
-      return "[图片]";
-    } else if (node is NodeSoundEntity) {
-      return "[语音]";
-    } else if (node is NodeVideoEntity) {
-      return "[视频]";
-    }
-
-    return "";
-  }
-
-  /// 点击事件
-  onClick(item) {
-    Navigator.push(
-      context,
-      new MaterialPageRoute(
-        builder: (context) => new ImPage(
-          id: item.id,
-          type: item.type,
-        ),
-      ),
-    );
   }
 
   @override
@@ -125,89 +55,52 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("首页(会话列表)"),
       ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        key: refreshIndicator,
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: data.map(
-            (item) {
-              DateTime dateTime = item.message != null
-                  ? DateTime.fromMillisecondsSinceEpoch(
-                      item.message.timestamp * 1000)
-                  : null;
-              return InkWell(
-                onTap: () => onClick(item),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: item.faceUrl == null
-                        ? null
-                        : Image.network(
-                            item.faceUrl,
-                            fit: BoxFit.cover,
-                          ).image,
+      body: IndexedStack(
+        index: currentIndex,
+        children: data.map((res) => res.widget).toList(),
+      ),
+      bottomNavigationBar: new BottomNavigationBar(
+        items: List.generate(
+            data.length,
+            (index) => BottomNavigationBarItem(
+                  icon: index == currentIndex
+                      ? data[index].selectedIcon
+                      : data[index].unselectedIcon,
+                  title: Text(
+                    data[index].title,
+                    style: TextStyle(fontFamily: "苹方-中黑体"),
                   ),
-                  title: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          item.nickname == null
-                              ? (item.type == SessionType.System ? "系统账号" : "")
-                              : item.nickname,
-                        ),
-                      ),
-                      Text(
-                        dateTime == null
-                            ? ""
-                            : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          this.onGetMessageDesc(item.message),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      item.unreadMessageNum != 0
-                          ? Container(
-                        margin: EdgeInsets.only(top: 5),
-                        padding: EdgeInsets.only(
-                          top: 2,
-                          bottom: 2,
-                          left: 6,
-                          right: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(100),
-                          ),
-                        ),
-                        child: Text(
-                          "${item.unreadMessageNum}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      )
-                          : Text(""),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ).toList(),
-        ),
+                )),
+        currentIndex: currentIndex,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          _changePage(index);
+        },
+        selectedItemColor: Color(0xFFFF764BF8),
+        unselectedItemColor: Color(0xFFFF90939A),
       ),
     );
   }
+}
+
+/// 底部导航栏数据对象
+class NavigationBarData {
+  /// 未选择时候的图标
+  final Widget unselectedIcon;
+
+  /// 选择后的图标
+  final Widget selectedIcon;
+
+  /// 标题内容
+  final String title;
+
+  /// 页面组件
+  final Widget widget;
+
+  NavigationBarData({
+    this.unselectedIcon,
+    this.selectedIcon,
+    @required this.title,
+    @required this.widget,
+  });
 }

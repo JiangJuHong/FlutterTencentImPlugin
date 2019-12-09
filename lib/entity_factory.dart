@@ -1,4 +1,5 @@
 import 'package:tencent_im_plugin/entity/node_video_entity.dart';
+import 'package:tencent_im_plugin/entity/group_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
@@ -6,6 +7,7 @@ import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
 
 class EntityFactory {
@@ -14,6 +16,8 @@ class EntityFactory {
       return null;
     } else if (T.toString() == "NodeVideoEntity") {
       return NodeVideoEntity.fromJson(json) as T;
+    } else if (T.toString() == "GroupEntity") {
+      return GroupEntity.fromJson(json) as T;
     } else if (T.toString() == "GroupInfoEntity") {
       return GroupInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeSoundEntity") {
@@ -28,6 +32,8 @@ class EntityFactory {
       return MessageEntity.fromJson(json) as T;
     } else if (T.toString() == "UserInfoEntity") {
       return UserInfoEntity.fromJson(json) as T;
+    } else if (T.toString() == "FriendEntity") {
+      return FriendEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeImageEntity") {
       return NodeImageEntity.fromJson(json) as T;
     } else {
