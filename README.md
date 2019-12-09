@@ -110,4 +110,10 @@ Example中，视频选择插件使用：image_picker，视频播放和信息获�
 ### 获得群组列表
 ``TencentImPlugin.getGroupList()``
 
+### 添加好友
+``TencentImPlugin.addFriend(id: 用户ID,remark: 备注,addWording: 申请说明,addSource: 添加来源,friendGroup: 分组)``
+
+### 检测单个好友关系
+``TencentImPlugin.checkSingleFriends(id:用户ID,type:FriendCheckTypeEnum.unidirection)``
+
 ## 对象实体说明

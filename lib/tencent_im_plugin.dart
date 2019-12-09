@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
+import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -10,6 +12,7 @@ import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/session_entity.dart';
 import 'entity/user_info_entity.dart';
+import 'enums/friend_check_type_enum.dart';
 
 class TencentImPlugin {
   static const MethodChannel _channel =
@@ -202,6 +205,36 @@ class TencentImPlugin {
   static Future<List<GroupInfoEntity>> getGroupList() async {
     String data = await _channel.invokeMethod('getGroupList');
     return ListUtil.generateOBJList<GroupInfoEntity>(jsonDecode(data));
+  }
+
+  /// 添加好友
+  static Future<AddFriendResultEntity> addFriend({
+    String id,
+    String remark,
+    String addWording,
+    String addSource,
+    String friendGroup,
+  }) async {
+    String data = await _channel.invokeMethod('addFriend', {
+      "id": id,
+      "remark": remark,
+      "addWording": addWording,
+      "addSource": addSource,
+      "friendGroup": friendGroup,
+    });
+    return AddFriendResultEntity.fromJson(jsonDecode(data));
+  }
+
+  /// 检测单个好友关系
+  static Future<CheckFriendResultEntity> checkSingleFriends({
+    String id,
+    FriendCheckTypeEnum type,
+  }) async {
+    String data = await _channel.invokeMethod('checkSingleFriends', {
+      "id": id,
+      "type": type == null ? null : FriendCheckTypeTool.getEnumByIndex(type),
+    });
+    return CheckFriendResultEntity.fromJson(jsonDecode(data));
   }
 
   /// 添加消息监听

@@ -35,10 +35,15 @@ import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
+import com.tencent.imsdk.friendship.TIMCheckFriendResult;
 import com.tencent.imsdk.friendship.TIMFriend;
+import com.tencent.imsdk.friendship.TIMFriendCheckInfo;
+import com.tencent.imsdk.friendship.TIMFriendRequest;
+import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -168,6 +173,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "getGroupList":
                 this.getGroupList(call, result);
+                break;
+            case "addFriend":
+                this.addFriend(call, result);
+                break;
+            case "checkSingleFriends":
+                this.checkSingleFriends(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -746,6 +757,79 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     }
                 });
 
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 添加好友
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void addFriend(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "addFriend: ");
+
+        // 用户Id
+        String id = this.getParam(methodCall, result, "id");
+        // 备注
+        String remark = methodCall.argument("remark");
+        // 请求说明
+        String addWording = methodCall.argument("addWording");
+        // 添加来源
+        String addSource = methodCall.argument("addSource");
+        // 分组名
+        String friendGroup = methodCall.argument("friendGroup");
+
+        TIMFriendRequest request = new TIMFriendRequest(id);
+        request.setRemark(remark);
+        request.setAddWording(addWording);
+        request.setAddSource(addSource);
+        request.setFriendGroup(friendGroup);
+
+        // 添加好友
+        TIMFriendshipManager.getInstance().addFriend(request, new TIMValueCallBack<TIMFriendResult>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(TIMFriendResult timFriendResult) {
+                result.success(JSON.toJSONString(timFriendResult));
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 检测单个好友关系
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void checkSingleFriends(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "checkSingleFriends: ");
+
+        // 用户Id
+        String id = this.getParam(methodCall, result, "id");
+        // 类型
+        int type = methodCall.argument("type");
+
+
+        TIMFriendCheckInfo checkInfo = new TIMFriendCheckInfo();
+        checkInfo.setUsers(Collections.singletonList(id));
+        checkInfo.setCheckType(type);
+
+        // 检测关系
+        TIMFriendshipManager.getInstance().checkFriends(checkInfo, new TIMValueCallBack<List<TIMCheckFriendResult>>() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(String.valueOf(code), desc, null);
+            }
+
+            @Override
+            public void onSuccess(List<TIMCheckFriendResult> timCheckFriendResults) {
+                result.success(JSON.toJSONString(timCheckFriendResults.get(0)));
             }
         });
     }
