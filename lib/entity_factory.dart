@@ -1,5 +1,4 @@
 import 'package:tencent_im_plugin/entity/node_video_entity.dart';
-import 'package:tencent_im_plugin/entity/group_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
@@ -16,8 +15,6 @@ class EntityFactory {
       return null;
     } else if (T.toString() == "NodeVideoEntity") {
       return NodeVideoEntity.fromJson(json) as T;
-    } else if (T.toString() == "GroupEntity") {
-      return GroupEntity.fromJson(json) as T;
     } else if (T.toString() == "GroupInfoEntity") {
       return GroupInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeSoundEntity") {

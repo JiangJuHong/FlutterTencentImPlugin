@@ -38,6 +38,7 @@ import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.imsdk.session.SessionWrapper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -726,7 +727,25 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
             @Override
             public void onSuccess(List<TIMGroupBaseInfo> groupBaseInfos) {
-                result.success(JSON.toJSONString(groupBaseInfos));
+
+                List<String> ids = new ArrayList<>(groupBaseInfos.size());
+                for (TIMGroupBaseInfo groupBaseInfo : groupBaseInfos) {
+                    ids.add(groupBaseInfo.getGroupId());
+                }
+
+                // 获得群资料
+                TIMGroupManager.getInstance().getGroupInfo(ids, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        result.error(String.valueOf(code), desc, null);
+                    }
+
+                    @Override
+                    public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                        result.success(JSON.toJSONString(timGroupDetailInfoResults));
+                    }
+                });
+
             }
         });
     }
