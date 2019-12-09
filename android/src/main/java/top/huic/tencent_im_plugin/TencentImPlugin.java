@@ -21,12 +21,15 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMSnapshot;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.TIMVideo;
+import com.tencent.imsdk.TIMVideoElem;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
@@ -153,6 +156,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "sendImageMessage":
                 this.sendImageMessage(call, result);
+                break;
+            case "sendVideoMessage":
+                this.sendVideoMessage(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -534,7 +540,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
-        // 封装文本对象
+        // 封装消息对象
         TIMMessage message = new TIMMessage();
         TIMTextElem textElem = new TIMTextElem();
         textElem.setText(content);
@@ -564,7 +570,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
-        // 封装文本对象
+        // 封装消息对象
         TIMMessage message = new TIMMessage();
         TIMSoundElem soundElem = new TIMSoundElem();
         soundElem.setPath(path);
@@ -587,16 +593,68 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 语音路径
+        // 图片路径
         String path = this.getParam(methodCall, result, "path");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
-        // 封装文本对象
+        // 封装消息对象
         TIMMessage message = new TIMMessage();
         TIMImageElem imageElem = new TIMImageElem();
         imageElem.setPath(path);
         message.addElement(imageElem);
+
+        // 发送消息
+        this.sendMessage(conversation, message, result);
+    }
+
+    /**
+     * 腾讯云 发送视频消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendVideoMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "sendVideoMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 视频路径
+        String path = this.getParam(methodCall, result, "path");
+        // 视频类型
+        String type = this.getParam(methodCall, result, "type");
+        // 视频时长
+        Integer duration = this.getParam(methodCall, result, "duration");
+        // 快照宽度
+        Integer snapshotWidth = this.getParam(methodCall, result, "snapshotWidth");
+        // 快照高度
+        Integer snapshotHeight = this.getParam(methodCall, result, "snapshotHeight");
+        // 快照路径
+        String snapshotPath = this.getParam(methodCall, result, "snapshotPath");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+
+        // 封装消息对象
+        TIMMessage message = new TIMMessage();
+        TIMVideoElem videoElem = new TIMVideoElem();
+
+
+        // 封装视频信息
+        TIMVideo video = new TIMVideo();
+        video.setType(type);
+        video.setDuaration(duration);
+
+        // 封装快照信息
+        TIMSnapshot snapshot = new TIMSnapshot();
+        snapshot.setWidth(snapshotWidth);
+        snapshot.setHeight(snapshotHeight);
+
+        videoElem.setSnapshot(snapshot);
+        videoElem.setVideo(video);
+        videoElem.setSnapshotPath(snapshotPath);
+        videoElem.setVideoPath(path);
+        message.addElement(videoElem);
 
         // 发送消息
         this.sendMessage(conversation, message, result);
@@ -610,7 +668,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result       Flutter返回对象
      */
     private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result) {
-        // 发送文本消息
         conversation.sendMessage(message, new TIMValueCallBack<TIMMessage>() {
             @Override
             public void onError(int code, String desc) {

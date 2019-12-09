@@ -18,6 +18,10 @@ dependencies:
   permission_handler: ^4.0.0
   # 图片选择器(https://pub.dev/packages/image_picker)
   image_picker: ^0.6.1+11
+  # 视频播放器和信息获取(https://pub.dev/packages/flutter_ijkplayer)
+  flutter_ijkplayer: ^0.3.5+1
+  # 视频缩略图
+  thumbnails: ^1.0.1
 
 dev_dependencies:
   flutter_test:

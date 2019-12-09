@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,6 +16,7 @@ import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:thumbnails/thumbnails.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -256,6 +258,12 @@ class ImPageState extends State<ImPage> {
       return MessageImage(url: node.imageData[ImageType.Original].url);
     } else if (node.type == NodeType.Sound) {
       return MessageVoice(path: node.path, duration: node.duration);
+    } else if (node.type == NodeType.Video) {
+      return MessageVideo(
+        path: node.videoPath,
+        duration: node.videoInfo.duaration,
+        snapshotPath: node.snapshotPath,
+      );
     }
   }
 
@@ -400,6 +408,54 @@ class ImPageState extends State<ImPage> {
     }
   }
 
+  /// 选择视频
+  onSelectVideo() async {
+    var video = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    String type = "";
+    List<String> suffix = video.path.split(".");
+    if (suffix.length >= 2) {
+      type = suffix[suffix.length - 1];
+    }
+
+    IjkMediaController controller = IjkMediaController();
+    await controller.setFileDataSource(video);
+    VideoInfo info = await controller.getVideoInfo();
+    String thumb = await Thumbnails.getThumbnail(
+      videoFile: video.path,
+      imageType: ThumbFormat.JPEG,
+      quality: 30,
+    );
+
+    // 发送视频消息
+    TencentImPlugin.sendVideoMessage(
+      sessionId: widget.id,
+      sessionType: widget.type,
+      path: video.path,
+      duration: info.duration.toInt(),
+      type: type,
+      snapshotPath: thumb,
+      snapshotHeight: 0,
+      snapshotWidth: 0,
+    );
+
+    int id = Random().nextInt(999999);
+    // 封装数据对象
+    DataEntity dataEntity = DataEntity(
+      id: id.toString(),
+      userInfo: loginUserInfo,
+      widget: MessageVideo(
+        path: video.path,
+        snapshotPath: thumb,
+        duration: info.duration.toInt(),
+      ),
+      self: true,
+    );
+
+    this.setState(() {
+      data.add(dataEntity);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -451,6 +507,15 @@ class ImPageState extends State<ImPage> {
                     child: Container(
                       child: Icon(
                         Icons.image,
+                      ),
+                      padding: EdgeInsets.only(left: 5, right: 5),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: onSelectVideo,
+                    child: Container(
+                      child: Icon(
+                        Icons.videocam,
                       ),
                       padding: EdgeInsets.only(left: 5, right: 5),
                     ),
@@ -657,7 +722,19 @@ class MessageImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return path != null ? Image.asset(path) : Image.network(url);
+    return Container(
+      height: 100,
+      width: 100,
+      child: path != null
+          ? Image.file(
+              File(path),
+              fit: BoxFit.cover,
+            )
+          : Image.network(
+              url,
+              fit: BoxFit.cover,
+            ),
+    );
   }
 }
 
@@ -693,6 +770,53 @@ class MessageVoice extends StatelessWidget {
           Icon(Icons.subject),
           Text("$duration ″"),
         ],
+      ),
+    );
+  }
+}
+
+/// 消息视频
+class MessageVideo extends StatelessWidget {
+  // 封面截图
+  final String snapshotPath;
+
+  // 路径
+  final String path;
+
+  // 时间
+  final int duration;
+
+  MessageVideo({Key key, this.path, this.duration, this.snapshotPath})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => 0,
+      child: Container(
+        height: 100,
+        width: 100,
+        child: Stack(
+          children: <Widget>[
+            MessageImage(path: snapshotPath),
+            Align(
+              alignment: new FractionalOffset(0.5, 0.5),
+              child: Icon(
+                Icons.play_circle_outline,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+            Positioned(
+              right: 5,
+              bottom: 5,
+              child: Text(
+                "$duration″",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

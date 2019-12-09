@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_ijkplayer:
+    dependency: "direct main"
+    description:
+      name: flutter_ijkplayer
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.5+1"
   flutter_sound:
     dependency: "direct main"
     description:
@@ -198,6 +205,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.11"
+  thumbnails:
+    dependency: "direct main"
+    description:
+      name: thumbnails
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   typed_data:
     dependency: transitive
     description:

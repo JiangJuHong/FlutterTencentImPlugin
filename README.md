@@ -96,4 +96,8 @@ Example中，录音插件使用: flutter_sound，权限请求插件使用: permi
 ``TencentImPlugin.sendImageMessage(sessionId:"",sessionType:SessionType.xxx,path:"图片资源路径")``
 Example中，图片选择插件使用：image_picker
 
+### 发送视频消息
+``TencentImPlugin.sendVoiceMessage(sessionId:"",sessionType:SessionType.xxx,path:"视频资源路径",type:"视频类型，如mp4",duration:时长(秒),snapshotWidth:截图宽度,snapshotHeight:截图高度,snapshotPath:"截图路径")``
+Example中，视频选择插件使用：image_picker，视频播放和信息获取插件为:flutter_ijkplayer，视频缩略图插件使用：thumbnails
+
 ## 对象实体说明

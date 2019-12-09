@@ -169,6 +169,29 @@ class TencentImPlugin {
     });
   }
 
+  /// 发送视频消息
+  static Future<void> sendVideoMessage({
+    String sessionId,
+    SessionType sessionType,
+    String path,
+    String type,
+    int duration,
+    int snapshotWidth,
+    int snapshotHeight,
+    String snapshotPath,
+  }) async {
+    await _channel.invokeMethod('sendVideoMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "path": path,
+      "type": type,
+      "duration": duration,
+      "snapshotWidth": snapshotWidth,
+      "snapshotHeight": snapshotHeight,
+      "snapshotPath": snapshotPath,
+    });
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {
