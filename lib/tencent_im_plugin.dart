@@ -6,7 +6,6 @@ import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
 import 'entity/friend_entity.dart';
-import 'entity/group_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/session_entity.dart';
@@ -200,9 +199,9 @@ class TencentImPlugin {
   }
 
   /// 获得群列表
-  static Future<List<GroupEntity>> getGroupList() async {
+  static Future<List<GroupInfoEntity>> getGroupList() async {
     String data = await _channel.invokeMethod('getGroupList');
-    return ListUtil.generateOBJList<GroupEntity>(jsonDecode(data));
+    return ListUtil.generateOBJList<GroupInfoEntity>(jsonDecode(data));
   }
 
   /// 添加消息监听

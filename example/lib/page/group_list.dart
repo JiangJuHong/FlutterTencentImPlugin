@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
-import 'package:tencent_im_plugin/entity/group_entity.dart';
+import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin_example/page/im.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 
@@ -17,7 +17,7 @@ class GroupListState extends State<GroupList> {
   GlobalKey<RefreshIndicatorState> refreshIndicator = GlobalKey();
 
   /// 数据对象
-  List<GroupEntity> data = [];
+  List<GroupInfoEntity> data = [];
 
   @override
   initState() {
@@ -68,59 +68,10 @@ class GroupListState extends State<GroupList> {
                     fit: BoxFit.cover,
                   ).image,
                 ),
-                title: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        item.groupName,
-                      ),
-                    ),
-//                    Text(
-//                      dateTime == null
-//                          ? ""
-//                          : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
-//                      style: TextStyle(
-//                        color: Colors.grey,
-//                        fontSize: 12,
-//                      ),
-//                    ),
-                  ],
+                title: Text(
+                  item.groupName,
                 ),
-//                subtitle: Row(
-//                  children: <Widget>[
-//                    Expanded(
-//                      child: Text(
-//                        this.onGetMessageDesc(item.message),
-//                        maxLines: 1,
-//                        overflow: TextOverflow.ellipsis,
-//                      ),
-//                    ),
-//                    item.unreadMessageNum != 0
-//                        ? Container(
-//                            margin: EdgeInsets.only(top: 5),
-//                            padding: EdgeInsets.only(
-//                              top: 2,
-//                              bottom: 2,
-//                              left: 6,
-//                              right: 6,
-//                            ),
-//                            decoration: BoxDecoration(
-//                              color: Colors.redAccent,
-//                              borderRadius: BorderRadius.all(
-//                                Radius.circular(100),
-//                              ),
-//                            ),
-//                            child: Text(
-//                              "${item.unreadMessageNum}",
-//                              style: TextStyle(
-//                                color: Colors.white,
-//                                fontSize: 12,
-//                              ),
-//                            ),
-//                          )
-//                        : Text(""),
-//                  ],
-//                ),
+                subtitle: Text("${item.memberNum}人"),
               ),
             );
           },
