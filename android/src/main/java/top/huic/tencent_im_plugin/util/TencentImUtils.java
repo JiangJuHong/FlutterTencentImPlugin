@@ -30,6 +30,7 @@ import java.util.Map;
 import androidx.annotation.RequiresApi;
 import top.huic.tencent_im_plugin.TencentImPlugin;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
 
 /**
@@ -49,37 +50,59 @@ public class TencentImUtils {
             String rootPath = getSystemFilePath(TencentImPlugin.context);
             // 如果是语音，就下载保存
             if (elem.getType() == TIMElemType.Sound) {
-                TIMSoundElem soundElem = (TIMSoundElem) elem;
+                final TIMSoundElem soundElem = (TIMSoundElem) elem;
                 final File file = new File(rootPath + "/" + soundElem.getUuid());
                 if (!file.exists()) {
+                    // 通知参数
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put("type", TIMElemType.Video);
+                    params.put("uuid", soundElem.getUuid());
+                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+
+                    // 下载
                     soundElem.getSoundToFile(file.getPath(), new TIMCallBack() {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + file.getPath());
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }
                 soundElem.setPath(file.getPath());
                 // 如果是视频，就保存缩略图
             } else if (elem.getType() == TIMElemType.Video) {
-                TIMVideoElem videoElem = (TIMVideoElem) elem;
+                final TIMVideoElem videoElem = (TIMVideoElem) elem;
                 // 缩略图文件
                 final File snapshotFile = new File(rootPath + "/" + videoElem.getSnapshotInfo().getUuid());
                 if (!snapshotFile.exists()) {
+                    // 通知参数
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put("type", TIMElemType.Video);
+                    params.put("uuid", videoElem.getSnapshotInfo().getUuid());
+                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+
+
+                    // 下载
                     videoElem.getSnapshotInfo().getImage(snapshotFile.getPath(), new TIMCallBack() {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("type", TIMElemType.Video);
+                            params.put("uuid", videoElem.getSnapshotInfo().getUuid());
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }
@@ -89,15 +112,24 @@ public class TencentImUtils {
                 // 短视频文件
                 final File videoFile = new File(rootPath + "/" + videoElem.getVideoInfo().getUuid());
                 if (!videoFile.exists()) {
+                    // 通知参数
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put("type", TIMElemType.Video);
+                    params.put("uuid", videoElem.getVideoInfo().getUuid());
+                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+
+                    // 下载
                     videoElem.getVideoInfo().getVideo(videoFile.getPath(), new TIMCallBack() {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
+                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }

@@ -72,7 +72,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     /**
      * 与Flutter的通信管道
      */
-    private MethodChannel channel;
+    private static MethodChannel channel;
 
     /**
      * 监听器回调的方法名
@@ -84,7 +84,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
     private TencentImPlugin(Context context, MethodChannel channel) {
         TencentImPlugin.context = context;
-        this.channel = channel;
+        TencentImPlugin.channel = channel;
         JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.mask;
     }
 
@@ -704,7 +704,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param type   类型
      * @param params 参数
      */
-    private void invokeListener(ListenerTypeEnum type, Object params) {
+    public static void invokeListener(ListenerTypeEnum type, Object params) {
         Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
         resultParams.put("params", params == null ? null : JSON.toJSONString(params));

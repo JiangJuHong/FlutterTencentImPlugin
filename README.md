@@ -91,6 +91,8 @@ buildTypes {
 ### 发送语音消息
 ``TencentImPlugin.sendSoundMessage(sessionId:"",sessionType:SessionType.xxx,duration:时长，整型,path:"语音资源路径")``
 Example中，录音插件使用: flutter_sound，权限请求插件使用: permission_handler
+下载语音消息时为异步，有可能出现界面渲染但是还没下载结束的问题，再次，可通过监听器类型:DownloadStart、DownloadSuccess和DownloadFail监听，以uuid作为唯一标识符
+语音下载拥有缓存，只会在第一次时下载
 
 ### 发送图片消息
 ``TencentImPlugin.sendImageMessage(sessionId:"",sessionType:SessionType.xxx,path:"图片资源路径")``
@@ -99,5 +101,7 @@ Example中，图片选择插件使用：image_picker
 ### 发送视频消息
 ``TencentImPlugin.sendVoiceMessage(sessionId:"",sessionType:SessionType.xxx,path:"视频资源路径",type:"视频类型，如mp4",duration:时长(秒),snapshotWidth:截图宽度,snapshotHeight:截图高度,snapshotPath:"截图路径")``
 Example中，视频选择插件使用：image_picker，视频播放和信息获取插件为:flutter_ijkplayer，视频缩略图插件使用：thumbnails
+下载视频封面和视频时为异步，有可能出现界面渲染但是还没下载结束的问题，再次，可通过监听器类型:DownloadSuccess和DownloadFail监听，以uuid作为唯一标识符
+视频下载拥有缓存，只会在第一次时下载
 
 ## 对象实体说明

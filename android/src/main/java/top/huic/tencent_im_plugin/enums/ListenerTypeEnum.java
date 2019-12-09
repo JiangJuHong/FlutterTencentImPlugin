@@ -54,4 +54,16 @@ public enum ListenerTypeEnum {
      * 群消息
      */
     GroupTips,
+    /**
+     * 开始下载
+     */
+    DownloadStart,
+    /**
+     * 下载成功
+     */
+    DownloadSuccess,
+    /**
+     * 下载失败
+     */
+    DownloadFail
 }

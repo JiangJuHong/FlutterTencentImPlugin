@@ -310,4 +310,13 @@ enum ListenerTypeEnum {
 
   /// 群消息
   GroupTips,
+
+  /// 下载开始
+  DownloadStart,
+
+  /// 下载成功
+  DownloadSuccess,
+
+  /// 下载失败
+  DownloadFail
 }
