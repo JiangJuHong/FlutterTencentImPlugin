@@ -17,6 +17,7 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.TIMVideoElem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,10 +46,11 @@ public class TencentImUtils {
         List<TIMElem> elems = new ArrayList<>();
         for (int i = 0; i < message.getElementCount(); i++) {
             TIMElem elem = message.getElement(i);
+            String rootPath = getSystemFilePath(TencentImPlugin.context);
             // 如果是语音，就下载保存
             if (elem.getType() == TIMElemType.Sound) {
                 TIMSoundElem soundElem = (TIMSoundElem) elem;
-                final File file = new File(getSystemFilePath(TencentImPlugin.context) + "/" + ((TIMSoundElem) elem).getUuid());
+                final File file = new File(rootPath + "/" + soundElem.getUuid());
                 if (!file.exists()) {
                     soundElem.getSoundToFile(file.getPath(), new TIMCallBack() {
                         @Override
@@ -63,6 +65,43 @@ public class TencentImUtils {
                     });
                 }
                 soundElem.setPath(file.getPath());
+                // 如果是视频，就保存缩略图
+            } else if (elem.getType() == TIMElemType.Video) {
+                TIMVideoElem videoElem = (TIMVideoElem) elem;
+                // 缩略图文件
+                final File snapshotFile = new File(rootPath + "/" + videoElem.getSnapshotInfo().getUuid());
+                if (!snapshotFile.exists()) {
+                    videoElem.getSnapshotInfo().getImage(snapshotFile.getPath(), new TIMCallBack() {
+                        @Override
+                        public void onError(int code, String desc) {
+                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
+                        }
+                    });
+                }
+                videoElem.setSnapshotPath(snapshotFile.getPath());
+
+
+                // 短视频文件
+                final File videoFile = new File(rootPath + "/" + videoElem.getVideoInfo().getUuid());
+                if (!videoFile.exists()) {
+                    videoElem.getVideoInfo().getVideo(videoFile.getPath(), new TIMCallBack() {
+                        @Override
+                        public void onError(int code, String desc) {
+                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
+                        }
+                    });
+                }
+                videoElem.setVideoPath(videoFile.getPath());
             }
             elems.add(elem);
         }

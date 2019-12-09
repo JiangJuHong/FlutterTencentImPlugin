@@ -1,6 +1,7 @@
 import 'node_text_entity.dart';
 import 'node_image_entity.dart';
 import 'node_sound_entity.dart';
+import 'node_video_entity.dart';
 
 /// 节点最上层
 class NodeEntity {
@@ -27,6 +28,9 @@ class NodeEntity {
     } else if (json["type"] ==
         NodeType.Sound.toString().replaceFirst("NodeType.", "")) {
       return NodeSoundEntity.fromJson(json);
+    } else if (json["type"] ==
+        NodeType.Video.toString().replaceFirst("NodeType.", "")) {
+      return NodeVideoEntity.fromJson(json);
     }
     return null;
   }

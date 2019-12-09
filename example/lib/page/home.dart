@@ -8,6 +8,7 @@ import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
 import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:tencent_im_plugin/entity/node_video_entity.dart';
 import 'package:tencent_im_plugin_example/page/im.dart';
 
 /// 首页
@@ -98,6 +99,8 @@ class HomePageState extends State<HomePage> {
       return "[图片]";
     } else if (node is NodeSoundEntity) {
       return "[语音]";
+    } else if (node is NodeVideoEntity) {
+      return "[视频]";
     }
 
     return "";
