@@ -774,15 +774,24 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String id = this.getParam(methodCall, result, "id");
         // 备注
         String remark = methodCall.argument("remark");
+        if (remark == null) {
+            remark = "";
+        }
         // 请求说明
         String addWording = methodCall.argument("addWording");
+        if (addWording == null) {
+            addWording = "";
+        }
         // 添加来源
         String addSource = methodCall.argument("addSource");
+        if (addSource == null) {
+            addSource = "";
+        }
         // 分组名
         String friendGroup = methodCall.argument("friendGroup");
-
-        // 测试
-        Log.i(TAG, "addFriend: 测试");
+        if (friendGroup == null) {
+            friendGroup = "";
+        }
 
 
         TIMFriendRequest request = new TIMFriendRequest(id);
@@ -790,8 +799,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         request.setAddWording(addWording);
         request.setAddSource(addSource);
         request.setFriendGroup(friendGroup);
-
-        Log.i(TAG, "addFriend: 测试222");
 
         // 添加好友
         TIMFriendshipManager.getInstance().addFriend(request, new TIMValueCallBack<TIMFriendResult>() {
