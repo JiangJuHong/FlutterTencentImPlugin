@@ -11,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 
@@ -42,6 +42,6 @@ android {
     }
     dependencies {
         api 'com.tencent.imsdk:imsdk:4.6.1'
-        api 'com.alibaba:fastjson:1.1.54.android'
+        api 'com.alibaba:fastjson:1.2.55'
     }
 }

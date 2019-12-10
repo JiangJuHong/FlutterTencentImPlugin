@@ -11,10 +11,12 @@ import 'package:tencent_im_plugin/list_util.dart';
 import 'entity/friend_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
+import 'entity/pendency_entity.dart';
 import 'entity/session_entity.dart';
 import 'entity/user_info_entity.dart';
 import 'enums/friend_add_type_enum.dart';
 import 'enums/friend_check_type_enum.dart';
+import 'enums/pendency_type_enum.dart';
 
 class TencentImPlugin {
   static const MethodChannel _channel =
@@ -248,13 +250,23 @@ class TencentImPlugin {
   }
 
   /// 删除单个好友
-  static Future<CheckFriendResultEntity> removeSingleFriends({
-    @required String id,
+//  static Future<CheckFriendResultEntity> removeSingleFriend({
+//    @required String id,
+//  }) async {
+//    String data = await _channel.invokeMethod('removeSingleFriend', {
+//      "id": id,
+//    });
+//    return CheckFriendResultEntity.fromJson(jsonDecode(data));
+//  }
+
+  /// 获得未决好友列表
+  static Future<List<PendencyEntity>> getPendencyList({
+    @required PendencyTypeEnum type,
   }) async {
-    String data = await _channel.invokeMethod('removeSingleFriends', {
-      "id": id,
+    String data = await _channel.invokeMethod('getPendencyList', {
+      "type": PendencyTypeTool.getIndexByEnum(type),
     });
-    return CheckFriendResultEntity.fromJson(jsonDecode(data));
+    return ListUtil.generateOBJList<PendencyEntity>(jsonDecode(data));
   }
 
   /// 添加消息监听

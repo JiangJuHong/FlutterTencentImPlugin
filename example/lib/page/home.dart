@@ -4,6 +4,8 @@ import 'package:tencent_im_plugin_example/page/friend_list.dart';
 import 'package:tencent_im_plugin_example/page/group_list.dart';
 import 'package:tencent_im_plugin_example/page/im_list.dart';
 
+import 'apply_list.dart';
+
 /// 首页
 class HomePage extends StatefulWidget {
   @override
@@ -23,6 +25,12 @@ class HomePageState extends State<HomePage> {
       title: "好友",
       selectedIcon: Icon(Icons.supervised_user_circle),
       unselectedIcon: Icon(Icons.supervised_user_circle),
+    ),
+    NavigationBarData(
+      widget: ApplyList(),
+      title: "申请列表",
+      selectedIcon: Icon(Icons.find_replace),
+      unselectedIcon: Icon(Icons.group),
     ),
     NavigationBarData(
       widget: GroupList(),
@@ -53,7 +61,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("首页(会话列表)"),
+        title: Text("首页"),
       ),
       body: IndexedStack(
         index: currentIndex,

@@ -116,4 +116,7 @@ Example中，视频选择插件使用：image_picker，视频播放和信息获�
 ### 检测单个好友关系
 ``TencentImPlugin.checkSingleFriends(id:用户ID,type:FriendCheckTypeEnum.unidirection)``
 
+### 获得未决好友列表(申请列表)
+``TencentImPlugin.getPendencyList(type:PendencyTypeEnum.BOTH)``
+
 ## 对象实体说明

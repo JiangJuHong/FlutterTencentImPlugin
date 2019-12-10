@@ -33,7 +33,7 @@ import top.huic.tencent_im_plugin.TencentImPlugin;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
-import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
+import top.huic.tencent_im_plugin.ValueCallBack;
 
 /**
  * 腾讯云IM工具类
@@ -92,11 +92,11 @@ public class TencentImUtils {
 
         // 获取群资料
         if (groupInfo.size() != 0) {
-            TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+            TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new ValueCallBack<List<TIMGroupDetailInfoResult>>() {
                 @Override
                 public void onError(int code, String desc) {
                     Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
-                    callback.error(code, desc);
+                    callback.onError(code, desc);
                 }
 
                 @Override
@@ -112,7 +112,7 @@ public class TencentImUtils {
 
                     // 回调成功
                     if (++currentIndex[0] >= maxIndex) {
-                        callback.success(resultData);
+                        callback.onSuccess(resultData);
                     }
                 }
             });
@@ -124,7 +124,7 @@ public class TencentImUtils {
                 @Override
                 public void onError(int code, String desc) {
                     Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
-                    callback.error(code, desc);
+                    callback.onError(code, desc);
                 }
 
                 @Override
@@ -137,10 +137,10 @@ public class TencentImUtils {
                             sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
                         }
                     }
-                    
+
                     // 回调成功
                     if (++currentIndex[0] >= maxIndex) {
-                        callback.success(resultData);
+                        callback.onSuccess(resultData);
                     }
                 }
             });
@@ -301,7 +301,7 @@ public class TencentImUtils {
         TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
             @Override
             public void onError(int code, String desc) {
-                callBack.error(code, desc);
+                callBack.onError(code, desc);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -324,7 +324,7 @@ public class TencentImUtils {
                         return o1.getTimestamp().compareTo(o2.getTimestamp());
                     }
                 });
-                callBack.success(messageEntities);
+                callBack.onSuccess(messageEntities);
             }
         });
     }
