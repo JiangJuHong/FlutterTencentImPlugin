@@ -331,7 +331,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
-        new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
+        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
             @Override
             public void success(List<SessionEntity> data) {
                 result.success(JSON.toJSONString(data));
@@ -966,7 +966,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         public void onRefreshConversation(List<TIMConversation> list) {
             Log.d(TAG, "onRefreshConversation: ");
             // 获取资料后调用回调
-            new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
+            TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
                 @Override
                 public void success(List<SessionEntity> data) {
                     invokeListener(ListenerTypeEnum.RefreshConversation, data);

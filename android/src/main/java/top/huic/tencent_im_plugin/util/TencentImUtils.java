@@ -5,19 +5,20 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.Map;
 import androidx.annotation.RequiresApi;
 import top.huic.tencent_im_plugin.TencentImPlugin;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
+import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
 
@@ -37,6 +39,95 @@ import top.huic.tencent_im_plugin.interfaces.ValueCallBack;
  * 腾讯云IM工具类
  */
 public class TencentImUtils {
+
+    /**
+     * 获得会话信息
+     *
+     * @param callback      回调对象
+     * @param conversations 原生会话列表
+     */
+    public static void getConversationInfo(final ValueCallBack<List<SessionEntity>> callback, final List<TIMConversation> conversations) {
+        final List<SessionEntity> resultData = new ArrayList<>();
+
+        // 需要获取用户信息的列表
+        final Map<String, SessionEntity> userInfo = new HashMap<>();
+
+        // 需要获取的群信息列表
+        final Map<String, SessionEntity> groupInfo = new HashMap<>();
+
+        // 获取会话列表
+        for (final TIMConversation timConversation : conversations) {
+            // 封装会话信息
+            SessionEntity entity = new SessionEntity();
+            entity.setId(timConversation.getPeer());
+            entity.setNickname(timConversation.getGroupName());
+            entity.setType(timConversation.getType());
+            entity.setUnreadMessageNum(timConversation.getUnreadMessageNum());
+
+            // 获取资料
+            if (timConversation.getType() == TIMConversationType.C2C) {
+                userInfo.put(timConversation.getPeer(), entity);
+            } else if (timConversation.getType() == TIMConversationType.Group) {
+                groupInfo.put(timConversation.getPeer(), entity);
+            }
+
+            // 获取最后一条消息
+            TIMMessage lastMsg = timConversation.getLastMsg();
+            if (lastMsg != null) {
+                // 封装消息信息
+                MessageEntity messageEntity = new MessageEntity();
+                messageEntity.setId(lastMsg.getMsgId());
+                messageEntity.setTimestamp(lastMsg.timestamp());
+                messageEntity.setElemList(TencentImUtils.getArrrElement(lastMsg));
+                entity.setMessage(messageEntity);
+            }
+            resultData.add(entity);
+        }
+
+        // 获取群资料
+        TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+            @Override
+            public void onError(int code, String desc) {
+                Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
+                callback.error(code, desc);
+            }
+
+            @Override
+            public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                // 设置群资料
+                for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
+                    SessionEntity sessionEntity = groupInfo.get(timGroupDetailInfoResult.getGroupId());
+                    if (sessionEntity != null) {
+                        sessionEntity.setNickname(timGroupDetailInfoResult.getGroupName());
+                        sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
+                    }
+                }
+                // 获取用户资料
+                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                    @Override
+                    public void onError(int code, String desc) {
+                        Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                        callback.error(code, desc);
+                    }
+
+                    @Override
+                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        // 设置用户资料
+                        for (TIMUserProfile timUserProfile : timUserProfiles) {
+                            SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
+                            if (sessionEntity != null) {
+                                sessionEntity.setNickname(timUserProfile.getNickName());
+                                sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
+                            }
+                        }
+                        // 回调成功
+                        callback.success(resultData);
+                    }
+                });
+            }
+        });
+    }
+
     /**
      * 根据Message对象获得所有节点
      *
