@@ -247,6 +247,16 @@ class TencentImPlugin {
     return CheckFriendResultEntity.fromJson(jsonDecode(data));
   }
 
+  /// 删除单个好友
+  static Future<CheckFriendResultEntity> removeSingleFriends({
+    @required String id,
+  }) async {
+    String data = await _channel.invokeMethod('removeSingleFriends', {
+      "id": id,
+    });
+    return CheckFriendResultEntity.fromJson(jsonDecode(data));
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {
