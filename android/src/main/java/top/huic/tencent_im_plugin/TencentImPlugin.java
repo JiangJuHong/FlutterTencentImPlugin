@@ -41,6 +41,7 @@ import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
 import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 import com.tencent.imsdk.friendship.TIMFriendRequest;
+import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
 
@@ -59,6 +60,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.PendencyEntity;
+import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
@@ -183,6 +185,15 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "getPendencyList":
                 this.getPendencyList(call, result);
+                break;
+            case "pendencyReport":
+                this.pendencyReport(call, result);
+                break;
+            case "deletePendency":
+                this.deletePendency(call, result);
+                break;
+            case "examinePendency":
+                this.examinePendency(call, result);
                 break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
@@ -762,10 +773,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Log.d(TAG, "getPendencyList: ");
         // 类型
         int type = this.getParam(methodCall, result, "type");
+        // 未决列表序列号。建议客户端保存 seq 和未决列表，请求时填入 server 返回的 seq。如果 seq 是 server 最新的，则不返回数据
+        int seq = methodCall.argument("seq");
+        // 翻页时间戳，只用来翻页，server 返回0时表示没有更多数据，第一次请求填0
+        int timestamp = methodCall.argument("timestamp");
+        // 每页的数量，请求时有效
+        int numPerPage = methodCall.argument("numPerPage");
 
         // 封装请求对象
         TIMFriendPendencyRequest request = new TIMFriendPendencyRequest();
         request.setTimPendencyGetType(type);
+        request.setSeq(seq);
+        request.setTimestamp(timestamp);
+        request.setNumPerPage(numPerPage);
+
 
         TIMFriendshipManager.getInstance().getPendencyList(request, new ValueCallBack<TIMFriendPendencyResponse>(result) {
             @Override
@@ -799,12 +820,80 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                             }
                         }
 
+                        // 封装返回对象
+                        PendencyPageEntiity response = new PendencyPageEntiity();
+                        response.setItems(resultData);
+
                         // 返回结果
-                        result.success(JSON.toJSONString(resultData));
+                        result.success(JSON.toJSONString(response));
                     }
                 });
             }
         });
+    }
+
+    /**
+     * 腾讯云 未决已读上报
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void pendencyReport(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "pendencyReport: ");
+        // 已读时间戳，此时间戳以前的消息都将置为已读
+        int timestamp = this.getParam(methodCall, result, "timestamp");
+        TIMFriendshipManager.getInstance().pendencyReport(timestamp, new TIMCallBack() {
+            @Override
+            public void onError(int code, String desc) {
+                result.error(desc, String.valueOf(code), null);
+            }
+
+            @Override
+            public void onSuccess() {
+                result.success(null);
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 未决删除
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deletePendency(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deletePendency: ");
+        // 类型
+        int type = this.getParam(methodCall, result, "type");
+
+        // 用户Id
+        String id = this.getParam(methodCall, result, "id");
+
+        // 删除未决
+        TIMFriendshipManager.getInstance().deletePendency(type, Collections.singletonList(id), new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 未决审核
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void examinePendency(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "examinePendency: ");
+        // 类型
+        int type = this.getParam(methodCall, result, "type");
+        // 用户Id
+        String id = this.getParam(methodCall, result, "id");
+        // 好友备注
+        String remark = methodCall.argument("remark");
+
+        // 未决审核
+        TIMFriendResponse response = new TIMFriendResponse();
+        response.setIdentifier(id);
+        response.setResponseType(type);
+        response.setRemark(remark);
+        TIMFriendshipManager.getInstance().doResponse(response, new ValueCallBack<TIMFriendResult>(result));
     }
 
     /**

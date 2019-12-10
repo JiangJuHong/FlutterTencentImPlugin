@@ -11,14 +11,15 @@ class PendencyEntity {
   PendencyTypeEnum type;
   UserInfoEntity userProfile;
 
-  PendencyEntity(
-      {this.identifier,
-      this.addSource,
-      this.addTime,
-      this.addWording,
-      this.nickname,
-      this.type,
-      this.userProfile});
+  PendencyEntity({
+    this.identifier,
+    this.addSource,
+    this.addTime,
+    this.addWording,
+    this.nickname,
+    this.type,
+    this.userProfile,
+  });
 
   PendencyEntity.fromJson(Map<String, dynamic> json) {
     identifier = json['identifier'];

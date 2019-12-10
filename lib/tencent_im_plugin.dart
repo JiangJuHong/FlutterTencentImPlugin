@@ -12,10 +12,12 @@ import 'entity/friend_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/pendency_entity.dart';
+import 'entity/pendency_page_entity.dart';
 import 'entity/session_entity.dart';
 import 'entity/user_info_entity.dart';
 import 'enums/friend_add_type_enum.dart';
 import 'enums/friend_check_type_enum.dart';
+import 'enums/pendency_examine_type_enum.dart';
 import 'enums/pendency_type_enum.dart';
 
 class TencentImPlugin {
@@ -260,13 +262,52 @@ class TencentImPlugin {
 //  }
 
   /// 获得未决好友列表
-  static Future<List<PendencyEntity>> getPendencyList({
+  static Future<PendencyPageEntity> getPendencyList({
+    int seq: 0,
+    int timestamp: 0,
+    int numPerPage: 0,
     @required PendencyTypeEnum type,
   }) async {
     String data = await _channel.invokeMethod('getPendencyList', {
       "type": PendencyTypeTool.getIndexByEnum(type),
+      "seq": seq,
+      "timestamp": timestamp,
+      "numPerPage": numPerPage,
     });
-    return ListUtil.generateOBJList<PendencyEntity>(jsonDecode(data));
+    return EntityFactory.generateOBJ<PendencyPageEntity>(jsonDecode(data));
+  }
+
+  /// 设置未决已读
+  static Future<void> pendencyReport({
+    int timestamp: 0,
+  }) async {
+    await _channel.invokeMethod('pendencyReport', {
+      "timestamp": timestamp,
+    });
+  }
+
+  /// 未决删除
+  static Future<void> deletePendency({
+    @required PendencyTypeEnum type,
+    @required String id,
+  }) async {
+    await _channel.invokeMethod('deletePendency', {
+      "id": id,
+      "type": PendencyTypeTool.getIndexByEnum(type),
+    });
+  }
+
+  /// 未决审核(通过/拒绝)
+  static Future<void> examinePendency({
+    @required PendencyExamineTypeEnum type,
+    @required String id,
+    String remark,
+  }) async {
+    await _channel.invokeMethod('examinePendency', {
+      "id": id,
+      "remark": remark,
+      "type": PendencyExamineTypeEnumTool.getIndexByEnum(type),
+    });
   }
 
   /// 添加消息监听

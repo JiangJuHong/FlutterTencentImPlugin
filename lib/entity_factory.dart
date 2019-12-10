@@ -7,6 +7,7 @@ import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_text_entity.dart';
+import 'package:tencent_im_plugin/entity/pendency_page_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_entity.dart';
@@ -34,6 +35,8 @@ class EntityFactory {
       return NodeEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeTextEntity") {
       return NodeTextEntity.fromJson(json) as T;
+    } else if (T.toString() == "PendencyPageEntity") {
+      return PendencyPageEntity.fromJson(json) as T;
     } else if (T.toString() == "MessageEntity") {
       return MessageEntity.fromJson(json) as T;
     } else if (T.toString() == "UserInfoEntity") {

@@ -117,6 +117,15 @@ Example中，视频选择插件使用：image_picker，视频播放和信息获�
 ``TencentImPlugin.checkSingleFriends(id:用户ID,type:FriendCheckTypeEnum.unidirection)``
 
 ### 获得未决好友列表(申请列表)
-``TencentImPlugin.getPendencyList(type:PendencyTypeEnum.BOTH)``
+``TencentImPlugin.getPendencyList(type:PendencyTypeEnum.BOTH,seq: 0,timestamp: 0,numPerPage: 0,)``
+
+### 未决已读
+``TencentImPlugin.pendencyReport(timestamp: 0,)``
+
+### 未决删除
+``TencentImPlugin.deletePendency(type:PendencyTypeEnum.BOTH,id:"123")``
+
+### 未决审核
+``TencentImPlugin.examinePendency(type:PendencyExamineTypeEnum.AGREE_AND_ADD,id:"123",remark:"123123")``
 
 ## 对象实体说明
