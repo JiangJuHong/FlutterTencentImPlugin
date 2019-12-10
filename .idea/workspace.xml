@@ -2,26 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7a1fd1e-29aa-41c6-9e69-2be488526475" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/entity/PendencyPageEntiity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/android/src/main/java/top/huic/tencent_im_plugin/entity/PendencyPageEntiity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/entity/pendency_page_entity.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/enums/pendency_examine_type_enum.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/entity/pendency_page_entity.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/enums/pendency_examine_type_enum.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/example/lib/page/apply_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/example/lib/page/apply_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/entity/pendency_entity.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/entity/pendency_entity.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/entity_factory.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/entity_factory.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/tencent_im_plugin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/tencent_im_plugin.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/page/apply_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/page/apply_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/entity/pendency_entity.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/entity/pendency_entity.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/entity_factory.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/entity_factory.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/tencent_im_plugin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/tencent_im_plugin.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,6 +17,18 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="GSLDU16824001098" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/tencent_im_plugin.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="326">
+              <caret line="265" column="15" lean-forward="true" selection-start-line="265" selection-start-column="15" selection-end-line="265" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/entity/pendency_page_entity.dart">
           <provider selected="true" editor-type-id="text-editor">
@@ -56,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/entity/pendency_entity.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
+            <state relative-caret-position="357">
               <caret line="21" column="2" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
@@ -65,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/example/lib/page/apply_list.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="63" column="7" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+            <state relative-caret-position="448">
+              <caret line="75" column="7" lean-forward="true" selection-start-line="75" selection-start-column="7" selection-end-line="75" selection-end-column="7" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -80,7 +74,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
+            <state relative-caret-position="2023">
               <caret line="119" column="45" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
             </state>
           </provider>
@@ -182,7 +176,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -278,6 +271,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -438,7 +432,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.2753358" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.2783883" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -448,7 +442,7 @@
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.3295063" />
       <window_info anchor="bottom" id="Run" order="1" />
       <window_info anchor="bottom" id="TODO" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.32857144" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.32857144" />
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.32857144" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="6" side_tool="true" />
@@ -497,7 +491,8 @@
     <MESSAGE value="修复无群组时报错问题" />
     <MESSAGE value="修改获取会话方式" />
     <MESSAGE value="完成好友未决列表" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成好友未决列表" />
+    <MESSAGE value="完成未决相关" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成未决相关" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -861,13 +856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/entity/add_friend_result_entity.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/enums/friend_status_enum.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
@@ -889,9 +877,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/entity/pendency_page_entity.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/entity/add_friend_result_entity.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/entity/pendency_entity.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
+        <state relative-caret-position="357">
           <caret line="21" column="2" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
           <folding>
             <element signature="e#0#64#0" expanded="true" />
@@ -901,34 +903,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
+        <state relative-caret-position="2023">
           <caret line="119" column="45" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/tencent_im_plugin.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="301" column="37" selection-start-line="301" selection-start-column="14" selection-end-line="301" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/entity/pendency_page_entity.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/page/apply_list.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="63" column="7" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+        <state relative-caret-position="448">
+          <caret line="75" column="7" lean-forward="true" selection-start-line="75" selection-start-column="7" selection-end-line="75" selection-end-column="7" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/tencent_im_plugin.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="265" column="15" lean-forward="true" selection-start-line="265" selection-start-column="15" selection-end-line="265" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>

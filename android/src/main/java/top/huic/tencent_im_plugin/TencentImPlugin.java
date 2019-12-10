@@ -792,7 +792,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(TIMFriendPendencyResponse timFriendPendencyResponse) {
                 if (timFriendPendencyResponse.getItems().size() == 0) {
-                    result.success(JSON.toJSONString(new ArrayList<>()));
+                    result.success(JSON.toJSONString(new HashMap<>()));
                     return;
                 }
 
