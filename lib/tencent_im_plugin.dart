@@ -232,7 +232,7 @@ class TencentImPlugin {
   }) async {
     String data = await _channel.invokeMethod('checkSingleFriends', {
       "id": id,
-      "type": type == null ? null : FriendCheckTypeTool.getEnumByIndex(type),
+      "type": type == null ? null : FriendCheckTypeTool.getIndexByEnum(type),
     });
     return CheckFriendResultEntity.fromJson(jsonDecode(data));
   }
