@@ -48,9 +48,9 @@ public class GetSessionList {
      * @param callback 回调对象
      * @param data     数据对象
      */
-    private void appendIndex(final ValueCallBack<List<SessionEntity>> callback, List<SessionEntity> data) {
-        synchronized (sync){
-            if (++index == maxIndex) {
+    private synchronized void appendIndex(final ValueCallBack<List<SessionEntity>> callback, List<SessionEntity> data) {
+        synchronized (sync) {
+            if (++index >= maxIndex) {
                 index = 0;
                 callback.success(data);
             }
@@ -102,12 +102,12 @@ public class GetSessionList {
         }
 
         // 如果有用户信息
-        if(userInfo.size() >= 1){
+        if (userInfo.size() >= 1) {
             maxIndex++;
         }
 
         // 如果有群信息
-        if(groupInfo.size() >= 1){
+        if (groupInfo.size() >= 1) {
             maxIndex++;
         }
 

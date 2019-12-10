@@ -334,7 +334,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         new GetSessionList().getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
             @Override
             public void success(List<SessionEntity> data) {
-                result.success(JSON.toJSONString(data == null ? new ArrayList<>() : data));
+                result.success(JSON.toJSONString(data));
             }
 
             @Override

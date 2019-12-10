@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7a1fd1e-29aa-41c6-9e69-2be488526475" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/GetSessionList.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/GetSessionList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/top/huic/tencent_im_plugin/TencentImPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/tencent_im_plugin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/tencent_im_plugin/lib/tencent_im_plugin.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/tencent_im_plugin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/tencent_im_plugin.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +20,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/tencent_im_plugin.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="224" column="12" lean-forward="true" selection-start-line="224" selection-start-column="12" selection-end-line="224" selection-end-column="12" />
+            <state relative-caret-position="499">
+              <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -437,7 +435,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575945441048</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="修复无群组时报错问题">
+      <created>1575958851884</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1575958851884</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -491,7 +496,8 @@
     <MESSAGE value="完成添加好友和检测好友关系" />
     <MESSAGE value="修改检测好友关系时错误关系引用" />
     <MESSAGE value="添加好友时增加类型字段" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加好友时增加类型字段" />
+    <MESSAGE value="修复无群组时报错问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复无群组时报错问题" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -861,8 +867,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/tencent_im_plugin.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="224" column="12" lean-forward="true" selection-start-line="224" selection-start-column="12" selection-end-line="224" selection-end-column="12" />
+        <state relative-caret-position="499">
+          <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
