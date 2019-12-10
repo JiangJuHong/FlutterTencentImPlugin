@@ -84,48 +84,67 @@ public class TencentImUtils {
             resultData.add(entity);
         }
 
+        // 初始化计数器
+        final int maxIndex = (userInfo.size() != 0 ? 1 : 0) + (groupInfo.size() != 0 ? 1 : 0);
+
+        // 当前计数器
+        final int[] currentIndex = {0};
+
         // 获取群资料
-        TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
-            @Override
-            public void onError(int code, String desc) {
-                Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
-                callback.error(code, desc);
-            }
-
-            @Override
-            public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
-                // 设置群资料
-                for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
-                    SessionEntity sessionEntity = groupInfo.get(timGroupDetailInfoResult.getGroupId());
-                    if (sessionEntity != null) {
-                        sessionEntity.setNickname(timGroupDetailInfoResult.getGroupName());
-                        sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
-                    }
+        if (groupInfo.size() != 0) {
+            TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
+                    callback.error(code, desc);
                 }
-                // 获取用户资料
-                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
-                        callback.error(code, desc);
+
+                @Override
+                public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                    // 设置群资料
+                    for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
+                        SessionEntity sessionEntity = groupInfo.get(timGroupDetailInfoResult.getGroupId());
+                        if (sessionEntity != null) {
+                            sessionEntity.setNickname(timGroupDetailInfoResult.getGroupName());
+                            sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
+                        }
                     }
 
-                    @Override
-                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                        // 设置用户资料
-                        for (TIMUserProfile timUserProfile : timUserProfiles) {
-                            SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
-                            if (sessionEntity != null) {
-                                sessionEntity.setNickname(timUserProfile.getNickName());
-                                sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
-                            }
-                        }
-                        // 回调成功
+                    // 回调成功
+                    if (++currentIndex[0] >= maxIndex) {
                         callback.success(resultData);
                     }
-                });
-            }
-        });
+                }
+            });
+        }
+
+        // 获取用户资料
+        if (userInfo.size() != 0) {
+            TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+                @Override
+                public void onError(int code, String desc) {
+                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+                    callback.error(code, desc);
+                }
+
+                @Override
+                public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                    // 设置用户资料
+                    for (TIMUserProfile timUserProfile : timUserProfiles) {
+                        SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
+                        if (sessionEntity != null) {
+                            sessionEntity.setNickname(timUserProfile.getNickName());
+                            sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
+                        }
+                    }
+                    
+                    // 回调成功
+                    if (++currentIndex[0] >= maxIndex) {
+                        callback.success(resultData);
+                    }
+                }
+            });
+        }
     }
 
     /**
