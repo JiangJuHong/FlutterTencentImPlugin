@@ -772,6 +772,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         // 用户Id
         String id = this.getParam(methodCall, result, "id");
+        // 添加类型
+        int addType = this.getParam(methodCall, result, "addType");
         // 备注
         String remark = methodCall.argument("remark");
         if (remark == null) {
@@ -797,8 +799,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMFriendRequest request = new TIMFriendRequest(id);
         request.setRemark(remark);
         request.setAddWording(addWording);
-        request.setAddSource(addSource);
+        request.setAddSource("AddSource_Type_" + addSource);
         request.setFriendGroup(friendGroup);
+        request.setAddType(addType);
 
         // 添加好友
         TIMFriendshipManager.getInstance().addFriend(request, new TIMValueCallBack<TIMFriendResult>() {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
@@ -12,6 +13,7 @@ import 'entity/group_info_entity.dart';
 import 'entity/message_entity.dart';
 import 'entity/session_entity.dart';
 import 'entity/user_info_entity.dart';
+import 'enums/friend_add_type_enum.dart';
 import 'enums/friend_check_type_enum.dart';
 
 class TencentImPlugin {
@@ -22,12 +24,13 @@ class TencentImPlugin {
   static TencentImPluginListener listener;
 
   /// 初始化腾讯云IM插件
-  static Future<void> init({String appid}) async {
+  static Future<void> init({@required String appid}) async {
     await _channel.invokeMethod('init', {"appid": appid});
   }
 
   /// 登录腾讯云IM
-  static Future<void> login({String identifier, String userSig}) async {
+  static Future<void> login(
+      {@required String identifier, @required String userSig}) async {
     await _channel
         .invokeMethod('login', {"identifier": identifier, "userSig": userSig});
   }
@@ -46,7 +49,7 @@ class TencentImPlugin {
 
   /// 获得群信息
   /// @return 群ID
-  static Future<GroupInfoEntity> getGroupInfo({id}) async {
+  static Future<GroupInfoEntity> getGroupInfo({@required id}) async {
     final String result =
         await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
@@ -57,7 +60,7 @@ class TencentImPlugin {
 
   /// 获得用户信息
   /// @return 用户ID
-  static Future<UserInfoEntity> getUserInfo({id}) async {
+  static Future<UserInfoEntity> getUserInfo({@required id}) async {
     final String result =
         await _channel.invokeMethod('getUserInfo', {"id": id});
     if (result != null) {
@@ -89,9 +92,9 @@ class TencentImPlugin {
   /// @param number 拉取消息数量
   /// @return 消息列表集合
   static Future<List<MessageEntity>> getMessages({
-    String sessionId,
-    SessionType sessionType,
-    int number,
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required int number,
   }) async {
     final String data = await _channel.invokeMethod('getMessages', {
       "sessionId": sessionId,
@@ -107,9 +110,9 @@ class TencentImPlugin {
   /// @param number 拉取消息数量
   /// @return 消息列表集合
   static Future<List<MessageEntity>> getLocalMessages({
-    String sessionId,
-    SessionType sessionType,
-    int number,
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required int number,
   }) async {
     final String data = await _channel.invokeMethod('getLocalMessages', {
       "sessionId": sessionId,
@@ -120,14 +123,14 @@ class TencentImPlugin {
   }
 
   /// 初始化本地存储
-  static Future<void> initStorage({String identifier}) async {
+  static Future<void> initStorage({@required String identifier}) async {
     await _channel.invokeMethod('initStorage', {"identifier": identifier});
   }
 
   /// 设置会话消息为已读
   static Future<void> setRead({
-    String sessionId,
-    SessionType sessionType,
+    @required String sessionId,
+    @required SessionType sessionType,
   }) async {
     await _channel.invokeMethod('setRead', {
       "sessionId": sessionId,
@@ -136,8 +139,11 @@ class TencentImPlugin {
   }
 
   /// 发送文本消息
-  static Future<void> sendTextMessage(
-      {String sessionId, SessionType sessionType, String content}) async {
+  static Future<void> sendTextMessage({
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required String content,
+  }) async {
     await _channel.invokeMethod('sendTextMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
@@ -146,11 +152,12 @@ class TencentImPlugin {
   }
 
   /// 发送语音消息
-  static Future<void> sendSoundMessage(
-      {String sessionId,
-      SessionType sessionType,
-      String path,
-      int duration}) async {
+  static Future<void> sendSoundMessage({
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required String path,
+    @required int duration,
+  }) async {
     await _channel.invokeMethod('sendSoundMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
@@ -161,9 +168,9 @@ class TencentImPlugin {
 
   /// 发送图片消息
   static Future<void> sendImageMessage({
-    String sessionId,
-    SessionType sessionType,
-    String path,
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required String path,
   }) async {
     await _channel.invokeMethod('sendImageMessage', {
       "sessionId": sessionId,
@@ -174,14 +181,14 @@ class TencentImPlugin {
 
   /// 发送视频消息
   static Future<void> sendVideoMessage({
-    String sessionId,
-    SessionType sessionType,
-    String path,
-    String type,
-    int duration,
-    int snapshotWidth,
-    int snapshotHeight,
-    String snapshotPath,
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required String path,
+    @required String type,
+    @required int duration,
+    @required int snapshotWidth,
+    @required int snapshotHeight,
+    @required String snapshotPath,
   }) async {
     await _channel.invokeMethod('sendVideoMessage', {
       "sessionId": sessionId,
@@ -209,11 +216,12 @@ class TencentImPlugin {
 
   /// 添加好友
   static Future<AddFriendResultEntity> addFriend({
-    String id,
+    @required String id,
     String remark,
     String addWording,
     String addSource,
     String friendGroup,
+    @required FriendAddTypeEnum addType,
   }) async {
     String data = await _channel.invokeMethod('addFriend', {
       "id": id,
@@ -221,14 +229,16 @@ class TencentImPlugin {
       "addWording": addWording,
       "addSource": addSource,
       "friendGroup": friendGroup,
+      "addType":
+          addType == null ? null : FriendAddTypeTool.getIndexByEnum(addType),
     });
     return AddFriendResultEntity.fromJson(jsonDecode(data));
   }
 
   /// 检测单个好友关系
   static Future<CheckFriendResultEntity> checkSingleFriends({
-    String id,
-    FriendCheckTypeEnum type,
+    @required String id,
+    @required FriendCheckTypeEnum type,
   }) async {
     String data = await _channel.invokeMethod('checkSingleFriends', {
       "id": id,
