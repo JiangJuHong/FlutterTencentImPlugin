@@ -799,7 +799,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMFriendRequest request = new TIMFriendRequest(id);
         request.setRemark(remark);
         request.setAddWording(addWording);
-        request.setAddSource("AddSource_Type_" + addSource);
+        request.setAddSource(addSource);
         request.setFriendGroup(friendGroup);
         request.setAddType(addType);
 
