@@ -781,11 +781,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 分组名
         String friendGroup = methodCall.argument("friendGroup");
 
+        // 测试
+        Log.i(TAG, "addFriend: 测试");
+
+
         TIMFriendRequest request = new TIMFriendRequest(id);
         request.setRemark(remark);
         request.setAddWording(addWording);
         request.setAddSource(addSource);
         request.setFriendGroup(friendGroup);
+
+        Log.i(TAG, "addFriend: 测试222");
 
         // 添加好友
         TIMFriendshipManager.getInstance().addFriend(request, new TIMValueCallBack<TIMFriendResult>() {
