@@ -23,6 +23,7 @@ import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -304,7 +305,6 @@ public class TencentImUtils {
                 callBack.onError(code, desc);
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(List<TIMUserProfile> timUserProfiles) {
                 // 赋值用户信息并封装返回集合
@@ -318,7 +318,7 @@ public class TencentImUtils {
                         }
                     }
                 }
-                messageEntities.sort(new Comparator<MessageEntity>() {
+                Collections.sort(messageEntities,new Comparator<MessageEntity>() {
                     @Override
                     public int compare(MessageEntity o1, MessageEntity o2) {
                         return o1.getTimestamp().compareTo(o2.getTimestamp());
