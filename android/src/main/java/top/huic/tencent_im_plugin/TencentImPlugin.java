@@ -9,6 +9,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
@@ -158,6 +159,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "setRead":
                 this.setRead(call, result);
+                break;
+            case "sendCustomMessage":
+                this.sendCustomMessage(call, result);
                 break;
             case "sendTextMessage":
                 this.sendTextMessage(call, result);
@@ -501,6 +505,33 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
             });
         }
+    }
+
+    /**
+     * 腾讯云 发送自定义消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendCustomMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "sendCustomMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 数据内容
+        String data = this.getParam(methodCall, result, "data");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+
+        // 封装消息对象
+        TIMMessage message = new TIMMessage();
+        TIMCustomElem customElem = new TIMCustomElem();
+        customElem.setData(data.getBytes());
+        message.addElement(customElem);
+
+        // 发送消息
+        this.sendMessage(conversation, message, result);
     }
 
     /**

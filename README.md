@@ -62,6 +62,9 @@
 ### 发送文本消息
 ``TencentImPlugin.sendTextMessage(sessionId:"",sessionType:SessionType.xxx,content:"xxxxxx")``
 
+### 发送自定义消息
+``TencentImPlugin.sendCustomMessage(sessionId:"",sessionType:SessionType.xxx,data:"xxxxxx")``
+
 ### 发送语音消息
 ``TencentImPlugin.sendSoundMessage(sessionId:"",sessionType:SessionType.xxx,duration:时长，整型,path:"语音资源路径")``
 Example中，录音插件使用: flutter_sound，权限请求插件使用: permission_handler

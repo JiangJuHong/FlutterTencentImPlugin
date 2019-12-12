@@ -142,6 +142,19 @@ class TencentImPlugin {
     });
   }
 
+  /// 发送自定义消息
+  static Future<void> sendCustomMessage({
+    @required String sessionId,
+    @required SessionType sessionType,
+    @required String data, // 自定义消息数据
+  }) async {
+    await _channel.invokeMethod('sendCustomMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "data": data,
+    });
+  }
+
   /// 发送文本消息
   static Future<void> sendTextMessage({
     @required String sessionId,
