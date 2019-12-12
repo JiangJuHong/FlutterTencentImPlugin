@@ -521,6 +521,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 数据内容
         String data = this.getParam(methodCall, result, "data");
+
+        // 其它数据
+        String ext = methodCall.argument("ext");
+        String sound = methodCall.argument("sound");
+        String desc = methodCall.argument("desc");
+
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
@@ -528,6 +534,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMMessage message = new TIMMessage();
         TIMCustomElem customElem = new TIMCustomElem();
         customElem.setData(data.getBytes());
+        customElem.setExt(ext != null ? ext.getBytes() : null);
+        customElem.setSound(sound != null ? sound.getBytes() : null);
+        customElem.setDesc(desc);
         message.addElement(customElem);
 
         // 发送消息

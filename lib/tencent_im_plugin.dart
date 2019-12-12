@@ -147,11 +147,17 @@ class TencentImPlugin {
     @required String sessionId,
     @required SessionType sessionType,
     @required String data, // 自定义消息数据
+    String ext,
+    String sound,
+    String desc,
   }) async {
     await _channel.invokeMethod('sendCustomMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "data": data,
+      "ext": ext,
+      "sound": sound,
+      "desc": desc,
     });
   }
 
