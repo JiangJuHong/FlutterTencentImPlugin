@@ -3,11 +3,12 @@ package top.huic.tencent_im_plugin.entity;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMMessageStatus;
 import com.tencent.imsdk.TIMUserProfile;
 
-import top.huic.tencent_im_plugin.util.*;
-
 import java.util.List;
+
+import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
  * 消息实体
@@ -90,6 +91,11 @@ public class MessageEntity {
      */
     private List<TIMElem> elemList;
 
+    /**
+     * 消息状态
+     */
+    private TIMMessageStatus status;
+
     public MessageEntity() {
     }
 
@@ -108,6 +114,7 @@ public class MessageEntity {
         this.groupMemberInfo = message.getSenderGroupMemberProfile();
         this.sender = message.getSender();
         this.sessionId = message.getConversation().getPeer();
+        this.status = message.status();
     }
 
     public String getId() {
@@ -228,5 +235,13 @@ public class MessageEntity {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public TIMMessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TIMMessageStatus status) {
+        this.status = status;
     }
 }

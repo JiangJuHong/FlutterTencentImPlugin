@@ -4,105 +4,186 @@
 
 ## Getting Started
 
-## Android 端集成
-无需额外配置，已内部打入混淆配置
+## 功能清单
+[x]初始化  
+[x]登录相关  
+[-]消息收发    
+[x]未读计数  
+[-]群组相关  
+[x]用户资料与关系链  
+[ ]离线推送  
 
-### 如果启动报错，请修改 AndroidManifest.xml 文件
+## 集成
+### Flutter
+```
+tencent_im_plugin:
+    git:
+      url: https://github.com/JiangJuHong/FlutterTencentImPlugin.git
+      ref: master
+```
+暂不支持通过版本号引入
+
+
+### Android 端集成
+无需额外配置，已内部打入混淆配置  
+如果启动报错，请修改 AndroidManifest.xml 文件  
 在 manifest 标签上增加:``xmlns:tools="http://schemas.android.com/tools"``
 在 application 标签上增加:``tools:replace="android:label"``
 
-## IOS端集成
+### IOS
 暂不支持
 
 ## 使用
-### 初始化
-通过调用 ``TencentImPlugin.init(appid: "xxxxxxx");`` 进行初始化
-注意：该方法必须调用且最好仅调用一次，建议在程序启动时调用一次即可。
 
 ### 登录
-通过调用 ``TencentImPlugin.login(identifier: "用户ID",userSig:"签名，建议通过服务端生成");`` 进行登录
-注意：如果已有用户登录，则登录方法会被中断且返回异常!
+---
 
-### 退出登录
-如果您需要登出，可以调用：``TencentImPlugin.logout();``
+#### 初始化
 
-### 获得当前登录用户
-``TencentImPlugin.getLoginUser();`` 返回值为当前登录用户ID
+#### 登录
 
-### 初始化本地存储
-``TencentImPlugin.initStorage(identifier: "用户ID");`` 
+#### 初始化本地存储(可以在无网络情况下加载本地会话和消息)
 
-### 获得当前登录用户会话列表
-``TencentImPlugin.getConversationList();`` 返回值为``List<SessionEntity>``
-会话列表时，对象内的 message 对象仅包含: id、elemList、timestamp 字段
+#### 退出登录
 
-### 根据群ID获取群信息
-``TencentImPlugin.getGroupInfo();``
-会优先读取本地数据，如果本地没有数据，则走云端拉取
+#### 获得当前登录用户ID
 
-### 根据用户ID获取用户信息
-``TencentImPlugin.getUserInfo();``
+#### 获得当前登录用户信息
 
-### 获得当前登录用户信息
-``TencentImPlugin.getLoginUserInfo();``
+### 消息收发
+---
 
-### 获取消息列表
-``TencentImPlugin.getMessages(sessionId:"",sessionType:SessionType.xxx,number:100,);``
+#### 文本消息发送
 
-### 获取本地消息列表
-``TencentImPlugin.getLocalMessages(sessionId:"",sessionType:SessionType.xxx,number:100,);``
+#### 图片消息发送
 
-### 设置会话消息为已读
-``TencentImPlugin.setRead(sessionId:"",sessionType:SessionType.xxx)``
+#### 表情消息发送(暂不支持)
 
-### 添加和移除监听
-``TencentImPlugin.addListener((type,params){....})`` ``TencentImPlugin.removeListener((type,params){....})``
-当事件被触发时调用，但是注意，不同类型所返回的参数值也有所不同
+#### 语音消息发送
 
-### 发送文本消息
-``TencentImPlugin.sendTextMessage(sessionId:"",sessionType:SessionType.xxx,content:"xxxxxx")``
+#### 发送地理位置(暂不支持)
 
-### 发送自定义消息
-``TencentImPlugin.sendCustomMessage(sessionId:"",sessionType:SessionType.xxx,data:"xxxxxx")``
+#### 小文件发送(暂不支持)
 
-### 发送语音消息
-``TencentImPlugin.sendSoundMessage(sessionId:"",sessionType:SessionType.xxx,duration:时长，整型,path:"语音资源路径")``
-Example中，录音插件使用: flutter_sound，权限请求插件使用: permission_handler
-下载语音消息时为异步，有可能出现界面渲染但是还没下载结束的问题，再次，可通过监听器类型:DownloadStart、DownloadSuccess和DownloadFail监听，以uuid作为唯一标识符
-语音下载拥有缓存，只会在第一次时下载
+#### 自定义消息发送
 
-### 发送图片消息
-``TencentImPlugin.sendImageMessage(sessionId:"",sessionType:SessionType.xxx,path:"图片资源路径")``
-Example中，图片选择插件使用：image_picker
+#### 短视频发送
 
-### 发送视频消息
-``TencentImPlugin.sendVoiceMessage(sessionId:"",sessionType:SessionType.xxx,path:"视频资源路径",type:"视频类型，如mp4",duration:时长(秒),snapshotWidth:截图宽度,snapshotHeight:截图高度,snapshotPath:"截图路径")``
-Example中，视频选择插件使用：image_picker，视频播放和信息获取插件为:flutter_ijkplayer，视频缩略图插件使用：thumbnails
-下载视频封面和视频时为异步，有可能出现界面渲染但是还没下载结束的问题，再次，可通过监听器类型:DownloadSuccess和DownloadFail监听，以uuid作为唯一标识符
-视频下载拥有缓存，只会在第一次时下载
+#### 文本消息接收
 
-### 获得好友列表
-``TencentImPlugin.getFriendList()``
+#### 图片消息接收
 
-### 获得群组列表
-``TencentImPlugin.getGroupList()``
+#### 语音消息接收
 
-### 添加好友
-``TencentImPlugin.addFriend(id: 用户ID,remark: 备注,addWording: 申请说明,addSource: 添加来源,friendGroup: 分组)``
+#### 小文件消息接收(暂不支持)
 
-### 检测单个好友关系
-``TencentImPlugin.checkSingleFriends(id:用户ID,type:FriendCheckTypeEnum.unidirection)``
+#### 短视频消息接收
 
-### 获得未决好友列表(申请列表)
-``TencentImPlugin.getPendencyList(type:PendencyTypeEnum.BOTH,seq: 0,timestamp: 0,numPerPage: 0,)``
+#### 获取会话列表
 
-### 未决已读
-``TencentImPlugin.pendencyReport(timestamp: 0,)``
+#### 获取本地消息
 
-### 未决删除
-``TencentImPlugin.deletePendency(type:PendencyTypeEnum.BOTH,id:"123")``
+#### 获得漫游(服务器上)的消息
 
-### 未决审核
-``TencentImPlugin.examinePendency(type:PendencyExamineTypeEnum.AGREE_AND_ADD,id:"123",remark:"123123")``
+#### 设置会话操作(暂不支持)
 
-## 对象实体说明
+#### 删除会话
+
+#### 删除会话本地消息 - 批量删除本会话的全部本地聊天记录
+
+#### 查找本地消息(暂不支持)
+
+#### 消息撤回(暂不支持)
+
+### 未读计数
+---
+
+#### 已读上报
+
+### 群组相关
+---
+
+#### 创建群组
+
+#### 邀请用户加入群组
+
+#### 申请加入群组
+
+#### 退出群组
+
+#### 删除群组成员
+
+#### 获取群成员列表
+
+#### 获取群组列表
+
+#### 解散群组
+
+#### 转让群组
+
+#### 获取群组资料
+
+#### 获取本人在群内的资料(暂不支持)
+
+#### 获取群内某个人的资料(暂不支持)
+
+#### 修改群资料
+
+#### 修改群成员资料
+
+#### 获得群未决列表
+
+#### 上报未决已读
+
+#### 未决审核同意【谨慎使用】
+
+#### 未决审核拒绝【谨慎使用】
+
+### 用户资料与关系链
+--- 
+
+#### 获取自己的资料
+
+#### 获取指定用户资料
+
+#### 修改自己资料
+
+#### 获取所有好友
+
+#### 修改好友资料
+
+#### 添加好友
+
+#### 删除好友
+
+#### 同意/拒绝好友申请
+
+#### 校验好友关系
+
+#### 获取未决列表
+
+#### 未决删除
+
+#### 未决已读上报
+
+#### 添加用户到黑名单
+
+#### 从黑名单删除
+
+#### 获得黑名单列表
+
+#### 创建好友分组
+
+#### 删除好友分组
+
+#### 添加好友到某分组
+
+#### 从某分组删除好友
+
+#### 重命名好友分组
+
+#### 获取好友分组
+
+### 离线推送
+---  
+暂不支持

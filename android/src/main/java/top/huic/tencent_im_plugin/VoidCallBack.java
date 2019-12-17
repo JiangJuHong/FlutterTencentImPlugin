@@ -1,0 +1,35 @@
+package top.huic.tencent_im_plugin;
+
+import com.tencent.imsdk.TIMCallBack;
+
+import io.flutter.plugin.common.MethodChannel;
+
+/**
+ * 操作结果回调
+ *
+ * @author 蒋具宏
+ */
+public class VoidCallBack implements TIMCallBack {
+    /**
+     * 回调
+     */
+    private MethodChannel.Result result;
+
+    public VoidCallBack(MethodChannel.Result result) {
+        this.result = result;
+    }
+
+    @Override
+    public void onError(int code, String desc) {
+        if (result != null) {
+            result.error(desc, String.valueOf(code), null);
+        }
+    }
+
+    @Override
+    public void onSuccess() {
+        if (result != null) {
+            result.success(null);
+        }
+    }
+}

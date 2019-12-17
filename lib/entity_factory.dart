@@ -1,6 +1,7 @@
 import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/node_video_entity.dart';
 import 'package:tencent_im_plugin/entity/pendency_entity.dart';
+import 'package:tencent_im_plugin/entity/group_pendency_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/node_custom_entity.dart';
 import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
@@ -13,6 +14,8 @@ import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_entity.dart';
+import 'package:tencent_im_plugin/entity/group_pendency_page_entity.dart';
 
 class EntityFactory {
   static T generateOBJ<T>(json) {
@@ -24,6 +27,8 @@ class EntityFactory {
       return NodeVideoEntity.fromJson(json) as T;
     } else if (T.toString() == "PendencyEntity") {
       return PendencyEntity.fromJson(json) as T;
+    } else if (T.toString() == "GroupPendencyEntity") {
+      return GroupPendencyEntity.fromJson(json) as T;
     } else if (T.toString() == "GroupInfoEntity") {
       return GroupInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeCustomEntity") {
@@ -48,6 +53,10 @@ class EntityFactory {
       return FriendEntity.fromJson(json) as T;
     } else if (T.toString() == "NodeImageEntity") {
       return NodeImageEntity.fromJson(json) as T;
+    } else if (T.toString() == "GroupMemberEntity") {
+      return GroupMemberEntity.fromJson(json) as T;
+    } else if (T.toString() == "GroupPendencyPageEntity") {
+      return GroupPendencyPageEntity.fromJson(json) as T;
     } else {
       return null;
     }

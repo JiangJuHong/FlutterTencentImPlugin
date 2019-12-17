@@ -65,5 +65,9 @@ public enum ListenerTypeEnum {
     /**
      * 下载失败
      */
-    DownloadFail
+    DownloadFail,
+    /**
+     * 已读
+     */
+    RecvReceipt,
 }

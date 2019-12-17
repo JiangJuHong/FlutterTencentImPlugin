@@ -6,13 +6,16 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
+import com.tencent.imsdk.TIMGroupMemberInfo;
+import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
 import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMImageElem;
 import com.tencent.imsdk.TIMLogLevel;
@@ -33,11 +36,18 @@ import com.tencent.imsdk.TIMVideoElem;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
+import com.tencent.imsdk.ext.group.TIMGroupMemberResult;
+import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
+import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
+import com.tencent.imsdk.ext.group.TIMGroupPendencyListGetSucc;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
+import com.tencent.imsdk.ext.message.TIMMessageReceipt;
+import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.friendship.TIMCheckFriendResult;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.imsdk.friendship.TIMFriendCheckInfo;
+import com.tencent.imsdk.friendship.TIMFriendGroup;
 import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
 import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
@@ -50,8 +60,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -59,6 +71,9 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
+import top.huic.tencent_im_plugin.entity.GroupPendencyEntity;
+import top.huic.tencent_im_plugin.entity.GroupPendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.PendencyEntity;
 import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
@@ -148,9 +163,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getUserInfo":
                 this.getUserInfo(call, result);
                 break;
-            case "getLoginUserInfo":
-                this.getLoginUserInfo(call, result);
-                break;
             case "getMessages":
                 this.getMessages(call, result);
                 break;
@@ -199,6 +211,92 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "examinePendency":
                 this.examinePendency(call, result);
                 break;
+            case "deleteConversation":
+                this.deleteConversation(call, result);
+                break;
+            case "deleteLocalMessage":
+                this.deleteLocalMessage(call, result);
+                break;
+            case "createGroup":
+                this.createGroup(call, result);
+                break;
+            case "inviteGroupMember":
+                this.inviteGroupMember(call, result);
+                break;
+            case "applyJoinGroup":
+                this.applyJoinGroup(call, result);
+                break;
+            case "quitGroup":
+                this.quitGroup(call, result);
+                break;
+            case "deleteGroupMember":
+                this.deleteGroupMember(call, result);
+                break;
+            case "getGroupMembers":
+                this.getGroupMembers(call, result);
+                break;
+            case "deleteGroup":
+                this.deleteGroup(call, result);
+                break;
+            case "modifyGroupOwner":
+                this.modifyGroupOwner(call, result);
+            case "modifyGroupInfo":
+                this.modifyGroupInfo(call, result);
+                break;
+            case "modifyMemberInfo":
+                this.modifyMemberInfo(call, result);
+                break;
+            case "getGroupPendencyList":
+                this.getGroupPendencyList(call, result);
+                break;
+            case "reportGroupPendency":
+                this.reportGroupPendency(call, result);
+                break;
+            case "groupPendencyAccept":
+                this.groupPendencyAccept(call, result);
+                break;
+            case "groupPendencyRefuse":
+                this.groupPendencyRefuse(call, result);
+                break;
+            case "getSelfProfile":
+                this.getSelfProfile(call, result);
+                break;
+            case "modifySelfProfile":
+                this.modifySelfProfile(call, result);
+                break;
+            case "modifyFriend":
+                this.modifyFriend(call, result);
+                break;
+            case "deleteFriends":
+                this.deleteFriends(call, result);
+                break;
+            case "addBlackList":
+                this.addBlackList(call, result);
+                break;
+            case "deleteBlackList":
+                this.deleteBlackList(call, result);
+                break;
+            case "getBlackList":
+                this.getBlackList(call, result);
+                break;
+            case "createFriendGroup":
+                this.createFriendGroup(call, result);
+                break;
+            case "deleteFriendGroup":
+                this.deleteFriendGroup(call, result);
+                break;
+            case "addFriendsToFriendGroup":
+                this.addFriendsToFriendGroup(call, result);
+                break;
+            case "deleteFriendsFromFriendGroup":
+                this.deleteFriendsFromFriendGroup(call, result);
+                break;
+            case "renameFriendGroup":
+                this.renameFriendGroup(call, result);
+                break;
+            case "getFriendGroups":
+                this.getFriendGroups(call, result);
+                break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
                 result.notImplemented();
@@ -237,11 +335,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     .setUserStatusListener(listener)
                     .setConnectionListener(listener)
                     .setGroupEventListener(listener)
-                    .setGroupEventListener(listener)
                     .setRefreshListener(listener)
-                    .setMessageRevokedListener(listener);
-            // # 开启消息已读回执
-            userConfig.enableReadReceipt(true);
+                    .setMessageRevokedListener(listener)
+                    .setMessageReceiptListener(listener)
+                    .enableReadReceipt(true);
+
+
             TIMManager.getInstance().setUserConfig(userConfig);
 
             // 添加消息监听器
@@ -269,19 +368,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         }
 
         // 登录操作
-        TIMManager.getInstance().login(identifier, userSig, new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                Log.d(TAG, "login failed. code: " + code + " errmsg: " + desc);
-                result.error(desc, String.valueOf(code), null);
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "login success!");
-                result.success(null);
-            }
-        });
+        TIMManager.getInstance().login(identifier, userSig, new VoidCallBack(result));
     }
 
     /**
@@ -292,19 +379,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void logout(MethodCall methodCall, final Result result) {
         if (!TextUtils.isEmpty(TIMManager.getInstance().getLoginUser())) {
-            TIMManager.getInstance().logout(new TIMCallBack() {
-                @Override
-                public void onError(int code, String desc) {
-                    Log.d(TAG, "logout failed. code: " + code + " errmsg: " + desc);
-                    result.error(desc, String.valueOf(code), null);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "logout success!");
-                    result.success(null);
-                }
-            });
+            TIMManager.getInstance().logout(new VoidCallBack(result));
         }
     }
 
@@ -328,19 +403,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 用户ID
         String identifier = this.getParam(methodCall, result, "identifier");
         //初始化本地存储
-        TIMManager.getInstance().initStorage(identifier, new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                Log.d(TAG, "initStorage failed, code: " + code + "|descr: " + desc);
-                result.error(desc, String.valueOf(code), null);
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "initStorage success!");
-                result.success(null);
-            }
-        });
+        TIMManager.getInstance().initStorage(identifier, new VoidCallBack(result));
     }
 
     /**
@@ -388,28 +451,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getUserInfo(MethodCall methodCall, final Result result) {
         // 用户ID
         String id = this.getParam(methodCall, result, "id");
-        TIMFriendshipManager.getInstance().getUsersProfile(Collections.singletonList(id), false, new ValueCallBack<List<TIMUserProfile>>(result) {
-            @Override
-            public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                if (timUserProfiles != null && timUserProfiles.size() >= 1) {
-                    result.success(JSON.toJSONString(timUserProfiles.get(0)));
-                } else {
-                    result.success(null);
-                }
-            }
-        });
-    }
-
-    /**
-     * 腾讯云 获得登录用户信息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void getLoginUserInfo(MethodCall methodCall, final Result result) {
-        // 用户ID
-        String id = TIMManager.getInstance().getLoginUser();
-        TIMFriendshipManager.getInstance().getUsersProfile(Collections.singletonList(id), false, new ValueCallBack<List<TIMUserProfile>>(result) {
+        boolean forceUpdate = this.getParam(methodCall, result, "forceUpdate");
+        TIMFriendshipManager.getInstance().getUsersProfile(Collections.singletonList(id), forceUpdate, new ValueCallBack<List<TIMUserProfile>>(result) {
             @Override
             public void onSuccess(List<TIMUserProfile> timUserProfiles) {
                 if (timUserProfiles != null && timUserProfiles.size() >= 1) {
@@ -435,17 +478,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
         // 设置已读
-        conversation.setReadMessage(null, new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                result.error(String.valueOf(code), desc, null);
-            }
-
-            @Override
-            public void onSuccess() {
-                result.success(null);
-            }
-        });
+        conversation.setReadMessage(null, new VoidCallBack(result));
 
     }
 
@@ -521,7 +554,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 数据内容
         String data = this.getParam(methodCall, result, "data");
-
+        // 使用使用在线消息发送(无痕)
+        boolean ol = this.getParam(methodCall, result, "ol");
         // 其它数据
         String ext = methodCall.argument("ext");
         String sound = methodCall.argument("sound");
@@ -540,7 +574,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         message.addElement(customElem);
 
         // 发送消息
-        this.sendMessage(conversation, message, result);
+        this.sendMessage(conversation, message, result, ol);
     }
 
     /**
@@ -557,6 +591,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 消息内容
         String content = this.getParam(methodCall, result, "content");
+        // 使用使用在线消息发送(无痕)
+        boolean ol = this.getParam(methodCall, result, "ol");
+
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
@@ -567,7 +604,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         message.addElement(textElem);
 
         // 发送消息
-        this.sendMessage(conversation, message, result);
+        this.sendMessage(conversation, message, result, ol);
     }
 
 
@@ -587,6 +624,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String path = this.getParam(methodCall, result, "path");
         // 语音时长
         Integer duration = this.getParam(methodCall, result, "duration");
+        // 使用使用在线消息发送(无痕)
+        boolean ol = this.getParam(methodCall, result, "ol");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
@@ -598,7 +637,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         message.addElement(soundElem);
 
         // 发送消息
-        this.sendMessage(conversation, message, result);
+        this.sendMessage(conversation, message, result, ol);
     }
 
     /**
@@ -615,6 +654,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 图片路径
         String path = this.getParam(methodCall, result, "path");
+        // 使用使用在线消息发送(无痕)
+        boolean ol = this.getParam(methodCall, result, "ol");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
@@ -625,7 +666,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         message.addElement(imageElem);
 
         // 发送消息
-        this.sendMessage(conversation, message, result);
+        this.sendMessage(conversation, message, result, ol);
     }
 
     /**
@@ -652,6 +693,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Integer snapshotHeight = this.getParam(methodCall, result, "snapshotHeight");
         // 快照路径
         String snapshotPath = this.getParam(methodCall, result, "snapshotPath");
+        // 使用使用在线消息发送(无痕)
+        boolean ol = this.getParam(methodCall, result, "ol");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
@@ -677,7 +720,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         message.addElement(videoElem);
 
         // 发送消息
-        this.sendMessage(conversation, message, result);
+        this.sendMessage(conversation, message, result, ol);
     }
 
     /**
@@ -686,14 +729,21 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param conversation 会话
      * @param message      消息内容
      * @param result       Flutter返回对象
+     * @param ol           是否使用在线消息发送
      */
-    private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result) {
-        conversation.sendMessage(message, new ValueCallBack<TIMMessage>(result) {
+    private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result, boolean ol) {
+        ValueCallBack callBack = new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
-                result.success(null);
+                result.success(JSON.toJSONString(new MessageEntity(message)));
             }
-        });
+        };
+
+        if (ol) {
+            conversation.sendOnlineMessage(message, callBack);
+        } else {
+            conversation.sendMessage(message, callBack);
+        }
     }
 
     /**
@@ -830,7 +880,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         TIMFriendshipManager.getInstance().getPendencyList(request, new ValueCallBack<TIMFriendPendencyResponse>(result) {
             @Override
-            public void onSuccess(TIMFriendPendencyResponse timFriendPendencyResponse) {
+            public void onSuccess(final TIMFriendPendencyResponse timFriendPendencyResponse) {
                 if (timFriendPendencyResponse.getItems().size() == 0) {
                     result.success(JSON.toJSONString(new HashMap<>()));
                     return;
@@ -848,7 +898,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
 
                 // 获得用户信息
-                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(map.keySet().toArray(new String[0])), false, new ValueCallBack<List<TIMUserProfile>>(result) {
+                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(map.keySet().toArray(new String[0])), true, new ValueCallBack<List<TIMUserProfile>>(result) {
                     @Override
                     public void onSuccess(List<TIMUserProfile> timUserProfiles) {
                         // 设置用户资料
@@ -860,12 +910,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                             }
                         }
 
-                        // 封装返回对象
-                        PendencyPageEntiity response = new PendencyPageEntiity();
-                        response.setItems(resultData);
-
                         // 返回结果
-                        result.success(JSON.toJSONString(response));
+                        result.success(JSON.toJSONString(new PendencyPageEntiity(timFriendPendencyResponse, resultData)));
                     }
                 });
             }
@@ -882,17 +928,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Log.d(TAG, "pendencyReport: ");
         // 已读时间戳，此时间戳以前的消息都将置为已读
         int timestamp = this.getParam(methodCall, result, "timestamp");
-        TIMFriendshipManager.getInstance().pendencyReport(timestamp, new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                result.error(desc, String.valueOf(code), null);
-            }
-
-            @Override
-            public void onSuccess() {
-                result.success(null);
-            }
-        });
+        TIMFriendshipManager.getInstance().pendencyReport(timestamp, new VoidCallBack(result));
     }
 
     /**
@@ -937,6 +973,656 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 腾讯云 删除会话
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteConversation(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteConversation: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        TIMConversationType sessionType = TIMConversationType.valueOf(sessionTypeStr);
+        // 删除本地缓存（会话内的消息内容）
+        boolean removeCache = this.getParam(methodCall, result, "removeCache");
+
+        boolean res;
+        if (removeCache) {
+            res = TIMManager.getInstance().deleteConversation(sessionType, sessionId);
+        } else {
+            res = TIMManager.getInstance().deleteConversationAndLocalMsgs(sessionType, sessionId);
+        }
+        result.success(res);
+    }
+
+    /**
+     * 腾讯云 删除会话内的本地聊天记录
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteLocalMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteLocalMessage: ");
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+
+
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        conversation.deleteLocalMessage(new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 创建群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void createGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "createGroup: ");
+        // 群类型
+        String type = this.getParam(methodCall, result, "type");
+        // 群名称
+        String name = this.getParam(methodCall, result, "name");
+        // 群ID
+        String groupId = methodCall.argument("groupId");
+        // 群公告
+        String notification = methodCall.argument("notification");
+        // 群简介
+        String introduction = methodCall.argument("introduction");
+        // 群头像
+        String faceUrl = methodCall.argument("faceUrl");
+        // 加群选项
+        String addOption = methodCall.argument("addOption");
+        // 最大群成员数
+        Integer maxMemberNum = methodCall.argument("maxMemberNum");
+
+
+        // 创建参数对象
+        TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam(type, name);
+        param.setGroupId(groupId);
+        param.setNotification(notification);
+        param.setIntroduction(introduction);
+        param.setFaceUrl(faceUrl);
+        param.setAddOption(addOption != null ? TIMGroupAddOpt.valueOf(addOption) : null);
+        if (maxMemberNum != null) {
+            param.setMaxMemberNum(maxMemberNum);
+        }
+
+        // 创建群
+        TIMGroupManager.getInstance().createGroup(param, new ValueCallBack<String>(result) {
+            @Override
+            public void onSuccess(String s) {
+                result.success(result);
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 邀请加入群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void inviteGroupMember(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "inviteGroupMember: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 用户ID集合
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+
+        TIMGroupManager.getInstance().inviteGroupMember(groupId, ids, new ValueCallBack<List<TIMGroupMemberResult>>(result));
+    }
+
+    /**
+     * 腾讯云 申请加入群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void applyJoinGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "applyJoinGroup: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 申请理由
+        String reason = methodCall.argument("reason");
+
+        TIMGroupManager.getInstance().applyJoinGroup(groupId, reason, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 退出群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void quitGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "quitGroup: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+
+        TIMGroupManager.getInstance().quitGroup(groupId, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 删除群组成员
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteGroupMember(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteGroupMember: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 用户ID集合
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        // 删除理由
+        String reason = methodCall.argument("reason");
+
+        TIMGroupManager.getInstance().deleteGroupMember(new TIMGroupManager.DeleteMemberParam(groupId, ids).setReason(reason), new ValueCallBack<List<TIMGroupMemberResult>>(result));
+    }
+
+    /**
+     * 腾讯云 获取群成员列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupMembers(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getGroupMembers: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+
+        TIMGroupManager.getInstance().getGroupMembers(groupId, new ValueCallBack<List<TIMGroupMemberInfo>>(result) {
+            @Override
+            public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
+                super.onSuccess(timGroupMemberInfos);
+                final Map<String, GroupMemberEntity> userInfo = new HashMap<>(timGroupMemberInfos.size(), 1);
+                for (TIMGroupMemberInfo timGroupMemberInfo : timGroupMemberInfos) {
+                    GroupMemberEntity user = userInfo.get(timGroupMemberInfo.getUser());
+                    if (user == null) {
+                        user = new GroupMemberEntity(timGroupMemberInfo);
+                    }
+                    userInfo.put(timGroupMemberInfo.getUser(), user);
+                }
+
+                // 获得用户资料
+                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), true, new ValueCallBack<List<TIMUserProfile>>(result) {
+                    @Override
+                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        for (TIMUserProfile timUserProfile : timUserProfiles) {
+                            GroupMemberEntity entity = userInfo.get(timUserProfile.getIdentifier());
+                            if (entity != null) {
+                                entity.setUserProfile(timUserProfile);
+                            }
+                        }
+                        result.success(JSON.toJSONString(userInfo));
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 解散群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteGroup: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+
+        TIMGroupManager.getInstance().deleteGroup(groupId, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 转让群组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void modifyGroupOwner(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "modifyGroupOwner: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 新群主ID
+        String identifier = this.getParam(methodCall, result, "identifier");
+
+        TIMGroupManager.getInstance().modifyGroupOwner(groupId, identifier, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 修改群资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void modifyGroupInfo(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "modifyGroupInfo: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 群名
+        String groupName = methodCall.argument("groupName");
+        // 公告
+        String notification = methodCall.argument("notification");
+        // 简介
+        String introduction = methodCall.argument("introduction");
+        // 群头像
+        String faceUrl = methodCall.argument("faceUrl");
+        // 加群选项
+        String addOption = methodCall.argument("addOption");
+        // 最大群成员数
+        Integer maxMemberNum = methodCall.argument("maxMemberNum");
+        // 是否对外可见
+        Boolean visable = methodCall.argument("visable");
+        // 全员禁言
+        Boolean silenceAll = methodCall.argument("silenceAll");
+
+        TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(groupId);
+        param.setGroupName(groupName);
+        param.setNotification(notification);
+        param.setIntroduction(introduction);
+        param.setFaceUrl(faceUrl);
+        param.setAddOption(addOption == null ? null : TIMGroupAddOpt.valueOf(addOption));
+        if (maxMemberNum != null) {
+            param.setMaxMemberNum(maxMemberNum);
+        }
+        if (visable != null) {
+            param.setVisable(visable);
+        }
+        if (silenceAll != null) {
+            param.setSearchable(silenceAll);
+        }
+        TIMGroupManager.getInstance().modifyGroupInfo(param, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 修改群成员资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void modifyMemberInfo(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "modifyMemberInfo: ");
+        // 群ID
+        String groupId = this.getParam(methodCall, result, "groupId");
+        // 群成员ID
+        String identifier = this.getParam(methodCall, result, "identifier");
+        // 名片
+        String nameCard = methodCall.argument("nameCard");
+        // 接收消息选项
+        String receiveMessageOpt = methodCall.argument("receiveMessageOpt");
+        // 禁言时间
+        Long silence = methodCall.argument("silence");
+        // 角色
+        Integer role = methodCall.argument("role");
+
+        TIMGroupManager.ModifyMemberInfoParam param = new TIMGroupManager.ModifyMemberInfoParam(groupId, identifier);
+        param.setNameCard(nameCard);
+        param.setReceiveMessageOpt(receiveMessageOpt == null ? null : TIMGroupReceiveMessageOpt.valueOf(receiveMessageOpt));
+        if (silence != null) {
+            param.setSilence(silence);
+        }
+        if (role != null) {
+            param.setRoleType(role);
+        }
+        TIMGroupManager.getInstance().modifyMemberInfo(param, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 获得未决群列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupPendencyList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getPendencyList: ");
+        // 翻页时间戳，只用来翻页，server 返回0时表示没有更多数据，第一次请求填0
+        final int timestamp = methodCall.argument("timestamp");
+        // 每页的数量，请求时有效
+        int numPerPage = methodCall.argument("numPerPage");
+
+        // 封装请求对象
+        TIMGroupPendencyGetParam request = new TIMGroupPendencyGetParam();
+        request.setTimestamp(timestamp);
+        request.setNumPerPage(numPerPage);
+
+        TIMGroupManager.getInstance().getGroupPendencyList(request, new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
+            @Override
+            public void onSuccess(final TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
+                if (timGroupPendencyListGetSucc.getPendencies().size() == 0) {
+                    result.success(JSON.toJSONString(new HashMap<>()));
+                    return;
+                }
+
+                // 存储ID的集合
+                Set<String> groupIds = new HashSet<>();
+                Set<String> userIds = new HashSet<>();
+
+                // 返回结果
+                final List<GroupPendencyEntity> resultData = new ArrayList<>(timGroupPendencyListGetSucc.getPendencies().size());
+                // 循环获得的列表，进行对象封装
+                for (TIMGroupPendencyItem item : timGroupPendencyListGetSucc.getPendencies()) {
+                    resultData.add(new GroupPendencyEntity(item));
+                    groupIds.add(item.getGroupId());
+                    userIds.add(item.getIdentifer());
+                    userIds.add(item.getToUser());
+                }
+
+                // 当前步骤
+                final int[] current = {0};
+
+                // 获得群信息
+                TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupIds.toArray(new String[0])), new ValueCallBack<List<TIMGroupDetailInfoResult>>(result) {
+                    @Override
+                    public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                        // 循环赋值
+                        for (GroupPendencyEntity resultDatum : resultData) {
+                            for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
+                                if (timGroupDetailInfoResult.getGroupId().equals(resultDatum.getGroupId())) {
+                                    resultDatum.setGroupInfo(timGroupDetailInfoResult);
+                                }
+                            }
+                        }
+                        current[0]++;
+                        if (current[0] >= 2) {
+                            result.success(JSON.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
+                        }
+                    }
+                });
+
+                // 获得用户信息
+                TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userIds.toArray(new String[0])), true, new ValueCallBack<List<TIMUserProfile>>(result) {
+                    @Override
+                    public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        // 循环赋值
+                        for (GroupPendencyEntity resultDatum : resultData) {
+                            for (TIMUserProfile timUserProfile : timUserProfiles) {
+                                // 申请人信息
+                                if (timUserProfile.getIdentifier().equals(resultDatum.getIdentifier())) {
+                                    resultDatum.setApplyUserInfo(timUserProfile);
+                                }
+                                // 处理人信息
+                                if (timUserProfile.getIdentifier().equals(resultDatum.getToUser())) {
+                                    resultDatum.setHandlerUserInfo(timUserProfile);
+                                }
+                            }
+                        }
+                        current[0]++;
+                        if (current[0] >= 2) {
+                            result.success(JSON.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 上报未决已读
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void reportGroupPendency(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "reportGroupPendency: ");
+        // 已读时间戳
+        Long timestamp = methodCall.argument("timestamp");
+        TIMGroupManager.getInstance().reportGroupPendency(timestamp, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 同意申请
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void groupPendencyAccept(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "groupPendencyAccept: ");
+        // 理由
+        final String msg = methodCall.argument("msg");
+        // 群ID
+        final String groupId = this.getParam(methodCall, result, "groupId");
+        // 申请人ID
+        final String identifier = this.getParam(methodCall, result, "identifier");
+        // 申请时间
+        final long addTime = this.getParam(methodCall, result, "addTime");
+
+        TIMGroupManager.getInstance().getGroupPendencyList(new TIMGroupPendencyGetParam(), new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
+            @Override
+            public void onSuccess(TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
+                List<TIMGroupPendencyItem> data = timGroupPendencyListGetSucc.getPendencies();
+                if (data != null) {
+                    for (TIMGroupPendencyItem datum : data) {
+                        if (datum.getGroupId().equals(groupId) && datum.getIdentifer().equals(identifier) && datum.getAddTime() == addTime) {
+                            datum.accept(msg, new VoidCallBack(result));
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 拒绝申请
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void groupPendencyRefuse(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "groupPendencyAccept: ");
+        // 理由
+        final String msg = methodCall.argument("msg");
+        // 群ID
+        final String groupId = this.getParam(methodCall, result, "groupId");
+        // 申请人ID
+        final String identifier = this.getParam(methodCall, result, "identifier");
+        // 申请时间
+        final long addTime = this.getParam(methodCall, result, "addTime");
+
+        TIMGroupManager.getInstance().getGroupPendencyList(new TIMGroupPendencyGetParam(), new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
+            @Override
+            public void onSuccess(TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
+                List<TIMGroupPendencyItem> data = timGroupPendencyListGetSucc.getPendencies();
+                if (data != null) {
+                    for (TIMGroupPendencyItem datum : data) {
+                        if (datum.getGroupId().equals(groupId) && datum.getIdentifer().equals(identifier) && datum.getAddTime() == addTime) {
+                            datum.refuse(msg, new VoidCallBack(result));
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 获取自己的资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getSelfProfile(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getSelfProfile: ");
+        // 强制走后台拉取
+        Boolean forceUpdate = methodCall.argument("forceUpdate");
+        if (forceUpdate != null && forceUpdate) {
+            TIMFriendshipManager.getInstance().getSelfProfile(new ValueCallBack<TIMUserProfile>(result));
+        } else {
+            // 先获取本地，再获取服务器
+            TIMUserProfile data = TIMFriendshipManager.getInstance().querySelfProfile();
+            if (data == null) {
+                TIMFriendshipManager.getInstance().getSelfProfile(new ValueCallBack<TIMUserProfile>(result));
+            } else {
+                result.success(JSON.toJSONString(data));
+            }
+        }
+    }
+
+    /**
+     * 腾讯云 修改自己的资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void modifySelfProfile(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "modifySelfProfile: ");
+
+        HashMap params = JSON.parseObject(this.getParam(methodCall, result, "params").toString(), HashMap.class);
+        TIMFriendshipManager.getInstance().modifySelfProfile(params, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 修改好友的资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void modifyFriend(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "modifyFriends: ");
+        String identifier = this.getParam(methodCall, result, "identifier");
+        HashMap params = JSON.parseObject(this.getParam(methodCall, result, "params").toString(), HashMap.class);
+        TIMFriendshipManager.getInstance().modifyFriend(identifier, params, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 删除好友
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteFriends(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteFriends: ");
+        int delFriendType = this.getParam(methodCall, result, "delFriendType");
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+
+        TIMFriendshipManager.getInstance().deleteFriends(ids, delFriendType, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 添加到黑名单
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void addBlackList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "addBlackList: ");
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        TIMFriendshipManager.getInstance().addBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+
+    /**
+     * 腾讯云 从黑名单删除
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteBlackList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "addBlackList: ");
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        TIMFriendshipManager.getInstance().deleteBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 获得黑名单列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getBlackList(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getBlackList: ");
+        TIMFriendshipManager.getInstance().getBlackList(new ValueCallBack<List<TIMFriend>>(result));
+    }
+
+    /**
+     * 腾讯云 创建好友分组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void createFriendGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "createFriendGroup: ");
+        List<String> groupNames = JSON.parseArray(this.getParam(methodCall, result, "groupNames").toString(), String.class);
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        TIMFriendshipManager.getInstance().createFriendGroup(groupNames, ids, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 删除好友分组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteFriendGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteFriendGroup: ");
+        List<String> groupNames = JSON.parseArray(this.getParam(methodCall, result, "groupNames").toString(), String.class);
+        TIMFriendshipManager.getInstance().deleteFriendGroup(groupNames, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 添加好友到某个分组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void addFriendsToFriendGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "addFriendsToFriendGroup: ");
+        String groupName = this.getParam(methodCall, result, "groupName");
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        TIMFriendshipManager.getInstance().addFriendsToFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 从分组删除好友
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteFriendsFromFriendGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "deleteFriendsFromFriendGroup: ");
+        String groupName = this.getParam(methodCall, result, "groupName");
+        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        TIMFriendshipManager.getInstance().deleteFriendsFromFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
+    }
+
+    /**
+     * 腾讯云 重命名分组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void renameFriendGroup(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "renameFriendGroup: ");
+        String oldGroupName = this.getParam(methodCall, result, "oldGroupName");
+        String newGroupName = this.getParam(methodCall, result, "newGroupName");
+        TIMFriendshipManager.getInstance().renameFriendGroup(oldGroupName, newGroupName, new VoidCallBack(result));
+    }
+
+    /**
+     * 腾讯云 获得好友分组
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getFriendGroups(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "getFriendGroups: ");
+        String groupNamesStr = methodCall.argument("groupNames");
+        List<String> groupNames = null;
+        if (groupNamesStr != null) {
+            groupNames = JSON.parseArray(groupNamesStr, String.class);
+        }
+        TIMFriendshipManager.getInstance().getFriendGroups(groupNames, new ValueCallBack<List<TIMFriendGroup>>(result));
+    }
+
+    /**
      * 通用方法，获得参数值，如未找到参数，则直接中断
      *
      * @param methodCall 方法调用对象
@@ -973,7 +1659,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             TIMLogListener, TIMUserStatusListener,
             TIMConnListener, TIMGroupEventListener,
             TIMRefreshListener, TIMMessageRevokedListener,
-            TIMMessageListener {
+            TIMMessageListener, TIMMessageReceiptListener {
         /**
          * 日志监听器
          */
@@ -1015,7 +1701,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onDisconnected(int i, String s) {
             Log.d(TAG, "onDisconnected: ");
-            invokeListener(ListenerTypeEnum.Disconnected, null);
+            Map<String, Object> params = new HashMap<>(2, 1);
+            params.put("code", i);
+            params.put("msg", s);
+            invokeListener(ListenerTypeEnum.Disconnected, params);
         }
 
         /**
@@ -1024,7 +1713,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onWifiNeedAuth(String s) {
             Log.d(TAG, "onWifiNeedAuth: ");
-            invokeListener(ListenerTypeEnum.WifiNeedAuth, null);
+            invokeListener(ListenerTypeEnum.WifiNeedAuth, s);
         }
 
         /**
@@ -1033,7 +1722,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
             Log.d(TAG, "onGroupTipsEvent: ");
-            invokeListener(ListenerTypeEnum.GroupTips, null);
+            invokeListener(ListenerTypeEnum.GroupTips, timGroupTipsElem);
         }
 
         /**
@@ -1052,7 +1741,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         public void onRefreshConversation(List<TIMConversation> list) {
             Log.d(TAG, "onRefreshConversation: ");
             // 获取资料后调用回调
-            TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>() {
+            TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
                 @Override
                 public void onSuccess(List<SessionEntity> data) {
                     invokeListener(ListenerTypeEnum.RefreshConversation, data);
@@ -1071,7 +1760,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public void onMessageRevoked(TIMMessageLocator timMessageLocator) {
             Log.d(TAG, "onMessageRevoked: ");
-            invokeListener(ListenerTypeEnum.MessageRevoked, null);
+            invokeListener(ListenerTypeEnum.MessageRevoked, timMessageLocator);
         }
 
         /**
@@ -1083,7 +1772,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public boolean onNewMessages(List<TIMMessage> list) {
             Log.d(TAG, "onNewMessages: " + list.toString());
-            TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>() {
+            TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>(null) {
                 @Override
                 public void onSuccess(List<MessageEntity> messageEntities) {
                     invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
@@ -1096,6 +1785,21 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
             });
             return false;
+        }
+
+        /**
+         * 已读消息通知
+         *
+         * @param list 消息列表
+         */
+        @Override
+        public void onRecvReceipt(List<TIMMessageReceipt> list) {
+            Log.d(TAG, "onRecvReceipt: ");
+            List<String> rs = new ArrayList<>(list.size());
+            for (TIMMessageReceipt timMessageReceipt : list) {
+                rs.add(timMessageReceipt.getConversation().getPeer());
+            }
+            invokeListener(ListenerTypeEnum.RecvReceipt, rs);
         }
     }
 }

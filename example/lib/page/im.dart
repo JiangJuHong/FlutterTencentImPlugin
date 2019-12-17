@@ -98,7 +98,7 @@ class ImPageState extends State<ImPage> {
     init();
 
     // 获得当前登录用户
-    TencentImPlugin.getLoginUserInfo().then((data) {
+    TencentImPlugin.getSelfProfile().then((data) {
       this.setState(() {
         loginUserInfo = data;
       });
@@ -169,7 +169,7 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 发送事件
-  onSend() {
+  onSend() async {
     if (controller.text == null || controller.text.trim() == "") {
       Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('不能发送空值!'), duration: Duration(milliseconds: 2000)));

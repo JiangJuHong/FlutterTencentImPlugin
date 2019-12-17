@@ -1,7 +1,5 @@
 package top.huic.tencent_im_plugin;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMValueCallBack;
 
@@ -17,9 +15,6 @@ public class ValueCallBack<T> implements TIMValueCallBack<T> {
      * 回调
      */
     private Result result;
-
-    public ValueCallBack() {
-    }
 
     public ValueCallBack(Result result) {
         this.result = result;

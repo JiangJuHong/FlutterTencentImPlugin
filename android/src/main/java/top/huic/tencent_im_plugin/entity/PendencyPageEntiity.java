@@ -14,15 +14,16 @@ public class PendencyPageEntiity {
     private long seq;
     private long timestamp;
     private long unreadCnt;
-    private List<PendencyEntity> items = new ArrayList();
+    private List<PendencyEntity> items;
 
-    public PendencyPageEntiity() {
-    }
-
-    public PendencyPageEntiity(TIMFriendPendencyResponse data) {
+    public PendencyPageEntiity(TIMFriendPendencyResponse data, List<PendencyEntity> items) {
         seq = data.getSeq();
         timestamp = data.getTimestamp();
         unreadCnt = data.getUnreadCnt();
+        this.items = items;
+        if (this.items == null) {
+            this.items = new ArrayList<>();
+        }
     }
 
     public long getSeq() {

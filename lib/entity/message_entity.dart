@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 
 import 'node_entity.dart';
 
@@ -48,6 +49,9 @@ class MessageEntity {
   // 用户信息
   UserInfoEntity userInfo;
 
+  // 状态(只读字段)
+  MessageStatusEum status;
+
   MessageEntity({
     this.rand,
     this.customInt,
@@ -88,6 +92,15 @@ class MessageEntity {
     userInfo = json['userInfo'] == null
         ? null
         : UserInfoEntity.fromJson(json['userInfo']);
+    if (json['status'] != null) {
+      for (var item in MessageStatusEum.values) {
+        if (item.toString().replaceAll("MessageStatusEum.", "") ==
+            json['status']) {
+          status = item;
+          break;
+        }
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -108,6 +121,9 @@ class MessageEntity {
     data['sender'] = this.sender;
     data['sessionId'] = this.sessionId;
     data['userInfo'] = this.userInfo == null ? null : this.userInfo.toJson();
+    data['status'] = this.status == null
+        ? null
+        : this.status.toString().replaceAll("MessageStatusEum.", "");
     return data;
   }
 }

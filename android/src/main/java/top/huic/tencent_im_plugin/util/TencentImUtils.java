@@ -1,11 +1,9 @@
 package top.huic.tencent_im_plugin.util;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
-import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
@@ -29,12 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.RequiresApi;
 import top.huic.tencent_im_plugin.TencentImPlugin;
+import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.VoidCallBack;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
-import top.huic.tencent_im_plugin.ValueCallBack;
 
 /**
  * 腾讯云IM工具类
@@ -93,7 +91,7 @@ public class TencentImUtils {
 
         // 获取群资料
         if (groupInfo.size() != 0) {
-            TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new ValueCallBack<List<TIMGroupDetailInfoResult>>() {
+            TIMGroupManager.getInstance().getGroupInfo(Arrays.asList(groupInfo.keySet().toArray(new String[0])), new ValueCallBack<List<TIMGroupDetailInfoResult>>(null) {
                 @Override
                 public void onError(int code, String desc) {
                     Log.d(TencentImPlugin.TAG, "getGroupInfo failed, code: " + code + "|descr: " + desc);
@@ -121,7 +119,7 @@ public class TencentImUtils {
 
         // 获取用户资料
         if (userInfo.size() != 0) {
-            TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+            TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), true, new TIMValueCallBack<List<TIMUserProfile>>() {
                 @Override
                 public void onError(int code, String desc) {
                     Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
@@ -171,7 +169,7 @@ public class TencentImUtils {
                     TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
 
                     // 下载
-                    soundElem.getSoundToFile(file.getPath(), new TIMCallBack() {
+                    soundElem.getSoundToFile(file.getPath(), new VoidCallBack(null) {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
@@ -200,7 +198,7 @@ public class TencentImUtils {
 
 
                     // 下载
-                    videoElem.getSnapshotInfo().getImage(snapshotFile.getPath(), new TIMCallBack() {
+                    videoElem.getSnapshotInfo().getImage(snapshotFile.getPath(), new VoidCallBack(null) {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
@@ -230,7 +228,7 @@ public class TencentImUtils {
                     TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
 
                     // 下载
-                    videoElem.getVideoInfo().getVideo(videoFile.getPath(), new TIMCallBack() {
+                    videoElem.getVideoInfo().getVideo(videoFile.getPath(), new VoidCallBack(null) {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
@@ -259,18 +257,7 @@ public class TencentImUtils {
      * @return 会话对象
      */
     public static TIMConversation getSession(String sessionId, String sessionTypeStr) {
-        TIMConversationType sessionType = null;
-        for (TIMConversationType value : TIMConversationType.values()) {
-            if (sessionTypeStr.equals(value.name())) {
-                sessionType = value;
-                break;
-            }
-        }
-        // 验证sessionType
-        if (sessionType == null) {
-            Log.w(TencentImPlugin.TAG, "init: Cannot find parameter `sessionType` or `sessionType` is null!");
-            throw new RuntimeException("Cannot find parameter `sessionType` or `sessionType` is null!");
-        }
+        TIMConversationType sessionType = TIMConversationType.valueOf(sessionTypeStr);
 
         // 获得会话信息
         TIMConversation conversation = TIMManager.getInstance().getConversation(sessionType, sessionId);
@@ -299,7 +286,7 @@ public class TencentImUtils {
         }
 
         // 获取用户资料
-        TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), false, new TIMValueCallBack<List<TIMUserProfile>>() {
+        TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), true, new TIMValueCallBack<List<TIMUserProfile>>() {
             @Override
             public void onError(int code, String desc) {
                 callBack.onError(code, desc);
@@ -318,7 +305,7 @@ public class TencentImUtils {
                         }
                     }
                 }
-                Collections.sort(messageEntities,new Comparator<MessageEntity>() {
+                Collections.sort(messageEntities, new Comparator<MessageEntity>() {
                     @Override
                     public int compare(MessageEntity o1, MessageEntity o2) {
                         return o1.getTimestamp().compareTo(o2.getTimestamp());

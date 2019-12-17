@@ -1,5 +1,6 @@
 import 'package:tencent_im_plugin/entity/node_custom_entity.dart';
 
+import 'node_other_entity.dart';
 import 'node_text_entity.dart';
 import 'node_image_entity.dart';
 import 'node_sound_entity.dart';
@@ -37,7 +38,7 @@ class NodeEntity {
         NodeType.Custom.toString().replaceFirst("NodeType.", "")) {
       return NodeCustomEntity.fromJson(json);
     }
-    return null;
+    return NodeOtherEntity.fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
