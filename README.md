@@ -34,6 +34,15 @@ tencent_im_plugin:
 暂不支持
 
 ## 使用
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/1.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/2.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/3.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/4.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/5.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/6.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/7.png?raw=true" height="300em" style="max-width:100%;">
+<img src="https://github.com/JiangJuHong/access-images/blob/master/FlutterTencentImPlugin/8.png?raw=true" height="300em" style="max-width:100%;">
+
 
 ### 登录
 ---
