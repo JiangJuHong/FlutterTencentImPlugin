@@ -772,6 +772,8 @@ class TencentImPluginListener {
                 ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
           } else if (type == ListenerTypeEnum.RecvReceipt) {
             params = jsonDecode(paramsStr);
+          }else{
+            params = paramsStr;
           }
 
           // 回调触发
