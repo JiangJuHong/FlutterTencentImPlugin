@@ -1140,7 +1140,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMGroupManager.getInstance().getGroupMembers(groupId, new ValueCallBack<List<TIMGroupMemberInfo>>(result) {
             @Override
             public void onSuccess(List<TIMGroupMemberInfo> timGroupMemberInfos) {
-                super.onSuccess(timGroupMemberInfos);
                 final Map<String, GroupMemberEntity> userInfo = new HashMap<>(timGroupMemberInfos.size(), 1);
                 for (TIMGroupMemberInfo timGroupMemberInfo : timGroupMemberInfos) {
                     GroupMemberEntity user = userInfo.get(timGroupMemberInfo.getUser());
