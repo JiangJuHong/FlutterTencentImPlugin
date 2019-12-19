@@ -1154,13 +1154,16 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), true, new ValueCallBack<List<TIMUserProfile>>(result) {
                     @Override
                     public void onSuccess(List<TIMUserProfile> timUserProfiles) {
+                        List<GroupMemberEntity> resultData = new ArrayList<>(userInfo.size());
+
                         for (TIMUserProfile timUserProfile : timUserProfiles) {
                             GroupMemberEntity entity = userInfo.get(timUserProfile.getIdentifier());
                             if (entity != null) {
                                 entity.setUserProfile(timUserProfile);
                             }
+                            resultData.add(entity);
                         }
-                        result.success(JSON.toJSONString(userInfo));
+                        result.success(JSON.toJSONString(resultData));
                     }
                 });
             }
