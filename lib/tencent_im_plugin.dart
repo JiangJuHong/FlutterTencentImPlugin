@@ -394,7 +394,9 @@ class TencentImPlugin {
       "notification": notification,
       "introduction": introduction,
       "faceUrl": faceUrl,
-      "addOption": addOption.toString().replaceAll("AddGroupOptEnum.", ""),
+      "addOption": addOption == null
+          ? null
+          : addOption.toString().replaceAll("AddGroupOptEnum.", ""),
       "maxMemberNum": maxMemberNum,
       "visable": visable,
       "silenceAll": silenceAll,
@@ -417,8 +419,11 @@ class TencentImPlugin {
       "nameCard": nameCard,
       "silence": silence,
       "role": role,
-      "receiveMessageOpt":
-          receiveMessageOpt.toString().replaceAll("ReceiveMessageOptEnum.", ""),
+      "receiveMessageOpt": receiveMessageOpt == null
+          ? null
+          : receiveMessageOpt
+              .toString()
+              .replaceAll("ReceiveMessageOptEnum.", ""),
     });
   }
 
