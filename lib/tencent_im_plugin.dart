@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:tencent_im_plugin/base64_util.dart';
 import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_pendency_page_entity.dart';
@@ -370,7 +371,12 @@ class TencentImPlugin {
     final String result =
         await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
-      return EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
+      GroupInfoEntity groupInfoEntity =  EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
+      if(groupInfoEntity != null && groupInfoEntity.custom != null && groupInfoEntity.custom.length != 0){
+        for(var key in groupInfoEntity.custom.keys){
+          groupInfoEntity.custom[key] = Base64Util.base64Decode(groupInfoEntity.custom[key]);
+        }
+      }
     }
     return null;
   }
