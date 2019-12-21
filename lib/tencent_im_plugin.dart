@@ -377,6 +377,7 @@ class TencentImPlugin {
           groupInfoEntity.custom[key] = Base64Util.base64Decode(groupInfoEntity.custom[key]);
         }
       }
+      return groupInfoEntity;
     }
     return null;
   }
