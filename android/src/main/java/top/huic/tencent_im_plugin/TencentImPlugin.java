@@ -56,6 +56,7 @@ import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1225,6 +1226,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Boolean visable = methodCall.argument("visable");
         // 全员禁言
         Boolean silenceAll = methodCall.argument("silenceAll");
+        // 自定义信息
+        String customInfo = methodCall.argument("customInfo");
 
         TIMGroupManager.ModifyGroupInfoParam param = new TIMGroupManager.ModifyGroupInfoParam(groupId);
         param.setGroupName(groupName);
@@ -1240,6 +1243,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         }
         if (silenceAll != null) {
             param.setSearchable(silenceAll);
+        }
+        try {
+            if (customInfo != null) {
+                Map<String, Object> customInfoData = JSON.parseObject(customInfo);
+                Map<String, byte[]> customInfoParams = new HashMap<>(customInfoData.size(), 1);
+                for (String s : customInfoData.keySet()) {
+                    if (customInfoData.get(s) != null) {
+                        customInfoParams.put(s, customInfoData.get(s).toString().getBytes("utf-8"));
+                    }
+                }
+                param.setCustomInfo(customInfoParams);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "modifyGroupInfo: set customInfo error", e);
         }
         TIMGroupManager.getInstance().modifyGroupInfo(param, new VoidCallBack(result));
     }

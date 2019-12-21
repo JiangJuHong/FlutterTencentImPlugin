@@ -377,8 +377,8 @@ class TencentImPlugin {
 
   /// 修改群资料
   static Future<void> modifyGroupInfo({
-    @required String name, // 群名称
-    String groupId, //群ID
+    String name, // 群名称
+    @required String groupId, //群ID
     String notification, //群公告
     String introduction, // 群简介
     String faceUrl, // 群头像
@@ -386,6 +386,7 @@ class TencentImPlugin {
     int maxMemberNum, // 最大群成员数
     bool visable, // 是否对外可见
     bool silenceAll, // 全员禁言
+    Map<String, dynamic> customInfo, // 自定义信息
   }) async {
     return await _channel.invokeMethod('modifyGroupInfo', {
       "name": name,
@@ -397,6 +398,7 @@ class TencentImPlugin {
       "maxMemberNum": maxMemberNum,
       "visable": visable,
       "silenceAll": silenceAll,
+      "customInfo": customInfo == null ? null : jsonEncode(customInfo),
     });
   }
 
@@ -772,7 +774,7 @@ class TencentImPluginListener {
                 ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
           } else if (type == ListenerTypeEnum.RecvReceipt) {
             params = jsonDecode(paramsStr);
-          }else{
+          } else {
             params = paramsStr;
           }
 
