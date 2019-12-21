@@ -285,7 +285,7 @@ class TencentImPlugin {
   }
 
   /// 邀请用户加入群组
-  static Future<List<Map>> inviteGroupMember({
+  static Future<List<dynamic>> inviteGroupMember({
     @required String groupId, //群ID
     @required List<String> ids, // 用户I集合
   }) async {
@@ -307,7 +307,7 @@ class TencentImPlugin {
   }
 
   /// 删除群组成员
-  static Future<List<Map>> deleteGroupMember({
+  static Future<List<dynamic>> deleteGroupMember({
     @required String groupId, //群ID
     @required List<String> ids, // 用户I集合
     String reason, //删除理由
@@ -625,7 +625,7 @@ class TencentImPlugin {
   }
 
   /// 添加到黑名单
-  static Future<List<Map>> addBlackList({
+  static Future<List<dynamic>> addBlackList({
     @required List<String> ids,
   }) async {
     return jsonDecode(await _channel.invokeMethod('addBlackList', {
@@ -634,7 +634,7 @@ class TencentImPlugin {
   }
 
   /// 从黑名单移除
-  static Future<List<Map>> deleteBlackList({
+  static Future<List<dynamic>> deleteBlackList({
     @required List<String> ids,
   }) async {
     return jsonDecode(await _channel.invokeMethod('deleteBlackList', {
@@ -649,7 +649,7 @@ class TencentImPlugin {
   }
 
   /// 创建好友分组
-  static Future<List<Map>> createFriendGroup({
+  static Future<List<dynamic>> createFriendGroup({
     @required List<String> groupNames,
     @required List<String> ids,
   }) async {
@@ -669,7 +669,7 @@ class TencentImPlugin {
   }
 
   /// 添加好友到某个分组
-  static Future<List<Map>> addFriendsToFriendGroup({
+  static Future<List<dynamic>> addFriendsToFriendGroup({
     @required List<String> ids,
     @required String groupName,
   }) async {
