@@ -280,7 +280,9 @@ class TencentImPlugin {
       "notification": notification,
       "introduction": introduction,
       "faceUrl": faceUrl,
-      "addOption": addOption.toString().replaceAll("AddGroupOptEnum.", ""),
+      "addOption": addOption == null
+          ? null
+          : addOption.toString().replaceAll("AddGroupOptEnum.", ""),
       "maxMemberNum": maxMemberNum,
     });
   }
@@ -371,10 +373,14 @@ class TencentImPlugin {
     final String result =
         await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
-      GroupInfoEntity groupInfoEntity =  EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
-      if(groupInfoEntity != null && groupInfoEntity.custom != null && groupInfoEntity.custom.length != 0){
-        for(var key in groupInfoEntity.custom.keys){
-          groupInfoEntity.custom[key] = Base64Util.base64Decode(groupInfoEntity.custom[key]);
+      GroupInfoEntity groupInfoEntity =
+          EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
+      if (groupInfoEntity != null &&
+          groupInfoEntity.custom != null &&
+          groupInfoEntity.custom.length != 0) {
+        for (var key in groupInfoEntity.custom.keys) {
+          groupInfoEntity.custom[key] =
+              Base64Util.base64Decode(groupInfoEntity.custom[key]);
         }
       }
       return groupInfoEntity;
