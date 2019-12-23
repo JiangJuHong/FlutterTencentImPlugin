@@ -266,6 +266,7 @@ class TencentImPlugin {
         String
             type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
     @required String name, // 群名称
+    @required List<GroupMemberEntity> members, // 默认群成员，根据role决定身份
     String groupId, //群ID
     String notification, //群公告
     String introduction, // 群简介
@@ -284,6 +285,7 @@ class TencentImPlugin {
           ? null
           : addOption.toString().replaceAll("AddGroupOptEnum.", ""),
       "maxMemberNum": maxMemberNum,
+      "members": jsonEncode(members),
     });
   }
 
