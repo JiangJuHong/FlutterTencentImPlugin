@@ -1058,7 +1058,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMGroupManager.getInstance().createGroup(param, new ValueCallBack<String>(result) {
             @Override
             public void onSuccess(String s) {
-                result.success(result);
+                result.success(s);
             }
         });
     }
