@@ -31,7 +31,7 @@ class HomePageState extends State<HomePage> {
       widget: ApplyList(),
       title: "申请列表",
       selectedIcon: Icon(Icons.find_replace),
-      unselectedIcon: Icon(Icons.group),
+      unselectedIcon: Icon(Icons.find_replace),
     ),
     NavigationBarData(
       widget: GroupList(),
