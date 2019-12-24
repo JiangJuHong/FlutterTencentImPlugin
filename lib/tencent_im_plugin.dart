@@ -392,7 +392,7 @@ class TencentImPlugin {
 
   /// 修改群资料
   static Future<void> modifyGroupInfo({
-    String name, // 群名称
+    String groupName, // 群名称
     @required String groupId, //群ID
     String notification, //群公告
     String introduction, // 群简介
@@ -404,7 +404,7 @@ class TencentImPlugin {
     Map<String, dynamic> customInfo, // 自定义信息
   }) async {
     return await _channel.invokeMethod('modifyGroupInfo', {
-      "name": name,
+      "groupName": groupName,
       "groupId": groupId,
       "notification": notification,
       "introduction": introduction,
