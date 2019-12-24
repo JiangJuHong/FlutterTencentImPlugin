@@ -34,7 +34,7 @@ class ApplyListState extends State<ApplyList> {
     return TencentImPlugin.getPendencyList(type: PendencyTypeEnum.BOTH)
         .then((res) {
       this.setState(() {
-        data = res.items;
+        data = res.items ?? [];
       });
     });
   }

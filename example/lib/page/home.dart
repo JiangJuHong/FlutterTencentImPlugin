@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tencent_im_plugin_example/page/create_group.dart';
 import 'package:tencent_im_plugin_example/page/friend_list.dart';
 import 'package:tencent_im_plugin_example/page/group_list.dart';
 import 'package:tencent_im_plugin_example/page/im_list.dart';
@@ -62,6 +63,21 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("首页"),
+        actions: <Widget>[
+          currentIndex == 3
+              ? IconButton(
+                  icon: const Icon(Icons.add),
+                  tooltip: '创建群聊',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => CreateGroupPage()),
+                    );
+                  },
+                )
+              : Container()
+        ],
       ),
       body: IndexedStack(
         index: currentIndex,
