@@ -42,13 +42,6 @@ class CreateGroupPageState extends State<CreateGroupPage> {
 
   /// 创建
   onCreate() async {
-    List<GroupMemberEntity> members = [
-      GroupMemberEntity(user: self.identifier, role: 400)
-    ];
-    for (var item in friendData) {
-      members.add(GroupMemberEntity(user: item.identifier, role: 200));
-    }
-
     String id = await TencentImPlugin.createGroup(
       type: data['type'],
       name: data['name'],
@@ -57,7 +50,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       faceUrl: data['faceUrl'],
       addOption: data['addOption'],
       maxMemberNum: data['maxMemberNum'],
-      members: members,
+      members: [GroupMemberEntity(user: self.identifier, role: 400)],
     );
 
     if (data['type'] == 'Private') {
