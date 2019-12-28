@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
@@ -85,6 +86,10 @@ public class TencentImUtils {
 
         // 初始化计数器
         final int maxIndex = (userInfo.size() != 0 ? 1 : 0) + (groupInfo.size() != 0 ? 1 : 0);
+        if (maxIndex == 0) {
+            callback.onSuccess(new ArrayList<SessionEntity>());
+        }
+
 
         // 当前计数器
         final int[] currentIndex = {0};
