@@ -774,6 +774,11 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     ids.add(groupBaseInfo.getGroupId());
                 }
 
+                if (ids.size() == 0) {
+                    result.success(JSON.toJSONString(new ArrayList<>()));
+                    return;
+                }
+
                 // 获得群资料
                 TIMGroupManager.getInstance().getGroupInfo(ids, new ValueCallBack<List<TIMGroupDetailInfoResult>>(result));
             }
