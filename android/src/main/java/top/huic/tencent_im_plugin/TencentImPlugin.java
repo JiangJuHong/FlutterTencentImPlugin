@@ -528,6 +528,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             conversation.getLocalMessage(number, null, new ValueCallBack<List<TIMMessage>>(result) {
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
+                    if (timMessages == null || timMessages.size() == 0) {
+                        result.success(JSON.toJSONString(new ArrayList<>()));
+                        return;
+                    }
                     TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
                 }
             });
@@ -535,6 +539,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             conversation.getMessage(number, null, new ValueCallBack<List<TIMMessage>>(result) {
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
+                    if (timMessages == null || timMessages.size() == 0) {
+                        result.success(JSON.toJSONString(new ArrayList<>()));
+                        return;
+                    }
                     TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
                 }
             });
