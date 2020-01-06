@@ -115,6 +115,7 @@ public class TencentImUtils {
                     for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
                         SessionEntity sessionEntity = groupInfo.get(timGroupDetailInfoResult.getGroupId());
                         if (sessionEntity != null) {
+                            sessionEntity.setGroup(timGroupDetailInfoResult);
                             sessionEntity.setNickname(timGroupDetailInfoResult.getGroupName());
                             sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());
                         }
@@ -143,6 +144,7 @@ public class TencentImUtils {
                     for (TIMUserProfile timUserProfile : timUserProfiles) {
                         SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
                         if (sessionEntity != null) {
+                            sessionEntity.setUserProfile(timUserProfile);
                             sessionEntity.setNickname(timUserProfile.getNickName());
                             sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
                         }

@@ -1,6 +1,8 @@
 package top.huic.tencent_im_plugin.entity;
 
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
 
 /**
  * 会话对象
@@ -37,6 +39,16 @@ public class SessionEntity {
      * 最近一条消息
      */
     private MessageEntity message;
+
+    /**
+     * 群信息，在type为群时有效
+     */
+    private TIMGroupDetailInfoResult group;
+
+    /**
+     * 用户信息，在type为C2C时有效
+     */
+    private TIMUserProfile userProfile;
 
     public String getId() {
         return id;
@@ -87,5 +99,21 @@ public class SessionEntity {
 
     public void setMessage(MessageEntity message) {
         this.message = message;
+    }
+
+    public TIMGroupDetailInfoResult getGroup() {
+        return group;
+    }
+
+    public void setGroup(TIMGroupDetailInfoResult group) {
+        this.group = group;
+    }
+
+    public TIMUserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(TIMUserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }
