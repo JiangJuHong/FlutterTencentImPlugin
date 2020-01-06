@@ -1,4 +1,6 @@
+import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
+import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 
 /// 会话实体
 class SessionEntity {
@@ -20,6 +22,12 @@ class SessionEntity {
   // 最近一条消息
   MessageEntity message;
 
+  // 群
+  GroupInfoEntity group;
+
+  // 用户
+  UserInfoEntity userProfile;
+
   SessionEntity({
     this.faceUrl,
     this.unreadMessageNum,
@@ -27,6 +35,8 @@ class SessionEntity {
     this.id,
     this.type,
     this.message,
+    this.group,
+    this.userProfile,
   });
 
   SessionEntity.fromJson(Map<String, dynamic> json) {
@@ -42,6 +52,12 @@ class SessionEntity {
     message = json["message"] != null
         ? MessageEntity.fromJson(json["message"])
         : null;
+
+    group =
+        json["group"] != null ? GroupInfoEntity.fromJson(json["group"]) : null;
+    userProfile = json["userProfile"] != null
+        ? UserInfoEntity.fromJson(json["userProfile"])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +68,8 @@ class SessionEntity {
     data['id'] = this.id;
     data['type'] = this.type.toString();
     data['message'] = this.message.toJson();
+    data['group'] = this.group.toJson();
+    data['userProfile'] = this.userProfile.toJson();
     return data;
   }
 }
