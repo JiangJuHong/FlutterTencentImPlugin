@@ -49,6 +49,11 @@ public class TencentImUtils {
     public static void getConversationInfo(final ValueCallBack<List<SessionEntity>> callback, final List<TIMConversation> conversations) {
         final List<SessionEntity> resultData = new ArrayList<>();
 
+        if (conversations == null || conversations.size() == 0) {
+            callback.onSuccess(resultData);
+            return;
+        }
+
         // 需要获取用户信息的列表
         final Map<String, SessionEntity> userInfo = new HashMap<>();
 
@@ -88,6 +93,7 @@ public class TencentImUtils {
         final int maxIndex = (userInfo.size() != 0 ? 1 : 0) + (groupInfo.size() != 0 ? 1 : 0);
         if (maxIndex == 0) {
             callback.onSuccess(new ArrayList<SessionEntity>());
+            return;
         }
 
 
