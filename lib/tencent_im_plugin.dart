@@ -591,7 +591,7 @@ class TencentImPlugin {
   }) async {
     await _channel.invokeMethod('examinePendency', {
       "id": id,
-      "remark": remark,
+      "remark": remark ?? "",
       "type": PendencyExamineTypeEnumTool.getIndexByEnum(type),
     });
   }
