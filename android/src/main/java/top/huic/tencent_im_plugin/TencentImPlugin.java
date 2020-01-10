@@ -532,7 +532,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         result.success(JSON.toJSONString(new ArrayList<>()));
                         return;
                     }
-                    TencentImUtils.getMessageInfo(timMessages, false, new ValueCallBack<List<MessageEntity>>(result));
+                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
                 }
             });
         } else {
@@ -543,7 +543,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         result.success(JSON.toJSONString(new ArrayList<>()));
                         return;
                     }
-                    TencentImUtils.getMessageInfo(timMessages, false, new ValueCallBack<List<MessageEntity>>(result));
+                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
                 }
             });
         }
@@ -1806,12 +1806,11 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         @Override
         public boolean onNewMessages(List<TIMMessage> list) {
             Log.d(TAG, "onNewMessages: " + list.toString());
-            TencentImUtils.getMessageInfo(list, true, new ValueCallBack<List<MessageEntity>>(null) {
+            TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>(null) {
                 @Override
                 public void onSuccess(List<MessageEntity> messageEntities) {
                     invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
                 }
-
 
                 @Override
                 public void onError(int code, String desc) {

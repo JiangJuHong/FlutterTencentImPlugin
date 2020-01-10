@@ -286,11 +286,9 @@ public class TencentImUtils {
      * 获得完整的消息对象
      *
      * @param timMessages 消息列表
-     * @param session     是否获得会话
      * @param callBack    完成回调
      */
-    public static void getMessageInfo(List<TIMMessage> timMessages, boolean session, final ValueCallBack<List<MessageEntity>> callBack) {
-
+    public static void getMessageInfo(List<TIMMessage> timMessages, final ValueCallBack<List<MessageEntity>> callBack) {
         if (timMessages == null || timMessages.size() == 0) {
             callBack.onSuccess(new ArrayList<MessageEntity>());
             return;
@@ -303,7 +301,7 @@ public class TencentImUtils {
         }
 
         // 初始化计数器
-        final int maxIndex = 2 - (session ? 1 : 0);
+        final int maxIndex = 2;
         // 当前计数器
         final int[] currentIndex = {0};
 
@@ -352,52 +350,50 @@ public class TencentImUtils {
         });
 
         // 获取会话信息
-        if (session) {
-            List<TIMConversation> conversations = new ArrayList<>(timMessages.size());
-            final Map<String, List<Integer>> cs = new HashMap<>(timMessages.size(), 1);
-            for (int i = 0; i < timMessages.size(); i++) {
-                TIMMessage timMessage = timMessages.get(i);
-                conversations.add(timMessage.getConversation());
+        List<TIMConversation> conversations = new ArrayList<>(timMessages.size());
+        final Map<String, List<Integer>> cs = new HashMap<>(timMessages.size(), 1);
+        for (int i = 0; i < timMessages.size(); i++) {
+            TIMMessage timMessage = timMessages.get(i);
+            conversations.add(timMessage.getConversation());
 
-                List<Integer> is;
-                if ((is = cs.get(timMessage.getConversation().getPeer())) == null) {
-                    is = new ArrayList<>();
-                }
-                is.add(i);
-                userIds.put(timMessage.getConversation().getPeer(), is);
+            List<Integer> is;
+            if ((is = cs.get(timMessage.getConversation().getPeer())) == null) {
+                is = new ArrayList<>();
             }
-            getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
-                @Override
-                public void onSuccess(List<SessionEntity> sessionEntities) {
-
-                    // 数据复制
-                    for (SessionEntity sessionEntity : sessionEntities) {
-                        for (Integer integer : cs.get(sessionEntity.getId())) {
-                            resultData.get(integer).setSessionEntity(sessionEntity);
-                        }
-                    }
-
-                    // 根据消息时间排序
-                    Collections.sort(resultData, new Comparator<MessageEntity>() {
-                        @Override
-                        public int compare(MessageEntity o1, MessageEntity o2) {
-                            return o1.getTimestamp().compareTo(o2.getTimestamp());
-                        }
-                    });
-
-
-                    // 回调成功
-                    if (++currentIndex[0] >= maxIndex) {
-                        callBack.onSuccess(resultData);
-                    }
-                }
-
-                @Override
-                public void onError(int code, String desc) {
-                    callBack.onError(code, desc);
-                }
-            }, conversations);
+            is.add(i);
+            cs.put(timMessage.getConversation().getPeer(), is);
         }
+        getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
+            @Override
+            public void onSuccess(List<SessionEntity> sessionEntities) {
+
+                // 数据复制
+                for (SessionEntity sessionEntity : sessionEntities) {
+                    for (Integer integer : cs.get(sessionEntity.getId())) {
+                        resultData.get(integer).setSessionEntity(sessionEntity);
+                    }
+                }
+
+                // 根据消息时间排序
+                Collections.sort(resultData, new Comparator<MessageEntity>() {
+                    @Override
+                    public int compare(MessageEntity o1, MessageEntity o2) {
+                        return o1.getTimestamp().compareTo(o2.getTimestamp());
+                    }
+                });
+
+
+                // 回调成功
+                if (++currentIndex[0] >= maxIndex) {
+                    callBack.onSuccess(resultData);
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                callBack.onError(code, desc);
+            }
+        }, conversations);
     }
 
     /**
