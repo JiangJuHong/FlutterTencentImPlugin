@@ -25,8 +25,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import top.huic.tencent_im_plugin.TencentImPlugin;
 import top.huic.tencent_im_plugin.ValueCallBack;
@@ -284,22 +286,39 @@ public class TencentImUtils {
      * 获得完整的消息对象
      *
      * @param timMessages 消息列表
+     * @param session     是否获得会话
      * @param callBack    完成回调
      */
-    public static void getMessageInfo(List<TIMMessage> timMessages, final ValueCallBack<List<MessageEntity>> callBack) {
-        // 需要被获取用户信息的数据集
-        final Map<String, List<MessageEntity>> userInfo = new HashMap<>();
-        for (TIMMessage timMessage : timMessages) {
-            List<MessageEntity> list = userInfo.get(timMessage.getSender());
-            if (list == null) {
-                list = new ArrayList<>();
-            }
-            list.add(new MessageEntity(timMessage));
-            userInfo.put(timMessage.getSender(), list);
+    public static void getMessageInfo(List<TIMMessage> timMessages, boolean session, final ValueCallBack<List<MessageEntity>> callBack) {
+
+        if (timMessages == null || timMessages.size() == 0) {
+            callBack.onSuccess(new ArrayList<MessageEntity>());
+            return;
         }
 
-        // 获取用户资料
-        TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userInfo.keySet().toArray(new String[0])), true, new TIMValueCallBack<List<TIMUserProfile>>() {
+        // 返回结果
+        final List<MessageEntity> resultData = new ArrayList<>();
+        for (TIMMessage timMessage : timMessages) {
+            resultData.add(new MessageEntity(timMessage));
+        }
+
+        // 初始化计数器
+        final int maxIndex = 2 - (session ? 1 : 0);
+        // 当前计数器
+        final int[] currentIndex = {0};
+
+        // 获取用户资料(存储Key和下标，方便添加时快速查找)
+        final Map<String, List<Integer>> userIds = new HashMap<>(resultData.size(), 1);
+        for (int i = 0; i < resultData.size(); i++) {
+            MessageEntity resultDatum = resultData.get(i);
+            List<Integer> is;
+            if ((is = userIds.get(resultDatum.getSender())) == null) {
+                is = new ArrayList<>();
+            }
+            is.add(i);
+            userIds.put(resultDatum.getSender(), is);
+        }
+        TIMFriendshipManager.getInstance().getUsersProfile(Arrays.asList(userIds.keySet().toArray(new String[0])), true, new TIMValueCallBack<List<TIMUserProfile>>() {
             @Override
             public void onError(int code, String desc) {
                 callBack.onError(code, desc);
@@ -307,26 +326,78 @@ public class TencentImUtils {
 
             @Override
             public void onSuccess(List<TIMUserProfile> timUserProfiles) {
-                // 赋值用户信息并封装返回集合
-                List<MessageEntity> messageEntities = new ArrayList<>();
+
+                // 数据复制
                 for (TIMUserProfile timUserProfile : timUserProfiles) {
-                    List<MessageEntity> list = userInfo.get(timUserProfile.getIdentifier());
-                    if (list != null) {
-                        for (MessageEntity messageEntity : list) {
-                            messageEntity.setUserInfo(timUserProfile);
-                            messageEntities.add(messageEntity);
-                        }
+                    for (Integer integer : userIds.get(timUserProfile.getIdentifier())) {
+                        resultData.get(integer).setUserInfo(timUserProfile);
                     }
                 }
-                Collections.sort(messageEntities, new Comparator<MessageEntity>() {
+
+                // 根据消息时间排序
+                Collections.sort(resultData, new Comparator<MessageEntity>() {
                     @Override
                     public int compare(MessageEntity o1, MessageEntity o2) {
                         return o1.getTimestamp().compareTo(o2.getTimestamp());
                     }
                 });
-                callBack.onSuccess(messageEntities);
+
+
+                // 回调成功
+                if (++currentIndex[0] >= maxIndex) {
+                    callBack.onSuccess(resultData);
+                }
+
             }
         });
+
+        // 获取会话信息
+        if (session) {
+            List<TIMConversation> conversations = new ArrayList<>(timMessages.size());
+            final Map<String, List<Integer>> cs = new HashMap<>(timMessages.size(), 1);
+            for (int i = 0; i < timMessages.size(); i++) {
+                TIMMessage timMessage = timMessages.get(i);
+                conversations.add(timMessage.getConversation());
+
+                List<Integer> is;
+                if ((is = cs.get(timMessage.getConversation().getPeer())) == null) {
+                    is = new ArrayList<>();
+                }
+                is.add(i);
+                userIds.put(timMessage.getConversation().getPeer(), is);
+            }
+            getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
+                @Override
+                public void onSuccess(List<SessionEntity> sessionEntities) {
+
+                    // 数据复制
+                    for (SessionEntity sessionEntity : sessionEntities) {
+                        for (Integer integer : cs.get(sessionEntity.getId())) {
+                            resultData.get(integer).setSessionEntity(sessionEntity);
+                        }
+                    }
+
+                    // 根据消息时间排序
+                    Collections.sort(resultData, new Comparator<MessageEntity>() {
+                        @Override
+                        public int compare(MessageEntity o1, MessageEntity o2) {
+                            return o1.getTimestamp().compareTo(o2.getTimestamp());
+                        }
+                    });
+
+
+                    // 回调成功
+                    if (++currentIndex[0] >= maxIndex) {
+                        callBack.onSuccess(resultData);
+                    }
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    callBack.onError(code, desc);
+                }
+            }, conversations);
+        }
     }
 
     /**

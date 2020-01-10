@@ -96,6 +96,11 @@ public class MessageEntity {
      */
     private TIMMessageStatus status;
 
+    /**
+     * 会话实体
+     */
+    private SessionEntity sessionEntity;
+
     public MessageEntity() {
     }
 
@@ -243,5 +248,13 @@ public class MessageEntity {
 
     public void setStatus(TIMMessageStatus status) {
         this.status = status;
+    }
+
+    public SessionEntity getSessionEntity() {
+        return sessionEntity;
+    }
+
+    public void setSessionEntity(SessionEntity sessionEntity) {
+        this.sessionEntity = sessionEntity;
     }
 }

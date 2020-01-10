@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 
@@ -52,6 +53,9 @@ class MessageEntity {
   // 状态(只读字段)
   MessageStatusEum status;
 
+  // 会话对象
+  SessionEntity sessionEntity;
+
   MessageEntity({
     this.rand,
     this.customInt,
@@ -67,6 +71,7 @@ class MessageEntity {
     this.sender,
     this.sessionId,
     this.userInfo,
+    this.sessionEntity,
   });
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
@@ -92,6 +97,9 @@ class MessageEntity {
     userInfo = json['userInfo'] == null
         ? null
         : UserInfoEntity.fromJson(json['userInfo']);
+    sessionEntity = json['sessionEntity'] == null
+        ? null
+        : SessionEntity.fromJson(json['sessionEntity']);
     if (json['status'] != null) {
       for (var item in MessageStatusEum.values) {
         if (item.toString().replaceAll("MessageStatusEum.", "") ==
@@ -121,6 +129,8 @@ class MessageEntity {
     data['sender'] = this.sender;
     data['sessionId'] = this.sessionId;
     data['userInfo'] = this.userInfo == null ? null : this.userInfo.toJson();
+    data['sessionEntity'] =
+        this.sessionEntity == null ? null : this.sessionEntity.toJson();
     data['status'] = this.status == null
         ? null
         : this.status.toString().replaceAll("MessageStatusEum.", "");
