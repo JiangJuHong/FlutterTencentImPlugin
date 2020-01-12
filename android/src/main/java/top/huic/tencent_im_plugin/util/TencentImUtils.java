@@ -295,10 +295,18 @@ public class TencentImUtils {
         }
 
         // 返回结果
-        final List<MessageEntity> resultData = new ArrayList<>();
+        final List<MessageEntity> resultData = new ArrayList<>(timMessages.size());
         for (TIMMessage timMessage : timMessages) {
             resultData.add(new MessageEntity(timMessage));
         }
+
+        // 根据消息时间排序
+        Collections.sort(resultData, new Comparator<MessageEntity>() {
+            @Override
+            public int compare(MessageEntity o1, MessageEntity o2) {
+                return o1.getTimestamp().compareTo(o2.getTimestamp());
+            }
+        });
 
         // 初始化计数器
         final int maxIndex = 2;
@@ -309,8 +317,8 @@ public class TencentImUtils {
         final Map<String, List<Integer>> userIds = new HashMap<>(resultData.size(), 1);
         for (int i = 0; i < resultData.size(); i++) {
             MessageEntity resultDatum = resultData.get(i);
-            List<Integer> is;
-            if ((is = userIds.get(resultDatum.getSender())) == null) {
+            List<Integer> is = userIds.get(resultDatum.getSender());
+            if (is == null) {
                 is = new ArrayList<>();
             }
             is.add(i);
@@ -332,15 +340,6 @@ public class TencentImUtils {
                     }
                 }
 
-                // 根据消息时间排序
-                Collections.sort(resultData, new Comparator<MessageEntity>() {
-                    @Override
-                    public int compare(MessageEntity o1, MessageEntity o2) {
-                        return o1.getTimestamp().compareTo(o2.getTimestamp());
-                    }
-                });
-
-
                 // 回调成功
                 if (++currentIndex[0] >= maxIndex) {
                     callBack.onSuccess(resultData);
@@ -356,8 +355,8 @@ public class TencentImUtils {
             TIMMessage timMessage = timMessages.get(i);
             conversations.add(timMessage.getConversation());
 
-            List<Integer> is;
-            if ((is = cs.get(timMessage.getConversation().getPeer())) == null) {
+            List<Integer> is = cs.get(timMessage.getConversation().getPeer());
+            if (is == null) {
                 is = new ArrayList<>();
             }
             is.add(i);
@@ -373,15 +372,6 @@ public class TencentImUtils {
                         resultData.get(integer).setSessionEntity(sessionEntity);
                     }
                 }
-
-                // 根据消息时间排序
-                Collections.sort(resultData, new Comparator<MessageEntity>() {
-                    @Override
-                    public int compare(MessageEntity o1, MessageEntity o2) {
-                        return o1.getTimestamp().compareTo(o2.getTimestamp());
-                    }
-                });
-
 
                 // 回调成功
                 if (++currentIndex[0] >= maxIndex) {
