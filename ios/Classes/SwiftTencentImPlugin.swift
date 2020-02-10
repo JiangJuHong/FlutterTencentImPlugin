@@ -20,11 +20,18 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "logout":
             logout(call: call, result: result)
             break
+        case "getLoginUser":
+            getLoginUser(call: call, result: result)
+            break
         case "initStorage":
-            //            login(call: call, result: result)
+            initStorage(call: call, result: result)
+            break
+        case "getConversationList":
+            getConversationList(call: call, result: result)
             break
         default:
-            result(FlutterMethodNotImplemented);
+            print()
+//            result(FlutterMethodNotImplemented);
         }
     }
     
@@ -69,7 +76,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 //                int code, NSString * msg
                 TIMManager.sharedInstance()?.login(loginParam, succ: {
                     result(nil);
-                }, fail:CommonUtils.returnErrorClosures(result: result))
+                }, fail:TencentImUtils.returnErrorClosures(result: result))
             }
         }
     }
@@ -80,6 +87,33 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func logout(call: FlutterMethodCall, result: @escaping FlutterResult){
         TIMManager.sharedInstance()?.logout({
             result(nil);
-        },fail:CommonUtils.returnErrorClosures(result: result));
+        },fail:TencentImUtils.returnErrorClosures(result: result));
+    }
+    
+    /**
+     * 获得当前登录用户
+     */
+    public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult){
+        result(TIMManager.sharedInstance()?.getLoginUser());
+    }
+    
+    /**
+     * 初始化本地存储
+     */
+    public func initStorage(call: FlutterMethodCall, result: @escaping FlutterResult){
+        if let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier")
+        {
+            TIMManager.sharedInstance()?.initStorage(identifier, succ: {
+                result(nil);
+            },fail:TencentImUtils.returnErrorClosures(result: result));
+        }
+        
+    }
+
+    /**
+     * 获得当前登录用户会话列表
+     */
+    public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult){
+        TencentImUtils.getConversationInfo(conversations: (TIMManager.sharedInstance()?.getConversationList())!);
     }
 }

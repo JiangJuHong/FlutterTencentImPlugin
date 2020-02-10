@@ -1,5 +1,4 @@
 import Flutter
-import ImSDK
 
 //  通用工具类
 //  Created by 蒋具宏 on 2020/2/10.
@@ -20,17 +19,5 @@ public class CommonUtils{
             );
         }
         return value
-    }
-    
-    /**
-     * 返回[错误返回闭包]，腾讯云IM通用格式
-     */
-    public static func returnErrorClosures(result: @escaping FlutterResult)->TIMFail{
-        return {
-            (code : Int32,desc : Optional<String>)-> Void in
-            result(
-                FlutterError(code: "\(code)",  message: "Execution Error",details: desc!)
-            );
-        };
     }
 }
