@@ -22,7 +22,7 @@ public class VoidCallBack implements TIMCallBack {
     @Override
     public void onError(int code, String desc) {
         if (result != null) {
-            result.error(desc, String.valueOf(code), null);
+            result.error(String.valueOf(code), "Execution Error", desc);
         }
     }
 
