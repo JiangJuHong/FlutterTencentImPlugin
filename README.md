@@ -3,13 +3,14 @@
 腾讯云IM插件
 
 ## Getting Started
+集成腾讯云IM SDK，同时支持 Android 和 IOS
 
 ## 功能清单
 [x]初始化  
 [x]登录相关  
-[-]消息收发    
+[x]消息收发    
 [x]未读计数  
-[-]群组相关  
+[x]群组相关  
 [x]用户资料与关系链  
 [ ]离线推送  
 
@@ -25,13 +26,10 @@ tencent_im_plugin:
 
 
 ### Android 端集成
-无需额外配置，已内部打入混淆配置  
-如果启动报错，请修改 AndroidManifest.xml 文件  
-在 manifest 标签上增加:``xmlns:tools="http://schemas.android.com/tools"``
-在 application 标签上增加:``tools:replace="android:label"``
+无需额外配置，已内部打入混淆配置
 
 ### IOS
-暂不支持
+无需额外配置
 
 ## 使用
 Demo截图:  
@@ -44,156 +42,59 @@ Demo截图:
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentImPlugin/7.png" height="300em" style="max-width:100%;display: inline-block;"/>
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentImPlugin/8.png" height="300em" style="max-width:100%;display: inline-block;"/>
 
-
-### 登录
----
-
-#### 初始化
-
-#### 登录
-
-#### 初始化本地存储(可以在无网络情况下加载本地会话和消息)
-
-#### 退出登录
-
-#### 获得当前登录用户ID
-
-#### 获得当前登录用户信息
-
-### 消息收发
----
-
-#### 文本消息发送
-
-#### 图片消息发送
-
-#### 表情消息发送(暂不支持)
-
-#### 语音消息发送
-
-#### 发送地理位置(暂不支持)
-
-#### 小文件发送(暂不支持)
-
-#### 自定义消息发送
-
-#### 短视频发送
-
-#### 文本消息接收
-
-#### 图片消息接收
-
-#### 语音消息接收
-
-#### 小文件消息接收(暂不支持)
-
-#### 短视频消息接收
-
-#### 获取会话列表
-
-#### 获取本地消息
-
-#### 获得漫游(服务器上)的消息
-
-#### 设置会话操作(暂不支持)
-
-#### 删除会话
-
-#### 删除会话本地消息 - 批量删除本会话的全部本地聊天记录
-
-#### 查找本地消息(暂不支持)
-
-#### 消息撤回(暂不支持)
-
-### 未读计数
----
-
-#### 已读上报
-
-### 群组相关
----
-
-#### 创建群组
-
-#### 邀请用户加入群组
-
-#### 申请加入群组
-
-#### 退出群组
-
-#### 删除群组成员
-
-#### 获取群成员列表
-
-#### 获取群组列表
-
-#### 解散群组
-
-#### 转让群组
-
-#### 获取群组资料
-
-#### 获取本人在群内的资料(暂不支持)
-
-#### 获取群内某个人的资料(暂不支持)
-
-#### 修改群资料
-
-#### 修改群成员资料
-
-#### 获得群未决列表
-
-#### 上报未决已读
-
-#### 未决审核同意【谨慎使用】
-
-#### 未决审核拒绝【谨慎使用】
-
-### 用户资料与关系链
---- 
-
-#### 获取自己的资料
-
-#### 获取指定用户资料
-
-#### 修改自己资料
-
-#### 获取所有好友
-
-#### 修改好友资料
-
-#### 添加好友
-
-#### 删除好友
-
-#### 同意/拒绝好友申请
-
-#### 校验好友关系
-
-#### 获取未决列表
-
-#### 未决删除
-
-#### 未决已读上报
-
-#### 添加用户到黑名单
-
-#### 从黑名单删除
-
-#### 获得黑名单列表
-
-#### 创建好友分组
-
-#### 删除好友分组
-
-#### 添加好友到某分组
-
-#### 从某分组删除好友
-
-#### 重命名好友分组
-
-#### 获取好友分组
-
-### 离线推送
----  
-暂不支持
+## 功能清单
+|  接口   | 说明  | 参数  | Android | IOS |
+|  ----  | ----  | ----  | ----  | ----  |
+| init  | 初始化 | {appid:"xxxxxx"} | √ | √
+| login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
+| logout  | 登出 | - | √ | √
+| getLoginUser  | 获得当前登录用户ID | - | √ | √
+| initStorage  | 初始化本地存储 | - | √ | √
+| getConversationList  | 获得会话列表 | - | √ | 
+| getGroupInfo  | 获得群信息 | - | √ | 
+| getUserInfo  | 获得用户信息 | - | √ | 
+| setRead  | 设置已读 | - | √ | 
+| getMessages  | 获得消息列表 | - | √ | 
+| getLocalMessages  | 获得本地消息列表 | - | √ | 
+| sendCustomMessage  | 发送自定义消息 | - | √ | 
+| sendTextMessage  | 发送文本消息 | - | √ | 
+| sendSoundMessage  | 发送语音消息 | - | √ | 
+| sendImageMessage  | 发送图片消息 | - | √ | 
+| sendVideoMessage  | 发送视频消息 | - | √ | 
+| getFriendList  | 获得好友列表 | - | √ | 
+| getGroupList  | 获得群组列表 | - | √ | 
+| addFriend  | 添加好友 | - | √ | 
+| checkSingleFriends  | 检测单个好友关系 | - | √ | 
+| getPendencyList  | 获得未决好友列表(申请中) | - | √ | 
+| pendencyReport  | 未决已读上报 | - | √ | 
+| deletePendency  | 未决删除 | - | √ | 
+| examinePendency  | 未决审核 | - | √ | 
+| deleteConversation  | 删除会话 | - | √ | 
+| deleteLocalMessage  | 删除会话内的本地聊天记录 | - | √ | 
+| createGroup  | 创建群组 | - | √ | 
+| inviteGroupMember  | 邀请加入群组 | - | √ | 
+| applyJoinGroup  | 申请加入群组 | - | √ | 
+| quitGroup  | 退出群组 | - | √ | 
+| deleteGroupMember  | 删除群组成员 | - | √ | 
+| getGroupMembers  | 获得群成员列表 | - | √ | 
+| deleteGroup  | 解散群组 | - | √ | 
+| modifyGroupOwner  | 转让群组 | - | √ | 
+| modifyGroupInfo  | 修改群组资料 | - | √ | 
+| modifyMemberInfo  | 修改群成员资料 | - | √ | 
+| getGroupPendencyList  | 获得未决群列表 | - | √ | 
+| reportGroupPendency  | 上报群未决已读 | - | √ | 
+| groupPendencyAccept  | 群未决审核（同意） | - | √ | 
+| groupPendencyRefuse  | 群未决审核（拒绝） | - | √ | 
+| getSelfProfile  | 获取登录用户资料 | - | √ | 
+| modifySelfProfile  | 修改登录用户资料 | - | √ | 
+| modifyFriend  | 修改好友资料 | - | √ | 
+| deleteFriends  | 删除好友 | - | √ | 
+| addBlackList  | 添加到黑名单 | - | √ | 
+| deleteBlackList  | 从黑名单删除 | - | √ | 
+| getBlackList  | 获得黑名单列表 | - | √ | 
+| createFriendGroup  | 创建好友分组 | - | √ | 
+| deleteFriendGroup  | 删除好友分组 | - | √ | 
+| addFriendsToFriendGroup  | 添加好友到某个分组 | - | √ | 
+| deleteFriendsFromFriendGroup  | 从分组删除好友 | - | √ | 
+| renameFriendGroup  | 重命名分组 | - | √ | 
+| getFriendGroups  | 获得好友分组 | - | √ | 

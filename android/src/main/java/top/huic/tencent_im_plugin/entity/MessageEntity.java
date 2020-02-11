@@ -27,16 +27,6 @@ public class MessageEntity {
     private Long uniqueId;
 
     /**
-     * 随机码
-     */
-    private Long rand;
-
-    /**
-     * 序列号
-     */
-    private Long seq;
-
-    /**
      * 对方是否已读
      */
     private Boolean peerReaded;
@@ -107,8 +97,6 @@ public class MessageEntity {
     public MessageEntity(TIMMessage message) {
         this.id = message.getMsgId();
         this.uniqueId = message.getMsgUniqueId();
-        this.rand = message.getRand();
-        this.seq = message.getSeq();
         this.peerReaded = message.isPeerReaded();
         this.read = message.isRead();
         this.self = message.isSelf();
@@ -136,22 +124,6 @@ public class MessageEntity {
 
     public void setUniqueId(Long uniqueId) {
         this.uniqueId = uniqueId;
-    }
-
-    public Long getRand() {
-        return rand;
-    }
-
-    public void setRand(Long rand) {
-        this.rand = rand;
-    }
-
-    public Long getSeq() {
-        return seq;
-    }
-
-    public void setSeq(Long seq) {
-        this.seq = seq;
     }
 
     public Boolean getPeerReaded() {

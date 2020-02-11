@@ -8,9 +8,6 @@ import 'node_entity.dart';
 
 /// 消息实体
 class MessageEntity {
-  // 随机码
-  int rand;
-
   // 自定义整数
   int customInt;
 
@@ -31,9 +28,6 @@ class MessageEntity {
 
   // 消息唯一id
   int uniqueId;
-
-  // 序列号
-  int seq;
 
   // 时间戳
   int timestamp;
@@ -57,14 +51,12 @@ class MessageEntity {
   SessionEntity sessionEntity;
 
   MessageEntity({
-    this.rand,
     this.customInt,
     this.read,
     this.elemList,
     this.self,
     this.id,
     this.uniqueId,
-    this.seq,
     this.customStr,
     this.timestamp,
     this.peerReaded,
@@ -75,7 +67,6 @@ class MessageEntity {
   });
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
-    rand = json['rand'];
     customInt = json['customInt'];
     read = json['read'];
     if (json['elemList'] != null) {
@@ -88,7 +79,6 @@ class MessageEntity {
     self = json['self'];
     id = json['id'];
     uniqueId = json['uniqueId'];
-    seq = json['seq'];
     customStr = json['customStr'];
     timestamp = json['timestamp'];
     peerReaded = json['peerReaded'];
@@ -113,7 +103,6 @@ class MessageEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rand'] = this.rand;
     data['customInt'] = this.customInt;
     data['read'] = this.read;
     if (this.elemList != null) {
@@ -122,7 +111,6 @@ class MessageEntity {
     data['self'] = this.self;
     data['id'] = this.id;
     data['uniqueId'] = this.uniqueId;
-    data['seq'] = this.seq;
     data['customStr'] = this.customStr;
     data['timestamp'] = this.timestamp;
     data['peerReaded'] = this.peerReaded;

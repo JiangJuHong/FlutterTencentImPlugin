@@ -168,10 +168,10 @@ public class TencentImUtils {
      * @return 所有节点对象
      */
     public static List<TIMElem> getArrrElement(TIMMessage message) {
+        String rootPath = getSystemFilePath(TencentImPlugin.context);
         List<TIMElem> elems = new ArrayList<>();
         for (int i = 0; i < message.getElementCount(); i++) {
             TIMElem elem = message.getElement(i);
-            String rootPath = getSystemFilePath(TencentImPlugin.context);
             // 如果是语音，就下载保存
             if (elem.getType() == TIMElemType.Sound) {
                 final TIMSoundElem soundElem = (TIMSoundElem) elem;

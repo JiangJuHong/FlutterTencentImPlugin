@@ -1,10 +1,12 @@
+import ImSDK
+
 //
 //  MessageEntity.swift
 //  tencent_im_plugin
 //
 //  Created by 蒋具宏 on 2020/2/10.
 //
-public class MessageEntity{
+public class MessageEntity : NSObject{
     /**
      * 消息ID
      */
@@ -13,17 +15,7 @@ public class MessageEntity{
     /**
      * 唯一ID
      */
-    var uniqueId : Int32?;
-    
-    /**
-     * 随机码
-     */
-    var rand : Int32?;
-    
-    /**
-     * 序列号
-     */
-    var seq : Int32?;
+    var uniqueId : UInt64?;
     
     /**
      * 对方是否已读
@@ -38,7 +30,7 @@ public class MessageEntity{
     /**
      * 当前登录用户是否是发送方
      */
-    //     var self : Bool?;
+    var `self` : Bool?;
     
     /**
      * 自定义整数
@@ -68,25 +60,45 @@ public class MessageEntity{
     /**
      * 发送人->用户信息
      */
-    //    private var userInfo : TIMUserProfile?;
+    private var userInfo : TIMUserProfile?;
     
     /**
      * 发送人->群成员信息
      */
-    //    private var groupMemberInfo : TIMGroupMemberInfo?;
+    private var groupMemberInfo : TIMGroupMemberInfo?;
     
     /**
      * 节点内容
      */
-    //    private var elemList : [TIMElem]?;
+    private var elemList : [TIMElem]?;
     
     /**
      * 消息状态
      */
-    //    private var status : TIMMessageStatus?;
+    private var status : TIMMessageStatus?;
     
     /**
      * 会话实体
      */
     private var sessionEntity : SessionEntity?;
+    
+    override init() {
+    }
+    
+    init(message : TIMMessage) {
+        super.init();
+        self.id = message.msgId();
+        self.uniqueId = message.uniqueId();
+        self.peerReaded = message.isPeerReaded();
+        self.read = message.isReaded();
+        self.`self` = message.isSelf();
+        self.customInt = message.customInt();
+        self.customStr = String(data: message.customData()!, encoding: String.Encoding.utf8);
+        self.timestamp = message.timestamp();
+        self.elemList = TencentImUtils.getArrrElement(message: message);
+        self.groupMemberInfo = message.getSenderGroupMemberProfile();
+        self.sender = message.sender();
+        self.sessionId = message.getConversation().getReceiver();
+        self.status = message.status();
+    }
 }
