@@ -23,5 +23,5 @@ Pod::Spec.new do |s|
 
   # 资源导入
   s.ios.vendored_framework = "Frameworks/ImSDK.framework"
-  s.vendored_frameworks = 'ImSDK.framework'
+#   s.vendored_frameworks = 'ImSDK.framework'
 end
