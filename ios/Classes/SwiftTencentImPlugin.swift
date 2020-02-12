@@ -255,8 +255,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * 获得当前登录用户会话列表
      */
     public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult){
-        var conversation = [TIMConversation] = TIMManager.sharedInstance()?.getConversationList()!;
-        print(conversation)
+        TencentImUtils.getConversationInfo(conversations:(TIMManager.sharedInstance()?.getConversationList())!,onSuccess: {
+            (array)-> Void in
+            print(JsonUtil.toJson(array));
+//            result(JsonUtil.toJson(array));
+            result("[]");
+        },onFail: TencentImUtils.returnErrorClosures(result: result));
     }
     
     /**

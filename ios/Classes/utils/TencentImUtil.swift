@@ -21,11 +21,11 @@ public class TencentImUtils{
      * @param callback      回调对象
      * @param conversations 原生会话列表
      */
-    public static func getConversationInfo(conversations : [TIMConversation]){
+    public static func getConversationInfo(conversations : [TIMConversation],onSuccess : @escaping GetConversationInfoSuc, onFail :  @escaping GetConversationInfoFail){
         var resultData : [SessionEntity] = [];
         
         if (conversations.count == 0) {
-            //            callback.onSuccess(resultData);
+            onSuccess(resultData);
             return;
         }
         
@@ -40,7 +40,7 @@ public class TencentImUtils{
             let entity = SessionEntity();
             entity.id = timConversation.getReceiver();
             entity.nickname = timConversation.getGroupName();
-            entity.type = timConversation.getType();
+            entity.type = SessionType.getByTIMConversationType(type: timConversation.getType());
             entity.unreadMessageNum = timConversation.getUnReadMessageNum();
             
             // 封装获取资料对象
@@ -56,9 +56,60 @@ public class TencentImUtils{
                 entity.message = MessageEntity(message: lastMsg!);
             }
             resultData.append(entity);
-            
-            //            print(userInfo)
-            //            print(groupInfo)
+        }
+        
+        // 初始化计数器
+        let  maxIndex = (userInfo.count != 0 ? 1 : 0) + (groupInfo.count != 0 ? 1 : 0);
+        if (maxIndex == 0) {
+            onSuccess([]);
+            return;
+        }
+        
+        // 当前计数器
+        var currentIndex = 0;
+        
+        // 获取群资料
+        if (groupInfo.count != 0) {
+            TIMGroupManager.sharedInstance()?.getGroupInfo(Array(groupInfo.keys), succ: {
+                (array)-> Void in
+                // 设置会话资料
+                for item in array!{
+                    let groupInfoResult = item as! TIMGroupInfoResult;
+                    if let sessionEntity = groupInfo[groupInfoResult.group]{
+                        sessionEntity.group = GroupInfoEntity(groupInfo: groupInfoResult);
+                        sessionEntity.nickname = groupInfoResult.groupName;
+                        sessionEntity.faceUrl = groupInfoResult.faceURL;
+                    }
+                }
+                
+                // 回调成功
+                currentIndex += 1;
+                if (currentIndex >= maxIndex) {
+                    onSuccess(resultData);
+                }
+            }, fail:onFail);
+        }
+        
+        // 获取用户资料
+        if userInfo.count != 0{
+            TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(userInfo.keys), forceUpdate: true, succ: {
+                (array)-> Void in
+                // 设置会话资料
+                for item in array!{
+                    let userProfile = item as TIMUserProfile;
+                    if let sessionEntity = userInfo[userProfile.identifier]{
+                        sessionEntity.userProfile = UserInfoEntity(userProfile: userProfile);
+                        sessionEntity.nickname = userProfile.nickname;
+                        sessionEntity.faceUrl = userProfile.faceURL;
+                    }
+                }
+                
+                // 回调成功
+                currentIndex += 1;
+                if (currentIndex >= maxIndex) {
+                    onSuccess(resultData);
+                }
+            }, fail: onFail);
         }
     }
     
@@ -68,112 +119,22 @@ public class TencentImUtils{
      * @param message 消息对象
      * @return 所有节点对象
      */
-    public static func getArrrElement(message : TIMMessage) -> [TIMElem]{
-        let elems : [TIMElem] = [];
+    public static func getArrayElement(message : TIMMessage) -> [NodeEntity]{
+        var elems : [NodeEntity] = [];
         for index in 0..<message.elemCount() {
             let elem : TIMElem = message.getElem(index)
-            // 语音消息
-            if elem is TIMSoundElem{
-                
-            }
-            
-            // 文本消息
-            if elem is TIMTextElem{
-                
-            }
+            elems.append(NodeEntity.getNodeEntityByTIMElem(elem: elem));
         }
-        //        for (int i = 0; i < message.getElementCount(); i++) {
-        //            TIMElem elem = message.getElement(i);
-        //            String rootPath = getSystemFilePath(TencentImPlugin.context);
-        //            // 如果是语音，就下载保存
-        //            if (elem.getType() == TIMElemType.Sound) {
-        //                final TIMSoundElem soundElem = (TIMSoundElem) elem;
-        //                final File file = new File(rootPath + "/" + soundElem.getUuid());
-        //                if (!file.exists()) {
-        //                    // 通知参数
-        //                    final Map<String, Object> params = new HashMap<>();
-        //                    params.put("type", TIMElemType.Video);
-        //                    params.put("uuid", soundElem.getUuid());
-        //                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
-        //
-        //                    // 下载
-        //                    soundElem.getSoundToFile(file.getPath(), new VoidCallBack(null) {
-        //                        @Override
-        //                        public void onError(int code, String desc) {
-        //                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
-        //                        }
-        //
-        //                        @Override
-        //                        public void onSuccess() {
-        //                            Log.d(TencentImPlugin.TAG, "download success,path:" + file.getPath());
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
-        //                        }
-        //                    });
-        //                }
-        //                soundElem.setPath(file.getPath());
-        //                // 如果是视频，就保存缩略图
-        //            } else if (elem.getType() == TIMElemType.Video) {
-        //                final TIMVideoElem videoElem = (TIMVideoElem) elem;
-        //                // 缩略图文件
-        //                final File snapshotFile = new File(rootPath + "/" + videoElem.getSnapshotInfo().getUuid());
-        //                if (!snapshotFile.exists()) {
-        //                    // 通知参数
-        //                    final Map<String, Object> params = new HashMap<>();
-        //                    params.put("type", TIMElemType.Video);
-        //                    params.put("uuid", videoElem.getSnapshotInfo().getUuid());
-        //                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
-        //
-        //
-        //                    // 下载
-        //                    videoElem.getSnapshotInfo().getImage(snapshotFile.getPath(), new VoidCallBack(null) {
-        //                        @Override
-        //                        public void onError(int code, String desc) {
-        //                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
-        //                            Map<String, Object> params = new HashMap<>();
-        //                            params.put("type", TIMElemType.Video);
-        //                            params.put("uuid", videoElem.getSnapshotInfo().getUuid());
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
-        //                        }
-        //
-        //                        @Override
-        //                        public void onSuccess() {
-        //                            Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
-        //                        }
-        //                    });
-        //                }
-        //                videoElem.setSnapshotPath(snapshotFile.getPath());
-        //
-        //
-        //                // 短视频文件
-        //                final File videoFile = new File(rootPath + "/" + videoElem.getVideoInfo().getUuid());
-        //                if (!videoFile.exists()) {
-        //                    // 通知参数
-        //                    final Map<String, Object> params = new HashMap<>();
-        //                    params.put("type", TIMElemType.Video);
-        //                    params.put("uuid", videoElem.getVideoInfo().getUuid());
-        //                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
-        //
-        //                    // 下载
-        //                    videoElem.getVideoInfo().getVideo(videoFile.getPath(), new VoidCallBack(null) {
-        //                        @Override
-        //                        public void onError(int code, String desc) {
-        //                            Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
-        //                        }
-        //
-        //                        @Override
-        //                        public void onSuccess() {
-        //                            Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
-        //                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
-        //                        }
-        //                    });
-        //                }
-        //                videoElem.setVideoPath(videoFile.getPath());
-        //            }
-        //            elems.add(elem);
-        //        }
         return elems;
     }
 }
+
+/**
+ *  会话获取成功回调
+ */
+public typealias GetConversationInfoSuc = (_ array : [SessionEntity]) -> Void;
+
+/**
+ *  会话获取失败回调
+ */
+public typealias GetConversationInfoFail = (_ code : Int32, _ desc : Optional<String>) -> Void;

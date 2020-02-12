@@ -60,7 +60,7 @@ public class MessageEntity : NSObject{
     /**
      * 发送人->用户信息
      */
-    private var userInfo : TIMUserProfile?;
+    private var userInfo : UserInfoEntity?;
     
     /**
      * 发送人->群成员信息
@@ -70,12 +70,12 @@ public class MessageEntity : NSObject{
     /**
      * 节点内容
      */
-    private var elemList : [TIMElem]?;
+    private var elemList : [NodeEntity]?;
     
     /**
      * 消息状态
      */
-    private var status : TIMMessageStatus?;
+    private var status : MessageStatus?;
     
     /**
      * 会话实体
@@ -95,10 +95,10 @@ public class MessageEntity : NSObject{
         self.customInt = message.customInt();
         self.customStr = String(data: message.customData()!, encoding: String.Encoding.utf8);
         self.timestamp = message.timestamp();
-        self.elemList = TencentImUtils.getArrrElement(message: message);
+        self.elemList = TencentImUtils.getArrayElement(message: message);
         self.groupMemberInfo = message.getSenderGroupMemberProfile();
         self.sender = message.sender();
         self.sessionId = message.getConversation().getReceiver();
-        self.status = message.status();
+        self.status = MessageStatus.getByTIMMessageStatus(status:message.status());
     }
 }

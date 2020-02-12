@@ -12,6 +12,7 @@ class UserInfoEntity {
   String allowType;
   String faceUrl;
   String location;
+  // 该字段仅支持 Android 设备
   Map<String, dynamic> customInfoUint;
 
   UserInfoEntity({

@@ -16,7 +16,7 @@ public class SessionEntity : NSObject{
     /**
      * 会话类型
      */
-    var type : TIMConversationType?;
+    var type : SessionType?;
     
     /**
      * 头像(用户头像、群头像、系统头像)
@@ -36,10 +36,10 @@ public class SessionEntity : NSObject{
     /**
      * 群信息，在type为群时有效
      */
-//    var group : TIMGroupDetailInfoResult?;
+    var group : GroupInfoEntity?;
     
     /**
      * 用户信息，在type为C2C时有效
      */
-    var userProfile : TIMUserProfile?;
+    var userProfile : UserInfoEntity?;
 }
