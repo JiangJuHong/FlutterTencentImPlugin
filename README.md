@@ -43,14 +43,29 @@ Demo截图:
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentImPlugin/8.png" height="300em" style="max-width:100%;display: inline-block;"/>
 
 ## 功能清单
+|  节点  |  进度  |  说明  |
+|  ----  | ---- |  ---- |
+|  TIMCustomElem  |  √ |  已完成 |
+|  TIMFaceElem  |  - |  暂不考虑 |
+|  TIMFileElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
+|  TIMGroupSystemElem  |  - |  暂不考虑 |
+|  TIMGroupTipsElem  |  - |  暂不考虑 |
+|  TIMImageElem  |  √ |  已完成 |
+|  TIMLocationElem  |  - |  计划内 |
+|  TIMProfileSystemElem  |  - |  暂不考虑 |
+|  TIMSNSSystemElem  |  - |  暂不考虑 |
+|  TIMSoundElem  |  ⊙ |  有缺陷，但不影响使用 |
+|  TIMTextElem  |  √ |  已完成 |
+|  TIMVideoElem  |  ⊙ |  有缺陷，但不影响使用 |
+
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
 | init  | 初始化 | {appid:"xxxxxx"} | √ | √
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
-| initStorage  | 初始化本地存储 | - | √ | √
-| getConversationList  | 获得会话列表 | - | √ | 
+| initStorage  | 初始化本地存储 | {"identifier": '用户ID'} | √ | √
+| getConversationList  | 获得会话列表 | - | √ | √ 
 | getGroupInfo  | 获得群信息 | - | √ | 
 | getUserInfo  | 获得用户信息 | - | √ | 
 | setRead  | 设置已读 | - | √ | 
