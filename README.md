@@ -74,9 +74,9 @@ Demo截图:
 | getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
 | sendCustomMessage  | 发送自定义消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",data:"数据内容"} | √ | √
 | sendTextMessage  | 发送文本消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",content:"文本内容"} | √ | √
-| sendSoundMessage  | 发送语音消息 | - | √ | 
-| sendImageMessage  | 发送图片消息 | - | √ | 
-| sendVideoMessage  | 发送视频消息 | - | √ | 
+| sendSoundMessage  | 发送语音消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"语音文件路径",duration:"语音时长"} | √ | √
+| sendImageMessage  | 发送图片消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"图片路径"} | √ | √
+| sendVideoMessage  | 发送视频消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"视频路径",type:"视频类型",duration:"时长",snapshotWidth:"快照宽度",snapshotHeight:"快照高度",snapshotPath:"快照路径"} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | 
 | getGroupList  | 获得群组列表 | - | √ | 
 | addFriend  | 添加好友 | - | √ | 

@@ -440,7 +440,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func sendSoundMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
+            let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32
+        {
+            let message = TIMMessage();
+            let soundElem = TIMSoundElem();
+            soundElem.path = path;
+            soundElem.second = duration;
+            message.add(soundElem);
+            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
+        }
     }
     
     /**
@@ -450,7 +462,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func sendImageMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String
+        {
+            let message = TIMMessage();
+            let imageElem = TIMImageElem();
+            imageElem.path = path;
+            message.add(imageElem);
+            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
+        }
     }
     
     /**
@@ -460,7 +482,36 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func sendVideoMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
+            let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32,
+            let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
+             let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
+             let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
+            let snapshotPath = CommonUtils.getParam(call: call, result: result, param: "snapshotPath") as? String
+        {
+            // 视频数据
+            let video = TIMVideo();
+            video.duration = duration;
+            video.type = type;
+            
+            // 缩略图数据
+            let snapshot = TIMSnapshot();
+            snapshot.width = snapshotWidth;
+            snapshot.height = snapshotHeight;
+            
+            // 消息数据
+            let message = TIMMessage();
+            let videoElem = TIMVideoElem();
+            videoElem.videoPath = path;
+            videoElem.video = video;
+            videoElem.snapshotPath = snapshotPath;
+            videoElem.snapshot = snapshot;
+            message.add(videoElem);
+            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
+        }
     }
     
     /**
