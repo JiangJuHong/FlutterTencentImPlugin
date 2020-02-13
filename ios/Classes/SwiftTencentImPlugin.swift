@@ -257,9 +257,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult){
         TencentImUtils.getConversationInfo(conversations:(TIMManager.sharedInstance()?.getConversationList())!,onSuccess: {
             (array)-> Void in
-            print(JsonUtil.toJson(array));
-//            result(JsonUtil.toJson(array));
-            result("[]");
+//             print(JsonUtil.toJson(array));
+           result(JsonUtil.toJson(array));
+//             result("[]");
         },onFail: TencentImUtils.returnErrorClosures(result: result));
     }
     
