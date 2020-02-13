@@ -1,5 +1,6 @@
 package top.huic.tencent_im_plugin.entity;
 
+import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMMessage;
@@ -87,9 +88,9 @@ public class MessageEntity {
     private TIMMessageStatus status;
 
     /**
-     * 会话实体
+     * 会话类型
      */
-    private SessionEntity sessionEntity;
+    private TIMConversationType sessionType;
 
     public MessageEntity() {
     }
@@ -108,6 +109,7 @@ public class MessageEntity {
         this.sender = message.getSender();
         this.sessionId = message.getConversation().getPeer();
         this.status = message.status();
+        this.sessionType = message.getConversation().getType();
     }
 
     public String getId() {
@@ -222,11 +224,11 @@ public class MessageEntity {
         this.status = status;
     }
 
-    public SessionEntity getSessionEntity() {
-        return sessionEntity;
+    public TIMConversationType getSessionType() {
+        return sessionType;
     }
 
-    public void setSessionEntity(SessionEntity sessionEntity) {
-        this.sessionEntity = sessionEntity;
+    public void setSessionType(TIMConversationType sessionType) {
+        this.sessionType = sessionType;
     }
 }
