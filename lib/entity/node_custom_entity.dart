@@ -8,7 +8,7 @@ class NodeCustomEntity extends NodeEntity {
   NodeCustomEntity({this.data});
 
   NodeCustomEntity.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? Base64Util.base64Decode(json['data']) : null;
+    data = json['data'];
     type = NodeEntity.fromJson(json).type;
   }
 

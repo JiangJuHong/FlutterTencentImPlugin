@@ -83,14 +83,16 @@ public class JsonUtil {
         var result = "\"\(k)\":";
         
         // 根据类型赋值不同的值
+        // 如果是字符串，将会进行转移 " to \"
+        // 如果是Data，将会解析为字符串并且进行转移
         if v is String{
-            result += "\"\(v)\"";
+            result += "\"\("\(v)".replacingOccurrences(of: "\"",with: "\\\""))\"";
         }else if v is Int32 || v is Int || v is UInt32 || v is UInt64 || v is Bool || v is Double{
             result += "\(v)";
         }else if v is Date{
             result += "\(Int((v as! Date).timeIntervalSince1970))";
         }else if v is Data{
-            result += "\"\(String(data: v as! Data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\0",with: ""))\"";
+            result += "\"\(String(data: v as! Data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\0",with: "").replacingOccurrences(of: "\"",with: "\\\""))\"";
         }else if v is Dictionary<AnyHashable, Any>{
             result += "{";
             // 解析键值对

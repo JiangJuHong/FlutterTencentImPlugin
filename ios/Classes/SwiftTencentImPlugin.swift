@@ -357,6 +357,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                     (array : Any) -> Void in
                     TencentImUtils.getMessageInfo(timMessages: array as! [TIMMessage], onSuccess: {
                         (array)-> Void in
+                        print("===========================");
+                        print(JsonUtil.toJson(array))
+                        print("===========================");
                         result(JsonUtil.toJson(array));
                     }, onFail:  TencentImUtils.returnErrorClosures(result: result));
                 };
