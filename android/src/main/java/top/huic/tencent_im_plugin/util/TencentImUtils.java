@@ -308,11 +308,6 @@ public class TencentImUtils {
             }
         });
 
-        // 初始化计数器
-        final int maxIndex = 2;
-        // 当前计数器
-        final int[] currentIndex = {0};
-
         // 获取用户资料(存储Key和下标，方便添加时快速查找)
         final Map<String, List<Integer>> userIds = new HashMap<>(resultData.size(), 1);
         for (int i = 0; i < resultData.size(); i++) {
@@ -339,51 +334,9 @@ public class TencentImUtils {
                         resultData.get(integer).setUserInfo(timUserProfile);
                     }
                 }
-
-                // 回调成功
-                if (++currentIndex[0] >= maxIndex) {
-                    callBack.onSuccess(resultData);
-                }
-
+                callBack.onSuccess(resultData);
             }
         });
-
-        // 获取会话信息
-        List<TIMConversation> conversations = new ArrayList<>(timMessages.size());
-        final Map<String, List<Integer>> cs = new HashMap<>(timMessages.size(), 1);
-        for (int i = 0; i < timMessages.size(); i++) {
-            TIMMessage timMessage = timMessages.get(i);
-            conversations.add(timMessage.getConversation());
-
-            List<Integer> is = cs.get(timMessage.getConversation().getPeer());
-            if (is == null) {
-                is = new ArrayList<>();
-            }
-            is.add(i);
-            cs.put(timMessage.getConversation().getPeer(), is);
-        }
-        getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
-            @Override
-            public void onSuccess(List<SessionEntity> sessionEntities) {
-
-                // 数据复制
-                for (SessionEntity sessionEntity : sessionEntities) {
-                    for (Integer integer : cs.get(sessionEntity.getId())) {
-                        resultData.get(integer).setSessionEntity(sessionEntity);
-                    }
-                }
-
-                // 回调成功
-                if (++currentIndex[0] >= maxIndex) {
-                    callBack.onSuccess(resultData);
-                }
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                callBack.onError(code, desc);
-            }
-        }, conversations);
     }
 
     /**

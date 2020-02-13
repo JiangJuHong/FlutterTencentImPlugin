@@ -418,7 +418,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
-     * 腾讯云 获得群信息（先获取本地的，如果本地没有，则获取云端的）
+     * 腾讯云 获得群信息
      *
      * @param methodCall 方法调用对象
      * @param result     返回结果对象

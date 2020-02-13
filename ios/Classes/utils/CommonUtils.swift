@@ -10,14 +10,14 @@ public class CommonUtils{
      * @param result     返回对象
      * @param param      参数名
      */
-    public static func getParam(call: FlutterMethodCall, result: @escaping FlutterResult, param : String)->String?
+    public static func getParam(call: FlutterMethodCall, result: @escaping FlutterResult, param : String)->Any?
     {
-        let value = (call.arguments as! [String:String])[param]
-        if value == nil{
-            result(
-                FlutterError(code: "5",  message: "Missing parameter",details: "Cannot find parameter `\(param)` or `\(param)` is null!")
-            );
+        if let value = (call.arguments as! [String:Any])[param]{
+            return value
         }
-        return value
+        result(
+            FlutterError(code: "5",  message: "Missing parameter",details: "Cannot find parameter `\(param)` or `\(param)` is null!")
+        );
+        return nil;
     }
 }

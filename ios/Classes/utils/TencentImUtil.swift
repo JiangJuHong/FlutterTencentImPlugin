@@ -21,7 +21,7 @@ public class TencentImUtils{
      * @param callback      回调对象
      * @param conversations 原生会话列表
      */
-    public static func getConversationInfo(conversations : [TIMConversation],onSuccess : @escaping GetConversationInfoSuc, onFail :  @escaping GetConversationInfoFail){
+    public static func getConversationInfo(conversations : [TIMConversation],onSuccess : @escaping GetInfoSuc, onFail :  @escaping GetInfoFail){
         var resultData : [SessionEntity] = [];
         
         if (conversations.count == 0) {
@@ -127,14 +127,85 @@ public class TencentImUtils{
         }
         return elems;
     }
+    
+    /**
+     * 根据会话ID和会话类型获得会话对象
+     *
+     * @param sessionId      会话ID
+     * @param sessionTypeStr 会话类型字符串模式
+     * @param result    返回结果对象，如果传递了该属性，那么在获取会话失败时会自动返回Error
+     * @return 会话对象
+     */
+    public static func getSession(sessionId : String, sessionTypeStr : String,result : FlutterResult?)-> TIMConversation? {
+        if let sessionType = SessionType.getEnumByName(name: sessionTypeStr){
+            if let session = TIMManager.sharedInstance()?.getConversation(TIMConversationType(rawValue: sessionType.rawValue)!, receiver: sessionId) {
+                return session;
+            }
+        }
+        if result != nil{
+            result!(
+                FlutterError(code: "100",  message: "Execution Error",details: "Session not found")
+            );
+        }
+        return nil;
+    }
+    
+    /**
+     * 获得完整的消息对象
+     *
+     * @param timMessages 消息列表
+     * @param callBack    完成回调
+     */
+    public static func getMessageInfo(timMessages : [TIMMessage], onSuccess : @escaping GetInfoSuc, onFail :  @escaping GetInfoFail) {
+        var resultData : [MessageEntity] = [];
+        
+        if (timMessages.count == 0) {
+            onSuccess(resultData);
+            return;
+        }
+        
+        // 根据消息列表封装消息信息
+        for item in timMessages{
+            let ms = MessageEntity(message: item);
+            resultData.append(ms);
+        }
+        
+        // 根据消息时间排序
+        resultData.sort(by: {
+            (o1,o2)-> Bool in
+            return (o1.timestamp?.compare(o2.timestamp!).rawValue)! <= 0
+        });
+
+        // 获取用户资料(存储Key和下标，方便添加时快速查找)
+        var userIds = [String: [Int]]();
+        for i in 0..<resultData.count{
+            let messageDatum = resultData[i];
+            // 获得用户信息
+            var userArray : [Int] = userIds[messageDatum.sender!] ?? [];
+            userArray.append(i);
+            userIds[messageDatum.sender!] = userArray;
+        }
+        TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(userIds.keys), forceUpdate: true, succ: {
+            (array) -> Void in
+            // 设置用户资料
+            for item in array!{
+                for index in userIds[item.identifier]!{
+                    resultData[index].userInfo = UserInfoEntity(userProfile: item);
+                }
+            }
+            
+            // 回调成功
+            onSuccess(resultData);
+        }, fail: onFail);
+    }
 }
 
 /**
- *  会话获取成功回调
+ *  获取信息成功回调
  */
-public typealias GetConversationInfoSuc = (_ array : [SessionEntity]) -> Void;
+public typealias GetInfoSuc = (_ array : [Any]) -> Void;
 
 /**
- *  会话获取失败回调
+ *  获取信息失败回调
  */
-public typealias GetConversationInfoFail = (_ code : Int32, _ desc : Optional<String>) -> Void;
+public typealias GetInfoFail = (_ code : Int32, _ desc : Optional<String>) -> Void;

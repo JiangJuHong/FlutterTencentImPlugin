@@ -58,29 +58,29 @@ public class MessageEntity : NSObject{
     var sessionId : String?
     
     /**
+     * 会话类型
+     */
+    var sessionType : SessionType?;
+    
+    /**
      * 发送人->用户信息
      */
-    private var userInfo : UserInfoEntity?;
+    var userInfo : UserInfoEntity?;
     
     /**
      * 发送人->群成员信息
      */
-    private var groupMemberInfo : TIMGroupMemberInfo?;
+    var groupMemberInfo : TIMGroupMemberInfo?;
     
     /**
      * 节点内容
      */
-    private var elemList : [NodeEntity]?;
+    var elemList : [NodeEntity]?;
     
     /**
      * 消息状态
      */
-    private var status : MessageStatus?;
-    
-    /**
-     * 会话实体
-     */
-    private var sessionEntity : SessionEntity?;
+    var status : MessageStatus?;
     
     override init() {
     }
@@ -99,6 +99,7 @@ public class MessageEntity : NSObject{
         self.groupMemberInfo = message.getSenderGroupMemberProfile();
         self.sender = message.sender();
         self.sessionId = message.getConversation().getReceiver();
+        self.sessionType = SessionType.getByTIMConversationType(type: (message.getConversation()?.getType())!);
         self.status = MessageStatus.getByTIMMessageStatus(status:message.status());
     }
 }
