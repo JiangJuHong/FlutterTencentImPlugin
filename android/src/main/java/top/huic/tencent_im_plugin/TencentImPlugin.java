@@ -565,10 +565,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String data = this.getParam(methodCall, result, "data");
         // 使用使用在线消息发送(无痕)
         boolean ol = this.getParam(methodCall, result, "ol");
-        // 其它数据
-        String ext = methodCall.argument("ext");
-        String sound = methodCall.argument("sound");
-        String desc = methodCall.argument("desc");
 
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
@@ -577,9 +573,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMMessage message = new TIMMessage();
         TIMCustomElem customElem = new TIMCustomElem();
         customElem.setData(data.getBytes());
-        customElem.setExt(ext != null ? ext.getBytes() : null);
-        customElem.setSound(sound != null ? sound.getBytes() : null);
-        customElem.setDesc(desc);
         message.addElement(customElem);
 
         // 发送消息
@@ -744,7 +737,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         ValueCallBack callBack = new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
-                result.success(JSON.toJSONString(new MessageEntity(message)));
+                result.success(null);
             }
         };
 

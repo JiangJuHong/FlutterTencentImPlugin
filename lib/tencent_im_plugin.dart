@@ -65,95 +65,69 @@ class TencentImPlugin {
   }
 
   /// 发送文本消息
-  static Future<MessageEntity> sendTextMessage({
+  static Future<void> sendTextMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String content, //发送内容
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    final String result = await _channel.invokeMethod('sendTextMessage', {
+    return await _channel.invokeMethod('sendTextMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "content": content,
       "ol": ol,
     });
-
-    if (result != null) {
-      return EntityFactory.generateOBJ<MessageEntity>(jsonDecode(result));
-    }
-    return null;
   }
 
   /// 发送图片消息
-  static Future<MessageEntity> sendImageMessage({
+  static Future<void> sendImageMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 发送图片路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    final String result = await _channel.invokeMethod('sendImageMessage', {
+    return await _channel.invokeMethod('sendImageMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
       "ol": ol,
     });
-
-    if (result != null) {
-      return EntityFactory.generateOBJ<MessageEntity>(jsonDecode(result));
-    }
-    return null;
   }
 
   /// 发送语音消息
-  static Future<MessageEntity> sendSoundMessage({
+  static Future<void> sendSoundMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 语音路径
     @required int duration, // 语音时长
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    final String result = await _channel.invokeMethod('sendSoundMessage', {
+    return await _channel.invokeMethod('sendSoundMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
       "duration": duration,
       "ol": ol,
     });
-
-    if (result != null) {
-      return EntityFactory.generateOBJ<MessageEntity>(jsonDecode(result));
-    }
-    return null;
   }
 
   /// 发送自定义消息
-  static Future<MessageEntity> sendCustomMessage({
+  static Future<void> sendCustomMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String data, // 自定义消息数据
-    String ext,
-    String sound,
-    String desc,
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    final String result = await _channel.invokeMethod('sendCustomMessage', {
+    return await _channel.invokeMethod('sendCustomMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "data": data,
-      "ext": ext,
-      "sound": sound,
-      "desc": desc,
       "ol": ol,
     });
-
-    if (result != null) {
-      return EntityFactory.generateOBJ<MessageEntity>(jsonDecode(result));
-    }
-    return null;
   }
 
   /// 发送视频消息
-  static Future<MessageEntity> sendVideoMessage({
+  static Future<void> sendVideoMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 视频路径
@@ -164,7 +138,7 @@ class TencentImPlugin {
     @required String snapshotPath, // 缩略图路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    final String result = await _channel.invokeMethod('sendVideoMessage', {
+    return await _channel.invokeMethod('sendVideoMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
@@ -175,11 +149,6 @@ class TencentImPlugin {
       "snapshotPath": snapshotPath,
       "ol": ol,
     });
-
-    if (result != null) {
-      return EntityFactory.generateOBJ<MessageEntity>(jsonDecode(result));
-    }
-    return null;
   }
 
   /// 获得当前登录用户会话列表

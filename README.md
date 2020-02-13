@@ -71,8 +71,8 @@ Demo截图:
 | setRead  | 设置已读 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
 | getMessages  | 获得消息列表 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
 | getLocalMessages  | 获得本地消息列表 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
-| sendCustomMessage  | 发送自定义消息 | - | √ | 
-| sendTextMessage  | 发送文本消息 | - | √ | 
+| sendCustomMessage  | 发送自定义消息 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",data:"数据内容"} | √ | √
+| sendTextMessage  | 发送文本消息 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",content:"文本内容"} | √ | √
 | sendSoundMessage  | 发送语音消息 | - | √ | 
 | sendImageMessage  | 发送图片消息 | - | √ | 
 | sendVideoMessage  | 发送视频消息 | - | √ | 

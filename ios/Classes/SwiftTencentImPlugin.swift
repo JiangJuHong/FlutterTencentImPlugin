@@ -377,7 +377,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func sendCustomMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
+            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool
+        {
+            let message = TIMMessage();
+            let customMessage = TIMCustomElem();
+            customMessage.data = data.data(using: String.Encoding.utf8);
+            message.add(customMessage);
+            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
+        }
     }
     
     /**
@@ -387,7 +397,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func sendTextMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let content = CommonUtils.getParam(call: call, result: result, param: "content") as? String,
+            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool
+        {
+            let message = TIMMessage();
+            let textElem = TIMTextElem();
+            textElem.text = content;
+            message.add(textElem);
+            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
+        }
     }
     
     
@@ -419,6 +439,30 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      */
     private func sendVideoMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         
+    }
+    
+    /**
+     * 发送消息
+     *
+     * @param conversation 会话
+     * @param message      消息内容
+     * @param result       Flutter返回对象
+     * @param ol           是否使用在线消息发送
+     */
+    private func sendMessage(conversation : TIMConversation, message : TIMMessage, result : @escaping FlutterResult, ol : Bool) {
+        
+        /// 成功回调
+        let successCallback = {
+            () -> Void in
+            result(nil);
+        };
+        
+        // 根据状态发送在线或离线消息
+        if ol{
+            conversation.sendOnlineMessage(message, succ: successCallback, fail:TencentImUtils.returnErrorClosures(result: result));
+        }else{
+            conversation.send(message, succ: successCallback, fail:TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
