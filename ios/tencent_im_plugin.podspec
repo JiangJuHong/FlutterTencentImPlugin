@@ -9,9 +9,9 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 腾讯云IM插件
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/JiangJuHong/FlutterTencentImPlugin'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'JiangJuHong' => '690717394@qq.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
@@ -22,6 +22,8 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   # 资源导入
-  s.ios.vendored_framework = "Frameworks/ImSDK.framework"
-#   s.vendored_frameworks = 'ImSDK.framework'
+  s.vendored_frameworks = '**/*.framework'
+
+  # SDK 依赖
+  s.dependency 'TXIMSDK_iOS', '~> 4.6.58'
 end
