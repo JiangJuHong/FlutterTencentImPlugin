@@ -25,9 +25,9 @@ public class ImageNodeEntity : NodeEntity{
     var taskId : UInt32?;
     
     /**
-     * 图片列表，根据类型分开
+     * 图片列表
      */
-    var imageData : [ImageType : ImageEntity] = [:];
+    var imageList : [ImageEntity] = [];
     
     override init() {
     }
@@ -41,7 +41,7 @@ public class ImageNodeEntity : NodeEntity{
         self.taskId = imageElem.taskId;
         for item in imageElem.imageList{
             let image = item as! TIMImage;
-            self.imageData[ImageType.getByTIMImage(image: image)] = ImageEntity(image: image);
+            self.imageList.append(ImageEntity(image: image));
         }
     }
 }
