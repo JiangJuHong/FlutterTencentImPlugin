@@ -25,5 +25,5 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = '**/*.framework'
 
   # SDK 依赖
-  s.dependency 'TXIMSDK_iOS', '~> 4.6.58'
+  s.dependency 'TXIMSDK_iOS'
 end
