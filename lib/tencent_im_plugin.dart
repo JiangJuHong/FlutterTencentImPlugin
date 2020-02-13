@@ -158,6 +158,22 @@ class TencentImPlugin {
         jsonDecode(await _channel.invokeMethod('getConversationList')));
   }
 
+  /// 获得当前登录用户会话列表
+  /// @return 会话列表集合
+  static Future<SessionEntity> getConversation({
+    @required String sessionId,
+    @required SessionType sessionType,
+}) async {
+    String result = await _channel.invokeMethod('getConversation',{
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+    });
+    if(result == null){
+      return null;
+    }
+    return SessionEntity.fromJson(jsonDecode(result));
+  }
+
   /// 根据会话ID获得本地消息列表
   /// @param sessionId 会话ID
   /// @param sessionType 会话类型

@@ -64,15 +64,16 @@ Demo截图:
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
-| initStorage  | 初始化本地存储 | {"identifier": '用户ID'} | √ | √
+| initStorage  | 初始化本地存储 | {identifier: '用户ID'} | √ | √
 | getConversationList  | 获得会话列表 | - | √ | √ 
-| getGroupInfo  | 获得群信息(云端) | {"id":'群ID'} | √ | √
-| getUserInfo  | 获得用户信息 | {"id":'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √
-| setRead  | 设置已读 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
-| getMessages  | 获得消息列表 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
-| getLocalMessages  | 获得本地消息列表 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
-| sendCustomMessage  | 发送自定义消息 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",data:"数据内容"} | √ | √
-| sendTextMessage  | 发送文本消息 | {"sessionId":'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",content:"文本内容"} | √ | √
+| getConversation  | 获得单个会话 | {id:'会话ID',sessionType:'会话类型} | √ | √ 
+| getGroupInfo  | 获得群信息(云端) | {id:'群ID'} | √ | √
+| getUserInfo  | 获得用户信息 | {id:'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √
+| setRead  | 设置已读 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
+| getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
+| getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
+| sendCustomMessage  | 发送自定义消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",data:"数据内容"} | √ | √
+| sendTextMessage  | 发送文本消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",content:"文本内容"} | √ | √
 | sendSoundMessage  | 发送语音消息 | - | √ | 
 | sendImageMessage  | 发送图片消息 | - | √ | 
 | sendVideoMessage  | 发送视频消息 | - | √ | 

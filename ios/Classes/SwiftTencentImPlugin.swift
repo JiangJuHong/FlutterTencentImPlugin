@@ -29,6 +29,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getConversationList":
             getConversationList(call: call, result: result)
             break
+        case "getConversation":
+            getConversation(call: call, result: result)
+            break
         case "getGroupInfo":
             self.getGroupInfo(call: call, result: result);
             break;
@@ -262,6 +265,25 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     }
     
     /**
+     * 根据ID获得会话
+     */
+    public func getConversation(call: FlutterMethodCall, result: @escaping FlutterResult){
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String{
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result){
+                TencentImUtils.getConversationInfo(conversations:([session]),onSuccess: {
+                    (array)-> Void in
+                    if array.count >= 1{
+                        result(JsonUtil.toJson(array[0]));
+                    }else{
+                        result(nil);
+                    }
+                },onFail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        }
+    }
+    
+    /**
      * 获得群信息
      *
      * @param methodCall 方法调用对象
@@ -357,9 +379,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                     (array : Any) -> Void in
                     TencentImUtils.getMessageInfo(timMessages: array as! [TIMMessage], onSuccess: {
                         (array)-> Void in
-                        print("===========================");
-                        print(JsonUtil.toJson(array))
-                        print("===========================");
                         result(JsonUtil.toJson(array));
                     }, onFail:  TencentImUtils.returnErrorClosures(result: result));
                 };

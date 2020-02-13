@@ -158,6 +158,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getConversationList":
                 this.getConversationList(call, result);
                 break;
+            case "getConversation":
+                this.getConversation(call, result);
+                break;
             case "getGroupInfo":
                 this.getGroupInfo(call, result);
                 break;
@@ -415,6 +418,22 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
         TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result), TIMManager.getInstance().getConversationList());
+    }
+
+    /**
+     * 腾讯云 根据ID获得会话
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getConversation(MethodCall methodCall, final Result result) {
+        // 会话ID
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        // 会话类型
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        // 获得会话信息
+        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result), Collections.singletonList(conversation));
     }
 
     /**
