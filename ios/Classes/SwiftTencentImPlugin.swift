@@ -488,8 +488,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
             let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32,
             let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
-             let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
-             let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
+            let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
+            let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
             let snapshotPath = CommonUtils.getParam(call: call, result: result, param: "snapshotPath") as? String
         {
             // 视频数据
@@ -568,7 +568,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             for item in array!{
                 ids.append((item as! TIMGroupInfo).group)
             }
-
+            
             if (ids.count == 0) {
                 result(JsonUtil.toJson([]));
                 return;
@@ -623,11 +623,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func checkSingleFriends(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
-            let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int
+        let type = ((call.arguments as! [String:Any])["type"]) as? Int;
+        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
         {
             let checkInfo = TIMFriendCheckInfo();
-            checkInfo.checkType = TIMFriendCheckType(rawValue: type)!;
+            if type != nil{
+                checkInfo.checkType = TIMFriendCheckType(rawValue: type!)!;
+            }
             checkInfo.users = [id];
             
             TIMFriendshipManager.sharedInstance()?.checkFriends(checkInfo, succ: {
@@ -644,7 +646,58 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getPendencyList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let seq = ((call.arguments as! [String:Any])["seq"]) as? UInt64;
+        let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64;
+        let numPerPage = ((call.arguments as! [String:Any])["numPerPage"]) as? UInt64;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int
+        {
+            let request = TIMFriendPendencyRequest();
+            request.type = TIMPendencyType(rawValue: type)!;
+            if seq != nil{
+                request.seq = seq!;
+            }
+            if timestamp != nil{
+                request.timestamp = timestamp!;
+            }
+            if numPerPage != nil{
+                request.numPerPage = numPerPage!;
+            }
+            
+            TIMFriendshipManager.sharedInstance()?.getPendencyList(request, succ: {
+                (data) -> Void in
+                if data?.pendencies.count == 0{
+                    result("{}");
+                    return;
+                }
+                
+                // 返回结果
+                var resultData = [PendencyEntity]();
+                
+                // 用户ID对应用户对象
+                var map : [String:PendencyEntity] = [:];
+                
+                // 循环获得的列表，进行对象封装
+                for item in data!.pendencies{
+                    map[item.identifier] = PendencyEntity(item: item);
+                }
+                
+                // 获得用户信息
+                TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(map.keys), forceUpdate: true, succ: {
+                    (array) -> Void in
+                    
+                    // 填充用户对象
+                    for item in array!{
+                        if let data = map[item.identifier]{
+                            data.userProfile = UserInfoEntity(userProfile: item);
+                            resultData.append(data);
+                        }
+                    }
+                    
+                    // 返回结果
+                    result(JsonUtil.toJson(resultData));
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -654,7 +707,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func pendencyReport(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64
+        {
+            TIMFriendshipManager.sharedInstance()?.pendencyReport(timestamp, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -664,7 +722,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deletePendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+            let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.delete(TIMPendencyType(rawValue: type)!, users: [id], succ:{
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -674,7 +738,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func examinePendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let remark = ((call.arguments as! [String:Any])["remark"]) as? String;
+        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+            let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
+        {
+            let response = TIMFriendResponse();
+            if remark != nil{
+                response.remark = remark!;
+            }
+            response.responseType = TIMFriendResponseType(rawValue: type)!;
+            response.identifier = id;
+            
+            TIMFriendshipManager.sharedInstance()?.do(response, succ: {
+                (data) -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -684,7 +763,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String
+        {
+            TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+            result(nil);
+        }
     }
     
     /**
@@ -694,7 +778,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteLocalMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String
+        {
+            TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+            result(nil);
+        }
     }
     
     /**

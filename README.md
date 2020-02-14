@@ -81,12 +81,12 @@ Demo截图:
 | getGroupList  | 获得群组列表 | - | √ | √
 | addFriend  | 添加好友 | {id:'用户ID',addType:'添加类型',remark:'备注',addWording:'请求说明',addSource:'添加来源',friendGroup:'分组名'} | √ | √
 | checkSingleFriends  | 检测单个好友关系 | {id:'用户ID',type:'检测类型'} | √ | √
-| getPendencyList  | 获得未决好友列表(申请中) | - | √ | 
-| pendencyReport  | 未决已读上报 | - | √ | 
-| deletePendency  | 未决删除 | - | √ | 
-| examinePendency  | 未决审核 | - | √ | 
-| deleteConversation  | 删除会话 | - | √ | 
-| deleteLocalMessage  | 删除会话内的本地聊天记录 | - | √ | 
+| getPendencyList  | 获得未决好友列表(申请中) | {type:'类型',seq:'未决列表序列号',timestamp:'翻页时间戳',numPerPage:'每页数量'} | √ | √
+| pendencyReport  | 未决已读上报 | {timestamp:"时间戳"} | √ | √
+| deletePendency  | 未决删除 | {id:'用户Id',type:'类型'}| √ | √
+| examinePendency  | 未决审核 | {id:'用户ID',type:'类型',remark:'备注'} | √ | √ 
+| deleteConversation  | 删除会话 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType'} | √ | √
+| deleteLocalMessage  | 删除会话内的本地聊天记录 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType'} | √ | √
 | createGroup  | 创建群组 | - | √ | 
 | inviteGroupMember  | 邀请加入群组 | - | √ | 
 | applyJoinGroup  | 申请加入群组 | - | √ | 

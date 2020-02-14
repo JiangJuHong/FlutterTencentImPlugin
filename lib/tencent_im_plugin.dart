@@ -574,7 +574,7 @@ class TencentImPlugin {
     @required String id,
     String remark,
   }) async {
-    await _channel.invokeMethod('examinePendency', {
+    return await _channel.invokeMethod('examinePendency', {
       "id": id,
       "remark": remark ?? "",
       "type": PendencyExamineTypeEnumTool.getIndexByEnum(type),
