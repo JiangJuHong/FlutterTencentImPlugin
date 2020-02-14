@@ -64,7 +64,7 @@ class FriendListState extends State<FriendList> {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundImage: Image.network(
-                    item.userInfoEntity.faceUrl,
+                    item.userInfoEntity.faceUrl ?? "",
                     fit: BoxFit.cover,
                   ).image,
                 ),

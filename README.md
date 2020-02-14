@@ -77,10 +77,10 @@ Demo截图:
 | sendSoundMessage  | 发送语音消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"语音文件路径",duration:"语音时长"} | √ | √
 | sendImageMessage  | 发送图片消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"图片路径"} | √ | √
 | sendVideoMessage  | 发送视频消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"视频路径",type:"视频类型",duration:"时长",snapshotWidth:"快照宽度",snapshotHeight:"快照高度",snapshotPath:"快照路径"} | √ | √
-| getFriendList  | 获得好友列表 | - | √ | 
-| getGroupList  | 获得群组列表 | - | √ | 
-| addFriend  | 添加好友 | - | √ | 
-| checkSingleFriends  | 检测单个好友关系 | - | √ | 
+| getFriendList  | 获得好友列表 | - | √ | √
+| getGroupList  | 获得群组列表 | - | √ | √
+| addFriend  | 添加好友 | {id:'用户ID',addType:'添加类型',remark:'备注',addWording:'请求说明',addSource:'添加来源',friendGroup:'分组名'} | √ | √
+| checkSingleFriends  | 检测单个好友关系 | {id:'用户ID',type:'检测类型'} | √ | √
 | getPendencyList  | 获得未决好友列表(申请中) | - | √ | 
 | pendencyReport  | 未决已读上报 | - | √ | 
 | deletePendency  | 未决删除 | - | √ | 

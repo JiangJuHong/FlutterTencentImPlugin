@@ -545,7 +545,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getFriendList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        TIMFriendshipManager.sharedInstance()?.getFriendList({
+            (array) -> Void in
+            var resultData : [FriendEntity] = []
+            for item in array!{
+                resultData.append(FriendEntity(friend: item ));
+            }
+            result(JsonUtil.toJson(resultData));
+        }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
     
     /**
@@ -555,7 +562,28 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getGroupList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        TIMGroupManager.sharedInstance()?.getGroupList({
+            (array) -> Void in
+            var ids : [String] = [];
+            for item in array!{
+                ids.append((item as! TIMGroupInfo).group)
+            }
+
+            if (ids.count == 0) {
+                result(JsonUtil.toJson([]));
+                return;
+            }
+            
+            // 获得群资料
+            TIMGroupManager.sharedInstance()?.getGroupInfo(ids, succ: {
+                (array) -> Void in
+                var resultData : [GroupInfoEntity] = []
+                for item in array!{
+                    resultData.append(GroupInfoEntity(groupInfo: item as! TIMGroupInfoResult));
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
     
     /**
@@ -565,7 +593,27 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func addFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
+            let addType = CommonUtils.getParam(call: call, result: result, param: "addType") as? Int,
+            let remark = CommonUtils.getParam(call: call, result: result, param: "remark") as? String,
+            let addWording = CommonUtils.getParam(call: call, result: result, param: "addWording") as? String,
+            let addSource = CommonUtils.getParam(call: call, result: result, param: "addSource") as? String,
+            let friendGroup = CommonUtils.getParam(call: call, result: result, param: "friendGroup") as? String
+        {
+            let request = TIMFriendRequest();
+            request.identifier = id;
+            request.addType = TIMFriendAddType(rawValue: addType)!;
+            request.remark = remark;
+            request.addWording = addWording;
+            request.addSource = addSource;
+            request.group = friendGroup;
+            
+            
+            TIMFriendshipManager.sharedInstance()?.addFriend(request, succ: {
+                (data) -> Void in
+                result(JsonUtil.toJson(FriendResultEntity(result: data!)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -575,7 +623,18 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func checkSingleFriends(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
+            let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int
+        {
+            let checkInfo = TIMFriendCheckInfo();
+            checkInfo.checkType = TIMFriendCheckType(rawValue: type)!;
+            checkInfo.users = [id];
+            
+            TIMFriendshipManager.sharedInstance()?.checkFriends(checkInfo, succ: {
+                (array) -> Void in
+                result(JsonUtil.toJson(FriendCheckResultEntity(result: (array!)[0])));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
