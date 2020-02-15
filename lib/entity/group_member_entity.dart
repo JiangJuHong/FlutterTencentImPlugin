@@ -5,9 +5,6 @@ class GroupMemberEntity {
   int silenceSeconds;
   int joinTime;
   String nameCard;
-  int tinyId;
-  int msgSeq;
-  int msgFlag;
   String user;
   UserInfoEntity userProfile;
 
@@ -16,9 +13,6 @@ class GroupMemberEntity {
     this.silenceSeconds,
     this.joinTime,
     this.nameCard,
-    this.tinyId,
-    this.msgSeq,
-    this.msgFlag,
     this.user,
     this.userProfile,
   });
@@ -28,9 +22,6 @@ class GroupMemberEntity {
     silenceSeconds = json['silenceSeconds'];
     joinTime = json['joinTime'];
     nameCard = json['nameCard'];
-    tinyId = json['tinyId'];
-    msgSeq = json['msgSeq'];
-    msgFlag = json['msgFlag'];
     user = json['user'];
     userProfile = json['userProfile'] == null
         ? null
@@ -43,9 +34,6 @@ class GroupMemberEntity {
     data['silenceSeconds'] = this.silenceSeconds;
     data['joinTime'] = this.joinTime;
     data['nameCard'] = this.nameCard;
-    data['tinyId'] = this.tinyId;
-    data['msgSeq'] = this.msgSeq;
-    data['msgFlag'] = this.msgFlag;
     data['user'] = this.user;
     data['userProfile'] =
         this.userProfile == null ? null : this.userProfile.toJson();

@@ -1101,7 +1101,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 用户ID集合
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
 
         TIMGroupManager.getInstance().inviteGroupMember(groupId, ids, new ValueCallBack<List<TIMGroupMemberResult>>(result));
     }
@@ -1147,7 +1147,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 用户ID集合
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         // 删除理由
         String reason = methodCall.argument("reason");
 
@@ -1308,15 +1308,35 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Long silence = methodCall.argument("silence");
         // 角色
         Integer role = methodCall.argument("role");
+        // 自定义信息
+        String customInfo = methodCall.argument("customInfo");
 
         TIMGroupManager.ModifyMemberInfoParam param = new TIMGroupManager.ModifyMemberInfoParam(groupId, identifier);
-        param.setNameCard(nameCard);
-        param.setReceiveMessageOpt(receiveMessageOpt == null ? null : TIMGroupReceiveMessageOpt.valueOf(receiveMessageOpt));
+        if(nameCard != null){
+            param.setNameCard(nameCard);
+        }
+        if(receiveMessageOpt != null){
+            param.setReceiveMessageOpt(TIMGroupReceiveMessageOpt.valueOf(receiveMessageOpt));
+        }
         if (silence != null) {
             param.setSilence(silence);
         }
         if (role != null) {
             param.setRoleType(role);
+        }
+        if(customInfo != null){
+            try{
+                Map<String, Object> customInfoData = JSON.parseObject(customInfo);
+                Map<String, byte[]> customInfoParams = new HashMap<>(customInfoData.size(), 1);
+                for (String s : customInfoData.keySet()) {
+                    if (customInfoData.get(s) != null) {
+                        customInfoParams.put(s, customInfoData.get(s).toString().getBytes("utf-8"));
+                    }
+                }
+                param.setCustomInfo(customInfoParams);
+            } catch (Exception e) {
+                Log.e(TAG, "modifyMemberInfo: set customInfo error", e);
+            }
         }
         TIMGroupManager.getInstance().modifyMemberInfo(param, new VoidCallBack(result));
     }
@@ -1419,7 +1439,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void reportGroupPendency(MethodCall methodCall, final Result result) {
         Log.d(TAG, "reportGroupPendency: ");
         // 已读时间戳
-        Long timestamp = methodCall.argument("timestamp");
+        Long timestamp = this.getParam(methodCall,result,"timestamp");
         TIMGroupManager.getInstance().reportGroupPendency(timestamp, new VoidCallBack(result));
     }
 
@@ -1547,7 +1567,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void deleteFriends(MethodCall methodCall, final Result result) {
         Log.d(TAG, "deleteFriends: ");
         int delFriendType = this.getParam(methodCall, result, "delFriendType");
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
 
         TIMFriendshipManager.getInstance().deleteFriends(ids, delFriendType, new ValueCallBack<List<TIMFriendResult>>(result));
     }
@@ -1560,7 +1580,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void addBlackList(MethodCall methodCall, final Result result) {
         Log.d(TAG, "addBlackList: ");
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().addBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
 
@@ -1573,7 +1593,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteBlackList(MethodCall methodCall, final Result result) {
         Log.d(TAG, "addBlackList: ");
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().deleteBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
 
@@ -1596,8 +1616,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void createFriendGroup(MethodCall methodCall, final Result result) {
         Log.d(TAG, "createFriendGroup: ");
-        List<String> groupNames = JSON.parseArray(this.getParam(methodCall, result, "groupNames").toString(), String.class);
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> groupNames = Arrays.asList(this.getParam(methodCall, result, "groupNames").toString().split(","));
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().createFriendGroup(groupNames, ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
 
@@ -1609,7 +1629,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteFriendGroup(MethodCall methodCall, final Result result) {
         Log.d(TAG, "deleteFriendGroup: ");
-        List<String> groupNames = JSON.parseArray(this.getParam(methodCall, result, "groupNames").toString(), String.class);
+        List<String> groupNames = Arrays.asList(this.getParam(methodCall, result, "groupNames").toString().split(","));
         TIMFriendshipManager.getInstance().deleteFriendGroup(groupNames, new VoidCallBack(result));
     }
 
@@ -1622,7 +1642,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void addFriendsToFriendGroup(MethodCall methodCall, final Result result) {
         Log.d(TAG, "addFriendsToFriendGroup: ");
         String groupName = this.getParam(methodCall, result, "groupName");
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().addFriendsToFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
 
@@ -1635,7 +1655,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void deleteFriendsFromFriendGroup(MethodCall methodCall, final Result result) {
         Log.d(TAG, "deleteFriendsFromFriendGroup: ");
         String groupName = this.getParam(methodCall, result, "groupName");
-        List<String> ids = JSON.parseArray(this.getParam(methodCall, result, "ids").toString(), String.class);
+        List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().deleteFriendsFromFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
 
@@ -1663,7 +1683,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String groupNamesStr = methodCall.argument("groupNames");
         List<String> groupNames = null;
         if (groupNamesStr != null) {
-            groupNames = JSON.parseArray(groupNamesStr, String.class);
+            groupNames = Arrays.asList(groupNamesStr.split(","));
         }
         TIMFriendshipManager.getInstance().getFriendGroups(groupNames, new ValueCallBack<List<TIMFriendGroup>>(result));
     }

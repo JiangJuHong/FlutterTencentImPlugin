@@ -31,11 +31,6 @@ public class GroupPendencyEntity {
     private TIMGroupPendencyHandledStatus handledStatus;
 
     /**
-     * 处理者添加的自定义消息
-     */
-    private String handledUserData;
-
-    /**
      * 申请人ID
      */
     private String identifier;
@@ -59,11 +54,6 @@ public class GroupPendencyEntity {
      * 请求附加信息
      */
     private String requestMsg;
-
-    /**
-     * 请求者添加的自定义消息
-     */
-    private String requestUserData;
 
     /**
      * 处理者ID
@@ -90,13 +80,11 @@ public class GroupPendencyEntity {
         this.groupId = data.getGroupId();
         this.handledMsg = data.getHandledMsg();
         this.handledStatus = data.getHandledStatus();
-        this.handledUserData = data.getHandledUserData();
         this.identifier = data.getIdentifer();
         this.addTime = data.getAddTime();
         this.operationType = data.getOperationType();
         this.pendencyType = data.getPendencyType();
         this.requestMsg = data.getRequestMsg();
-        this.requestUserData = data.getRequestUserData();
         this.toUser = data.getToUser();
     }
 
@@ -130,14 +118,6 @@ public class GroupPendencyEntity {
 
     public void setHandledStatus(TIMGroupPendencyHandledStatus handledStatus) {
         this.handledStatus = handledStatus;
-    }
-
-    public String getHandledUserData() {
-        return handledUserData;
-    }
-
-    public void setHandledUserData(String handledUserData) {
-        this.handledUserData = handledUserData;
     }
 
     public String getIdentifier() {
@@ -178,14 +158,6 @@ public class GroupPendencyEntity {
 
     public void setRequestMsg(String requestMsg) {
         this.requestMsg = requestMsg;
-    }
-
-    public String getRequestUserData() {
-        return requestUserData;
-    }
-
-    public void setRequestUserData(String requestUserData) {
-        this.requestUserData = requestUserData;
     }
 
     public String getToUser() {

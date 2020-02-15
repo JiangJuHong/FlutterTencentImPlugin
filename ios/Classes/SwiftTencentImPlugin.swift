@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import ImSDK
+import HandyJSON
 
 public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -793,7 +794,50 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let groupId = ((call.arguments as! [String:Any])["groupId"]) as? String;
+        let notification = ((call.arguments as! [String:Any])["notification"]) as? String;
+        let introduction = ((call.arguments as! [String:Any])["introduction"]) as? String;
+        let faceUrl = ((call.arguments as! [String:Any])["faceUrl"]) as? String;
+        let addOption = ((call.arguments as! [String:Any])["addOption"]) as? String;
+        let maxMemberNum = ((call.arguments as! [String:Any])["maxMemberNum"]) as? UInt32;
+        let members = ((call.arguments as! [String:Any])["members"]) as? String;
+        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? String,
+            let name = CommonUtils.getParam(call: call, result: result, param: "name") as? String
+        {
+            // 封装群对象
+            let groupInfo = TIMCreateGroupInfo();
+            if groupId != nil{
+                groupInfo.group = groupId!;
+            }
+            if notification != nil{
+                groupInfo.notification = notification!;
+            }
+            if introduction != nil{
+                groupInfo.introduction = introduction!;
+            }
+            if faceUrl != nil{
+                groupInfo.faceURL = faceUrl!;
+            }
+            if addOption != nil{
+                groupInfo.addOpt = TIMGroupAddOpt(rawValue: GroupAddOptType.getEnumByName(name: addOption!)!.rawValue)!;
+            }
+            if maxMemberNum != nil{
+                groupInfo.maxMemberNum = maxMemberNum!;
+            }
+            if members != nil{
+                if let ms = [GroupMemberEntity].deserialize(from: members) {
+                    print(ms);
+                }
+            }
+            groupInfo.groupType = type;
+            groupInfo.groupName = name;
+            
+            // 创建群
+            TIMGroupManager.sharedInstance()?.createGroup(groupInfo, succ: {
+                (id) -> Void in
+                result(id);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -803,7 +847,18 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func inviteGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMGroupManager.sharedInstance()?.inviteGroupMember(groupId, members: ids.components(separatedBy:","), succ: {
+                (array) -> Void in
+                var resultData : [GroupMemberResult] = [];
+                for item in array!{
+                    resultData.append(GroupMemberResult(result: item as! TIMGroupMemberResult));
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -813,7 +868,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func applyJoinGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let reason =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMGroupManager.sharedInstance()?.joinGroup(groupId, msg: reason, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -823,7 +884,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func quitGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
+        {
+            TIMGroupManager.sharedInstance()?.quitGroup(groupId, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -833,7 +899,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let reason =  CommonUtils.getParam(call: call, result: result, param: "reason") as? String,
+            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMGroupManager.sharedInstance()?.deleteGroupMember(withReason: groupId, reason: reason, members: ids.components(separatedBy:","), succ: {
+                (array) -> Void in
+                var resultData : [GroupMemberResult] = [];
+                for item in array!{
+                    resultData.append(GroupMemberResult(result: item as! TIMGroupMemberResult));
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -843,7 +921,37 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getGroupMembers(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
+        {
+            TIMGroupManager.sharedInstance()?.getGroupMembers(groupId, succ: {
+                (array) -> Void in
+                
+                var userInfo : [String:GroupMemberEntity] = [:];
+                for item in array!{
+                    let member = item as! TIMGroupMemberInfo;
+                    let item = GroupMemberEntity(info: member);
+                    userInfo[member.member] = item;
+                }
+                
+                // 获得用户信息
+                TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(userInfo.keys), forceUpdate: true, succ: {
+                    (array) -> Void in
+                    
+                    var resultData : [GroupMemberEntity] = [];
+                    
+                    // 填充用户对象
+                    for item in array!{
+                        if let data = userInfo[item.identifier]{
+                            data.userProfile = UserInfoEntity(userProfile: item);
+                            resultData.append(data);
+                        }
+                    }
+                    
+                    // 返回结果
+                    result(JsonUtil.toJson(resultData));
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -853,7 +961,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
+        {
+            TIMGroupManager.sharedInstance()?.deleteGroup(groupId, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -863,7 +976,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func modifyGroupOwner(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String
+        {
+            TIMGroupManager.sharedInstance()?.modifyGroupOwner(groupId, user: identifier, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -873,7 +992,69 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func modifyGroupInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let notification = ((call.arguments as! [String:Any])["notification"]) as? String;
+        let introduction = ((call.arguments as! [String:Any])["introduction"]) as? String;
+        let faceUrl = ((call.arguments as! [String:Any])["faceUrl"]) as? String;
+        let addOption = ((call.arguments as! [String:Any])["addOption"]) as? String;
+        let groupName = ((call.arguments as! [String:Any])["groupName"]) as? String;
+        let visable = ((call.arguments as! [String:Any])["visable"]) as? Bool;
+        let silenceAll = ((call.arguments as! [String:Any])["silenceAll"]) as? Bool;
+        let customInfo = ((call.arguments as! [String:Any])["customInfo"]) as? String;
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
+        {
+            if silenceAll != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupAllShutup(groupId, shutup: silenceAll!, succ:{
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if visable != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupSearchable(groupId, searchable: visable!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+            
+            if groupName != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupName(groupId, groupName: groupName!, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if addOption != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupAddOpt(groupId, opt: TIMGroupAddOpt(rawValue: GroupAddOptType.getEnumByName(name: addOption!)!.hashValue)!, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if faceUrl != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupFaceUrl(groupId, url: faceUrl!, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if introduction != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupIntroduction(groupId, introduction: introduction!, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if notification != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupNotification(groupId, notification: notification!, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if customInfo != nil{
+                let ci = JsonUtil.getDictionaryFromJSONString(jsonString: customInfo!);
+                var customInfoData : [String:Data] = [:];
+                for (key, value) in ci {
+                    customInfoData[key] = "\(value)".data(using: String.Encoding.utf8);
+                }
+                TIMGroupManager.sharedInstance()?.modifyGroupCustomInfo(groupId, customInfo: customInfoData, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        }
     }
     
     /**
@@ -883,7 +1064,42 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func modifyMemberInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let nameCard = ((call.arguments as! [String:Any])["nameCard"]) as? String;
+        let silence = ((call.arguments as! [String:Any])["silence"]) as? UInt32;
+        let role = ((call.arguments as! [String:Any])["role"]) as? Int;
+        let customInfo = ((call.arguments as! [String:Any])["customInfo"]) as? String;
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String
+        {
+            
+            if nameCard != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetNameCard(groupId, user: identifier, nameCard: nameCard!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if silence != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetSilence(groupId, user: identifier, stime: silence!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if role != nil{
+                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetRole(groupId, user: identifier, role: TIMGroupMemberRole(rawValue: role!)!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            if customInfo != nil{
+                let ci = JsonUtil.getDictionaryFromJSONString(jsonString: customInfo!);
+                var customInfoData : [String:Data] = [:];
+                for (key, value) in ci {
+                    customInfoData[key] = "\(value)".data(using: String.Encoding.utf8);
+                }
+                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetCustomInfo(groupId, user: identifier, customInfo: customInfoData, succ:  {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        }
     }
     
     /**
@@ -893,7 +1109,85 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getGroupPendencyList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64;
+        let numPerPage = ((call.arguments as! [String:Any])["numPerPage"]) as? UInt32;
         
+        let option = TIMGroupPendencyOption();
+        if timestamp != nil{
+            option.timestamp = timestamp!;
+        }
+        if numPerPage != nil{
+            option.numPerPage = numPerPage!;
+        }
+        
+        TIMGroupManager.sharedInstance()?.getPendencyFromServer(option, succ: {
+            (meta,array) -> Void in
+            // 如果没有数据就直接返回
+            if array?.count == 0{
+                result("[]");
+                return;
+            }
+            
+            // 存储ID的集合
+            var groupIds = Set<String>();
+            var userIds = Set<String>();
+            
+            var resultData : [GroupPendencyEntity] = [];
+            for item in array!{
+                resultData.append(GroupPendencyEntity(item: item));
+                groupIds.insert(item.groupId);
+                userIds.insert(item.selfIdentifier);
+                userIds.insert(item.toUser);
+            }
+            
+            // 当前步骤 和 最大步骤
+            var current = 0;
+            let maxIndex = (groupIds.count > 1 ? 1 : 0 ) + (userIds.count > 1 ? 1 : 0 );
+            
+            // 获得群信息
+            if groupIds.count >= 1{
+                TIMGroupManager.sharedInstance()?.getGroupInfo(Array(groupIds), succ: {
+                    (array) -> Void in
+                    // 循环赋值
+                    for resultDatum in resultData{
+                        for item in array!{
+                            let group = item as! TIMGroupInfoResult;
+                            if group.group == resultDatum.groupId{
+                                resultDatum.groupInfo = GroupInfoEntity(groupInfo: group);
+                            }
+                        }
+                    }
+                    current += 1;
+                    if (current >= maxIndex) {
+                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list:resultData)))
+                    }
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+            
+            if userIds.count >= 1{
+                TIMFriendshipManager.sharedInstance()?.getUsersProfile((Array(userIds)), forceUpdate: true, succ: {
+                    (array) -> Void in
+                    
+                    // 循环赋值
+                    for resultDatum in resultData{
+                        for item in array!{
+                            let userInfo = item;
+                            if userInfo.identifier == resultDatum.identifier{
+                                resultDatum.applyUserInfo = UserInfoEntity(userProfile: item);
+                            }
+                            
+                            if userInfo.identifier == resultDatum.toUser{
+                                resultDatum.handlerUserInfo = UserInfoEntity(userProfile: item);
+                            }
+                        }
+                    }
+                    current += 1;
+                    if (current >= maxIndex) {
+                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list:resultData)))
+                    }
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
     
     /**
@@ -903,7 +1197,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func reportGroupPendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64{
+            TIMGroupManager.sharedInstance()?.pendencyReport(timestamp, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -913,7 +1211,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func groupPendencyAccept(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let msg = ((call.arguments as! [String:Any])["msg"]) as? String;
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+            let addTime =  CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64{
+            TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
+                (_,array) -> Void in
+                for item in array!{
+                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime{
+                        item.accept(msg, succ: {
+                            result(nil);
+                        }, fail: TencentImUtils.returnErrorClosures(result: result))
+                    }
+                }
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -923,7 +1235,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func groupPendencyRefuse(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        let msg = ((call.arguments as! [String:Any])["msg"]) as? String;
+        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+            let addTime =  CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64{
+            TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
+                (_,array) -> Void in
+                for item in array!{
+                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime{
+                        item.refuse(msg, succ: {
+                            result(nil);
+                        }, fail: TencentImUtils.returnErrorClosures(result: result))
+                    }
+                }
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -933,7 +1259,24 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getSelfProfile(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        // 强制走后台拉取
+        let forceUpdate = ((call.arguments as! [String:Any])["forceUpdate"]) as? Bool;
         
+        if forceUpdate != nil && forceUpdate!{
+            TIMFriendshipManager.sharedInstance()?.getSelfProfile({
+                (data) -> Void in
+                result(JsonUtil.toJson(UserInfoEntity(userProfile: data!)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }else{
+            if let data = TIMFriendshipManager.sharedInstance()?.querySelfProfile(){
+                result(JsonUtil.toJson(UserInfoEntity(userProfile: data)));
+            }else{
+                TIMFriendshipManager.sharedInstance()?.getSelfProfile({
+                    (data) -> Void in
+                    result(JsonUtil.toJson(UserInfoEntity(userProfile: data!)));
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
     }
     
     /**
@@ -943,7 +1286,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func modifySelfProfile(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let params =  CommonUtils.getParam(call: call, result: result, param: "params") as? String{
+            TIMFriendshipManager.sharedInstance()?.modifySelfProfile(JsonUtil.getDictionaryFromJSONString(jsonString: params), succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -953,7 +1301,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func modifyFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+            let params =  CommonUtils.getParam(call: call, result: result, param: "params") as? String{
+            TIMFriendshipManager.sharedInstance()?.modifyFriend(identifier, values: JsonUtil.getDictionaryFromJSONString(jsonString: params), succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -963,6 +1317,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteFriends(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String,
+            let delFriendType =  CommonUtils.getParam(call: call, result: result, param: "delFriendType") as? Int
+        {
+            TIMFriendshipManager.sharedInstance()?.deleteFriends(ids.components(separatedBy: ","), delType: TIMDelFriendType(rawValue: delFriendType)!, succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -972,7 +1342,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func addBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.addBlackList(ids.components(separatedBy: ","), succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     
@@ -983,7 +1367,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.deleteBlackList(ids.components(separatedBy: ","), succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
     }
     
     /**
@@ -993,7 +1391,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        TIMFriendshipManager.sharedInstance()?.getBlackList({
+            (array) -> Void in
+            var resultData : [FriendEntity] = []
+            for item in array!{
+                resultData.append(FriendEntity(friend: item ));
+            }
+            result(JsonUtil.toJson(resultData));
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
     
     /**
@@ -1003,7 +1408,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func createFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupNames =  CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String,
+            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.createFriendGroup(groupNames.components(separatedBy: ","), users: ids.components(separatedBy: ","), succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -1013,7 +1433,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupNames =  CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.deleteFriendGroup(groupNames.components(separatedBy: ","), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -1023,7 +1448,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func addFriendsToFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupName =  CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
+            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.addFriends(toFriendGroup: groupName, users: ids.components(separatedBy: ","), succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -1033,7 +1473,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func deleteFriendsFromFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let groupName =  CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
+            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.deleteFriends(fromFriendGroup: groupName, users: ids.components(separatedBy: ","), succ: {
+                (array) -> Void in
+                var resultData : [FriendResultEntity] = [];
+                
+                // 填充对象
+                for item in array!{
+                    resultData.append(FriendResultEntity(result: item));
+                }
+                
+                // 返回结果
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -1043,7 +1498,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func renameFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let oldGroupName =  CommonUtils.getParam(call: call, result: result, param: "oldGroupName") as? String,
+            let newGroupName =  CommonUtils.getParam(call: call, result: result, param: "newGroupName") as? String
+        {
+            TIMFriendshipManager.sharedInstance()?.renameFriendGroup(oldGroupName, newName: newGroupName, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
     
     /**
@@ -1053,6 +1514,27 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param result     返回结果对象
      */
     private func getFriendGroups(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        // 组名
+        let groupNames = ((call.arguments as! [String:Any])["groupNames"]) as? String;
         
+        var groups : [String] = [];
+        
+        if groupNames != nil{
+            groups = groupNames!.components(separatedBy:",");
+        }
+        
+        TIMFriendshipManager.sharedInstance()?.getFriendGroups(groups, succ: {
+            (array) -> Void in
+            
+            var resultData : [FriendGroupEntity] = [];
+            
+            // 填充对象
+            for item in array!{
+                resultData.append(FriendGroupEntity(group: item));
+            }
+            
+            // 返回结果
+            result(JsonUtil.toJson(resultData));
+        }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
 }

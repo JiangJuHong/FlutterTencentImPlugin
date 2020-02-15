@@ -26,4 +26,7 @@ Pod::Spec.new do |s|
 
   # SDK 依赖
   s.dependency 'TXIMSDK_iOS'
+
+  # alibaba json 序列化库(https://github.com/alibaba/HandyJSON)
+  s.dependency 'HandyJSON'
 end

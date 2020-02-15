@@ -3,6 +3,23 @@ import Foundation
 //  Json工具类
 //  Created by 蒋具宏 on 2020/2/11.
 public class JsonUtil {
+    
+    /**
+     * 将json字符串转换为字典
+     */
+    public static func getDictionaryFromJSONString(jsonString:String) ->[String:Any]{
+     
+        let jsonData:Data = jsonString.data(using: .utf8)!
+     
+        let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+        if dict != nil {
+            return (dict as! NSDictionary) as! [String : Any]
+        }
+        return NSDictionary() as! [String : Any]
+         
+     
+    }
+    
     /**
      * 将对象转换为JSON字符串(数组/对象)
      */
@@ -27,7 +44,7 @@ public class JsonUtil {
     /**
      * 将对象转换为JSON字符串(单个对象)
      */
-    public static func toJsonByObj(_ object: Any) -> String{
+    private static func toJsonByObj(_ object: Any) -> String{
         var result = "{";
         // 反射当前类及父类反射对象
         let morror = Mirror.init(reflecting: object)
@@ -68,7 +85,7 @@ public class JsonUtil {
     /**
      * 解码值，optional 将会被自动解码
      */
-    public static func unwrap<T>(_ any: T) -> Any{
+    private static func unwrap<T>(_ any: T) -> Any{
         let mirror = Mirror(reflecting: any)
         guard mirror.displayStyle == .optional, let first = mirror.children.first else {
             return any
@@ -79,7 +96,7 @@ public class JsonUtil {
     /**
      * 根据K和V拼装键值对
      */
-    public static func kv(_ k : Any, _ v : Any)->String{
+    private static func kv(_ k : Any, _ v : Any)->String{
         var result = "\"\(k)\":";
         
         // 根据类型赋值不同的值
@@ -87,7 +104,7 @@ public class JsonUtil {
         // 如果是Data，将会解析为字符串并且进行转移
         if v is String{
             result += "\"\("\(v)".replacingOccurrences(of: "\"",with: "\\\""))\"";
-        }else if v is Int32 || v is Int || v is UInt32 || v is UInt64 || v is Bool || v is Double{
+        }else if v is Int32 || v is Int || v is UInt32 || v is UInt64 || v is Bool || v is Double || v is time_t{
             result += "\(v)";
         }else if v is Date{
             result += "\(Int((v as! Date).timeIntervalSince1970))";

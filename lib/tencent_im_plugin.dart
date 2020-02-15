@@ -279,7 +279,7 @@ class TencentImPlugin {
   }) async {
     return jsonDecode(await _channel.invokeMethod('inviteGroupMember', {
       "groupId": groupId,
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
     }));
   }
 
@@ -302,7 +302,7 @@ class TencentImPlugin {
   }) async {
     return jsonDecode(await _channel.invokeMethod('deleteGroupMember', {
       "groupId": groupId,
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
       "reason": reason,
     }));
   }
@@ -439,7 +439,7 @@ class TencentImPlugin {
 
   /// 上报未决已读
   static Future<void> reportGroupPendency({
-    int timestamp, // 已读时间戳
+    @required int timestamp, // 已读时间戳
   }) async {
     return await _channel.invokeMethod('reportGroupPendency', {
       "timestamp": timestamp,
@@ -558,12 +558,12 @@ class TencentImPlugin {
   }
 
   /// 删除好友
-  static Future<Map> deleteFriends({
+  static Future<List<dynamic>> deleteFriends({
     @required List<String> ids, // 好友列表
     @required int delFriendType, // 删除类型
   }) async {
     return jsonDecode(await _channel.invokeMethod('deleteFriends', {
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
       "delFriendType": delFriendType,
     }));
   }
@@ -634,7 +634,7 @@ class TencentImPlugin {
     @required List<String> ids,
   }) async {
     return jsonDecode(await _channel.invokeMethod('addBlackList', {
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
     }));
   }
 
@@ -643,7 +643,7 @@ class TencentImPlugin {
     @required List<String> ids,
   }) async {
     return jsonDecode(await _channel.invokeMethod('deleteBlackList', {
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
     }));
   }
 
@@ -659,8 +659,8 @@ class TencentImPlugin {
     @required List<String> ids,
   }) async {
     return jsonDecode(await _channel.invokeMethod('createFriendGroup', {
-      "groupNames": jsonEncode(groupNames),
-      "ids": jsonEncode(ids),
+      "groupNames": groupNames.join(","),
+      "ids": ids.join(","),
     }));
   }
 
@@ -669,7 +669,7 @@ class TencentImPlugin {
     @required List<String> groupNames,
   }) async {
     return jsonDecode(await _channel.invokeMethod('deleteFriendGroup', {
-      "groupNames": jsonEncode(groupNames),
+      "groupNames": groupNames.join(","),
     }));
   }
 
@@ -679,19 +679,19 @@ class TencentImPlugin {
     @required String groupName,
   }) async {
     return jsonDecode(await _channel.invokeMethod('addFriendsToFriendGroup', {
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
       "groupName": groupName,
     }));
   }
 
   /// 从某个分组删除好友
-  static Future<void> deleteFriendsFromFriendGroup({
+  static Future<List<dynamic>> deleteFriendsFromFriendGroup({
     @required List<String> ids,
     @required String groupName,
   }) async {
     return jsonDecode(
         await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
-      "ids": jsonEncode(ids),
+      "ids": ids.join(","),
       "groupName": groupName,
     }));
   }
@@ -708,11 +708,11 @@ class TencentImPlugin {
   }
 
   /// 获得好友分组
-  static Future<void> getFriendGroups({
+  static Future<List<dynamic>> getFriendGroups({
     List<String> groupNames,
   }) async {
     return jsonDecode(await _channel.invokeMethod('getFriendGroups', {
-      "groupNames": groupNames == null ? null : jsonEncode(groupNames),
+      "groupNames": groupNames == null ? null : groupNames.join(","),
     }));
   }
 

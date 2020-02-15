@@ -4,7 +4,6 @@ import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 class GroupPendencyEntity {
   String toUser;
   String identifier;
-  String requestUserData;
   int addTime;
   String fromUser;
   String pendencyType;
@@ -13,7 +12,6 @@ class GroupPendencyEntity {
   String handledMsg;
   String handledStatus;
   String operationType;
-  String handledUserData;
   UserInfoEntity applyUserInfo;
   UserInfoEntity handlerUserInfo;
   GroupInfoEntity groupInfo;
@@ -21,7 +19,6 @@ class GroupPendencyEntity {
   GroupPendencyEntity({
     this.toUser,
     this.identifier,
-    this.requestUserData,
     this.addTime,
     this.fromUser,
     this.pendencyType,
@@ -30,7 +27,6 @@ class GroupPendencyEntity {
     this.handledMsg,
     this.handledStatus,
     this.operationType,
-    this.handledUserData,
     this.applyUserInfo,
     this.handlerUserInfo,
     this.groupInfo,
@@ -39,7 +35,6 @@ class GroupPendencyEntity {
   GroupPendencyEntity.fromJson(Map<String, dynamic> json) {
     toUser = json['toUser'];
     identifier = json['identifier'];
-    requestUserData = json['requestUserData'];
     addTime = json['addTime'];
     fromUser = json['fromUser'];
     pendencyType = json['pendencyType'];
@@ -48,7 +43,6 @@ class GroupPendencyEntity {
     handledMsg = json['handledMsg'];
     handledStatus = json['handledStatus'];
     operationType = json['operationType'];
-    handledUserData = json['handledUserData'];
     applyUserInfo = json['applyUserInfo'] != null
         ? new UserInfoEntity.fromJson(json['applyUserInfo'])
         : null;
@@ -64,7 +58,6 @@ class GroupPendencyEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['toUser'] = this.toUser;
     data['identifier'] = this.identifier;
-    data['requestUserData'] = this.requestUserData;
     data['addTime'] = this.addTime;
     data['fromUser'] = this.fromUser;
     data['pendencyType'] = this.pendencyType;
@@ -73,7 +66,6 @@ class GroupPendencyEntity {
     data['handledMsg'] = this.handledMsg;
     data['handledStatus'] = this.handledStatus;
     data['operationType'] = this.operationType;
-    data['handledUserData'] = this.handledUserData;
     if (this.applyUserInfo != null) {
       data['applyUserInfo'] = this.applyUserInfo.toJson();
     }

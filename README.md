@@ -87,30 +87,30 @@ Demo截图:
 | examinePendency  | 未决审核 | {id:'用户ID',type:'类型',remark:'备注'} | √ | √ 
 | deleteConversation  | 删除会话 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType'} | √ | √
 | deleteLocalMessage  | 删除会话内的本地聊天记录 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType'} | √ | √
-| createGroup  | 创建群组 | - | √ | 
-| inviteGroupMember  | 邀请加入群组 | - | √ | 
-| applyJoinGroup  | 申请加入群组 | - | √ | 
-| quitGroup  | 退出群组 | - | √ | 
-| deleteGroupMember  | 删除群组成员 | - | √ | 
-| getGroupMembers  | 获得群成员列表 | - | √ | 
-| deleteGroup  | 解散群组 | - | √ | 
-| modifyGroupOwner  | 转让群组 | - | √ | 
-| modifyGroupInfo  | 修改群组资料 | - | √ | 
-| modifyMemberInfo  | 修改群成员资料 | - | √ | 
-| getGroupPendencyList  | 获得未决群列表 | - | √ | 
-| reportGroupPendency  | 上报群未决已读 | - | √ | 
-| groupPendencyAccept  | 群未决审核（同意） | - | √ | 
-| groupPendencyRefuse  | 群未决审核（拒绝） | - | √ | 
-| getSelfProfile  | 获取登录用户资料 | - | √ | 
-| modifySelfProfile  | 修改登录用户资料 | - | √ | 
-| modifyFriend  | 修改好友资料 | - | √ | 
-| deleteFriends  | 删除好友 | - | √ | 
-| addBlackList  | 添加到黑名单 | - | √ | 
-| deleteBlackList  | 从黑名单删除 | - | √ | 
-| getBlackList  | 获得黑名单列表 | - | √ | 
-| createFriendGroup  | 创建好友分组 | - | √ | 
-| deleteFriendGroup  | 删除好友分组 | - | √ | 
-| addFriendsToFriendGroup  | 添加好友到某个分组 | - | √ | 
-| deleteFriendsFromFriendGroup  | 从分组删除好友 | - | √ | 
-| renameFriendGroup  | 重命名分组 | - | √ | 
-| getFriendGroups  | 获得好友分组 | - | √ | 
+| createGroup  | 创建群组 | {groupId:'指定群ID',notification:'群公告',introduction:'描述',faceUrl:'头像',addOption:'入群类型',maxMemberNum:'最大成员数量',members:'成员集合',type:'类型',name:'群名'} | √ | √
+| inviteGroupMember  | 邀请加入群组 | {groupId:'群ID',ids:'群成员ID'} | √ | √
+| applyJoinGroup  | 申请加入群组 | {groupId:'群ID',reason:'申请说明'} | √ | √
+| quitGroup  | 退出群组 | {groupId:'群ID'} | √ | √
+| deleteGroupMember  | 删除群组成员 | {groupId:'群ID',ids:'用户ID集合',reason:"删除说明"} | √ | √
+| getGroupMembers  | 获得群成员列表 | {groupId:'群ID'} | √ | √
+| deleteGroup  | 解散群组 | {groupId:'群ID'} | √ | √
+| modifyGroupOwner  | 转让群组 | {groupId:'群ID',identifier:'新群主ID'} | √ | √
+| modifyGroupInfo  | 修改群组资料 | {groupId:'指定群ID',notification:'群公告',introduction:'描述',faceUrl:'头像',addOption:'入群类型',maxMemberNum:'最大成员数量(IOS不支持)',type:'类型',groupName:'群名',visable:'是否对外可见',silenceAll:'全员禁言',customInfo:'自定义信息'} | √ | √
+| modifyMemberInfo  | 修改群成员资料 | {groupId:'群ID',identifier:'群成员ID',nameCard:'名片',receiveMessageOpt:'接收消息选项，注:IOS不支持',silence:'禁言时间',role:'角色',customInfo:'自定义数据'} | √ | √
+| getGroupPendencyList  | 获得未决群列表 | {timestamp:'翻页时间戳',numPerPage:'每页的数量'} | √ | √
+| reportGroupPendency  | 上报群未决已读 | {timestamp:'已读时间戳'} | √ | √
+| groupPendencyAccept  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
+| groupPendencyRefuse  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
+| getSelfProfile  | 获取登录用户资料 | {forceUpdate:"是否强制走后台拉取"} | √ | √
+| modifySelfProfile  | 修改登录用户资料 | {params:'修改参数'} | √ | √
+| modifyFriend  | 修改好友资料 | {identifier:'好友ID',params:'修改参数'} | √ | √
+| deleteFriends  | 删除好友 | {ids:"用户ID列表",delFriendType:'删除类型'} | √ | √
+| addBlackList  | 添加到黑名单 | {ids:"用户ID列表"} | √ | √
+| deleteBlackList  | 从黑名单删除 | {ids:"用户ID列表"} | √ | √
+| getBlackList  | 获得黑名单列表 | - | √ | √
+| createFriendGroup  | 创建好友分组 | {groupNames:'组名列表',ids:'用户列表'} | √ | √
+| deleteFriendGroup  | 删除好友分组 | {groupNames:'组名列表'} | √ | √
+| addFriendsToFriendGroup  | 添加好友到某个分组 | {groupName:'组名',ids:'ID列表'} | √ | √
+| deleteFriendsFromFriendGroup  | 从分组删除好友 | {groupName:'组名',ids:'ID列表'} | √ | √
+| renameFriendGroup  | 重命名分组 | {oldGroupName:'旧名称',newGroupName:'新名称'} | √ | √
+| getFriendGroups  | 获得好友分组 | {groupNames:'组名'} | √ | √
