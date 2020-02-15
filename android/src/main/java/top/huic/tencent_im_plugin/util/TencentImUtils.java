@@ -36,6 +36,7 @@ import top.huic.tencent_im_plugin.VoidCallBack;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+import top.huic.tencent_im_plugin.listener.TencentImListener;
 
 /**
  * 腾讯云IM工具类
@@ -181,20 +182,20 @@ public class TencentImUtils {
                     final Map<String, Object> params = new HashMap<>();
                     params.put("type", TIMElemType.Video);
                     params.put("uuid", soundElem.getUuid());
-                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadStart, params);
 
                     // 下载
                     soundElem.getSoundToFile(file.getPath(), new VoidCallBack(null) {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + file.getPath());
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }
@@ -209,7 +210,7 @@ public class TencentImUtils {
                     final Map<String, Object> params = new HashMap<>();
                     params.put("type", TIMElemType.Video);
                     params.put("uuid", videoElem.getSnapshotInfo().getUuid());
-                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadStart, params);
 
 
                     // 下载
@@ -220,13 +221,13 @@ public class TencentImUtils {
                             Map<String, Object> params = new HashMap<>();
                             params.put("type", TIMElemType.Video);
                             params.put("uuid", videoElem.getSnapshotInfo().getUuid());
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }
@@ -240,20 +241,20 @@ public class TencentImUtils {
                     final Map<String, Object> params = new HashMap<>();
                     params.put("type", TIMElemType.Video);
                     params.put("uuid", videoElem.getVideoInfo().getUuid());
-                    TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadStart, params);
+                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadStart, params);
 
                     // 下载
                     videoElem.getVideoInfo().getVideo(videoFile.getPath(), new VoidCallBack(null) {
                         @Override
                         public void onError(int code, String desc) {
                             Log.d(TencentImPlugin.TAG, "login failed. code: " + code + " errmsg: " + desc);
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadFail, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadFail, params);
                         }
 
                         @Override
                         public void onSuccess() {
                             Log.d(TencentImPlugin.TAG, "download success,path:" + snapshotFile.getPath());
-                            TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
+                            TencentImListener.invokeListener(ListenerTypeEnum.DownloadSuccess, params);
                         }
                     });
                 }

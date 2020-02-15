@@ -51,10 +51,10 @@ public class TencentImListener implements TIMUserStatusListener,
     /**
      * 与Flutter的通信管道
      */
-    private MethodChannel channel;
+    private static MethodChannel channel;
 
     public TencentImListener(MethodChannel channel) {
-        this.channel = channel;
+        TencentImListener.channel = channel;
     }
 
     /**
@@ -63,7 +63,7 @@ public class TencentImListener implements TIMUserStatusListener,
      * @param type   类型
      * @param params 参数
      */
-    private void invokeListener(ListenerTypeEnum type, Object params) {
+    public static void invokeListener(ListenerTypeEnum type, Object params) {
         Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
         resultParams.put("params", params == null ? null : JSON.toJSONString(params));
