@@ -1,5 +1,3 @@
-import 'package:tencent_im_plugin/base64_util.dart';
-
 import 'node_entity.dart';
 
 class NodeCustomEntity extends NodeEntity {

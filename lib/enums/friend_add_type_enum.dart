@@ -15,6 +15,8 @@ class FriendAddTypeTool {
         return FriendAddTypeEnum.single;
       case 2:
         return FriendAddTypeEnum.both;
+      default:
+        return null;
     }
   }
 
@@ -25,6 +27,8 @@ class FriendAddTypeTool {
         return 1;
       case FriendAddTypeEnum.both:
         return 2;
+      default:
+        return null;
     }
   }
 }

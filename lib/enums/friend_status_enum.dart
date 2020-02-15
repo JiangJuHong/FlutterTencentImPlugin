@@ -46,6 +46,8 @@ class FriendStatusEnumTool {
         return FriendStatusEnum.IN_OTHER_SIDE_BLACK_LIST;
       case 30539:
         return FriendStatusEnum.PENDING;
+      default:
+        return null;
     }
   }
 
@@ -68,6 +70,8 @@ class FriendStatusEnumTool {
         return 30525;
       case FriendStatusEnum.PENDING:
         return 30539;
+      default:
+        return null;
     }
   }
 }

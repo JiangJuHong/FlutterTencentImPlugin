@@ -15,6 +15,8 @@ class FriendCheckTypeTool {
         return FriendCheckTypeEnum.unidirection;
       case 2:
         return FriendCheckTypeEnum.bidirection;
+      default:
+        return null;
     }
   }
 
@@ -25,6 +27,8 @@ class FriendCheckTypeTool {
         return 1;
       case FriendCheckTypeEnum.bidirection:
         return 2;
+      default:
+        return null;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+
 class Base64Util {
   /// Base64加密
   static String base64Encode(String data) {

@@ -19,6 +19,8 @@ class PendencyExamineTypeEnumTool {
         return PendencyExamineTypeEnum.AGREE_AND_ADD;
       case 2:
         return PendencyExamineTypeEnum.REJECT;
+      default:
+        return null;
     }
   }
 
@@ -31,6 +33,8 @@ class PendencyExamineTypeEnumTool {
         return 1;
       case PendencyExamineTypeEnum.REJECT:
         return 2;
+      default:
+        return null;
     }
   }
 }

@@ -21,6 +21,8 @@ class PendencyTypeTool {
         return PendencyTypeEnum.SEND_OUT;
       case 3:
         return PendencyTypeEnum.BOTH;
+      default:
+        return null;
     }
   }
 
@@ -33,6 +35,8 @@ class PendencyTypeTool {
         return 2;
       case PendencyTypeEnum.BOTH:
         return 3;
+      default:
+        return null;
     }
   }
 }
