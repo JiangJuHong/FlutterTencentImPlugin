@@ -80,6 +80,7 @@ import top.huic.tencent_im_plugin.entity.PendencyEntity;
 import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
@@ -101,11 +102,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * 与Flutter的通信管道
      */
     private static MethodChannel channel;
-
-    /**
-     * 监听器回调的方法名
-     */
-    private final static String LISTENER_FUNC_NAME = "onListener";
 
     public TencentImPlugin() {
     }
@@ -325,13 +321,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         // 主线程才初始化SDK
         if (SessionWrapper.isMainProcess(context)) {
-            TencentImPluginListener listener = new TencentImPluginListener();
+            TencentImListener listener = new TencentImListener(TencentImPlugin.channel);
 
             // 初始化 SDK
             TIMManager.getInstance().init(context, new TIMSdkConfig(Integer.parseInt(appid))
                     .enableLogPrint(true)
                     .setLogLevel(TIMLogLevel.WARN)
-                    .setLogListener(listener)
             );
 
             // 基本用户配置
@@ -1703,168 +1698,5 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             throw new RuntimeException("Cannot find parameter `" + param + "` or `" + param + "` is null!");
         }
         return par;
-    }
-
-    /**
-     * 调用监听器
-     *
-     * @param type   类型
-     * @param params 参数
-     */
-    public static void invokeListener(ListenerTypeEnum type, Object params) {
-        Map<String, Object> resultParams = new HashMap<>(2, 1);
-        resultParams.put("type", type);
-        resultParams.put("params", params == null ? null : JSON.toJSONString(params));
-        channel.invokeMethod(LISTENER_FUNC_NAME, JSON.toJSONString(resultParams));
-    }
-
-    /**
-     * 腾讯云IM监听器
-     */
-    class TencentImPluginListener implements
-            TIMLogListener, TIMUserStatusListener,
-            TIMConnListener, TIMGroupEventListener,
-            TIMRefreshListener, TIMMessageRevokedListener,
-            TIMMessageListener, TIMMessageReceiptListener {
-        /**
-         * 日志监听器
-         */
-        @Override
-        public void log(int i, String s, String s1) {
-            Log.println(i, "Tencent Im:[" + s + "]", s1);
-        }
-
-        /**
-         * 被其他终端踢下线
-         */
-        @Override
-        public void onForceOffline() {
-            Log.d(TAG, "onForceOffline: ");
-            invokeListener(ListenerTypeEnum.ForceOffline, null);
-        }
-
-        /**
-         * 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
-         */
-        @Override
-        public void onUserSigExpired() {
-            Log.d(TAG, "onUserSigExpired: ");
-            invokeListener(ListenerTypeEnum.UserSigExpired, null);
-        }
-
-        /**
-         * 连接监听
-         */
-        @Override
-        public void onConnected() {
-            Log.d(TAG, "onConnected: ");
-            invokeListener(ListenerTypeEnum.Connected, null);
-        }
-
-        /**
-         * 断开连接监听
-         */
-        @Override
-        public void onDisconnected(int i, String s) {
-            Log.d(TAG, "onDisconnected: ");
-            Map<String, Object> params = new HashMap<>(2, 1);
-            params.put("code", i);
-            params.put("msg", s);
-            invokeListener(ListenerTypeEnum.Disconnected, params);
-        }
-
-        /**
-         * wifi需要身份认证
-         */
-        @Override
-        public void onWifiNeedAuth(String s) {
-            Log.d(TAG, "onWifiNeedAuth: ");
-            invokeListener(ListenerTypeEnum.WifiNeedAuth, s);
-        }
-
-        /**
-         * 群消息事件
-         */
-        @Override
-        public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
-            Log.d(TAG, "onGroupTipsEvent: ");
-            invokeListener(ListenerTypeEnum.GroupTips, timGroupTipsElem);
-        }
-
-        /**
-         * 会话刷新
-         */
-        @Override
-        public void onRefresh() {
-            Log.d(TAG, "onRefresh: ");
-            invokeListener(ListenerTypeEnum.Refresh, null);
-        }
-
-        /**
-         * 会话刷新
-         */
-        @Override
-        public void onRefreshConversation(List<TIMConversation> list) {
-            Log.d(TAG, "onRefreshConversation: ");
-            // 获取资料后调用回调
-            TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
-                @Override
-                public void onSuccess(List<SessionEntity> data) {
-                    invokeListener(ListenerTypeEnum.RefreshConversation, data);
-                }
-
-                @Override
-                public void onError(int code, String desc) {
-                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
-                }
-            }, list);
-        }
-
-        /**
-         * 消息撤回
-         */
-        @Override
-        public void onMessageRevoked(TIMMessageLocator timMessageLocator) {
-            Log.d(TAG, "onMessageRevoked: ");
-            invokeListener(ListenerTypeEnum.MessageRevoked, timMessageLocator);
-        }
-
-        /**
-         * 新消息通知
-         *
-         * @param list 消息列表
-         * @return 默认情况下所有消息监听器都将按添加顺序被回调一次，除非用户在 onNewMessages 回调中返回 true，此时将不再继续回调下一个消息监听器
-         */
-        @Override
-        public boolean onNewMessages(List<TIMMessage> list) {
-            Log.d(TAG, "onNewMessages: " + list.toString());
-            TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>(null) {
-                @Override
-                public void onSuccess(List<MessageEntity> messageEntities) {
-                    invokeListener(ListenerTypeEnum.NewMessages, messageEntities);
-                }
-
-                @Override
-                public void onError(int code, String desc) {
-                    Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
-                }
-            });
-            return false;
-        }
-
-        /**
-         * 已读消息通知
-         *
-         * @param list 消息列表
-         */
-        @Override
-        public void onRecvReceipt(List<TIMMessageReceipt> list) {
-            Log.d(TAG, "onRecvReceipt: ");
-            List<String> rs = new ArrayList<>(list.size());
-            for (TIMMessageReceipt timMessageReceipt : list) {
-                rs.add(timMessageReceipt.getConversation().getPeer());
-            }
-            invokeListener(ListenerTypeEnum.RecvReceipt, rs);
-        }
     }
 }

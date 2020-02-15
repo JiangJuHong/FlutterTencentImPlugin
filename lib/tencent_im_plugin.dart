@@ -821,7 +821,7 @@ enum ListenerTypeEnum {
   /// 断开连接
   Disconnected,
 
-  /// Wifi需要认证
+  /// Wifi需要认证【Android独享】
   WifiNeedAuth,
 
   /// 会话刷新
@@ -850,4 +850,13 @@ enum ListenerTypeEnum {
 
   /// 已读(参数是已读会话ID集合)
   RecvReceipt,
+
+  /// 断线重连失败【IOS独享】
+  ReConnFailed,
+
+  /// 网络连接失败【IOS独享】
+  ConnFailed,
+
+  /// 连接中【IOS独享】
+  Connecting,
 }

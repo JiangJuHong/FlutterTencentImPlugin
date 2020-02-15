@@ -45,6 +45,13 @@ public class JsonUtil {
      * 将对象转换为JSON字符串(单个对象)
      */
     private static func toJsonByObj(_ object: Any) -> String{
+        
+        if object is String ||
+            object is Int32 || object is Int || object is UInt32 || object is UInt64 || object is Bool || object is Double || object is time_t || object is Date || object is Data || object is Dictionary<AnyHashable, Any>
+            {
+            return vHandler(object);
+        }
+        
         var result = "{";
         // 反射当前类及父类反射对象
         let morror = Mirror.init(reflecting: object)
@@ -53,9 +60,12 @@ public class JsonUtil {
         var dict : Dictionary<String?, Any> = [:];
         
         // 遍历父类和子类属性集合，添加到键值对字典
-        for (name, value) in (superMorror?.children)! {
-            dict[name!] = value;
+        if superMorror != nil{
+            for (name, value) in (superMorror?.children)! {
+                dict[name!] = value;
+            }
         }
+    
         for (name, value) in morror.children {
             dict[name!] = value;
         }
@@ -97,21 +107,26 @@ public class JsonUtil {
      * 根据K和V拼装键值对
      */
     private static func kv(_ k : Any, _ v : Any)->String{
-        var result = "\"\(k)\":";
-        
+        return "\"\(k)\":\(vHandler(v))";
+    }
+    
+    /**
+     *  值处理，根据不同类型的值，返回不同的结果
+     */
+    private static func vHandler(_ v : Any)->String{
         // 根据类型赋值不同的值
         // 如果是字符串，将会进行转移 " to \"
         // 如果是Data，将会解析为字符串并且进行转移
         if v is String{
-            result += "\"\("\(v)".replacingOccurrences(of: "\"",with: "\\\""))\"";
+            return "\"\("\(v)".replacingOccurrences(of: "\"",with: "\\\""))\"";
         }else if v is Int32 || v is Int || v is UInt32 || v is UInt64 || v is Bool || v is Double || v is time_t{
-            result += "\(v)";
+            return "\(v)";
         }else if v is Date{
-            result += "\(Int((v as! Date).timeIntervalSince1970))";
+            return "\(Int((v as! Date).timeIntervalSince1970))";
         }else if v is Data{
-            result += "\"\(String(data: v as! Data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\0",with: "").replacingOccurrences(of: "\"",with: "\\\""))\"";
+            return "\"\(String(data: v as! Data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\0",with: "").replacingOccurrences(of: "\"",with: "\\\""))\"";
         }else if v is Dictionary<AnyHashable, Any>{
-            result += "{";
+            var result = "{";
             // 解析键值对
             for (key,value) in v as! Dictionary<AnyHashable, Any>{
                 result += "\(kv(key, value)),";
@@ -120,13 +135,11 @@ public class JsonUtil {
             if result.hasSuffix(","){
                 result = String(result.dropLast());
             }
-            result += "}";
+            return result + "}";
         }else if v is NSObject{
-            result += toJson(v);
+            return toJson(v);
         }else {
-            result += "\"\(v)\"";
+            return "\"\(v)\"";
         }
-        
-        return result;
     }
 }

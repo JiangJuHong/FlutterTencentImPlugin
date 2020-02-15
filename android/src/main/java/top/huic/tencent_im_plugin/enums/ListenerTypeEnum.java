@@ -26,7 +26,7 @@ public enum ListenerTypeEnum {
     Disconnected,
 
     /**
-     * Wifi需要认证
+     * Wifi需要认证【Android独享】
      */
     WifiNeedAuth,
 

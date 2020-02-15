@@ -4,9 +4,12 @@ import ImSDK
 import HandyJSON
 
 public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
+    public static var channel : FlutterMethodChannel?;
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "tencent_im_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftTencentImPlugin()
+        SwiftTencentImPlugin.channel = channel;
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -183,20 +186,29 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      */
     public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult){
         if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String{
+            // 监听器
+            let listener = TencentImListener(channel: SwiftTencentImPlugin.channel!);
+            
             // 初始化SDK配置
             let sdkConfig = TIMSdkConfig();
             sdkConfig.sdkAppId = (appid as NSString).intValue;
-            // TODO 临时代码
-            sdkConfig.disableLogPrint = true;
             sdkConfig.logLevel = TIMLogLevel.LOG_WARN;
-            //            sdkConfig.logFunc =
+            sdkConfig.connListener = listener;
             TIMManager.sharedInstance()?.initSdk(sdkConfig);
             
             // 初始化用户配置
             let userConfig = TIMUserConfig();
             userConfig.enableReadReceipt = true;
+            userConfig.userStatusListener = listener;
+            userConfig.groupEventListener = listener;
+            userConfig.refreshListener = listener;
+            userConfig.messageRevokeListener = listener;
+            userConfig.messageReceiptListener = listener;
             TIMManager.sharedInstance()?.setUserConfig(userConfig);
             
+            // 添加新消息监听器
+            TIMManager.sharedInstance()?.add(listener);
+    
             result(nil);
         }
     }

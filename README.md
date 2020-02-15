@@ -49,7 +49,7 @@ Demo截图:
 |  TIMFaceElem  |  - |  暂不考虑 |
 |  TIMFileElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
 |  TIMGroupSystemElem  |  - |  暂不考虑 |
-|  TIMGroupTipsElem  |  - |  暂不考虑 |
+|  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  - |  计划内 |
 |  TIMProfileSystemElem  |  - |  暂不考虑 |
