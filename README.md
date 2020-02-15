@@ -17,10 +17,7 @@
 ## 集成
 ### Flutter
 ```
-tencent_im_plugin:
-    git:
-      url: https://github.com/JiangJuHong/FlutterTencentImPlugin.git
-      ref: master
+tencent_im_plugin: ^0.0.2
 ```
 暂不支持通过版本号引入
 

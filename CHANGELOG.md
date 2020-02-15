@@ -1,3 +1,2 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+* 集成腾讯云IMSDK，包含Android 和 IOS

@@ -1,8 +1,8 @@
 name: tencent_im_plugin
 description: 腾讯云IM插件
 version: 0.0.1
-author:
-homepage:
+author: 690717394@qq.com
+homepage: https://github.com/JiangJuHong/FlutterTencentImPlugin
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
