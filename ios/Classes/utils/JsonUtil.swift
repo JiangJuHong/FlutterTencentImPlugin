@@ -80,7 +80,6 @@ public class JsonUtil {
                     result += kv(n, v);
                     result += ",";
                 }
-                //            print("\(name!),\(type(of:v))");
             }
         }
         
@@ -118,13 +117,13 @@ public class JsonUtil {
         // 如果是字符串，将会进行转移 " to \"
         // 如果是Data，将会解析为字符串并且进行转移
         if v is String{
-            return "\"\("\(v)".replacingOccurrences(of: "\"",with: "\\\""))\"";
+            return "\"\(stringReplace(source: "\(v)"))\"";
         }else if v is Int32 || v is Int || v is UInt32 || v is UInt64 || v is Bool || v is Double || v is time_t{
             return "\(v)";
         }else if v is Date{
             return "\(Int((v as! Date).timeIntervalSince1970))";
         }else if v is Data{
-            return "\"\(String(data: v as! Data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\0",with: "").replacingOccurrences(of: "\"",with: "\\\""))\"";
+            return "\"\(stringReplace(source: String(data: v as! Data, encoding: String.Encoding.utf8)!))\"";
         }else if v is Dictionary<AnyHashable, Any>{
             var result = "{";
             // 解析键值对
@@ -141,5 +140,25 @@ public class JsonUtil {
         }else {
             return "\"\(v)\"";
         }
+    }
+    
+    /**
+     *  字符串替换
+     */
+    private static func stringReplace(source:String)->String{
+        var result = source;
+        
+        // 内容替换
+        result = result.replacingOccurrences(of:"\\",with:"\\\\");
+        result = result.replacingOccurrences(of:"\"",with:"\\\"");
+        result = result.replacingOccurrences(of:"/",with:"\\/");
+        result = result.replacingOccurrences(of:"\\\\b",with:"\\b");
+        result = result.replacingOccurrences(of:"\\\\f",with:"\\f");
+        result = result.replacingOccurrences(of:"\n",with:"\\n");
+        result = result.replacingOccurrences(of:"\r",with:"\\r");
+        result = result.replacingOccurrences(of:"\t",with:"\\t");
+        result = result.replacingOccurrences(of:"\0",with:"");
+        
+        return result;
     }
 }

@@ -3,13 +3,19 @@ import UIKit
 import ImSDK
 import HandyJSON
 
-public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
+public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener,TIMConnListener,TIMGroupEventListener,TIMRefreshListener,TIMMessageRevokeListener,TIMMessageReceiptListener,TIMMessageListener {
     public static var channel : FlutterMethodChannel?;
+    
+    /**
+     * 监听器回调的方法名
+     */
+    private static let LISTENER_FUNC_NAME = "onListener";
+    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "tencent_im_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftTencentImPlugin()
-//        SwiftTencentImPlugin.channel = channel;
+        SwiftTencentImPlugin.channel = channel;
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -186,29 +192,25 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      */
     public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult){
         if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String{
-            // 监听器
-//            let listener = TencentImListener(channel: SwiftTencentImPlugin.channel!);
-            
             // 初始化SDK配置
             let sdkConfig = TIMSdkConfig();
             sdkConfig.sdkAppId = (appid as NSString).intValue;
             sdkConfig.logLevel = TIMLogLevel.LOG_WARN;
-//            sdkConfig.connListener = listener;
+            sdkConfig.connListener = self;
             TIMManager.sharedInstance()?.initSdk(sdkConfig);
             
             // 初始化用户配置
             let userConfig = TIMUserConfig();
             userConfig.enableReadReceipt = true;
-//            userConfig.userStatusListener = listener;
-//            userConfig.groupEventListener = listener;
-//            userConfig.refreshListener = listener;
-//            userConfig.messageRevokeListener = listener;
-//            userConfig.messageReceiptListener = listener;
+            userConfig.userStatusListener = self;
+            userConfig.groupEventListener = self;
+            userConfig.refreshListener = self;
+            userConfig.messageRevokeListener = self;
+            userConfig.messageReceiptListener = self;
             TIMManager.sharedInstance()?.setUserConfig(userConfig);
             
             // 添加新消息监听器
-//            TIMManager.sharedInstance()?.add(listener);
-    
+            TIMManager.sharedInstance()?.add(self);
             result(nil);
         }
     }
@@ -230,7 +232,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 let loginParam = TIMLoginParam();
                 loginParam.identifier = identifier;
                 loginParam.userSig = userSig;
-                //                int code, NSString * msg
                 TIMManager.sharedInstance()?.login(loginParam, succ: {
                     result(nil);
                 }, fail:TencentImUtils.returnErrorClosures(result: result))
@@ -1548,5 +1549,124 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             // 返回结果
             result(JsonUtil.toJson(resultData));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
+    }
+    
+    /**
+     * 调用监听器
+     *
+     * @param type   类型
+     * @param params 参数
+     */
+    private func invokeListener(type : ListenerType, params : Any?) {
+        var resultParams : [String:Any] = [:];
+        resultParams["type"] = type;
+        resultParams["params"] = params == nil ? nil : JsonUtil.toJson(params!);
+        SwiftTencentImPlugin.channel!.invokeMethod(SwiftTencentImPlugin.LISTENER_FUNC_NAME, arguments: JsonUtil.toJson(resultParams));
+    }
+    
+    /**
+     * 踢下线通知
+     */
+    public func onForceOffline() {
+        self.invokeListener(type: ListenerType.ForceOffline, params: nil);
+    }
+    
+    /**
+     * 断线重连失败【IOS独享】
+     */
+    public func onReConnFailed(_ code: Int32, err: String!) {
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code":code,"msg":err!]);
+    }
+    
+    /**
+     * 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
+     */
+    public func onUserSigExpired() {
+        self.invokeListener(type: ListenerType.UserSigExpired, params: nil);
+    }
+    
+    /**
+     * 网络连接成功
+     */
+    public func onConnSucc() {
+        self.invokeListener(type: ListenerType.Connected, params: nil);
+    }
+    
+    /**
+     * 网络连接失败【IOS独享】
+     */
+    public func onConnFailed(_ code: Int32, err: String!) {
+        self.invokeListener(type: ListenerType.ConnFailed, params: ["code":code,"msg":err!]);
+    }
+    
+    /**
+     * 网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
+     */
+    public func onDisconnect(_ code: Int32, err: String!) {
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code":code,"msg":err!]);
+    }
+    
+    /**
+     * 连接中【IOS独享】
+     */
+    public func onConnecting() {
+        self.invokeListener(type: ListenerType.Connecting, params: nil);
+    }
+    
+    /**
+     * 群Tips回调
+     */
+    public func onGroupTipsEvent(_ elem: TIMGroupTipsElem!) {
+        self.invokeListener(type: ListenerType.GroupTips, params: GroupTipsNodeEntity(elem: elem));
+    }
+    
+    /**
+     * 刷新会话
+     */
+    public func onRefresh() {
+        self.invokeListener(type: ListenerType.Refresh, params: nil);
+    }
+    
+    /**
+     * 刷新部分会话
+     */
+    public func onRefreshConversations(_ conversations: [TIMConversation]!) {
+        // 获取资料后调用回调
+        TencentImUtils.getConversationInfo(conversations: conversations, onSuccess: {
+            (array) -> Void in
+            self.invokeListener(type: ListenerType.RefreshConversation, params: array);
+        }, onFail: {_,_ in
+            
+        });
+    }
+    
+    /**
+     * 消息撤回通知
+     */
+    public func onRevokeMessage(_ locator: TIMMessageLocator!) {
+        self.invokeListener(type: ListenerType.MessageRevoked, params: MessageLocatorEntity(locator: locator));
+    }
+    
+    /**
+     * 收到了已读回执
+     */
+    public func onRecvMessageReceipts(_ receipts: [Any]!) {
+        var rs : [String] = [];
+        
+        for item in receipts{
+            rs.append((item as! TIMMessageReceipt).conversation.getReceiver());
+        }
+        
+        self.invokeListener(type: ListenerType.RecvReceipt, params: rs);
+    }
+    
+    /**
+     * 新消息回调通知
+     */
+    public func onNewMessage(_ msgs: [Any]!) {
+        TencentImUtils.getMessageInfo(timMessages: msgs as! [TIMMessage], onSuccess:{
+            (array) -> Void in
+            self.invokeListener(type: ListenerType.NewMessages, params: array);
+        }, onFail: {_,_ in })
     }
 }
