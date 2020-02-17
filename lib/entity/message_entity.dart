@@ -97,7 +97,7 @@ class MessageEntity {
       }
     }
     for (var item in SessionType.values) {
-      if (item.toString().replaceFirst("SessionType.", "") == json['type']) {
+      if (item.toString().replaceFirst("SessionType.", "") == json['sessionType']) {
         sessionType = item;
       }
     }

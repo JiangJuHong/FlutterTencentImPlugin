@@ -7,3 +7,6 @@
 ## 0.1.2
 * 修复IOS上Json字符串中包含特殊字符的问题
 * 修复IOS监听器无效的问题
+
+## 0.1.3
+* 修复 MessageEntity 中 sessionType 始终为空的问题
