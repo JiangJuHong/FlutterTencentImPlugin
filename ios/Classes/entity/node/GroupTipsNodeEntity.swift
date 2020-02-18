@@ -33,31 +33,39 @@ public class GroupTipsNodeEntity : NodeEntity{
         self.groupId = groupTipsElem.group;
         self.memberNum = groupTipsElem.memberNum;
         
-        var groupInfoListData : [GroupTipsElemGroupInfoEntity] = [];
-        for item in groupTipsElem.groupChangeList{
-            groupInfoListData.append(GroupTipsElemGroupInfoEntity(info: item));
+        if groupTipsElem.groupChangeList != nil{
+            var groupInfoListData : [GroupTipsElemGroupInfoEntity] = [];
+            for item in groupTipsElem.groupChangeList!{
+                groupInfoListData.append(GroupTipsElemGroupInfoEntity(info: item));
+            }
+            self.groupInfoList = groupInfoListData;
         }
-        self.groupInfoList = groupInfoListData;
         
-        var memberInfoListData : [GroupTipsElemMemberInfoEntity] = [];
-        for item in groupTipsElem.memberChangeList{
-            memberInfoListData.append(GroupTipsElemMemberInfoEntity(info: item))
+        if groupTipsElem.memberChangeList != nil{
+            var memberInfoListData : [GroupTipsElemMemberInfoEntity] = [];
+            for item in groupTipsElem.memberChangeList!{
+                memberInfoListData.append(GroupTipsElemMemberInfoEntity(info: item))
+            }
+            self.memberInfoList = memberInfoListData;
         }
-        self.memberInfoList = memberInfoListData;
 
         self.opUserInfo = UserInfoEntity(userProfile: groupTipsElem.opUserInfo);
         self.opGroupMemberInfo = GroupMemberEntity(info: groupTipsElem.opGroupMemberInfo);
         
-        var changedUserInfoData : [String:UserInfoEntity] = [:];
-        for(key,value) in groupTipsElem.changedUserInfo{
-            changedUserInfoData[key] = UserInfoEntity(userProfile: value);
+        if groupTipsElem.changedUserInfo != nil{
+            var changedUserInfoData : [String:UserInfoEntity] = [:];
+            for(key,value) in groupTipsElem.changedUserInfo{
+                changedUserInfoData[key] = UserInfoEntity(userProfile: value);
+            }
+            self.changedUserInfo = changedUserInfoData;
         }
-        self.changedUserInfo = changedUserInfoData;
         
-        var changedGroupMemberInfoData : [String:GroupMemberEntity] = [:];
-        for(key,value) in groupTipsElem.changedGroupMemberInfo{
-            changedGroupMemberInfoData[key] = GroupMemberEntity(info: value);
+        if groupTipsElem.changedGroupMemberInfo != nil{
+            var changedGroupMemberInfoData : [String:GroupMemberEntity] = [:];
+            for(key,value) in groupTipsElem.changedGroupMemberInfo{
+                changedGroupMemberInfoData[key] = GroupMemberEntity(info: value);
+            }
+            self.changedGroupMemberInfo = changedGroupMemberInfoData;
         }
-        self.changedGroupMemberInfo = changedGroupMemberInfoData;
     }
 }
