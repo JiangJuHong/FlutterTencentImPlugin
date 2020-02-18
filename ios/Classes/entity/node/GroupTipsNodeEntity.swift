@@ -54,7 +54,7 @@ public class GroupTipsNodeEntity : NodeEntity{
         
         if groupTipsElem.changedUserInfo != nil{
             var changedUserInfoData : [String:UserInfoEntity] = [:];
-            for(key,value) in groupTipsElem.changedUserInfo{
+            for(key,value) in groupTipsElem.changedUserInfo!{
                 changedUserInfoData[key] = UserInfoEntity(userProfile: value);
             }
             self.changedUserInfo = changedUserInfoData;
@@ -62,7 +62,7 @@ public class GroupTipsNodeEntity : NodeEntity{
         
         if groupTipsElem.changedGroupMemberInfo != nil{
             var changedGroupMemberInfoData : [String:GroupMemberEntity] = [:];
-            for(key,value) in groupTipsElem.changedGroupMemberInfo{
+            for(key,value) in groupTipsElem.changedGroupMemberInfo!{
                 changedGroupMemberInfoData[key] = GroupMemberEntity(info: value);
             }
             self.changedGroupMemberInfo = changedGroupMemberInfoData;
