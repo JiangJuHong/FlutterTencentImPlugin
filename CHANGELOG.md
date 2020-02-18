@@ -13,3 +13,6 @@
 
 ## 0.1.4
 * 修复 GroupTipsNode 节点nil对象引起闪退问题
+
+## 0.1.5
+* 修复 GroupTipsNode 节点nil对象引起闪退问题
