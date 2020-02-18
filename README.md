@@ -17,7 +17,7 @@
 ## 集成
 ### Flutter
 ```
-tencent_im_plugin: ^0.1.3
+tencent_im_plugin: ^0.1.4
 ```
 暂不支持通过版本号引入
 

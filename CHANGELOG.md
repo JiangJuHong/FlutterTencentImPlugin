@@ -10,3 +10,6 @@
 
 ## 0.1.3
 * 修复 MessageEntity 中 sessionType 始终为空的问题
+
+## 0.1.4
+* 修复 GroupTipsNode 节点nil对象引起闪退问题
