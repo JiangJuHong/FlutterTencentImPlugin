@@ -12,12 +12,12 @@ public class CommonUtils{
      */
     public static func getParam(call: FlutterMethodCall, result: @escaping FlutterResult, param : String)->Any?
     {
-        if let value = (call.arguments as! [String:Any])[param]{
-            return value
+        let value = (call.arguments as! [String:Any])[param];
+        if value == nil{
+            result(
+                FlutterError(code: "5",  message: "Missing parameter",details: "Cannot find parameter `\(param)` or `\(param)` is null!")
+            );
         }
-        result(
-            FlutterError(code: "5",  message: "Missing parameter",details: "Cannot find parameter `\(param)` or `\(param)` is null!")
-        );
-        return nil;
+        return value
     }
 }
