@@ -715,7 +715,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
                     }
                     
                     // 返回结果
-                    result(JsonUtil.toJson(resultData));
+                    result(JsonUtil.toJson(PendencyPageEntity(res: data!, items: resultData)));
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
