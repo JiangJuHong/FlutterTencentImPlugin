@@ -607,21 +607,28 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func addFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let remark = ((call.arguments as! [String:Any])["remark"]) as? String;
+        let addWording = ((call.arguments as! [String:Any])["addWording"]) as? String;
+        let addSource = ((call.arguments as! [String:Any])["addSource"]) as? String;
+        let friendGroup = ((call.arguments as! [String:Any])["friendGroup"]) as? String;
         if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
-            let addType = CommonUtils.getParam(call: call, result: result, param: "addType") as? Int,
-            let remark = CommonUtils.getParam(call: call, result: result, param: "remark") as? String,
-            let addWording = CommonUtils.getParam(call: call, result: result, param: "addWording") as? String,
-            let addSource = CommonUtils.getParam(call: call, result: result, param: "addSource") as? String,
-            let friendGroup = CommonUtils.getParam(call: call, result: result, param: "friendGroup") as? String
+            let addType = CommonUtils.getParam(call: call, result: result, param: "addType") as? Int
         {
             let request = TIMFriendRequest();
             request.identifier = id;
             request.addType = TIMFriendAddType(rawValue: addType)!;
-            request.remark = remark;
-            request.addWording = addWording;
-            request.addSource = addSource;
-            request.group = friendGroup;
-            
+            if remark != nil{
+                 request.remark = remark!;
+            }
+            if addWording != nil{
+                request.addWording = addWording!;
+            }
+            if addSource != nil{
+                request.addSource = addSource!;
+            }
+            if friendGroup != nil{
+                request.group = friendGroup;
+            }
             
             TIMFriendshipManager.sharedInstance()?.addFriend(request, succ: {
                 (data) -> Void in
