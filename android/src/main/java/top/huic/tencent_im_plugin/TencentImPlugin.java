@@ -428,7 +428,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result), Collections.singletonList(conversation));
+        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result){
+            @Override
+            public void onSuccess(List<SessionEntity> sessionEntities) {
+                result.success(JSON.toJSONString(sessionEntities.get(0)));
+            }
+        }, Collections.singletonList(conversation));
     }
 
     /**
