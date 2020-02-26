@@ -1567,7 +1567,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func invokeListener(type : ListenerType, params : Any?) {
         var resultParams : [String:Any] = [:];
         resultParams["type"] = type;
-        resultParams["params"] = params == nil ? nil : JsonUtil.toJson(params!);
+        if let p = params{
+            resultParams["params"] = (p is Dictionary<AnyHashable, Any> ? JsonUtil.toJson(p) : p);
+        }
         SwiftTencentImPlugin.channel!.invokeMethod(SwiftTencentImPlugin.LISTENER_FUNC_NAME, arguments: JsonUtil.toJson(resultParams));
     }
     
