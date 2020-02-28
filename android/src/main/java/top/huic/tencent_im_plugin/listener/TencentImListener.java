@@ -27,6 +27,7 @@ import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+import top.huic.tencent_im_plugin.util.JsonUtil;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
