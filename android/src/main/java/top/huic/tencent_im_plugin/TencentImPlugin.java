@@ -81,6 +81,7 @@ import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
+import top.huic.tencent_im_plugin.util.JsonUtil;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
@@ -431,7 +432,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result){
             @Override
             public void onSuccess(List<SessionEntity> sessionEntities) {
-                result.success(JSON.toJSONString(sessionEntities.get(0)));
+                result.success(JsonUtil.toJSONString(sessionEntities.get(0)));
             }
         }, Collections.singletonList(conversation));
     }
@@ -451,14 +452,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 @Override
                 public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
                     if (timGroupDetailInfoResults != null && timGroupDetailInfoResults.size() >= 1) {
-                        result.success(JSON.toJSONString(timGroupDetailInfoResults.get(0)));
+                        result.success(JsonUtil.toJSONString(timGroupDetailInfoResults.get(0)));
                     } else {
                         result.success(null);
                     }
                 }
             });
         } else {
-            result.success(JSON.toJSONString(groupDetailInfo));
+            result.success(JsonUtil.toJSONString(groupDetailInfo));
         }
     }
 
@@ -476,7 +477,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(List<TIMUserProfile> timUserProfiles) {
                 if (timUserProfiles != null && timUserProfiles.size() >= 1) {
-                    result.success(JSON.toJSONString(timUserProfiles.get(0)));
+                    result.success(JsonUtil.toJSONString(timUserProfiles.get(0)));
                 } else {
                     result.success(null);
                 }
@@ -548,7 +549,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
                     if (timMessages == null || timMessages.size() == 0) {
-                        result.success(JSON.toJSONString(new ArrayList<>()));
+                        result.success(JsonUtil.toJSONString(new ArrayList<>()));
                         return;
                     }
                     TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
@@ -559,7 +560,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
                     if (timMessages == null || timMessages.size() == 0) {
-                        result.success(JSON.toJSONString(new ArrayList<>()));
+                        result.success(JsonUtil.toJSONString(new ArrayList<>()));
                         return;
                     }
                     TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
@@ -795,7 +796,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
 
                 if (ids.size() == 0) {
-                    result.success(JSON.toJSONString(new ArrayList<>()));
+                    result.success(JsonUtil.toJSONString(new ArrayList<>()));
                     return;
                 }
 
@@ -874,7 +875,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TIMFriendshipManager.getInstance().checkFriends(checkInfo, new ValueCallBack<List<TIMCheckFriendResult>>(result) {
             @Override
             public void onSuccess(List<TIMCheckFriendResult> timCheckFriendResults) {
-                result.success(JSON.toJSONString(timCheckFriendResults.get(0)));
+                result.success(JsonUtil.toJSONString(timCheckFriendResults.get(0)));
             }
         });
     }
@@ -908,7 +909,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(final TIMFriendPendencyResponse timFriendPendencyResponse) {
                 if (timFriendPendencyResponse.getItems().size() == 0) {
-                    result.success(JSON.toJSONString(new HashMap<>()));
+                    result.success(JsonUtil.toJSONString(new HashMap<>()));
                     return;
                 }
 
@@ -937,7 +938,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         }
 
                         // 返回结果
-                        result.success(JSON.toJSONString(new PendencyPageEntiity(timFriendPendencyResponse, resultData)));
+                        result.success(JsonUtil.toJSONString(new PendencyPageEntiity(timFriendPendencyResponse, resultData)));
                     }
                 });
             }
@@ -1190,7 +1191,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                             }
                             resultData.add(entity);
                         }
-                        result.success(JSON.toJSONString(resultData));
+                        result.success(JsonUtil.toJSONString(resultData));
                     }
                 });
             }
@@ -1363,7 +1364,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(final TIMGroupPendencyListGetSucc timGroupPendencyListGetSucc) {
                 if (timGroupPendencyListGetSucc.getPendencies().size() == 0) {
-                    result.success(JSON.toJSONString(new HashMap<>()));
+                    result.success(JsonUtil.toJSONString(new HashMap<>()));
                     return;
                 }
 
@@ -1398,7 +1399,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         }
                         current[0]++;
                         if (current[0] >= 2) {
-                            result.success(JSON.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
+                            result.success(JsonUtil.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
                         }
                     }
                 });
@@ -1422,7 +1423,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         }
                         current[0]++;
                         if (current[0] >= 2) {
-                            result.success(JSON.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
+                            result.success(JsonUtil.toJSONString(new GroupPendencyPageEntiity(timGroupPendencyListGetSucc.getPendencyMeta(), resultData)));
                         }
                     }
                 });
@@ -1527,7 +1528,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             if (data == null) {
                 TIMFriendshipManager.getInstance().getSelfProfile(new ValueCallBack<TIMUserProfile>(result));
             } else {
-                result.success(JSON.toJSONString(data));
+                result.success(JsonUtil.toJSONString(data));
             }
         }
     }

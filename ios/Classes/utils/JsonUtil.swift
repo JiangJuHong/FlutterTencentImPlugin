@@ -46,8 +46,11 @@ public class JsonUtil {
      */
     private static func toJsonByObj(_ object: Any) -> String{
         
-        if object is String ||
-            object is Int32 || object is Int || object is UInt32 || object is UInt64 || object is Bool || object is Double || object is time_t || object is Date || object is Data || object is Dictionary<AnyHashable, Any>
+        if object is String{
+            return "\(object)";
+        }
+        
+        if object is Int32 || object is Int || object is UInt32 || object is UInt64 || object is Bool || object is Double || object is time_t || object is Date || object is Data || object is Dictionary<AnyHashable, Any>
             {
             return vHandler(object);
         }
