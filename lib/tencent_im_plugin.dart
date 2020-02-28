@@ -3,14 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:tencent_im_plugin/base64_util.dart';
 import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_pendency_page_entity.dart';
 import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/enums/add_group_opt_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
-
 import 'entity/friend_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/group_member_entity.dart';
@@ -357,20 +355,9 @@ class TencentImPlugin {
   /// 获得群信息
   /// @return 群ID
   static Future<GroupInfoEntity> getGroupInfo({@required id}) async {
-    final String result =
-        await _channel.invokeMethod('getGroupInfo', {"id": id});
+    final String result = await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
-      GroupInfoEntity groupInfoEntity =
-          EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
-      if (groupInfoEntity != null &&
-          groupInfoEntity.custom != null &&
-          groupInfoEntity.custom.length != 0) {
-        for (var key in groupInfoEntity.custom.keys) {
-          groupInfoEntity.custom[key] =
-              Base64Util.base64Decode(groupInfoEntity.custom[key]);
-        }
-      }
-      return groupInfoEntity;
+      return EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
     }
     return null;
   }

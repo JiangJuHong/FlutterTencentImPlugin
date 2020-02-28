@@ -28,7 +28,7 @@ public class ValueCallBack<T> implements TIMValueCallBack<T> {
     @Override
     public void onSuccess(T t) {
         if (result != null) {
-            result.success(JSON.toJSONString(t));
+            result.success(JsonUtil.toJSONString(t));
         }
     }
 

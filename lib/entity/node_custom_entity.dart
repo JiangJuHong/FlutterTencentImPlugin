@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:tencent_im_plugin/base64_util.dart';
-
 import 'node_entity.dart';
 
 class NodeCustomEntity extends NodeEntity {
@@ -10,12 +8,7 @@ class NodeCustomEntity extends NodeEntity {
   NodeCustomEntity({this.data});
 
   NodeCustomEntity.fromJson(Map<String, dynamic> json) {
-    // 因为 fastJson 会将byte[]转换为base64，所以这里需要进行base64解码
-    if(Platform.isAndroid){
-      data = json['data'] != null ? Base64Util.base64Decode(json['data']) : null;
-    }else{
-      data = json['data'];
-    }
+    data = json['data'];
     type = NodeEntity.fromJson(json).type;
   }
 
