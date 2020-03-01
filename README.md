@@ -8,7 +8,6 @@
 
 ### 近期计划(已完成内容将会被移除)
 [-]TIMLocationElem 节点  
-[ ]未决消息审核/拒绝优化  
 [ ]IOS端语音、视频的下载功能  
 
 
@@ -102,7 +101,7 @@ Demo截图:
 | modifyMemberInfo  | 修改群成员资料 | {groupId:'群ID',identifier:'群成员ID',nameCard:'名片',receiveMessageOpt:'接收消息选项，注:IOS不支持',silence:'禁言时间',role:'角色',customInfo:'自定义数据'} | √ | √
 | getGroupPendencyList  | 获得未决群列表 | {timestamp:'翻页时间戳',numPerPage:'每页的数量'} | √ | √
 | reportGroupPendency  | 上报群未决已读 | {timestamp:'已读时间戳'} | √ | √
-| groupPendencyAccept  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
+| groupPendencyAccept  | 群未决审核（同意）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | groupPendencyRefuse  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | getSelfProfile  | 获取登录用户资料 | {forceUpdate:"是否强制走后台拉取"} | √ | √
 | modifySelfProfile  | 修改登录用户资料 | {params:'修改参数'} | √ | √
