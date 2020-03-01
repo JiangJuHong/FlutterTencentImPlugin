@@ -23,6 +23,16 @@ public class MessageEntity {
     private String id;
 
     /**
+     * 消息随机码
+     */
+    private Long rand;
+
+    /**
+     * 消息序列号
+     */
+    private Long seq;
+
+    /**
      * 唯一ID
      */
     private Long uniqueId;
@@ -96,6 +106,8 @@ public class MessageEntity {
     }
 
     public MessageEntity(TIMMessage message) {
+        this.rand = message.getRand();
+        this.seq = message.getSeq();
         this.id = message.getMsgId();
         this.uniqueId = message.getMsgUniqueId();
         this.peerReaded = message.isPeerReaded();
@@ -230,5 +242,21 @@ public class MessageEntity {
 
     public void setSessionType(TIMConversationType sessionType) {
         this.sessionType = sessionType;
+    }
+
+    public Long getRand() {
+        return rand;
+    }
+
+    public void setRand(Long rand) {
+        this.rand = rand;
+    }
+
+    public Long getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Long seq) {
+        this.seq = seq;
     }
 }

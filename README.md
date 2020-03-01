@@ -3,7 +3,14 @@
 腾讯云IM插件
 
 ## Getting Started
-集成腾讯云IM SDK，同时支持 Android 和 IOS
+集成腾讯云IM SDK，同时支持 Android 和 IOS  
+**注意：`v0.1.x` 为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于登录 `v0.2.0`**
+
+### 近期计划(已完成内容将会被移除)
+[-]TIMLocationElem 节点  
+[ ]未决消息审核/拒绝优化  
+[ ]IOS端语音、视频的下载功能  
+
 
 ## 功能清单
 [x]初始化  
@@ -17,9 +24,8 @@
 ## 集成
 ### Flutter
 ```
-tencent_im_plugin: ^0.1.13
+tencent_im_plugin: ^0.1.14
 ```
-暂不支持通过版本号引入
 
 
 ### Android 端集成
@@ -51,9 +57,9 @@ Demo截图:
 |  TIMLocationElem  |  - |  计划内 |
 |  TIMProfileSystemElem  |  - |  暂不考虑 |
 |  TIMSNSSystemElem  |  - |  暂不考虑 |
-|  TIMSoundElem  |  ⊙ |  有缺陷，但不影响使用 |
+|  TIMSoundElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
 |  TIMTextElem  |  √ |  已完成 |
-|  TIMVideoElem  |  ⊙ |  有缺陷，但不影响使用 |
+|  TIMVideoElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
 
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
@@ -111,3 +117,4 @@ Demo截图:
 | deleteFriendsFromFriendGroup  | 从分组删除好友 | {groupName:'组名',ids:'ID列表'} | √ | √
 | renameFriendGroup  | 重命名分组 | {oldGroupName:'旧名称',newGroupName:'新名称'} | √ | √
 | getFriendGroups  | 获得好友分组 | {groupNames:'组名'} | √ | √
+| revokeMessage | 撤回一条发送成功的消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳'} | √ | √

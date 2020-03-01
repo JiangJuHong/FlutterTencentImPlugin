@@ -182,6 +182,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
         case "getFriendGroups":
             self.getFriendGroups(call: call, result: result);
             break;
+        case "revokeMessage":
+            self.revokeMessage(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -618,7 +621,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             request.identifier = id;
             request.addType = TIMFriendAddType(rawValue: addType)!;
             if remark != nil{
-                 request.remark = remark!;
+                request.remark = remark!;
             }
             if addWording != nil{
                 request.addWording = addWording!;
@@ -1556,6 +1559,35 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             // 返回结果
             result(JsonUtil.toJson(resultData));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
+    }
+    
+    /**
+     * 消息撤回
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64
+        {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+                let locator = TIMMessageLocator();
+                locator.seq = seq;
+                locator.rand = rand;
+                locator.isSelf = true;
+                locator.time = time_t(timestamp);
+                session.findMessages([locator], succ: {
+                    (array) -> Void in
+                    session.revokeMessage((array![0] as! TIMMessage), succ: {
+                        result(nil);
+                    }, fail: TencentImUtils.returnErrorClosures(result: result));
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
     }
     
     /**

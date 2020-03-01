@@ -13,6 +13,16 @@ public class MessageEntity : NSObject{
     var id : String?;
     
     /**
+     * 消息随机码
+     */
+    var rand : UInt64?;
+    
+    /**
+     * 消息序列号
+     */
+    var seq : UInt64?;
+    
+    /**
      * 唯一ID
      */
     var uniqueId : UInt64?;
@@ -88,6 +98,8 @@ public class MessageEntity : NSObject{
     init(message : TIMMessage) {
         super.init();
         self.id = message.msgId();
+        self.seq = message.locator()?.seq;
+        self.rand = message.locator()?.rand;
         self.uniqueId = message.uniqueId();
         self.peerReaded = message.isPeerReaded();
         self.read = message.isReaded();

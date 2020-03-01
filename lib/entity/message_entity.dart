@@ -11,6 +11,12 @@ class MessageEntity {
   // 自定义整数
   int customInt;
 
+  // 消息随机码
+  int rand;
+
+  // 消息序列号
+  int seq;
+
   // 自定义值
   String customStr;
 
@@ -64,6 +70,8 @@ class MessageEntity {
     this.sessionId,
     this.userInfo,
     this.sessionType,
+    this.rand,
+    this.seq,
   });
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
@@ -97,10 +105,13 @@ class MessageEntity {
       }
     }
     for (var item in SessionType.values) {
-      if (item.toString().replaceFirst("SessionType.", "") == json['sessionType']) {
+      if (item.toString().replaceFirst("SessionType.", "") ==
+          json['sessionType']) {
         sessionType = item;
       }
     }
+    rand = json['rand'];
+    seq = json['seq'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +134,8 @@ class MessageEntity {
     data['status'] = this.status == null
         ? null
         : this.status.toString().replaceAll("MessageStatusEum.", "");
+    data['rand'] = this.rand;
+    data['seq'] = this.seq;
     return data;
   }
 }

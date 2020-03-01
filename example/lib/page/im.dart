@@ -6,6 +6,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:tencent_im_plugin/enums/message_status_enum.dart';
+
 //import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 //import 'package:flutter_sound/flutter_sound.dart';
 import 'package:image_picker/image_picker.dart';
@@ -228,11 +230,14 @@ class ImPageState extends State<ImPage> {
     for (var item in messageEntity) {
       Widget widget = getComponent(item.elemList);
       if (widget != null) {
-        dataEntity.add(new DataEntity(
-          userInfo: item.userInfo,
-          self: item.self,
-          widget: widget,
-        ));
+        dataEntity.add(
+          new DataEntity(
+            userInfo: item.userInfo,
+            self: item.self,
+            widget: widget,
+            message: item,
+          ),
+        );
       }
     }
     this.setState(() {});
@@ -377,10 +382,11 @@ class ImPageState extends State<ImPage> {
     });
 
     TencentImPlugin.sendSoundMessage(
-        sessionId: widget.id,
-        sessionType: widget.type,
-        duration: voiceCurrentSecond,
-        path: voicePath);
+      sessionId: widget.id,
+      sessionType: widget.type,
+      duration: voiceCurrentSecond,
+      path: voicePath,
+    );
   }
 
   /// 选择图片
@@ -457,6 +463,50 @@ class ImPageState extends State<ImPage> {
 //    });
   }
 
+  /// 消息长按事件
+  onMessageLongPress(DataEntity item, BuildContext context) {
+    if (item.self) {
+      final RenderBox renderBoxRed = context.findRenderObject();
+      final positionRed = renderBoxRed.localToGlobal(Offset.zero);
+      showMenu(
+        items: <PopupMenuEntry>[
+          PopupMenuItem(
+            value: 0,
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.delete),
+                Text("撤回"),
+              ],
+            ),
+          )
+        ],
+        context: context,
+        position: RelativeRect.fromLTRB(
+          MediaQuery.of(context).size.width - 70,
+          positionRed.dy - 10,
+          0,
+          0,
+        ),
+      ).then((res) {
+        if (res == 0) {
+          TencentImPlugin.revokeMessage(
+            sessionId: item.message.sessionId,
+            sessionType: item.message.sessionType,
+            rand: item.message.rand,
+            seq: item.message.seq,
+            timestamp: item.message.timestamp,
+          ).then((_) {
+            Scaffold.of(context)
+                .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
+          }).catchError((e) {
+            Scaffold.of(context)
+                .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -479,8 +529,20 @@ class ImPageState extends State<ImPage> {
                 key: refreshIndicator,
                 child: ListView(
                   controller: scrollController,
-                  children:
-                      data.map((item) => MessageItem(data: item)).toList(),
+                  children: data
+                      .map(
+                        (item) => LayoutBuilder(
+                          builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            return GestureDetector(
+                              onLongPress: () =>
+                                  onMessageLongPress(item, context),
+                              child: MessageItem(data: item),
+                            );
+                          },
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),
@@ -617,6 +679,8 @@ class DataEntity {
   /// id，可自定义
   final String id;
 
+  final MessageEntity message;
+
   /// 用户信息
   final UserInfoEntity userInfo;
 
@@ -626,7 +690,13 @@ class DataEntity {
   /// 显示组件
   final Widget widget;
 
-  DataEntity({this.id, this.userInfo, this.self, this.widget});
+  DataEntity({
+    this.id,
+    this.userInfo,
+    this.self,
+    this.widget,
+    this.message,
+  });
 }
 
 /// 消息条目
@@ -676,7 +746,10 @@ class MessageItem extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(3))),
-                  child: data.widget,
+                  child: data.message != null &&
+                          data.message.status == MessageStatusEum.HasRevoked
+                      ? Text("[该消息已被撤回]")
+                      : data.widget,
                 ),
               ],
             ),

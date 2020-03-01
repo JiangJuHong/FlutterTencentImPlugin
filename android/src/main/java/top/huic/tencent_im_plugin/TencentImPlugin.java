@@ -33,6 +33,7 @@ import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.imsdk.conversation.Msg;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
@@ -298,6 +299,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getFriendGroups":
                 this.getFriendGroups(call, result);
                 break;
+            case "revokeMessage":
+                this.revokeMessage(call, result);
+                break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
                 result.notImplemented();
@@ -429,7 +433,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 获得会话信息
         TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result){
+        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result) {
             @Override
             public void onSuccess(List<SessionEntity> sessionEntities) {
                 result.success(JsonUtil.toJSONString(sessionEntities.get(0)));
@@ -1313,10 +1317,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String customInfo = methodCall.argument("customInfo");
 
         TIMGroupManager.ModifyMemberInfoParam param = new TIMGroupManager.ModifyMemberInfoParam(groupId, identifier);
-        if(nameCard != null){
+        if (nameCard != null) {
             param.setNameCard(nameCard);
         }
-        if(receiveMessageOpt != null){
+        if (receiveMessageOpt != null) {
             param.setReceiveMessageOpt(TIMGroupReceiveMessageOpt.valueOf(receiveMessageOpt));
         }
         if (silence != null) {
@@ -1325,8 +1329,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         if (role != null) {
             param.setRoleType(role);
         }
-        if(customInfo != null){
-            try{
+        if (customInfo != null) {
+            try {
                 Map<String, Object> customInfoData = JSON.parseObject(customInfo);
                 Map<String, byte[]> customInfoParams = new HashMap<>(customInfoData.size(), 1);
                 for (String s : customInfoData.keySet()) {
@@ -1440,7 +1444,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void reportGroupPendency(MethodCall methodCall, final Result result) {
         Log.d(TAG, "reportGroupPendency: ");
         // 已读时间戳
-        Long timestamp = this.getParam(methodCall,result,"timestamp");
+        Long timestamp = this.getParam(methodCall, result, "timestamp");
         TIMGroupManager.getInstance().reportGroupPendency(timestamp, new VoidCallBack(result));
     }
 
@@ -1687,6 +1691,40 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             groupNames = Arrays.asList(groupNamesStr.split(","));
         }
         TIMFriendshipManager.getInstance().getFriendGroups(groupNames, new ValueCallBack<List<TIMFriendGroup>>(result));
+    }
+
+    /**
+     * 腾讯云 撤回消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void revokeMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "revokeMessage: ");
+        // 获得参数
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
+        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
+        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
+
+        // 获得会话信息
+        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        TIMMessageLocator locator = new TIMMessageLocator();
+        locator.setRand(rand);
+        locator.setSeq(seq);
+        locator.setSelf(true);
+        locator.setTimestamp(timestamp);
+
+        // 获得消息
+        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<TIMMessage> timMessages) {
+                // 撤回消息
+                conversation.revokeMessage(timMessages.get(0), new VoidCallBack(result));
+            }
+        });
+
     }
 
     /**
