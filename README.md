@@ -7,7 +7,8 @@
 **注意：`v0.1.x` 为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于登录 `v0.2.0`**
 
 ### 近期计划(已完成内容将会被移除)
-[-]TIMLocationElem 节点  
+[ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
+[ ]TIMLocationElem 节点  
 [ ]IOS端语音、视频的下载功能  
 
 
