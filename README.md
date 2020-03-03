@@ -1,4 +1,5 @@
 # tencent_im_plugin
+[![pub package](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
 
 腾讯云IM插件
 
@@ -24,7 +25,7 @@
 ## 集成
 ### Flutter
 ```
-tencent_im_plugin: ^0.1.14
+tencent_im_plugin: ^[最新版本号]
 ```
 
 
