@@ -9,6 +9,7 @@
 
 ### 近期计划(已完成内容将会被移除)
 [ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
+[ ]删除单条消息功能(非撤回)
 [ ]TIMLocationElem 节点  
 [ ]IOS端语音、视频的下载功能  
 
