@@ -185,6 +185,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
         case "revokeMessage":
             self.revokeMessage(call: call, result: result);
             break;
+        case "removeMessage":
+            self.removeMessage(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -1585,6 +1588,34 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
                     session.revokeMessage((array![0] as! TIMMessage), succ: {
                         result(nil);
                     }, fail: TencentImUtils.returnErrorClosures(result: result));
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
+    }
+    
+    /**
+     * 消息删除
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func removeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool
+        {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+                let locator = TIMMessageLocator();
+                locator.seq = seq;
+                locator.rand = rand;
+                locator.isSelf = `self`;
+                locator.time = time_t(timestamp);
+                session.findMessages([locator], succ: {
+                    (array) -> Void in
+                    result((array![0] as! TIMMessage).remove());
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
         }

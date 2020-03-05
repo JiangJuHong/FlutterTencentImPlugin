@@ -9,7 +9,6 @@
 
 ### 近期计划(已完成内容将会被移除)
 [ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
-[ ]删除单条消息功能(非撤回)
 [ ]TIMLocationElem 节点  
 [ ]IOS端语音、视频的下载功能  
 
@@ -120,3 +119,4 @@ Demo截图:
 | renameFriendGroup  | 重命名分组 | {oldGroupName:'旧名称',newGroupName:'新名称'} | √ | √
 | getFriendGroups  | 获得好友分组 | {groupNames:'组名'} | √ | √
 | revokeMessage | 撤回一条发送成功的消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳'} | √ | √
+| removeMessage | 删除一条消息(本地) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的'} | √ | √

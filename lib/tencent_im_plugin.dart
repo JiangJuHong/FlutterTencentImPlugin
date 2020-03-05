@@ -706,7 +706,7 @@ class TencentImPlugin {
     }));
   }
 
-  /// 获得好友分组
+  /// 撤回
   static Future<void> revokeMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
@@ -714,13 +714,32 @@ class TencentImPlugin {
     @required int seq, //消息序列号
     @required int timestamp, // 消息时间戳
   }) async {
-    return jsonDecode(await _channel.invokeMethod('revokeMessage', {
+    return await _channel.invokeMethod('revokeMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "rand": rand,
       "seq": seq,
       "timestamp": timestamp
-    }));
+    });
+  }
+
+  /// 删除(仅会删除本地)
+  static Future<bool> removeMessage({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+  }) async {
+    return await _channel.invokeMethod('removeMessage', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "self": self,
+    });
   }
 
   /// 添加消息监听
@@ -755,11 +774,11 @@ class TencentImPluginListener {
         case 'onListener':
           // 获得原始类型和参数
           String typeStr = arguments['type'];
-          String paramsStr = arguments['params'];
+          var paramsStr = arguments['params'];
 
           // 封装回调类型和参数
           ListenerTypeEnum type;
-          Object params;
+          var params;
 
           // 初始化类型
           for (var item in ListenerTypeEnum.values) {

@@ -464,47 +464,76 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 消息长按事件
-  onMessageLongPress(DataEntity item, BuildContext context) {
-    if (item.self) {
-      final RenderBox renderBoxRed = context.findRenderObject();
-      final positionRed = renderBoxRed.localToGlobal(Offset.zero);
-      showMenu(
-        items: <PopupMenuEntry>[
-          PopupMenuItem(
-            value: 0,
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.delete),
-                Text("撤回"),
-              ],
-            ),
-          )
-        ],
-        context: context,
-        position: RelativeRect.fromLTRB(
-          MediaQuery.of(context).size.width - 70,
-          positionRed.dy - 10,
-          0,
-          0,
+  onMessageLongPress(index, DataEntity item, BuildContext context) {
+    final RenderBox renderBoxRed = context.findRenderObject();
+    final positionRed = renderBoxRed.localToGlobal(Offset.zero);
+    showMenu(
+      items: <PopupMenuEntry>[
+        item.self
+            ? PopupMenuItem(
+                value: 0,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.redo),
+                    Text("撤回"),
+                  ],
+                ),
+              )
+            : null,
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.delete),
+              Text("删除"),
+            ],
+          ),
         ),
-      ).then((res) {
-        if (res == 0) {
-          TencentImPlugin.revokeMessage(
-            sessionId: item.message.sessionId,
-            sessionType: item.message.sessionType,
-            rand: item.message.rand,
-            seq: item.message.seq,
-            timestamp: item.message.timestamp,
-          ).then((_) {
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
-          }).catchError((e) {
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
-          });
-        }
-      });
-    }
+      ],
+      context: context,
+      position: RelativeRect.fromLTRB(
+        MediaQuery.of(context).size.width - 70,
+        positionRed.dy - 10,
+        0,
+        0,
+      ),
+    ).then((res) {
+      if (res == 0) {
+        TencentImPlugin.revokeMessage(
+          sessionId: item.message.sessionId,
+          sessionType: item.message.sessionType,
+          rand: item.message.rand,
+          seq: item.message.seq,
+          timestamp: item.message.timestamp,
+        ).then((_) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
+          this.setState(
+              () => data[index].message.status = MessageStatusEum.HasRevoked);
+        }).catchError((e) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
+        });
+      }
+
+      if (res == 1) {
+        TencentImPlugin.removeMessage(
+          sessionId: item.message.sessionId,
+          sessionType: item.message.sessionType,
+          rand: item.message.rand,
+          seq: item.message.seq,
+          timestamp: item.message.timestamp,
+          self: item.message.self,
+        ).then((result) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: new Text('消息删除:$result')));
+          this.setState(() => data.removeAt(index));
+        }).catchError((e) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: new Text('消息删除失败:$e')));
+        });
+      }
+    });
   }
 
   @override
@@ -529,20 +558,19 @@ class ImPageState extends State<ImPage> {
                 key: refreshIndicator,
                 child: ListView(
                   controller: scrollController,
-                  children: data
-                      .map(
-                        (item) => LayoutBuilder(
-                          builder: (BuildContext context,
-                              BoxConstraints constraints) {
-                            return GestureDetector(
-                              onLongPress: () =>
-                                  onMessageLongPress(item, context),
-                              child: MessageItem(data: item),
-                            );
-                          },
-                        ),
-                      )
-                      .toList(),
+                  children: List.generate(
+                    data.length,
+                    (index) => LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return GestureDetector(
+                          onLongPress: () =>
+                              onMessageLongPress(index, data[index], context),
+                          child: MessageItem(data: data[index]),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),

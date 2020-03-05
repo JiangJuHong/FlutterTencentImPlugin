@@ -302,6 +302,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "revokeMessage":
                 this.revokeMessage(call, result);
                 break;
+            case "removeMessage":
+                this.removeMessage(call, result);
+                break;
             default:
                 Log.w(TAG, "onMethodCall: not found method " + call.method);
                 result.notImplemented();
@@ -1722,6 +1725,40 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onSuccess(List<TIMMessage> timMessages) {
                 // 撤回消息
                 conversation.revokeMessage(timMessages.get(0), new VoidCallBack(result));
+            }
+        });
+
+    }
+
+    /**
+     * 腾讯云 删除消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void removeMessage(MethodCall methodCall, final Result result) {
+        Log.d(TAG, "removeMessage: ");
+        // 获得参数
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
+        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
+        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
+        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
+        boolean self = this.getParam(methodCall, result, "self");
+
+        // 获得会话信息
+        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        TIMMessageLocator locator = new TIMMessageLocator();
+        locator.setRand(rand);
+        locator.setSeq(seq);
+        locator.setTimestamp(timestamp);
+        locator.setSelf(self);
+
+        // 获得消息
+        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<TIMMessage> timMessages) {
+                result.success(timMessages.get(0).remove());
             }
         });
 
