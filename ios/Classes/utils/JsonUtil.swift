@@ -42,9 +42,11 @@ public class JsonUtil {
     public static func toJson(_ object: Any) -> Any {
         // 解析数组
         if let array = object as? [Any] {
+            let isStringArray = object is [String];
             var result = "[";
             for item in array{
-                result += "\(toJsonByObj(item)),";
+                let data = isStringArray ? "\"\(toJsonByObj(item))\"" : toJsonByObj(item);
+                result += "\(data),";
             }
             // 删除末尾逗号
             if result.hasSuffix(","){
