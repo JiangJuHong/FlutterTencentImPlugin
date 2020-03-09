@@ -742,6 +742,47 @@ class TencentImPlugin {
     });
   }
 
+  /// 设置自定义整型
+  static Future<void> setMessageCustomInt({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+    @required int value, // 会话ID
+  }) async {
+    return await _channel.invokeMethod('setMessageCustomInt', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "value": value,
+    });
+  }
+
+
+  /// 设置自定义字符串
+  static Future<void> setMessageCustomStr({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+    @required String value, // 会话ID
+  }) async {
+    return await _channel.invokeMethod('setMessageCustomStr', {
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "value": value,
+    });
+  }
+
   /// 添加消息监听
   static void addListener(ListenerValue func) {
     if (listener == null) {

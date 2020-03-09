@@ -188,6 +188,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
         case "removeMessage":
             self.removeMessage(call: call, result: result);
             break;
+        case "setMessageCustomInt":
+            self.setMessageCustomInt(call: call, result: result);
+            break;
+        case "setMessageCustomStr":
+            self.setMessageCustomStr(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -1616,6 +1622,67 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
                 session.findMessages([locator], succ: {
                     (array) -> Void in
                     result((array![0] as! TIMMessage).remove());
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
+    }
+    
+    /**
+     * 设置消息自定义整型
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func setMessageCustomInt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
+            let value =  CommonUtils.getParam(call: call, result: result, param: "value") as? Int32
+        {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+                let locator = TIMMessageLocator();
+                locator.seq = seq;
+                locator.rand = rand;
+                locator.isSelf = `self`;
+                locator.time = time_t(timestamp);
+                session.findMessages([locator], succ: {
+                    (array) -> Void in
+                    (array![0] as! TIMMessage).setCustomInt(value);
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
+    }
+    
+    
+    /**
+     * 设置消息自定义字符串
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func setMessageCustomStr(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
+            let value =  CommonUtils.getParam(call: call, result: result, param: "value") as? String
+        {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+                let locator = TIMMessageLocator();
+                locator.seq = seq;
+                locator.rand = rand;
+                locator.isSelf = `self`;
+                locator.time = time_t(timestamp);
+                session.findMessages([locator], succ: {
+                    (array) -> Void in
+                    (array![0] as! TIMMessage).setCustomData(value.data(using: String.Encoding.utf8));
+                    result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
         }
