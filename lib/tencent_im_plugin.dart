@@ -110,7 +110,7 @@ class TencentImPlugin {
   }
 
   /// 发送自定义消息
-  static Future<void> sendCustomMessage({
+  static Future<MessageEntity> sendCustomMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String data, // 自定义消息数据
@@ -125,7 +125,7 @@ class TencentImPlugin {
   }
 
   /// 发送视频消息
-  static Future<void> sendVideoMessage({
+  static Future<MessageEntity> sendVideoMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 视频路径
