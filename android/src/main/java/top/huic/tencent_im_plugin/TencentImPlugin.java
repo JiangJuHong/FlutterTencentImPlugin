@@ -769,8 +769,13 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result, boolean ol) {
         ValueCallBack callBack = new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(TIMMessage message) {
-                result.success(null);
+            public void onSuccess(final TIMMessage message) {
+                TencentImUtils.getMessageInfo(Collections.singletonList(message),new ValueCallBack<List<MessageEntity>>(result){
+                    @Override
+                    public void onSuccess(List<MessageEntity> messageEntities) {
+                        result.success(JSON.toJSONString(messageEntities.get(0)));
+                    }
+                });
             }
         };
 
