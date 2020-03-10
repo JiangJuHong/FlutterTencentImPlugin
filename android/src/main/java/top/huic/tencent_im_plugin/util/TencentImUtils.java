@@ -82,12 +82,10 @@ public class TencentImUtils {
             // 获取最后一条消息
             TIMMessage lastMsg = timConversation.getLastMsg();
             if (lastMsg != null) {
+                // 加入到获取用户的队列
+                userInfo.put(lastMsg.getSender(), entity);
                 // 封装消息信息
-                MessageEntity messageEntity = new MessageEntity();
-                messageEntity.setId(lastMsg.getMsgId());
-                messageEntity.setTimestamp(lastMsg.timestamp());
-                messageEntity.setElemList(TencentImUtils.getArrrElement(lastMsg));
-                entity.setMessage(messageEntity);
+                entity.setMessage(new MessageEntity(lastMsg));
             }
             resultData.add(entity);
         }
@@ -146,10 +144,16 @@ public class TencentImUtils {
                     // 设置用户资料
                     for (TIMUserProfile timUserProfile : timUserProfiles) {
                         SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
-                        if (sessionEntity != null) {
+                        // 会话用户ID
+                        if (sessionEntity != null && timUserProfile.getIdentifier().equals(sessionEntity.getId())) {
                             sessionEntity.setUserProfile(timUserProfile);
                             sessionEntity.setNickname(timUserProfile.getNickName());
                             sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
+                        }
+
+                        // 最后一条消息用户ID
+                        if (sessionEntity != null && sessionEntity.getMessage() != null && timUserProfile.getIdentifier().equals(sessionEntity.getMessage().getSender())) {
+                            sessionEntity.getMessage().setUserInfo(timUserProfile);
                         }
                     }
 

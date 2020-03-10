@@ -53,6 +53,7 @@ public class TencentImUtils{
             // 获取最后一条消息
             let lastMsg = timConversation.getLastMsg();
             if (lastMsg != nil) {
+                userInfo[lastMsg!.sender()] = entity;
                 entity.message = MessageEntity(message: lastMsg!);
             }
             resultData.append(entity);
@@ -97,10 +98,19 @@ public class TencentImUtils{
                 // 设置会话资料
                 for item in array!{
                     let userProfile = item as TIMUserProfile;
-                    if let sessionEntity = userInfo[userProfile.identifier]{
-                        sessionEntity.userProfile = UserInfoEntity(userProfile: userProfile);
-                        sessionEntity.nickname = userProfile.nickname;
-                        sessionEntity.faceUrl = userProfile.faceURL;
+                    
+                    let sessionEntity = userInfo[userProfile.identifier];
+                    
+                    // 会话用户ID
+                    if sessionEntity != nil && userProfile.identifier == sessionEntity?.id{
+                        sessionEntity!.userProfile = UserInfoEntity(userProfile: userProfile);
+                        sessionEntity!.nickname = userProfile.nickname;
+                        sessionEntity!.faceUrl = userProfile.faceURL;
+                    }
+                    
+                    // 最后一条消息用户ID
+                    if sessionEntity != nil && userProfile.identifier == sessionEntity?.message?.sender{
+                        sessionEntity?.message?.userInfo = UserInfoEntity(userProfile: userProfile);
                     }
                 }
                 
