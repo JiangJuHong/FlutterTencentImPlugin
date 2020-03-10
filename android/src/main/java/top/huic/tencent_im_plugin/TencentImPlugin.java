@@ -770,10 +770,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         ValueCallBack callBack = new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(final TIMMessage message) {
-                TencentImUtils.getMessageInfo(Collections.singletonList(message),new ValueCallBack<List<MessageEntity>>(result){
+                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
                     @Override
                     public void onSuccess(List<MessageEntity> messageEntities) {
-                        result.success(JSON.toJSONString(messageEntities.get(0)));
+                        result.success(JsonUtil.toJSONString(messageEntities.get(0)));
                     }
                 });
             }
