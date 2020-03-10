@@ -43,7 +43,7 @@ class LoginPageState extends State<LoginPage> {
     TencentImPlugin.login(
       identifier: "98a6f9541f1b455480bf460aa5208497",
       userSig:
-          "eJw1jksLgkAUhf-LrKPuTPMUWiVBGSnootqNOJMXScwspOi-J1rL8-gO502yfTp3fYOtI4FSSgLAbDSfriUBYXMgk74XlW0aLEhAOQAzwNRySrBwdYceR8BoK70RnHqacyG4htxzCdYKBpob9V-Dy1AuTXJa2-5Vpdoe0rPYVV0S1uEtPj6iXsfZhmEebqNyIWH1Azu8Dk*pUEJTbkB*vvMwNwA_",
+          "eJwtjcsOgjAURP*lWwy5Lb3QkrjxtTDEhRgS3ZXQSiHKQ0SN8d8lwHLO5Mx8ySmK3V63JCTMBbIYs830vbPGjlgK5RuJnBqackQuIDXcB6WQgeAymJ1HVqq6thkJKQdgEljgTY1*17bVA0ccFICJdvY2MuEFSBnj84q9DpfbrtoUptrnziXZlcn62GDhNLU8Q9HLuM0DWB2en0ggvJbk9wfJKDdD",
     ).then((_) {
       Navigator.push(
         context,

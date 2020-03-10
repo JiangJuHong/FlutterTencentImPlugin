@@ -553,7 +553,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
         /// 成功回调
         let successCallback = {
             () -> Void in
-            result(nil);
+            TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                (array) -> Void in
+                result(JsonUtil.toJson(array[0]));
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
         };
         
         // 根据状态发送在线或离线消息

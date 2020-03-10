@@ -63,50 +63,50 @@ class TencentImPlugin {
   }
 
   /// 发送文本消息
-  static Future<void> sendTextMessage({
+  static Future<MessageEntity> sendTextMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String content, //发送内容
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return await _channel.invokeMethod('sendTextMessage', {
+    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendTextMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "content": content,
       "ol": ol,
-    });
+    })));
   }
 
   /// 发送图片消息
-  static Future<void> sendImageMessage({
+  static Future<MessageEntity> sendImageMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 发送图片路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return await _channel.invokeMethod('sendImageMessage', {
+    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendImageMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
       "ol": ol,
-    });
+    })));
   }
 
   /// 发送语音消息
-  static Future<void> sendSoundMessage({
+  static Future<MessageEntity> sendSoundMessage({
     @required String sessionId, // 会话ID
     @required SessionType sessionType, // 会话类型
     @required String path, // 语音路径
     @required int duration, // 语音时长
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return await _channel.invokeMethod('sendSoundMessage', {
+    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendSoundMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
       "duration": duration,
       "ol": ol,
-    });
+    })));
   }
 
   /// 发送自定义消息
@@ -116,12 +116,12 @@ class TencentImPlugin {
     @required String data, // 自定义消息数据
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return await _channel.invokeMethod('sendCustomMessage', {
+    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendCustomMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "data": data,
       "ol": ol,
-    });
+    })));
   }
 
   /// 发送视频消息
@@ -136,7 +136,7 @@ class TencentImPlugin {
     @required String snapshotPath, // 缩略图路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return await _channel.invokeMethod('sendVideoMessage', {
+    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendVideoMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
@@ -146,7 +146,7 @@ class TencentImPlugin {
       "snapshotHeight": snapshotHeight,
       "snapshotPath": snapshotPath,
       "ol": ol,
-    });
+    })));
   }
 
   /// 获得当前登录用户会话列表
