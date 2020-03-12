@@ -1858,7 +1858,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         T par = methodCall.argument(param);
         if (par == null) {
             Log.w(TAG, "init: Cannot find parameter `" + param + "` or `" + param + "` is null!");
-            result.error("Missing parameter", "Cannot find parameter `" + param + "` or `" + param + "` is null!", 5);
             throw new RuntimeException("Cannot find parameter `" + param + "` or `" + param + "` is null!");
         }
         return par;

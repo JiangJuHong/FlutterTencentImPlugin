@@ -67,3 +67,6 @@
 
 ## 0.1.21
 * 发送新消息后，返回的数据对象有问题
+
+## 0.1.22
+* 修复 setMessageCustomInt 和 setMessageCustomString 报错的问题

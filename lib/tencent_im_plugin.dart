@@ -69,7 +69,8 @@ class TencentImPlugin {
     @required String content, //发送内容
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendTextMessage', {
+    return MessageEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('sendTextMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "content": content,
@@ -84,7 +85,8 @@ class TencentImPlugin {
     @required String path, // 发送图片路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendImageMessage', {
+    return MessageEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('sendImageMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
@@ -100,7 +102,8 @@ class TencentImPlugin {
     @required int duration, // 语音时长
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendSoundMessage', {
+    return MessageEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('sendSoundMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
@@ -116,7 +119,8 @@ class TencentImPlugin {
     @required String data, // 自定义消息数据
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendCustomMessage', {
+    return MessageEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('sendCustomMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "data": data,
@@ -136,7 +140,8 @@ class TencentImPlugin {
     @required String snapshotPath, // 缩略图路径
     bool ol: false, // 是否为在线消息，如果为true，将使用 sendOnlineMessage 通道进行消息发送
   }) async {
-    return MessageEntity.fromJson(jsonDecode(await _channel.invokeMethod('sendVideoMessage', {
+    return MessageEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('sendVideoMessage', {
       "sessionId": sessionId,
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "path": path,
@@ -757,11 +762,11 @@ class TencentImPlugin {
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "rand": rand,
       "seq": seq,
+      "self": self,
       "timestamp": timestamp,
       "value": value,
     });
   }
-
 
   /// 设置自定义字符串
   static Future<void> setMessageCustomStr({
@@ -778,6 +783,7 @@ class TencentImPlugin {
       "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
       "rand": rand,
       "seq": seq,
+      "self": self,
       "timestamp": timestamp,
       "value": value,
     });

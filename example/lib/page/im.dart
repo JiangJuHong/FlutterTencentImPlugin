@@ -489,6 +489,42 @@ class ImPageState extends State<ImPage> {
             ],
           ),
         ),
+        PopupMenuItem(
+          value: 2,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.send),
+              Text("设置自定义随机值(Int)"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 3,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.send),
+              Text("设置自定义随机值(String)"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 4,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.send),
+              Text("获得自定义随机值(Int)"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 5,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.send),
+              Text("获得自定义随机值(String)"),
+            ],
+          ),
+        ),
       ],
       context: context,
       position: RelativeRect.fromLTRB(
@@ -498,40 +534,87 @@ class ImPageState extends State<ImPage> {
         0,
       ),
     ).then((res) {
-      if (res == 0) {
-        TencentImPlugin.revokeMessage(
-          sessionId: item.message.sessionId,
-          sessionType: item.message.sessionType,
-          rand: item.message.rand,
-          seq: item.message.seq,
-          timestamp: item.message.timestamp,
-        ).then((_) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
-          this.setState(
-              () => data[index].message.status = MessageStatusEum.HasRevoked);
-        }).catchError((e) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
-        });
-      }
-
-      if (res == 1) {
-        TencentImPlugin.removeMessage(
-          sessionId: item.message.sessionId,
-          sessionType: item.message.sessionType,
-          rand: item.message.rand,
-          seq: item.message.seq,
-          timestamp: item.message.timestamp,
-          self: item.message.self,
-        ).then((result) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: new Text('消息删除:$result')));
-          this.setState(() => data.removeAt(index));
-        }).catchError((e) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: new Text('消息删除失败:$e')));
-        });
+      if (res != null) {
+        switch (res) {
+          case 0:
+            TencentImPlugin.revokeMessage(
+              sessionId: item.message.sessionId,
+              sessionType: item.message.sessionType,
+              rand: item.message.rand,
+              seq: item.message.seq,
+              timestamp: item.message.timestamp,
+            ).then((_) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
+              this.setState(() =>
+                  data[index].message.status = MessageStatusEum.HasRevoked);
+            }).catchError((e) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
+            });
+            break;
+          case 1:
+            TencentImPlugin.removeMessage(
+              sessionId: item.message.sessionId,
+              sessionType: item.message.sessionType,
+              rand: item.message.rand,
+              seq: item.message.seq,
+              timestamp: item.message.timestamp,
+              self: item.message.self,
+            ).then((result) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('消息删除:$result')));
+              this.setState(() => data.removeAt(index));
+            }).catchError((e) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('消息删除失败:$e')));
+            });
+            break;
+          case 2:
+            int value = new Random(0).nextInt(9999999);
+            TencentImPlugin.setMessageCustomInt(
+              sessionId: item.message.sessionId,
+              sessionType: item.message.sessionType,
+              rand: item.message.rand,
+              seq: item.message.seq,
+              timestamp: item.message.timestamp,
+              self: item.message.self,
+              value: value,
+            ).then((result) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: new Text('设置自定义整型成功:$value，为了确保成功，请返回界面后重试')));
+            }).catchError((e) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('设置自定义整型失败:$e')));
+            });
+            break;
+          case 3:
+            String value = "string=${new Random(0).nextInt(9999999).toString()}";
+            TencentImPlugin.setMessageCustomStr(
+              sessionId: item.message.sessionId,
+              sessionType: item.message.sessionType,
+              rand: item.message.rand,
+              seq: item.message.seq,
+              timestamp: item.message.timestamp,
+              self: item.message.self,
+              value: value,
+            ).then((result) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: new Text('设置自定义字符串成功:$value，为了确保成功，请返回界面后重试')));
+            }).catchError((e) {
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: new Text('设置自定义字符串失败:$e')));
+            });
+            break;
+          case 4:
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: new Text('获得的自定义整型为:${item.message.customInt}')));
+            break;
+          case 5:
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: new Text('获得的自定义字符串为:${item.message.customStr}')));
+            break;
+        }
       }
     });
   }
