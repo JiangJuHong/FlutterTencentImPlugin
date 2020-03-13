@@ -11,6 +11,7 @@
 [ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
 [ ]TIMLocationElem 节点  
 [ ]IOS端语音、视频的下载功能  
+[ ]Demo增加视频发送功能
 
 
 ## 功能清单
