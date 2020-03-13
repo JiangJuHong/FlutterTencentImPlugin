@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -19,6 +18,11 @@ import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/node_entity.dart';
 import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:tencent_im_plugin/message_node/text_message_node.dart';
+import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
+import 'package:tencent_im_plugin/message_node/video_message_node.dart';
+import 'package:tencent_im_plugin/message_node/image_message_node.dart';
+import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
 import 'package:thumbnails/thumbnails.dart';
 
 /// 聊天页面
@@ -192,10 +196,12 @@ class ImPageState extends State<ImPage> {
     });
 
     // 发送消息
-    TencentImPlugin.sendTextMessage(
+    TencentImPlugin.sendMessage(
       sessionId: widget.id,
       sessionType: widget.type,
-      content: controller.text,
+      node: TextMessageNode(
+        content: controller.text,
+      ),
     );
     controller.text = "";
 
@@ -381,11 +387,13 @@ class ImPageState extends State<ImPage> {
       data.add(dataEntity);
     });
 
-    TencentImPlugin.sendSoundMessage(
+    TencentImPlugin.sendMessage(
       sessionId: widget.id,
       sessionType: widget.type,
-      duration: voiceCurrentSecond,
-      path: voicePath,
+      node: SoundMessageNode(
+        duration: voiceCurrentSecond,
+        path: voicePath,
+      ),
     );
   }
 
@@ -407,10 +415,12 @@ class ImPageState extends State<ImPage> {
         data.add(dataEntity);
       });
 
-      TencentImPlugin.sendImageMessage(
+      TencentImPlugin.sendMessage(
         sessionId: widget.id,
         sessionType: widget.type,
-        path: image.path,
+        node: ImageMessageNode(
+          path: image.path,
+        ),
       );
     }
   }
@@ -589,7 +599,8 @@ class ImPageState extends State<ImPage> {
             });
             break;
           case 3:
-            String value = "string=${new Random(0).nextInt(9999999).toString()}";
+            String value =
+                "string=${new Random(0).nextInt(9999999).toString()}";
             TencentImPlugin.setMessageCustomStr(
               sessionId: item.message.sessionId,
               sessionType: item.message.sessionType,

@@ -57,6 +57,7 @@ import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
 
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,6 +82,7 @@ import top.huic.tencent_im_plugin.entity.PendencyEntity;
 import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.util.JsonUtil;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
@@ -137,183 +139,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     @Override
     public void onMethodCall(MethodCall call, Result result) {
         Log.d(TAG, "onMethodCall: " + call.method + ",param:" + call.arguments);
-        switch (call.method) {
-            case "init":
-                this.init(call, result);
-                break;
-            case "login":
-                this.login(call, result);
-                break;
-            case "logout":
-                this.logout(call, result);
-                break;
-            case "getLoginUser":
-                this.getLoginUser(call, result);
-                break;
-            case "initStorage":
-                this.initStorage(call, result);
-                break;
-            case "getConversationList":
-                this.getConversationList(call, result);
-                break;
-            case "getConversation":
-                this.getConversation(call, result);
-                break;
-            case "getGroupInfo":
-                this.getGroupInfo(call, result);
-                break;
-            case "getUserInfo":
-                this.getUserInfo(call, result);
-                break;
-            case "getMessages":
-                this.getMessages(call, result);
-                break;
-            case "getLocalMessages":
-                this.getLocalMessages(call, result);
-                break;
-            case "setRead":
-                this.setRead(call, result);
-                break;
-            case "sendCustomMessage":
-                this.sendCustomMessage(call, result);
-                break;
-            case "sendTextMessage":
-                this.sendTextMessage(call, result);
-                break;
-            case "sendSoundMessage":
-                this.sendSoundMessage(call, result);
-                break;
-            case "sendImageMessage":
-                this.sendImageMessage(call, result);
-                break;
-            case "sendVideoMessage":
-                this.sendVideoMessage(call, result);
-                break;
-            case "getFriendList":
-                this.getFriendList(call, result);
-                break;
-            case "getGroupList":
-                this.getGroupList(call, result);
-                break;
-            case "addFriend":
-                this.addFriend(call, result);
-                break;
-            case "checkSingleFriends":
-                this.checkSingleFriends(call, result);
-                break;
-            case "getPendencyList":
-                this.getPendencyList(call, result);
-                break;
-            case "pendencyReport":
-                this.pendencyReport(call, result);
-                break;
-            case "deletePendency":
-                this.deletePendency(call, result);
-                break;
-            case "examinePendency":
-                this.examinePendency(call, result);
-                break;
-            case "deleteConversation":
-                this.deleteConversation(call, result);
-                break;
-            case "deleteLocalMessage":
-                this.deleteLocalMessage(call, result);
-                break;
-            case "createGroup":
-                this.createGroup(call, result);
-                break;
-            case "inviteGroupMember":
-                this.inviteGroupMember(call, result);
-                break;
-            case "applyJoinGroup":
-                this.applyJoinGroup(call, result);
-                break;
-            case "quitGroup":
-                this.quitGroup(call, result);
-                break;
-            case "deleteGroupMember":
-                this.deleteGroupMember(call, result);
-                break;
-            case "getGroupMembers":
-                this.getGroupMembers(call, result);
-                break;
-            case "deleteGroup":
-                this.deleteGroup(call, result);
-                break;
-            case "modifyGroupOwner":
-                this.modifyGroupOwner(call, result);
-            case "modifyGroupInfo":
-                this.modifyGroupInfo(call, result);
-                break;
-            case "modifyMemberInfo":
-                this.modifyMemberInfo(call, result);
-                break;
-            case "getGroupPendencyList":
-                this.getGroupPendencyList(call, result);
-                break;
-            case "reportGroupPendency":
-                this.reportGroupPendency(call, result);
-                break;
-            case "groupPendencyAccept":
-                this.groupPendencyAccept(call, result);
-                break;
-            case "groupPendencyRefuse":
-                this.groupPendencyRefuse(call, result);
-                break;
-            case "getSelfProfile":
-                this.getSelfProfile(call, result);
-                break;
-            case "modifySelfProfile":
-                this.modifySelfProfile(call, result);
-                break;
-            case "modifyFriend":
-                this.modifyFriend(call, result);
-                break;
-            case "deleteFriends":
-                this.deleteFriends(call, result);
-                break;
-            case "addBlackList":
-                this.addBlackList(call, result);
-                break;
-            case "deleteBlackList":
-                this.deleteBlackList(call, result);
-                break;
-            case "getBlackList":
-                this.getBlackList(call, result);
-                break;
-            case "createFriendGroup":
-                this.createFriendGroup(call, result);
-                break;
-            case "deleteFriendGroup":
-                this.deleteFriendGroup(call, result);
-                break;
-            case "addFriendsToFriendGroup":
-                this.addFriendsToFriendGroup(call, result);
-                break;
-            case "deleteFriendsFromFriendGroup":
-                this.deleteFriendsFromFriendGroup(call, result);
-                break;
-            case "renameFriendGroup":
-                this.renameFriendGroup(call, result);
-                break;
-            case "getFriendGroups":
-                this.getFriendGroups(call, result);
-                break;
-            case "revokeMessage":
-                this.revokeMessage(call, result);
-                break;
-            case "removeMessage":
-                this.removeMessage(call, result);
-                break;
-            case "setMessageCustomInt":
-                this.setMessageCustomInt(call, result);
-                break;
-            case "setMessageCustomStr":
-                this.setMessageCustomStr(call, result);
-                break;
-            default:
-                Log.w(TAG, "onMethodCall: not found method " + call.method);
-                result.notImplemented();
+        try {
+            Method method = this.getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
+            method.invoke(this, call, result);
+        } catch (Exception e) {
+            Log.e(TAG, "method invoke error:", e);
+            result.notImplemented();
         }
     }
 
@@ -583,193 +414,21 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
-     * 腾讯云 发送自定义消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendCustomMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "sendCustomMessage: ");
-        // 会话ID
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        // 会话类型
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 数据内容
-        String data = this.getParam(methodCall, result, "data");
-        // 使用使用在线消息发送(无痕)
-        boolean ol = this.getParam(methodCall, result, "ol");
-
-        // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
-        // 封装消息对象
-        TIMMessage message = new TIMMessage();
-        TIMCustomElem customElem = new TIMCustomElem();
-        customElem.setData(data.getBytes());
-        message.addElement(customElem);
-
-        // 发送消息
-        this.sendMessage(conversation, message, result, ol);
-    }
-
-    /**
-     * 腾讯云 发送文本消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendTextMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "sendTextMessage: ");
-        // 会话ID
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        // 会话类型
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 消息内容
-        String content = this.getParam(methodCall, result, "content");
-        // 使用使用在线消息发送(无痕)
-        boolean ol = this.getParam(methodCall, result, "ol");
-
-        // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
-        // 封装消息对象
-        TIMMessage message = new TIMMessage();
-        TIMTextElem textElem = new TIMTextElem();
-        textElem.setText(content);
-        message.addElement(textElem);
-
-        // 发送消息
-        this.sendMessage(conversation, message, result, ol);
-    }
-
-
-    /**
-     * 腾讯云 发送语音消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendSoundMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "sendSoundMessage: ");
-        // 会话ID
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        // 会话类型
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 语音路径
-        String path = this.getParam(methodCall, result, "path");
-        // 语音时长
-        Integer duration = this.getParam(methodCall, result, "duration");
-        // 使用使用在线消息发送(无痕)
-        boolean ol = this.getParam(methodCall, result, "ol");
-        // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
-        // 封装消息对象
-        TIMMessage message = new TIMMessage();
-        TIMSoundElem soundElem = new TIMSoundElem();
-        soundElem.setPath(path);
-        soundElem.setDuration(duration);
-        message.addElement(soundElem);
-
-        // 发送消息
-        this.sendMessage(conversation, message, result, ol);
-    }
-
-    /**
-     * 腾讯云 发送图片消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendImageMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "sendImageMessage: ");
-        // 会话ID
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        // 会话类型
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 图片路径
-        String path = this.getParam(methodCall, result, "path");
-        // 使用使用在线消息发送(无痕)
-        boolean ol = this.getParam(methodCall, result, "ol");
-        // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
-        // 封装消息对象
-        TIMMessage message = new TIMMessage();
-        TIMImageElem imageElem = new TIMImageElem();
-        imageElem.setPath(path);
-        message.addElement(imageElem);
-
-        // 发送消息
-        this.sendMessage(conversation, message, result, ol);
-    }
-
-    /**
-     * 腾讯云 发送视频消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendVideoMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "sendVideoMessage: ");
-        // 会话ID
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        // 会话类型
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        // 视频路径
-        String path = this.getParam(methodCall, result, "path");
-        // 视频类型
-        String type = this.getParam(methodCall, result, "type");
-        // 视频时长
-        Integer duration = this.getParam(methodCall, result, "duration");
-        // 快照宽度
-        Integer snapshotWidth = this.getParam(methodCall, result, "snapshotWidth");
-        // 快照高度
-        Integer snapshotHeight = this.getParam(methodCall, result, "snapshotHeight");
-        // 快照路径
-        String snapshotPath = this.getParam(methodCall, result, "snapshotPath");
-        // 使用使用在线消息发送(无痕)
-        boolean ol = this.getParam(methodCall, result, "ol");
-        // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
-        // 封装消息对象
-        TIMMessage message = new TIMMessage();
-        TIMVideoElem videoElem = new TIMVideoElem();
-
-
-        // 封装视频信息
-        TIMVideo video = new TIMVideo();
-        video.setType(type);
-        video.setDuaration(duration);
-
-        // 封装快照信息
-        TIMSnapshot snapshot = new TIMSnapshot();
-        snapshot.setWidth(snapshotWidth);
-        snapshot.setHeight(snapshotHeight);
-
-        videoElem.setSnapshot(snapshot);
-        videoElem.setVideo(video);
-        videoElem.setSnapshotPath(snapshotPath);
-        videoElem.setVideoPath(path);
-        message.addElement(videoElem);
-
-        // 发送消息
-        this.sendMessage(conversation, message, result, ol);
-    }
-
-    /**
      * 发送消息
      *
-     * @param conversation 会话
-     * @param message      消息内容
-     * @param result       Flutter返回对象
-     * @param ol           是否使用在线消息发送
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
      */
-    private void sendMessage(TIMConversation conversation, TIMMessage message, final Result result, boolean ol) {
-        ValueCallBack callBack = new ValueCallBack<TIMMessage>(result) {
+    private void sendMessage(MethodCall methodCall, final Result result) {
+        Map node = JSON.parseObject(this.getParam(methodCall, result, "node").toString(), Map.class);
+        String sessionType = this.getParam(methodCall, result, "sessionType");
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        boolean ol = this.getParam(methodCall, result, "ol");
+
+        // 发送消息
+        MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface().send(TencentImUtils.getSession(sessionId, sessionType), node, ol, new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(final TIMMessage message) {
+            public void onSuccess(TIMMessage message) {
                 TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
                     @Override
                     public void onSuccess(List<MessageEntity> messageEntities) {
@@ -777,13 +436,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     }
                 });
             }
-        };
-
-        if (ol) {
-            conversation.sendOnlineMessage(message, callBack);
-        } else {
-            conversation.sendMessage(message, callBack);
-        }
+        });
     }
 
     /**

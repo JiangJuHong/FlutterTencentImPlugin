@@ -7,6 +7,12 @@
 集成腾讯云IM SDK，同时支持 Android 和 IOS  
 **注意：`v0.1.x` 为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**
 
+### v0.2.0 改版说明
+v0.2.0 主要更改了发送消息和消息节点，使用上更符合逻辑。  
+#### 更新步骤
+1. 将发送消息统一更改为 sendMessage  
+2. MessageEntity 增加 note 属性，对非自定消息可直接用于展示
+
 ### 近期计划(已完成内容将会被移除)
 [ ]【重大改变】整合发送消息为一个方法。**优势:使用更简单，学习成本更低。劣势：影响之前的代码**   
 [ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
@@ -30,7 +36,6 @@
 tencent_im_plugin: ^[最新版本号]
 ```
 
-
 ### Android 端集成
 无需额外配置，已内部打入混淆配置
 
@@ -49,6 +54,16 @@ Demo截图:
 <img src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/FlutterTencentImPlugin/8.png" height="300em" style="max-width:100%;display: inline-block;"/>
 
 ## 功能清单
+### 消息发送节点
+|  节点  |  进度  |  说明  |
+|  ----  | ---- |  ---- |
+|  TextMessageNode  |  √ |  文本消息 |
+|  ImageMessageNode  |  √ |  图片消息 |
+|  SoundMessageNode  |  √ |  语音消息 |
+|  VideoMessageNode  |  √ |  视频消息 |
+|  CustomMessageNode  |  √ | 自定义消息 |
+
+### 消息接收节点
 |  节点  |  进度  |  说明  |
 |  ----  | ---- |  ---- |
 |  TIMCustomElem  |  √ |  已完成 |
@@ -64,6 +79,7 @@ Demo截图:
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
 
+### 接口
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
 | init  | 初始化 | {appid:"xxxxxx"} | √ | √
@@ -78,11 +94,7 @@ Demo截图:
 | setRead  | 设置已读 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
 | getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
 | getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
-| sendCustomMessage  | 发送自定义消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",data:"数据内容"} | √ | √
-| sendTextMessage  | 发送文本消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",content:"文本内容"} | √ | √
-| sendSoundMessage  | 发送语音消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"语音文件路径",duration:"语音时长"} | √ | √
-| sendImageMessage  | 发送图片消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"图片路径"} | √ | √
-| sendVideoMessage  | 发送视频消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",path:"视频路径",type:"视频类型",duration:"时长",snapshotWidth:"快照宽度",snapshotHeight:"快照高度",snapshotPath:"快照路径"} | √ | √
+| sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
 | getGroupList  | 获得群组列表 | - | √ | √
 | addFriend  | 添加好友 | {id:'用户ID',addType:'添加类型',remark:'备注',addWording:'请求说明',addSource:'添加来源',friendGroup:'分组名'} | √ | √
