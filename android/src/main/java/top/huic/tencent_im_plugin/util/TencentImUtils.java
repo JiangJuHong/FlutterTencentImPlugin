@@ -116,6 +116,12 @@ public class TencentImUtils {
                     for (TIMGroupDetailInfoResult timGroupDetailInfoResult : timGroupDetailInfoResults) {
                         SessionEntity sessionEntity = groupInfo.get(timGroupDetailInfoResult.getGroupId());
                         if (sessionEntity != null) {
+                            // 如果出现错误操作，则直接移除，且删除无效会话
+                            if (timGroupDetailInfoResult.getResultCode() != 0) {
+                                resultData.remove(sessionEntity);
+                                TIMManager.getInstance().deleteConversation(TIMConversationType.Group, timGroupDetailInfoResult.getGroupId());
+                            }
+
                             sessionEntity.setGroup(timGroupDetailInfoResult);
                             sessionEntity.setNickname(timGroupDetailInfoResult.getGroupName());
                             sessionEntity.setFaceUrl(timGroupDetailInfoResult.getFaceUrl());

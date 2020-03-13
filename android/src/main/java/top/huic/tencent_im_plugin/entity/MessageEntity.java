@@ -9,6 +9,7 @@ import com.tencent.imsdk.TIMUserProfile;
 
 import java.util.List;
 
+import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
@@ -102,6 +103,12 @@ public class MessageEntity {
      */
     private TIMConversationType sessionType;
 
+    /**
+     * 描述，根据节点内容自定义描述信息，例如文本会直接包含，图片则为: [图片]
+     * 注意：如果有多个 elem，将只返回第一个节点的内容
+     */
+    private String note;
+
     public MessageEntity() {
     }
 
@@ -122,6 +129,9 @@ public class MessageEntity {
         this.sessionId = message.getConversation().getPeer();
         this.status = message.status();
         this.sessionType = message.getConversation().getType();
+        if (message.getElementCount() >= 1) {
+            this.note = MessageNodeType.getTypeByTIMElemType(message.getElement(0).getType()).getMessageNodeInterface().getNote(message.getElement(0));
+        }
     }
 
     public String getId() {
@@ -258,5 +268,13 @@ public class MessageEntity {
 
     public void setSeq(Long seq) {
         this.seq = seq;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

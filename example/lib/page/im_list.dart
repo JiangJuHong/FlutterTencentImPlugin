@@ -84,28 +84,6 @@ class ImListState extends State<ImList> {
     });
   }
 
-  /// 获得消息描述
-  onGetMessageDesc(MessageEntity message) {
-    if (message == null ||
-        message.elemList == null ||
-        message.elemList.length == 0) {
-      return "";
-    }
-
-    NodeEntity node = message.elemList[0];
-    if (node is NodeTextEntity) {
-      return node.text;
-    } else if (node is NodeImageEntity) {
-      return "[图片]";
-    } else if (node is NodeSoundEntity) {
-      return "[语音]";
-    } else if (node is NodeVideoEntity) {
-      return "[视频]";
-    }
-
-    return "";
-  }
-
   /// 点击事件
   onClick(item) {
     Navigator.push(
@@ -167,7 +145,9 @@ class ImListState extends State<ImList> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        this.onGetMessageDesc(item.message),
+                        item.message != null && item.message.note != null
+                            ? item.message.note
+                            : "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

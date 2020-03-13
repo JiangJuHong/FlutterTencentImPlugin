@@ -56,6 +56,9 @@ class MessageEntity {
   // 会话类型
   SessionType sessionType;
 
+  // 描述
+  String note;
+
   MessageEntity({
     this.customInt,
     this.read,
@@ -72,6 +75,7 @@ class MessageEntity {
     this.sessionType,
     this.rand,
     this.seq,
+    this.note,
   });
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
@@ -112,6 +116,7 @@ class MessageEntity {
     }
     rand = json['rand'];
     seq = json['seq'];
+    note = json['note'];
   }
 
   Map<String, dynamic> toJson() {
@@ -136,6 +141,7 @@ class MessageEntity {
         : this.status.toString().replaceAll("MessageStatusEum.", "");
     data['rand'] = this.rand;
     data['seq'] = this.seq;
+    data['note'] = this.note;
     return data;
   }
 }
