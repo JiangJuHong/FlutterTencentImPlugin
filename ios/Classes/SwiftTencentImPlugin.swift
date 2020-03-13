@@ -3,23 +3,23 @@ import UIKit
 import ImSDK
 import HandyJSON
 
-public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener,TIMConnListener,TIMGroupEventListener,TIMRefreshListener,TIMMessageRevokeListener,TIMMessageReceiptListener,TIMMessageListener {
-    public static var channel : FlutterMethodChannel?;
-    
+public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListener, TIMConnListener, TIMGroupEventListener, TIMRefreshListener, TIMMessageRevokeListener, TIMMessageReceiptListener, TIMMessageListener {
+    public static var channel: FlutterMethodChannel?;
+
     /**
      * 监听器回调的方法名
      */
     private static let LISTENER_FUNC_NAME = "onListener";
-    
-    
+
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "tencent_im_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftTencentImPlugin()
         SwiftTencentImPlugin.channel = channel;
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-    
-    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "init":
             self.`init`(call: call, result: result)
@@ -198,19 +198,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             result(FlutterMethodNotImplemented);
         }
     }
-    
+
     /**
      * 初始化腾讯云IM
      */
-    public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult){
-        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String{
+    public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String {
             // 初始化SDK配置
             let sdkConfig = TIMSdkConfig();
             sdkConfig.sdkAppId = (appid as NSString).intValue;
             sdkConfig.logLevel = TIMLogLevel.LOG_WARN;
             sdkConfig.connListener = self;
             TIMManager.sharedInstance()?.initSdk(sdkConfig);
-            
+
             // 初始化用户配置
             let userConfig = TIMUserConfig();
             userConfig.enableReadReceipt = true;
@@ -220,95 +220,93 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             userConfig.messageRevokeListener = self;
             userConfig.messageReceiptListener = self;
             TIMManager.sharedInstance()?.setUserConfig(userConfig);
-            
+
             // 添加新消息监听器
             TIMManager.sharedInstance()?.add(self);
             result(nil);
         }
     }
-    
+
     /**
      * 登录
      */
-    public func login(call: FlutterMethodCall, result: @escaping FlutterResult){
-        if let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String ,
-            let userSig =  CommonUtils.getParam(call: call, result: result, param: "userSig") as? String
-        {
+    public func login(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+           let userSig = CommonUtils.getParam(call: call, result: result, param: "userSig") as? String {
             // 如果已经登录，则不允许重复登录
-            if TIMManager.sharedInstance()?.getLoginUser() != nil{
+            if TIMManager.sharedInstance()?.getLoginUser() != nil {
                 result(
-                    FlutterError(code: "login failed.", message: "user is login", details: "user is already login ,you should login out first")
+                        FlutterError(code: "login failed.", message: "user is login", details: "user is already login ,you should login out first")
                 );
-            }else{
+            } else {
                 // 登录操作
                 let loginParam = TIMLoginParam();
                 loginParam.identifier = identifier;
                 loginParam.userSig = userSig;
                 TIMManager.sharedInstance()?.login(loginParam, succ: {
                     result(nil);
-                }, fail:TencentImUtils.returnErrorClosures(result: result))
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
         }
     }
-    
+
     /**
      * 登出
      */
-    public func logout(call: FlutterMethodCall, result: @escaping FlutterResult){
+    public func logout(call: FlutterMethodCall, result: @escaping FlutterResult) {
         TIMManager.sharedInstance()?.logout({
             result(nil);
-        },fail:TencentImUtils.returnErrorClosures(result: result));
+        }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
-    
+
     /**
      * 获得当前登录用户
      */
-    public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult){
+    public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult) {
         result(TIMManager.sharedInstance()?.getLoginUser());
     }
-    
+
     /**
      * 初始化本地存储
      */
-    public func initStorage(call: FlutterMethodCall, result: @escaping FlutterResult){
-        if let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String
-        {
+    public func initStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String {
             TIMManager.sharedInstance()?.initStorage(identifier, succ: {
                 result(nil);
-            },fail:TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
-        
+
     }
-    
+
     /**
      * 获得当前登录用户会话列表
      */
-    public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult){
-        TencentImUtils.getConversationInfo(conversations:(TIMManager.sharedInstance()?.getConversationList())!,onSuccess: {
-            (array)-> Void in
+    public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        TencentImUtils.getConversationInfo(conversations: (TIMManager.sharedInstance()?.getConversationList())!, onSuccess: {
+            (array) -> Void in
             result(JsonUtil.toJson(array));
-        },onFail: TencentImUtils.returnErrorClosures(result: result));
+        }, onFail: TencentImUtils.returnErrorClosures(result: result));
     }
-    
+
     /**
      * 根据ID获得会话
      */
-    public func getConversation(call: FlutterMethodCall, result: @escaping FlutterResult){
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String{
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result){
-                TencentImUtils.getConversationInfo(conversations:([session]),onSuccess: {
-                    (array)-> Void in
-                    if array.count >= 1{
+    public func getConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result) {
+                TencentImUtils.getConversationInfo(conversations: ([session]), onSuccess: {
+                    (array) -> Void in
+                    if array.count >= 1 {
                         result(JsonUtil.toJson(array[0]));
-                    }else{
+                    } else {
                         result(nil);
                     }
-                },onFail: TencentImUtils.returnErrorClosures(result: result));
+                }, onFail: TencentImUtils.returnErrorClosures(result: result));
             }
         }
     }
-    
+
     /**
      * 获得群信息
      *
@@ -316,18 +314,18 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func getGroupInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let id =  CommonUtils.getParam(call: call, result: result, param: "id"){
+        if let id = CommonUtils.getParam(call: call, result: result, param: "id") {
             TIMGroupManager.sharedInstance()?.getGroupInfo([id], succ: {
-                (array)-> Void in
-                if array!.count >= 1{
+                (array) -> Void in
+                if array!.count >= 1 {
                     result(JsonUtil.toJson(GroupInfoEntity(groupInfo: array![0] as! TIMGroupInfoResult)));
-                }else{
+                } else {
                     result(nil);
                 }
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获得用户信息
      *
@@ -335,19 +333,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func getUserInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
-            let forceUpdate = CommonUtils.getParam(call: call, result: result, param: "forceUpdate") as? Bool{
+        if let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String,
+           let forceUpdate = CommonUtils.getParam(call: call, result: result, param: "forceUpdate") as? Bool {
             TIMFriendshipManager.sharedInstance()?.getUsersProfile([id], forceUpdate: forceUpdate, succ: {
-                (array)-> Void in
-                if array!.count >= 1{
+                (array) -> Void in
+                if array!.count >= 1 {
                     result(JsonUtil.toJson(UserInfoEntity(userProfile: array![0])));
-                }else{
+                } else {
                     result(nil);
                 }
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 设置会话消息为已读
      *
@@ -355,17 +353,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func setRead(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String{
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result){
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result) {
                 session.setRead(nil, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
         }
     }
-    
-    
+
+
     /**
      * 获得消息列表
      *
@@ -375,7 +373,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func getMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.getMessages(call: call, result: result, local: false);
     }
-    
+
     /**
      * 获得本地消息列表
      *
@@ -385,7 +383,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func getLocalMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.getMessages(call: call, result: result, local: true);
     }
-    
+
     /**
      * 获得消息列表
      *
@@ -393,31 +391,30 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      * @param local      是否是获取本地消息
      */
-    private func getMessages(call: FlutterMethodCall, result: @escaping FlutterResult, local : Bool) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let number = CommonUtils.getParam(call: call, result: result, param: "number") as? Int32
-        {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result){
-                
+    private func getMessages(call: FlutterMethodCall, result: @escaping FlutterResult, local: Bool) {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let number = CommonUtils.getParam(call: call, result: result, param: "number") as? Int32 {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result) {
+
                 // 成功回调
                 let successCallback = {
-                    (array : Any) -> Void in
+                    (array: Any) -> Void in
                     TencentImUtils.getMessageInfo(timMessages: array as! [TIMMessage], onSuccess: {
-                        (array)-> Void in
+                        (array) -> Void in
                         result(JsonUtil.toJson(array));
-                    }, onFail:  TencentImUtils.returnErrorClosures(result: result));
+                    }, onFail: TencentImUtils.returnErrorClosures(result: result));
                 };
                 // 获取本地消息记录或云端消息记录
-                if local{
+                if local {
                     session.getLocalMessage(number, last: nil, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
-                }else{
+                } else {
                     session.getMessage(number, last: nil, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
                 }
             }
         }
     }
-    
+
     /**
      * 发送自定义消息
      *
@@ -425,11 +422,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func sendCustomMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
-            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
             let message = TIMMessage();
             let customMessage = TIMCustomElem();
             customMessage.data = data.data(using: String.Encoding.utf8);
@@ -437,7 +433,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
         }
     }
-    
+
     /**
      * 发送文本消息
      *
@@ -445,11 +441,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func sendTextMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let content = CommonUtils.getParam(call: call, result: result, param: "content") as? String,
-            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let content = CommonUtils.getParam(call: call, result: result, param: "content") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
             let message = TIMMessage();
             let textElem = TIMTextElem();
             textElem.text = content;
@@ -457,8 +452,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
         }
     }
-    
-    
+
+
     /**
      * 发送语音消息
      *
@@ -466,12 +461,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func sendSoundMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
-            let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
+           let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32 {
             let message = TIMMessage();
             let soundElem = TIMSoundElem();
             soundElem.path = path;
@@ -480,7 +474,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
         }
     }
-    
+
     /**
      * 发送图片消息
      *
@@ -488,11 +482,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func sendImageMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
             let message = TIMMessage();
             let imageElem = TIMImageElem();
             imageElem.path = path;
@@ -500,7 +493,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
         }
     }
-    
+
     /**
      * 发送视频消息
      *
@@ -508,26 +501,25 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func sendVideoMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-            let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
-            let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32,
-            let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
-            let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
-            let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
-            let snapshotPath = CommonUtils.getParam(call: call, result: result, param: "snapshotPath") as? String
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
+           let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32,
+           let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
+           let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
+           let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
+           let snapshotPath = CommonUtils.getParam(call: call, result: result, param: "snapshotPath") as? String {
             // 视频数据
             let video = TIMVideo();
             video.duration = duration;
             video.type = type;
-            
+
             // 缩略图数据
             let snapshot = TIMSnapshot();
             snapshot.width = snapshotWidth;
             snapshot.height = snapshotHeight;
-            
+
             // 消息数据
             let message = TIMMessage();
             let videoElem = TIMVideoElem();
@@ -539,7 +531,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
         }
     }
-    
+
     /**
      * 发送消息
      *
@@ -548,8 +540,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result       Flutter返回对象
      * @param ol           是否使用在线消息发送
      */
-    private func sendMessage(conversation : TIMConversation, message : TIMMessage, result : @escaping FlutterResult, ol : Bool) {
-        
+    private func sendMessage(conversation: TIMConversation, message: TIMMessage, result: @escaping FlutterResult, ol: Bool) {
+
         /// 成功回调
         let successCallback = {
             () -> Void in
@@ -558,15 +550,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
                 result(JsonUtil.toJson(array[0]));
             }, onFail: TencentImUtils.returnErrorClosures(result: result));
         };
-        
+
         // 根据状态发送在线或离线消息
-        if ol{
-            conversation.sendOnlineMessage(message, succ: successCallback, fail:TencentImUtils.returnErrorClosures(result: result));
-        }else{
-            conversation.send(message, succ: successCallback, fail:TencentImUtils.returnErrorClosures(result: result));
+        if ol {
+            conversation.sendOnlineMessage(message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result));
+        } else {
+            conversation.send(message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获得好友列表
      *
@@ -576,14 +568,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func getFriendList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         TIMFriendshipManager.sharedInstance()?.getFriendList({
             (array) -> Void in
-            var resultData : [FriendEntity] = []
-            for item in array!{
-                resultData.append(FriendEntity(friend: item ));
+            var resultData: [FriendEntity] = []
+            for item in array! {
+                resultData.append(FriendEntity(friend: item));
             }
             result(JsonUtil.toJson(resultData));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
-    
+
     /**
      * 获得群组列表
      *
@@ -593,28 +585,28 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func getGroupList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         TIMGroupManager.sharedInstance()?.getGroupList({
             (array) -> Void in
-            var ids : [String] = [];
-            for item in array!{
+            var ids: [String] = [];
+            for item in array! {
                 ids.append((item as! TIMGroupInfo).group)
             }
-            
+
             if (ids.count == 0) {
                 result(JsonUtil.toJson([]));
                 return;
             }
-            
+
             // 获得群资料
             TIMGroupManager.sharedInstance()?.getGroupInfo(ids, succ: {
                 (array) -> Void in
-                var resultData : [GroupInfoEntity] = []
-                for item in array!{
+                var resultData: [GroupInfoEntity] = []
+                for item in array! {
                     resultData.append(GroupInfoEntity(groupInfo: item as! TIMGroupInfoResult));
                 }
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
-    
+
     /**
      * 添加好友
      *
@@ -622,36 +614,35 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func addFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let remark = ((call.arguments as! [String:Any])["remark"]) as? String;
-        let addWording = ((call.arguments as! [String:Any])["addWording"]) as? String;
-        let addSource = ((call.arguments as! [String:Any])["addSource"]) as? String;
-        let friendGroup = ((call.arguments as! [String:Any])["friendGroup"]) as? String;
-        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String,
-            let addType = CommonUtils.getParam(call: call, result: result, param: "addType") as? Int
-        {
+        let remark = ((call.arguments as! [String: Any])["remark"]) as? String;
+        let addWording = ((call.arguments as! [String: Any])["addWording"]) as? String;
+        let addSource = ((call.arguments as! [String: Any])["addSource"]) as? String;
+        let friendGroup = ((call.arguments as! [String: Any])["friendGroup"]) as? String;
+        if let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String,
+           let addType = CommonUtils.getParam(call: call, result: result, param: "addType") as? Int {
             let request = TIMFriendRequest();
             request.identifier = id;
             request.addType = TIMFriendAddType(rawValue: addType)!;
-            if remark != nil{
+            if remark != nil {
                 request.remark = remark!;
             }
-            if addWording != nil{
+            if addWording != nil {
                 request.addWording = addWording!;
             }
-            if addSource != nil{
+            if addSource != nil {
                 request.addSource = addSource!;
             }
-            if friendGroup != nil{
+            if friendGroup != nil {
                 request.group = friendGroup;
             }
-            
+
             TIMFriendshipManager.sharedInstance()?.addFriend(request, succ: {
                 (data) -> Void in
                 result(JsonUtil.toJson(FriendResultEntity(result: data!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 检测单个好友关系
      *
@@ -659,22 +650,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func checkSingleFriends(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let type = ((call.arguments as! [String:Any])["type"]) as? Int;
-        if let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
-        {
+        let type = ((call.arguments as! [String: Any])["type"]) as? Int;
+        if let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String {
             let checkInfo = TIMFriendCheckInfo();
-            if type != nil{
+            if type != nil {
                 checkInfo.checkType = TIMFriendCheckType(rawValue: type!)!;
             }
             checkInfo.users = [id];
-            
+
             TIMFriendshipManager.sharedInstance()?.checkFriends(checkInfo, succ: {
                 (array) -> Void in
                 result(JsonUtil.toJson(FriendCheckResultEntity(result: (array!)[0])));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获得未决好友列表(申请中)
      *
@@ -682,60 +672,59 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func getPendencyList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let seq = ((call.arguments as! [String:Any])["seq"]) as? UInt64;
-        let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64;
-        let numPerPage = ((call.arguments as! [String:Any])["numPerPage"]) as? UInt64;
-        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int
-        {
+        let seq = ((call.arguments as! [String: Any])["seq"]) as? UInt64;
+        let timestamp = ((call.arguments as! [String: Any])["timestamp"]) as? UInt64;
+        let numPerPage = ((call.arguments as! [String: Any])["numPerPage"]) as? UInt64;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int {
             let request = TIMFriendPendencyRequest();
             request.type = TIMPendencyType(rawValue: type)!;
-            if seq != nil{
+            if seq != nil {
                 request.seq = seq!;
             }
-            if timestamp != nil{
+            if timestamp != nil {
                 request.timestamp = timestamp!;
             }
-            if numPerPage != nil{
+            if numPerPage != nil {
                 request.numPerPage = numPerPage!;
             }
-            
+
             TIMFriendshipManager.sharedInstance()?.getPendencyList(request, succ: {
                 (data) -> Void in
-                if data?.pendencies.count == 0{
+                if data?.pendencies.count == 0 {
                     result("{}");
                     return;
                 }
-                
+
                 // 返回结果
                 var resultData = [PendencyEntity]();
-                
+
                 // 用户ID对应用户对象
-                var map : [String:PendencyEntity] = [:];
-                
+                var map: [String: PendencyEntity] = [:];
+
                 // 循环获得的列表，进行对象封装
-                for item in data!.pendencies{
+                for item in data!.pendencies {
                     map[item.identifier] = PendencyEntity(item: item);
                 }
-                
+
                 // 获得用户信息
                 TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(map.keys), forceUpdate: true, succ: {
                     (array) -> Void in
-                    
+
                     // 填充用户对象
-                    for item in array!{
-                        if let data = map[item.identifier]{
+                    for item in array! {
+                        if let data = map[item.identifier] {
                             data.userProfile = UserInfoEntity(userProfile: item);
                             resultData.append(data);
                         }
                     }
-                    
+
                     // 返回结果
                     result(JsonUtil.toJson(PendencyPageEntity(res: data!, items: resultData)));
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 未决已读上报
      *
@@ -743,14 +732,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func pendencyReport(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64
-        {
+        if let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64 {
             TIMFriendshipManager.sharedInstance()?.pendencyReport(timestamp, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 未决删除
      *
@@ -758,15 +746,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deletePendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
-            let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
-        {
-            TIMFriendshipManager.sharedInstance()?.delete(TIMPendencyType(rawValue: type)!, users: [id], succ:{
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+           let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String {
+            TIMFriendshipManager.sharedInstance()?.delete(TIMPendencyType(rawValue: type)!, users: [id], succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 未决审核
      *
@@ -774,24 +761,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func examinePendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let remark = ((call.arguments as! [String:Any])["remark"]) as? String;
-        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
-            let id =  CommonUtils.getParam(call: call, result: result, param: "id") as? String
-        {
+        let remark = ((call.arguments as! [String: Any])["remark"]) as? String;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+           let id = CommonUtils.getParam(call: call, result: result, param: "id") as? String {
             let response = TIMFriendResponse();
-            if remark != nil{
+            if remark != nil {
                 response.remark = remark!;
             }
             response.responseType = TIMFriendResponseType(rawValue: type)!;
             response.identifier = id;
-            
+
             TIMFriendshipManager.sharedInstance()?.do(response, succ: {
                 (data) -> Void in
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 删除会话
      *
@@ -799,14 +785,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
             TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
             result(nil);
         }
     }
-    
+
     /**
      * 删除会话内的本地聊天记录
      *
@@ -814,14 +799,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteLocalMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String
-        {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
             TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
             result(nil);
         }
     }
-    
+
     /**
      * 创建群组
      *
@@ -829,44 +813,43 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let groupId = ((call.arguments as! [String:Any])["groupId"]) as? String;
-        let notification = ((call.arguments as! [String:Any])["notification"]) as? String;
-        let introduction = ((call.arguments as! [String:Any])["introduction"]) as? String;
-        let faceUrl = ((call.arguments as! [String:Any])["faceUrl"]) as? String;
-        let addOption = ((call.arguments as! [String:Any])["addOption"]) as? String;
-        let maxMemberNum = ((call.arguments as! [String:Any])["maxMemberNum"]) as? UInt32;
-        let members = ((call.arguments as! [String:Any])["members"]) as? String;
-        if let type =  CommonUtils.getParam(call: call, result: result, param: "type") as? String,
-            let name = CommonUtils.getParam(call: call, result: result, param: "name") as? String
-        {
+        let groupId = ((call.arguments as! [String: Any])["groupId"]) as? String;
+        let notification = ((call.arguments as! [String: Any])["notification"]) as? String;
+        let introduction = ((call.arguments as! [String: Any])["introduction"]) as? String;
+        let faceUrl = ((call.arguments as! [String: Any])["faceUrl"]) as? String;
+        let addOption = ((call.arguments as! [String: Any])["addOption"]) as? String;
+        let maxMemberNum = ((call.arguments as! [String: Any])["maxMemberNum"]) as? UInt32;
+        let members = ((call.arguments as! [String: Any])["members"]) as? String;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
+           let name = CommonUtils.getParam(call: call, result: result, param: "name") as? String {
             // 封装群对象
             let groupInfo = TIMCreateGroupInfo();
-            if groupId != nil{
+            if groupId != nil {
                 groupInfo.group = groupId!;
             }
-            if notification != nil{
+            if notification != nil {
                 groupInfo.notification = notification!;
             }
-            if introduction != nil{
+            if introduction != nil {
                 groupInfo.introduction = introduction!;
             }
-            if faceUrl != nil{
+            if faceUrl != nil {
                 groupInfo.faceURL = faceUrl!;
             }
-            if addOption != nil{
+            if addOption != nil {
                 groupInfo.addOpt = TIMGroupAddOpt(rawValue: GroupAddOptType.getEnumByName(name: addOption!)!.rawValue)!;
             }
-            if maxMemberNum != nil{
+            if maxMemberNum != nil {
                 groupInfo.maxMemberNum = maxMemberNum!;
             }
-            if members != nil{
+            if members != nil {
                 if let ms = [GroupMemberEntity].deserialize(from: members) {
                     print(ms);
                 }
             }
             groupInfo.groupType = type;
             groupInfo.groupName = name;
-            
+
             // 创建群
             TIMGroupManager.sharedInstance()?.createGroup(groupInfo, succ: {
                 (id) -> Void in
@@ -874,7 +857,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 邀请加入群组
      *
@@ -882,20 +865,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func inviteGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
-            TIMGroupManager.sharedInstance()?.inviteGroupMember(groupId, members: ids.components(separatedBy:","), succ: {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
+            TIMGroupManager.sharedInstance()?.inviteGroupMember(groupId, members: ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [GroupMemberResult] = [];
-                for item in array!{
+                var resultData: [GroupMemberResult] = [];
+                for item in array! {
                     resultData.append(GroupMemberResult(result: item as! TIMGroupMemberResult));
                 }
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 申请加入群组
      *
@@ -903,15 +885,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func applyJoinGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let reason =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let reason = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMGroupManager.sharedInstance()?.joinGroup(groupId, msg: reason, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 退出群组
      *
@@ -919,14 +900,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func quitGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
-        {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String {
             TIMGroupManager.sharedInstance()?.quitGroup(groupId, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 删除群组成员
      *
@@ -934,21 +914,20 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let reason =  CommonUtils.getParam(call: call, result: result, param: "reason") as? String,
-            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
-            TIMGroupManager.sharedInstance()?.deleteGroupMember(withReason: groupId, reason: reason, members: ids.components(separatedBy:","), succ: {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String,
+           let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
+            TIMGroupManager.sharedInstance()?.deleteGroupMember(withReason: groupId, reason: reason, members: ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [GroupMemberResult] = [];
-                for item in array!{
+                var resultData: [GroupMemberResult] = [];
+                for item in array! {
                     resultData.append(GroupMemberResult(result: item as! TIMGroupMemberResult));
                 }
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获取群成员列表
      *
@@ -956,39 +935,38 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func getGroupMembers(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
-        {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String {
             TIMGroupManager.sharedInstance()?.getGroupMembers(groupId, succ: {
                 (array) -> Void in
-                
-                var userInfo : [String:GroupMemberEntity] = [:];
-                for item in array!{
+
+                var userInfo: [String: GroupMemberEntity] = [:];
+                for item in array! {
                     let member = item as! TIMGroupMemberInfo;
                     let item = GroupMemberEntity(info: member);
                     userInfo[member.member] = item;
                 }
-                
+
                 // 获得用户信息
                 TIMFriendshipManager.sharedInstance()?.getUsersProfile(Array(userInfo.keys), forceUpdate: true, succ: {
                     (array) -> Void in
-                    
-                    var resultData : [GroupMemberEntity] = [];
-                    
+
+                    var resultData: [GroupMemberEntity] = [];
+
                     // 填充用户对象
-                    for item in array!{
-                        if let data = userInfo[item.identifier]{
+                    for item in array! {
+                        if let data = userInfo[item.identifier] {
                             data.userProfile = UserInfoEntity(userProfile: item);
                             resultData.append(data);
                         }
                     }
-                    
+
                     // 返回结果
                     result(JsonUtil.toJson(resultData));
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 解散群组
      *
@@ -996,14 +974,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
-        {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String {
             TIMGroupManager.sharedInstance()?.deleteGroup(groupId, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 转让群组
      *
@@ -1011,15 +988,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func modifyGroupOwner(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String
-        {
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String {
             TIMGroupManager.sharedInstance()?.modifyGroupOwner(groupId, user: identifier, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 修改群资料
      *
@@ -1027,71 +1003,70 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func modifyGroupInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let notification = ((call.arguments as! [String:Any])["notification"]) as? String;
-        let introduction = ((call.arguments as! [String:Any])["introduction"]) as? String;
-        let faceUrl = ((call.arguments as! [String:Any])["faceUrl"]) as? String;
-        let addOption = ((call.arguments as! [String:Any])["addOption"]) as? String;
-        let groupName = ((call.arguments as! [String:Any])["groupName"]) as? String;
-        let visable = ((call.arguments as! [String:Any])["visable"]) as? Bool;
-        let silenceAll = ((call.arguments as! [String:Any])["silenceAll"]) as? Bool;
-        let customInfo = ((call.arguments as! [String:Any])["customInfo"]) as? String;
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String
-        {
-            if silenceAll != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupAllShutup(groupId, shutup: silenceAll!, succ:{
+        let notification = ((call.arguments as! [String: Any])["notification"]) as? String;
+        let introduction = ((call.arguments as! [String: Any])["introduction"]) as? String;
+        let faceUrl = ((call.arguments as! [String: Any])["faceUrl"]) as? String;
+        let addOption = ((call.arguments as! [String: Any])["addOption"]) as? String;
+        let groupName = ((call.arguments as! [String: Any])["groupName"]) as? String;
+        let visable = ((call.arguments as! [String: Any])["visable"]) as? Bool;
+        let silenceAll = ((call.arguments as! [String: Any])["silenceAll"]) as? Bool;
+        let customInfo = ((call.arguments as! [String: Any])["customInfo"]) as? String;
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String {
+            if silenceAll != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupAllShutup(groupId, shutup: silenceAll!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if visable != nil{
+
+            if visable != nil {
                 TIMGroupManager.sharedInstance()?.modifyGroupSearchable(groupId, searchable: visable!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
-            
-            if groupName != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupName(groupId, groupName: groupName!, succ:  {
+
+            if groupName != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupName(groupId, groupName: groupName!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if addOption != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupAddOpt(groupId, opt: TIMGroupAddOpt(rawValue: GroupAddOptType.getEnumByName(name: addOption!)!.hashValue)!, succ:  {
+
+            if addOption != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupAddOpt(groupId, opt: TIMGroupAddOpt(rawValue: GroupAddOptType.getEnumByName(name: addOption!)!.hashValue)!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if faceUrl != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupFaceUrl(groupId, url: faceUrl!, succ:  {
+
+            if faceUrl != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupFaceUrl(groupId, url: faceUrl!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if introduction != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupIntroduction(groupId, introduction: introduction!, succ:  {
+
+            if introduction != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupIntroduction(groupId, introduction: introduction!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if notification != nil{
-                TIMGroupManager.sharedInstance()?.modifyGroupNotification(groupId, notification: notification!, succ:  {
+
+            if notification != nil {
+                TIMGroupManager.sharedInstance()?.modifyGroupNotification(groupId, notification: notification!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if customInfo != nil{
+
+            if customInfo != nil {
                 let ci = JsonUtil.getDictionaryFromJSONString(jsonString: customInfo!);
-                var customInfoData : [String:Data] = [:];
+                var customInfoData: [String: Data] = [:];
                 for (key, value) in ci {
                     customInfoData[key] = "\(value)".data(using: String.Encoding.utf8);
                 }
-                TIMGroupManager.sharedInstance()?.modifyGroupCustomInfo(groupId, customInfo: customInfoData, succ:  {
+                TIMGroupManager.sharedInstance()?.modifyGroupCustomInfo(groupId, customInfo: customInfoData, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
         }
     }
-    
+
     /**
      * 修改群成员资料
      *
@@ -1099,44 +1074,43 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func modifyMemberInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let nameCard = ((call.arguments as! [String:Any])["nameCard"]) as? String;
-        let silence = ((call.arguments as! [String:Any])["silence"]) as? UInt32;
-        let role = ((call.arguments as! [String:Any])["role"]) as? Int;
-        let customInfo = ((call.arguments as! [String:Any])["customInfo"]) as? String;
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String
-        {
-            
-            if nameCard != nil{
+        let nameCard = ((call.arguments as! [String: Any])["nameCard"]) as? String;
+        let silence = ((call.arguments as! [String: Any])["silence"]) as? UInt32;
+        let role = ((call.arguments as! [String: Any])["role"]) as? Int;
+        let customInfo = ((call.arguments as! [String: Any])["customInfo"]) as? String;
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String {
+
+            if nameCard != nil {
                 TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetNameCard(groupId, user: identifier, nameCard: nameCard!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if silence != nil{
+
+            if silence != nil {
                 TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetSilence(groupId, user: identifier, stime: silence!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if role != nil{
+
+            if role != nil {
                 TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetRole(groupId, user: identifier, role: TIMGroupMemberRole(rawValue: role!)!, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            if customInfo != nil{
+            if customInfo != nil {
                 let ci = JsonUtil.getDictionaryFromJSONString(jsonString: customInfo!);
-                var customInfoData : [String:Data] = [:];
+                var customInfoData: [String: Data] = [:];
                 for (key, value) in ci {
                     customInfoData[key] = "\(value)".data(using: String.Encoding.utf8);
                 }
-                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetCustomInfo(groupId, user: identifier, customInfo: customInfoData, succ:  {
+                TIMGroupManager.sharedInstance()?.modifyGroupMemberInfoSetCustomInfo(groupId, user: identifier, customInfo: customInfoData, succ: {
                     result(nil);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
         }
     }
-    
+
     /**
      * 获得未决群列表
      *
@@ -1144,87 +1118,87 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func getGroupPendencyList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64;
-        let numPerPage = ((call.arguments as! [String:Any])["numPerPage"]) as? UInt32;
-        
+        let timestamp = ((call.arguments as! [String: Any])["timestamp"]) as? UInt64;
+        let numPerPage = ((call.arguments as! [String: Any])["numPerPage"]) as? UInt32;
+
         let option = TIMGroupPendencyOption();
-        if timestamp != nil{
+        if timestamp != nil {
             option.timestamp = timestamp!;
         }
-        if numPerPage != nil{
+        if numPerPage != nil {
             option.numPerPage = numPerPage!;
         }
-        
+
         TIMGroupManager.sharedInstance()?.getPendencyFromServer(option, succ: {
-            (meta,array) -> Void in
+            (meta, array) -> Void in
             // 如果没有数据就直接返回
-            if array?.count == 0{
+            if array?.count == 0 {
                 result("[]");
                 return;
             }
-            
+
             // 存储ID的集合
             var groupIds = Set<String>();
             var userIds = Set<String>();
-            
-            var resultData : [GroupPendencyEntity] = [];
-            for item in array!{
+
+            var resultData: [GroupPendencyEntity] = [];
+            for item in array! {
                 resultData.append(GroupPendencyEntity(item: item));
                 groupIds.insert(item.groupId);
                 userIds.insert(item.selfIdentifier);
                 userIds.insert(item.toUser);
             }
-            
+
             // 当前步骤 和 最大步骤
             var current = 0;
-            let maxIndex = (groupIds.count > 1 ? 1 : 0 ) + (userIds.count > 1 ? 1 : 0 );
-            
+            let maxIndex = (groupIds.count > 1 ? 1 : 0) + (userIds.count > 1 ? 1 : 0);
+
             // 获得群信息
-            if groupIds.count >= 1{
+            if groupIds.count >= 1 {
                 TIMGroupManager.sharedInstance()?.getGroupInfo(Array(groupIds), succ: {
                     (array) -> Void in
                     // 循环赋值
-                    for resultDatum in resultData{
-                        for item in array!{
+                    for resultDatum in resultData {
+                        for item in array! {
                             let group = item as! TIMGroupInfoResult;
-                            if group.group == resultDatum.groupId{
+                            if group.group == resultDatum.groupId {
                                 resultDatum.groupInfo = GroupInfoEntity(groupInfo: group);
                             }
                         }
                     }
                     current += 1;
                     if (current >= maxIndex) {
-                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list:resultData)))
+                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list: resultData)))
                     }
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
-            
-            if userIds.count >= 1{
+
+            if userIds.count >= 1 {
                 TIMFriendshipManager.sharedInstance()?.getUsersProfile((Array(userIds)), forceUpdate: true, succ: {
                     (array) -> Void in
-                    
+
                     // 循环赋值
-                    for resultDatum in resultData{
-                        for item in array!{
+                    for resultDatum in resultData {
+                        for item in array! {
                             let userInfo = item;
-                            if userInfo.identifier == resultDatum.identifier{
+                            if userInfo.identifier == resultDatum.identifier {
                                 resultDatum.applyUserInfo = UserInfoEntity(userProfile: item);
                             }
-                            
-                            if userInfo.identifier == resultDatum.toUser{
+
+                            if userInfo.identifier == resultDatum.toUser {
                                 resultDatum.handlerUserInfo = UserInfoEntity(userProfile: item);
                             }
                         }
                     }
                     current += 1;
                     if (current >= maxIndex) {
-                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list:resultData)))
+                        result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list: resultData)))
                     }
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
         }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
-    
+
     /**
      * 上报未决已读
      *
@@ -1232,13 +1206,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func reportGroupPendency(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let timestamp = ((call.arguments as! [String:Any])["timestamp"]) as? UInt64{
+        if let timestamp = ((call.arguments as! [String: Any])["timestamp"]) as? UInt64 {
             TIMGroupManager.sharedInstance()?.pendencyReport(timestamp, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 同意申请
      *
@@ -1246,14 +1220,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func groupPendencyAccept(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let msg = ((call.arguments as! [String:Any])["msg"]) as? String;
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
-            let addTime =  CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64{
+        let msg = ((call.arguments as! [String: Any])["msg"]) as? String;
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+           let addTime = CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64 {
             TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
-                (_,array) -> Void in
-                for item in array!{
-                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime{
+                (_, array) -> Void in
+                for item in array! {
+                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime {
                         item.accept(msg, succ: {
                             result(nil);
                         }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -1262,7 +1236,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 拒绝申请
      *
@@ -1270,14 +1244,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func groupPendencyRefuse(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let msg = ((call.arguments as! [String:Any])["msg"]) as? String;
-        if let groupId =  CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-            let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
-            let addTime =  CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64{
+        let msg = ((call.arguments as! [String: Any])["msg"]) as? String;
+        if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
+           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+           let addTime = CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64 {
             TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
-                (_,array) -> Void in
-                for item in array!{
-                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime{
+                (_, array) -> Void in
+                for item in array! {
+                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime {
                         item.refuse(msg, succ: {
                             result(nil);
                         }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -1286,7 +1260,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获取自己的资料
      *
@@ -1295,17 +1269,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      */
     private func getSelfProfile(call: FlutterMethodCall, result: @escaping FlutterResult) {
         // 强制走后台拉取
-        let forceUpdate = ((call.arguments as! [String:Any])["forceUpdate"]) as? Bool;
-        
-        if forceUpdate != nil && forceUpdate!{
+        let forceUpdate = ((call.arguments as! [String: Any])["forceUpdate"]) as? Bool;
+
+        if forceUpdate != nil && forceUpdate! {
             TIMFriendshipManager.sharedInstance()?.getSelfProfile({
                 (data) -> Void in
                 result(JsonUtil.toJson(UserInfoEntity(userProfile: data!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
-        }else{
-            if let data = TIMFriendshipManager.sharedInstance()?.querySelfProfile(){
+        } else {
+            if let data = TIMFriendshipManager.sharedInstance()?.querySelfProfile() {
                 result(JsonUtil.toJson(UserInfoEntity(userProfile: data)));
-            }else{
+            } else {
                 TIMFriendshipManager.sharedInstance()?.getSelfProfile({
                     (data) -> Void in
                     result(JsonUtil.toJson(UserInfoEntity(userProfile: data!)));
@@ -1313,7 +1287,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }
         }
     }
-    
+
     /**
      * 修改自己的资料
      *
@@ -1321,14 +1295,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func modifySelfProfile(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let params =  CommonUtils.getParam(call: call, result: result, param: "params") as? String{
+        if let params = CommonUtils.getParam(call: call, result: result, param: "params") as? String {
             TIMFriendshipManager.sharedInstance()?.modifySelfProfile(JsonUtil.getDictionaryFromJSONString(jsonString: params), succ: {
                 () -> Void in
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 修改好友的资料
      *
@@ -1336,15 +1310,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func modifyFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let identifier =  CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
-            let params =  CommonUtils.getParam(call: call, result: result, param: "params") as? String{
+        if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+           let params = CommonUtils.getParam(call: call, result: result, param: "params") as? String {
             TIMFriendshipManager.sharedInstance()?.modifyFriend(identifier, values: JsonUtil.getDictionaryFromJSONString(jsonString: params), succ: {
                 () -> Void in
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 删除好友
      *
@@ -1352,24 +1326,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteFriends(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String,
-            let delFriendType =  CommonUtils.getParam(call: call, result: result, param: "delFriendType") as? Int
-        {
+        if let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String,
+           let delFriendType = CommonUtils.getParam(call: call, result: result, param: "delFriendType") as? Int {
             TIMFriendshipManager.sharedInstance()?.deleteFriends(ids.components(separatedBy: ","), delType: TIMDelFriendType(rawValue: delFriendType)!, succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 添加到黑名单
      *
@@ -1377,24 +1350,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func addBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMFriendshipManager.sharedInstance()?.addBlackList(ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
-    
+
+
     /**
      * 从黑名单删除
      *
@@ -1402,23 +1374,22 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMFriendshipManager.sharedInstance()?.deleteBlackList(ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
-    
+
     /**
      * 获得黑名单列表
      *
@@ -1428,14 +1399,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
     private func getBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         TIMFriendshipManager.sharedInstance()?.getBlackList({
             (array) -> Void in
-            var resultData : [FriendEntity] = []
-            for item in array!{
-                resultData.append(FriendEntity(friend: item ));
+            var resultData: [FriendEntity] = []
+            for item in array! {
+                resultData.append(FriendEntity(friend: item));
             }
             result(JsonUtil.toJson(resultData));
         }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
-    
+
     /**
      * 创建好友分组
      *
@@ -1443,24 +1414,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func createFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupNames =  CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String,
-            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let groupNames = CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String,
+           let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMFriendshipManager.sharedInstance()?.createFriendGroup(groupNames.components(separatedBy: ","), users: ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 删除好友分组
      *
@@ -1468,14 +1438,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupNames =  CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String
-        {
+        if let groupNames = CommonUtils.getParam(call: call, result: result, param: "groupNames") as? String {
             TIMFriendshipManager.sharedInstance()?.deleteFriendGroup(groupNames.components(separatedBy: ","), succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 添加好友到某个分组
      *
@@ -1483,24 +1452,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func addFriendsToFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupName =  CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
-            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
+           let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMFriendshipManager.sharedInstance()?.addFriends(toFriendGroup: groupName, users: ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 从分组删除好友
      *
@@ -1508,24 +1476,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func deleteFriendsFromFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupName =  CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
-            let ids =  CommonUtils.getParam(call: call, result: result, param: "ids") as? String
-        {
+        if let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
+           let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
             TIMFriendshipManager.sharedInstance()?.deleteFriends(fromFriendGroup: groupName, users: ids.components(separatedBy: ","), succ: {
                 (array) -> Void in
-                var resultData : [FriendResultEntity] = [];
-                
+                var resultData: [FriendResultEntity] = [];
+
                 // 填充对象
-                for item in array!{
+                for item in array! {
                     resultData.append(FriendResultEntity(result: item));
                 }
-                
+
                 // 返回结果
                 result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 重命名分组
      *
@@ -1533,15 +1500,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func renameFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let oldGroupName =  CommonUtils.getParam(call: call, result: result, param: "oldGroupName") as? String,
-            let newGroupName =  CommonUtils.getParam(call: call, result: result, param: "newGroupName") as? String
-        {
+        if let oldGroupName = CommonUtils.getParam(call: call, result: result, param: "oldGroupName") as? String,
+           let newGroupName = CommonUtils.getParam(call: call, result: result, param: "newGroupName") as? String {
             TIMFriendshipManager.sharedInstance()?.renameFriendGroup(oldGroupName, newName: newGroupName, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /**
      * 获得好友分组
      *
@@ -1550,29 +1516,29 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      */
     private func getFriendGroups(call: FlutterMethodCall, result: @escaping FlutterResult) {
         // 组名
-        let groupNames = ((call.arguments as! [String:Any])["groupNames"]) as? String;
-        
-        var groups : [String] = [];
-        
-        if groupNames != nil{
-            groups = groupNames!.components(separatedBy:",");
+        let groupNames = ((call.arguments as! [String: Any])["groupNames"]) as? String;
+
+        var groups: [String] = [];
+
+        if groupNames != nil {
+            groups = groupNames!.components(separatedBy: ",");
         }
-        
+
         TIMFriendshipManager.sharedInstance()?.getFriendGroups(groups, succ: {
             (array) -> Void in
-            
-            var resultData : [FriendGroupEntity] = [];
-            
+
+            var resultData: [FriendGroupEntity] = [];
+
             // 填充对象
-            for item in array!{
+            for item in array! {
                 resultData.append(FriendGroupEntity(group: item));
             }
-            
+
             // 返回结果
             result(JsonUtil.toJson(resultData));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
-    
+
     /**
      * 消息撤回
      *
@@ -1580,13 +1546,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64
-        {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+           let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+           let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64 {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
                 let locator = TIMMessageLocator();
                 locator.seq = seq;
                 locator.rand = rand;
@@ -1601,7 +1566,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }
         }
     }
-    
+
     /**
      * 消息删除
      *
@@ -1609,14 +1574,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func removeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool
-        {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+           let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+           let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+           let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
                 let locator = TIMMessageLocator();
                 locator.seq = seq;
                 locator.rand = rand;
@@ -1629,7 +1593,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }
         }
     }
-    
+
     /**
      * 设置消息自定义整型
      *
@@ -1637,15 +1601,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func setMessageCustomInt(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
-            let value =  CommonUtils.getParam(call: call, result: result, param: "value") as? Int32
-        {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+           let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+           let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+           let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
+           let value = CommonUtils.getParam(call: call, result: result, param: "value") as? Int32 {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
                 let locator = TIMMessageLocator();
                 locator.seq = seq;
                 locator.rand = rand;
@@ -1659,8 +1622,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }
         }
     }
-    
-    
+
+
     /**
      * 设置消息自定义字符串
      *
@@ -1668,15 +1631,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
      * @param result     返回结果对象
      */
     private func setMessageCustomStr(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId =  CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType =  CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand =  CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq =  CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp =  CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` =  CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
-            let value =  CommonUtils.getParam(call: call, result: result, param: "value") as? String
-        {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result){
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+           let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+           let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
+           let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
+           let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
+           let value = CommonUtils.getParam(call: call, result: result, param: "value") as? String {
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
                 let locator = TIMMessageLocator();
                 locator.seq = seq;
                 locator.rand = rand;
@@ -1690,85 +1652,85 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
             }
         }
     }
-    
+
     /**
      * 调用监听器
      *
      * @param type   类型
      * @param params 参数
      */
-    private func invokeListener(type : ListenerType, params : Any?) {
-        var resultParams : [String:Any] = [:];
+    private func invokeListener(type: ListenerType, params: Any?) {
+        var resultParams: [String: Any] = [:];
         resultParams["type"] = type;
-        if let p = params{
+        if let p = params {
             resultParams["params"] = JsonUtil.toJson(p);
         }
         SwiftTencentImPlugin.channel!.invokeMethod(SwiftTencentImPlugin.LISTENER_FUNC_NAME, arguments: JsonUtil.toJson(resultParams));
     }
-    
+
     /**
      * 踢下线通知
      */
     public func onForceOffline() {
         self.invokeListener(type: ListenerType.ForceOffline, params: nil);
     }
-    
+
     /**
      * 断线重连失败【IOS独享】
      */
     public func onReConnFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code":code,"msg":err!]);
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err!]);
     }
-    
+
     /**
      * 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
      */
     public func onUserSigExpired() {
         self.invokeListener(type: ListenerType.UserSigExpired, params: nil);
     }
-    
+
     /**
      * 网络连接成功
      */
     public func onConnSucc() {
         self.invokeListener(type: ListenerType.Connected, params: nil);
     }
-    
+
     /**
      * 网络连接失败【IOS独享】
      */
     public func onConnFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.ConnFailed, params: ["code":code,"msg":err!]);
+        self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err!]);
     }
-    
+
     /**
      * 网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
      */
     public func onDisconnect(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code":code,"msg":err!]);
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err!]);
     }
-    
+
     /**
      * 连接中【IOS独享】
      */
     public func onConnecting() {
         self.invokeListener(type: ListenerType.Connecting, params: nil);
     }
-    
+
     /**
      * 群Tips回调
      */
     public func onGroupTipsEvent(_ elem: TIMGroupTipsElem!) {
         self.invokeListener(type: ListenerType.GroupTips, params: GroupTipsNodeEntity(elem: elem));
     }
-    
+
     /**
      * 刷新会话
      */
     public func onRefresh() {
         self.invokeListener(type: ListenerType.Refresh, params: nil);
     }
-    
+
     /**
      * 刷新部分会话
      */
@@ -1777,38 +1739,38 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin,TIMUserStatusListener
         TencentImUtils.getConversationInfo(conversations: conversations, onSuccess: {
             (array) -> Void in
             self.invokeListener(type: ListenerType.RefreshConversation, params: array);
-        }, onFail: {_,_ in
-            
+        }, onFail: { _, _ in
+
         });
     }
-    
+
     /**
      * 消息撤回通知
      */
     public func onRevokeMessage(_ locator: TIMMessageLocator!) {
         self.invokeListener(type: ListenerType.MessageRevoked, params: MessageLocatorEntity(locator: locator));
     }
-    
+
     /**
      * 收到了已读回执
      */
     public func onRecvMessageReceipts(_ receipts: [Any]!) {
-        var rs : [String] = [];
-        
-        for item in receipts{
+        var rs: [String] = [];
+
+        for item in receipts {
             rs.append((item as! TIMMessageReceipt).conversation.getReceiver());
         }
-        
+
         self.invokeListener(type: ListenerType.RecvReceipt, params: rs);
     }
-    
+
     /**
      * 新消息回调通知
      */
     public func onNewMessage(_ msgs: [Any]!) {
-        TencentImUtils.getMessageInfo(timMessages: msgs as! [TIMMessage], onSuccess:{
+        TencentImUtils.getMessageInfo(timMessages: msgs as! [TIMMessage], onSuccess: {
             (array) -> Void in
             self.invokeListener(type: ListenerType.NewMessages, params: array);
-        }, onFail: {_,_ in })
+        }, onFail: { _, _ in })
     }
 }
