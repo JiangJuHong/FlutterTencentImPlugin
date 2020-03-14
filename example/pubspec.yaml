@@ -18,8 +18,8 @@ dependencies:
   permission_handler: 4.0.0
   # 视频播放器和信息获取(https://pub.flutter-io.cn/packages/video_player)
   video_player: 0.10.8+1
-  # 相机工具包（http://s0pub0dev.icopy.site/packages/camera_utils）
-  camera_utils: 0.1.8
+  # 相机工具包（https://pub.dev/packages/correct_camera_utils）
+  correct_camera_utils: 0.1.2
 
 dev_dependencies:
   flutter_test:

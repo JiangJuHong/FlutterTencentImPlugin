@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:camera_utils/camera_utils.dart';
+import 'package:correct_camera_utils/camera_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -426,7 +426,7 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 发送消息
-  sendMessage(node, widget) {
+  sendMessage(node, wd) {
     // 发送视频消息
     TencentImPlugin.sendMessage(
       sessionId: widget.id,
@@ -442,7 +442,7 @@ class ImPageState extends State<ImPage> {
     DataEntity dataEntity = DataEntity(
       id: id.toString(),
       userInfo: loginUserInfo,
-      widget: widget,
+      widget: wd,
       self: true,
     );
 

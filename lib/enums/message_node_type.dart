@@ -14,4 +14,7 @@ enum MessageNodeType {
 
   // 视频
   Video,
+
+  // 位置
+  Location,
 }

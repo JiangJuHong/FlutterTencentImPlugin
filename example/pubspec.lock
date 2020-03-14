@@ -29,13 +29,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.5"
-  camera_utils:
-    dependency: "direct main"
-    description:
-      name: camera_utils
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.8"
   charcode:
     dependency: transitive
     description:
@@ -57,6 +50,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
+  correct_camera_utils:
+    dependency: "direct main"
+    description:
+      name: correct_camera_utils
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.2"
   crypto:
     dependency: transitive
     description:

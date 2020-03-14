@@ -62,6 +62,7 @@ Demo截图:
 |  SoundMessageNode  |  √ |  语音消息 |
 |  VideoMessageNode  |  √ |  视频消息 |
 |  CustomMessageNode  |  √ | 自定义消息 |
+|  LocationMessageNode  |  √ | 位置消息 |
 
 ### 消息接收节点
 |  节点  |  进度  |  说明  |
@@ -72,7 +73,7 @@ Demo截图:
 |  TIMGroupSystemElem  |  - |  暂不考虑 |
 |  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
-|  TIMLocationElem  |  - |  计划内 |
+|  TIMLocationElem  |  √ |  已完成 |
 |  TIMProfileSystemElem  |  - |  暂不考虑 |
 |  TIMSNSSystemElem  |  - |  暂不考虑 |
 |  TIMSoundElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
