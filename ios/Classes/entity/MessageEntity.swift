@@ -92,6 +92,11 @@ public class MessageEntity : NSObject{
      */
     var status : MessageStatus?;
     
+    /**
+     *  消息描述
+     */
+    var note : String?;
+    
     override init() {
     }
     
@@ -113,5 +118,8 @@ public class MessageEntity : NSObject{
         self.sessionId = message.getConversation().getReceiver();
         self.sessionType = SessionType.getByTIMConversationType(type: (message.getConversation()?.getType())!);
         self.status = MessageStatus.getByTIMMessageStatus(status:message.status());
+        if message.elemCount() > 0{
+            self.note = MessageNodeType.getTypeByTIMElem(type: message.getElem(0)!)!.messageNodeInterface().getNote(elem: message.getElem(0)!);
+        }
     }
 }
