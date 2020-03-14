@@ -26,7 +26,7 @@ public enum NodeType : String{
     // 文本
     case Text = "TIMTextElem"
     // 微视频
-    case Video = "TIMVideo"
+    case Video = "TIMVideoElem"
     
     /**
      * 根据腾讯云获得枚举

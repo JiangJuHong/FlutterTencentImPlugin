@@ -57,21 +57,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "setRead":
             self.setRead(call: call, result: result);
             break;
-        case "sendCustomMessage":
-            self.sendCustomMessage(call: call, result: result);
-            break;
-        case "sendTextMessage":
-            self.sendTextMessage(call: call, result: result);
-            break;
-        case "sendSoundMessage":
-            self.sendSoundMessage(call: call, result: result);
-            break;
-        case "sendImageMessage":
-            self.sendImageMessage(call: call, result: result);
-            break;
-        case "sendVideoMessage":
-            self.sendVideoMessage(call: call, result: result);
-            break;
+        case "sendMessage":
+            self.sendMessage(call: call, result: result);
         case "getFriendList":
             self.getFriendList(call: call, result: result);
             break;
@@ -416,146 +403,30 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     }
 
     /**
-     * 发送自定义消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private func sendCustomMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
-            let message = TIMMessage();
-            let customMessage = TIMCustomElem();
-            customMessage.data = data.data(using: String.Encoding.utf8);
-            message.add(customMessage);
-            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
-        }
-    }
-
-    /**
-     * 发送文本消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private func sendTextMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-           let content = CommonUtils.getParam(call: call, result: result, param: "content") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
-            let message = TIMMessage();
-            let textElem = TIMTextElem();
-            textElem.text = content;
-            message.add(textElem);
-            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
-        }
-    }
-
-
-    /**
-     * 发送语音消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private func sendSoundMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
-           let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32 {
-            let message = TIMMessage();
-            let soundElem = TIMSoundElem();
-            soundElem.path = path;
-            soundElem.second = duration;
-            message.add(soundElem);
-            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
-        }
-    }
-
-    /**
-     * 发送图片消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private func sendImageMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
-            let message = TIMMessage();
-            let imageElem = TIMImageElem();
-            imageElem.path = path;
-            message.add(imageElem);
-            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
-        }
-    }
-
-    /**
-     * 发送视频消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private func sendVideoMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-           let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String,
-           let duration = CommonUtils.getParam(call: call, result: result, param: "duration") as? Int32,
-           let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
-           let snapshotWidth = CommonUtils.getParam(call: call, result: result, param: "snapshotWidth") as? Int32,
-           let snapshotHeight = CommonUtils.getParam(call: call, result: result, param: "snapshotHeight") as? Int32,
-           let snapshotPath = CommonUtils.getParam(call: call, result: result, param: "snapshotPath") as? String {
-            // 视频数据
-            let video = TIMVideo();
-            video.duration = duration;
-            video.type = type;
-
-            // 缩略图数据
-            let snapshot = TIMSnapshot();
-            snapshot.width = snapshotWidth;
-            snapshot.height = snapshotHeight;
-
-            // 消息数据
-            let message = TIMMessage();
-            let videoElem = TIMVideoElem();
-            videoElem.videoPath = path;
-            videoElem.video = video;
-            videoElem.snapshotPath = snapshotPath;
-            videoElem.snapshot = snapshot;
-            message.add(videoElem);
-            self.sendMessage(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result)!, message: message, result: result, ol: ol);
-        }
-    }
-
-    /**
      * 发送消息
      *
-     * @param conversation 会话
-     * @param message      消息内容
-     * @param result       Flutter返回对象
-     * @param ol           是否使用在线消息发送
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
      */
-    private func sendMessage(conversation: TIMConversation, message: TIMMessage, result: @escaping FlutterResult, ol: Bool) {
-
-        /// 成功回调
-        let successCallback = {
-            () -> Void in
-            TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
-                (array) -> Void in
-                result(JsonUtil.toJson(array[0]));
-            }, onFail: TencentImUtils.returnErrorClosures(result: result));
-        };
-
-        // 根据状态发送在线或离线消息
-        if ol {
-            conversation.sendOnlineMessage(message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result));
-        } else {
-            conversation.send(message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result));
+    private func sendMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+           let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String,
+           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
+            // 将节点信息解析
+            let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+            
+            // 通过多态发送消息
+            MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().send(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, ol: ol, onCallback:{
+                (message) -> Void in
+                
+                // 处理消息结果并返回
+                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                    (array) -> Void in
+                    result(JsonUtil.toJson(array[0]));
+                }, onFail: TencentImUtils.returnErrorClosures(result: result));
+                
+            }, onFailCalback: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 

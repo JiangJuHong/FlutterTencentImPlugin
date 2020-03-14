@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:camera_utils/camera_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
-
-//import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
-//import 'package:flutter_sound/flutter_sound.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
@@ -22,8 +20,7 @@ import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
-import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
-import 'package:thumbnails/thumbnails.dart';
+import 'package:video_player/video_player.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -45,7 +42,7 @@ class ImPage extends StatefulWidget {
 
 class ImPageState extends State<ImPage> {
   /// 语音插件
-//  final FlutterSound flutterSound = new FlutterSound();
+  final FlutterSound flutterSound = new FlutterSound();
 
   /// 语音最长秒速
   final int voiceMaxSecond = 60;
@@ -181,28 +178,14 @@ class ImPageState extends State<ImPage> {
           content: Text('不能发送空值!'), duration: Duration(milliseconds: 2000)));
       return;
     }
-    int id = Random().nextInt(999999);
 
-    // 封装数据对象
-    DataEntity dataEntity = DataEntity(
-      id: id.toString(),
-      userInfo: loginUserInfo,
-      widget: MessageText(text: controller.text),
-      self: true,
-    );
-
-    this.setState(() {
-      data.add(dataEntity);
-    });
-
-    // 发送消息
-    TencentImPlugin.sendMessage(
-      sessionId: widget.id,
-      sessionType: widget.type,
-      node: TextMessageNode(
+    this.sendMessage(
+      TextMessageNode(
         content: controller.text,
       ),
+      MessageText(text: controller.text),
     );
+
     controller.text = "";
 
     Timer(
@@ -271,10 +254,15 @@ class ImPageState extends State<ImPage> {
     } else if (node.type == NodeType.Sound) {
       return MessageVoice(path: node.path, duration: node.duration);
     } else if (node.type == NodeType.Video) {
-      return MessageVideo(
-        path: node.videoPath,
-        duration: node.videoInfo.duaration,
-        snapshotPath: node.snapshotPath,
+      return InkWell(
+        onTap: (){
+          Scaffold.of(context).showSnackBar(SnackBar(content: new Text('视频播放功能暂未实现')));
+        },
+        child: MessageVideo(
+          path: node.videoPath,
+          duration: node.videoInfo.duaration,
+          snapshotPath: node.snapshotPath,
+        ),
       );
     }
   }
@@ -285,9 +273,9 @@ class ImPageState extends State<ImPage> {
       textShow = "松开手指,取消发送";
       speech = true;
     });
-//    flutterSound.startRecorder(null).then((res) {
-//      this.setState(() => voicePath = res);
-//    });
+    flutterSound.startRecorder().then((res) {
+      this.setState(() => voicePath = res);
+    });
 
     // 开启计时器
     startTimer();
@@ -321,28 +309,28 @@ class ImPageState extends State<ImPage> {
     stopTimer();
 
     // 停止录制
-//    if (flutterSound.isRecording) {
-//      flutterSound.stopRecorder().then((res) {
-//        if (removeVoice) {
-//          File file = File(voicePath);
-//          file.exists().then((exist) {
-//            if (exist) {
-//              file.delete();
-//            }
-//          });
-//        } else {
-//          // 发送语音
-//          sendVoice(voicePath, voiceCurrentSecond);
-//        }
-//        // 重置
-//        this.setState(() {
-//          removeVoice = false;
-//          speech = false;
-//          textShow = "按住说话";
-//          voiceCurrentSecond = 0;
-//        });
-//      });
-//    }
+    if (flutterSound.isRecording) {
+      flutterSound.stopRecorder().then((res) {
+        if (removeVoice) {
+          File file = File(voicePath);
+          file.exists().then((exist) {
+            if (exist) {
+              file.delete();
+            }
+          });
+        } else {
+          // 发送语音
+          sendVoice(voicePath, voiceCurrentSecond);
+        }
+        // 重置
+        this.setState(() {
+          removeVoice = false;
+          speech = false;
+          textShow = "按住说话";
+          voiceCurrentSecond = 0;
+        });
+      });
+    }
   }
 
   /// 开启计时器
@@ -373,53 +361,29 @@ class ImPageState extends State<ImPage> {
           content: Text('时间太短!'), duration: Duration(milliseconds: 2000)));
       return;
     }
-    int id = Random().nextInt(999999);
 
-    // 封装数据对象
-    DataEntity dataEntity = DataEntity(
-      id: id.toString(),
-      userInfo: loginUserInfo,
-      widget: MessageVoice(path: path, duration: duration),
-      self: true,
-    );
-
-    this.setState(() {
-      data.add(dataEntity);
-    });
-
-    TencentImPlugin.sendMessage(
-      sessionId: widget.id,
-      sessionType: widget.type,
-      node: SoundMessageNode(
+    this.sendMessage(
+      SoundMessageNode(
         duration: voiceCurrentSecond,
         path: voicePath,
+      ),
+      MessageVoice(
+        path: path,
+        duration: duration,
       ),
     );
   }
 
   /// 选择图片
   onSelectImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await CameraUtils.pickImage;
     if (image != null) {
-      int id = Random().nextInt(999999);
-
-      // 封装数据对象
-      DataEntity dataEntity = DataEntity(
-        id: id.toString(),
-        userInfo: loginUserInfo,
-        widget: MessageImage(path: image.path),
-        self: true,
-      );
-
-      this.setState(() {
-        data.add(dataEntity);
-      });
-
-      TencentImPlugin.sendMessage(
-        sessionId: widget.id,
-        sessionType: widget.type,
-        node: ImageMessageNode(
-          path: image.path,
+      this.sendMessage(
+        MessageImage(
+          path: image,
+        ),
+        ImageMessageNode(
+          path: image,
         ),
       );
     }
@@ -427,50 +391,64 @@ class ImPageState extends State<ImPage> {
 
   /// 选择视频
   onSelectVideo() async {
-    var video = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    // 选择视频并截取后缀
+    final video = await CameraUtils.pickVideo;
     String type = "";
-    List<String> suffix = video.path.split(".");
+    List<String> suffix = video.split(".");
     if (suffix.length >= 2) {
       type = suffix[suffix.length - 1];
     }
 
-//    IjkMediaController controller = IjkMediaController();
-//    await controller.setFileDataSource(video);
-//    VideoInfo info = await controller.getVideoInfo();
-//    String thumb = await Thumbnails.getThumbnail(
-//      videoFile: video.path,
-//      imageType: ThumbFormat.JPEG,
-//      quality: 30,
-//    );
-//
-//    // 发送视频消息
-//    TencentImPlugin.sendVideoMessage(
-//      sessionId: widget.id,
-//      sessionType: widget.type,
-//      path: video.path,
-//      duration: info.duration.toInt(),
-//      type: type,
-//      snapshotPath: thumb,
-//      snapshotHeight: 0,
-//      snapshotWidth: 0,
-//    );
-//
-//    int id = Random().nextInt(999999);
-//    // 封装数据对象
-//    DataEntity dataEntity = DataEntity(
-//      id: id.toString(),
-//      userInfo: loginUserInfo,
-//      widget: MessageVideo(
-//        path: video.path,
-//        snapshotPath: thumb,
-//        duration: info.duration.toInt(),
-//      ),
-//      self: true,
-//    );
-//
-//    this.setState(() {
-//      data.add(dataEntity);
-//    });
+    // 获得控制器并获得视频时长
+    VideoPlayerController playerController =
+        VideoPlayerController.file(File(video));
+    await playerController.initialize();
+    int duration = playerController.value.duration.inSeconds;
+
+    // 获得视频缩略图
+    String thumb = await CameraUtils.getThumbnail(video);
+
+    this.sendMessage(
+      VideoMessageNode(
+        path: video,
+        duration: duration,
+        type: type,
+        snapshotPath: thumb,
+        snapshotHeight: 0,
+        snapshotWidth: 0,
+      ),
+      MessageVideo(
+        path: video,
+        snapshotPath: thumb,
+        duration: duration,
+      ),
+    );
+  }
+
+  /// 发送消息
+  sendMessage(node, widget) {
+    // 发送视频消息
+    TencentImPlugin.sendMessage(
+      sessionId: widget.id,
+      sessionType: widget.type,
+      node: node,
+    ).then((e) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
+    });
+
+    int id = Random().nextInt(999999);
+    // 封装数据对象
+    DataEntity dataEntity = DataEntity(
+      id: id.toString(),
+      userInfo: loginUserInfo,
+      widget: widget,
+      self: true,
+    );
+
+    this.setState(() {
+      data.add(dataEntity);
+    });
   }
 
   /// 消息长按事件
@@ -943,17 +921,17 @@ class MessageVoice extends StatelessWidget {
   final int duration;
 
   /// 语音插件
-//  final FlutterSound flutterSound = new FlutterSound();
+  final FlutterSound flutterSound = new FlutterSound();
 
   MessageVoice({Key key, this.path, this.duration}) : super(key: key);
 
   // 播放语音
   onPlayerOrStop() {
-//    if (flutterSound.isPlaying) {
-//      flutterSound.stopPlayer();
-//    } else {
-//      flutterSound.startPlayer(path);
-//    }
+    if (flutterSound.isPlaying) {
+      flutterSound.stopPlayer();
+    } else {
+      flutterSound.startPlayer(path);
+    }
   }
 
   @override

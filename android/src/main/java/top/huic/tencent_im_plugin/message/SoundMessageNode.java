@@ -19,7 +19,7 @@ public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem> {
     public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
         TIMSoundElem soundElem = new TIMSoundElem();
-        soundElem.setPath(super.getParam(params, "type").toString());
+        soundElem.setPath(super.getParam(params, "path").toString());
         soundElem.setDuration(Integer.parseInt(super.getParam(params, "duration").toString()));
         message.addElement(soundElem);
         super.sendMessage(conversation, message, ol, onCallback);

@@ -36,7 +36,7 @@ public class NodeEntity : NSObject{
             entity = ProfileSystemNodeEntity(elem:elem);
         }else if elem is TIMSNSSystemElem{
             entity = SNSSystemNodeEntity(elem:elem);
-        }else if elem is TIMVideo{
+        }else if elem is TIMVideoElem{
             entity = VideoNodeEntity(elem:elem);
         }else{
             entity = NodeEntity();
