@@ -16,9 +16,11 @@ public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem> {
     @Override
     public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
-        TIMCustomElem customElem = new TIMCustomElem();
-        customElem.setData(super.getParam(params, "data").toString().getBytes());
-        message.addElement(customElem);
+        TIMLocationElem locationElem = new TIMLocationElem();
+        locationElem.setDesc(super.getParam(params, "desc").toString());
+        locationElem.setLatitude(Double.parseDouble(super.getParam(params, "latitude").toString()));
+        locationElem.setLongitude(Double.parseDouble(super.getParam(params, "longitude").toString()));
+        message.addElement(locationElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
 

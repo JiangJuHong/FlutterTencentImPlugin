@@ -17,7 +17,10 @@ enum MessageNodeType{
     case Video
     
     /// 自定义
-    case Custom;
+    case Custom
+    
+    /// 位置节点
+    case Location;
     
     func messageNodeInterface() -> AbstractMessageNode {
         switch self {
@@ -31,6 +34,8 @@ enum MessageNodeType{
             return VideoMessageNode()
         case .Custom:
             return CustomMessageNode()
+        case .Location:
+            return LocationMessageNode();
         }
     }
     
@@ -47,6 +52,8 @@ enum MessageNodeType{
             return MessageNodeType.Video;
         case "Custom":
             return MessageNodeType.Custom;
+        case "Location":
+            return MessageNodeType.Location;
         default:
             return nil;
         }
@@ -72,6 +79,10 @@ enum MessageNodeType{
         
         if type is TIMCustomElem{
             return MessageNodeType.Custom;
+        }
+        
+        if type is TIMLocationElem{
+            return MessageNodeType.Location;
         }
         
         return nil;

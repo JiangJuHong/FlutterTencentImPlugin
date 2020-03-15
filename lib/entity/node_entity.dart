@@ -1,5 +1,6 @@
 import 'package:tencent_im_plugin/entity/node_custom_entity.dart';
 
+import 'node_localtion_entity.dart';
 import 'node_other_entity.dart';
 import 'node_text_entity.dart';
 import 'node_image_entity.dart';
@@ -37,6 +38,9 @@ class NodeEntity {
     } else if (json["type"] ==
         NodeType.Custom.toString().replaceFirst("NodeType.", "")) {
       return NodeCustomEntity.fromJson(json);
+    } else if (json["type"] ==
+        NodeType.Location.toString().replaceFirst("NodeType.", "")) {
+      return NodeLocationEntity.fromJson(json);
     }
     return NodeOtherEntity.fromJson(json);
   }

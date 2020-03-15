@@ -20,6 +20,7 @@ import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
+import 'package:tencent_im_plugin/message_node/location_message_node.dart';
 import 'package:video_player/video_player.dart';
 
 /// 聊天页面
@@ -93,6 +94,9 @@ class ImPageState extends State<ImPage> {
 
   /// 计数器
   Timer _timer;
+
+  /// 用作显示提示框
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
   @override
   initState() {
@@ -255,14 +259,21 @@ class ImPageState extends State<ImPage> {
       return MessageVoice(path: node.path, duration: node.duration);
     } else if (node.type == NodeType.Video) {
       return InkWell(
-        onTap: (){
-          Scaffold.of(context).showSnackBar(SnackBar(content: new Text('视频播放功能暂未实现')));
+        onTap: () {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: new Text('视频播放功能暂未实现')));
         },
         child: MessageVideo(
           path: node.videoPath,
           duration: node.videoInfo.duaration,
           snapshotPath: node.snapshotPath,
         ),
+      );
+    } else if (node.type == NodeType.Location) {
+      return MessageLocation(
+        desc: node.desc,
+        latitude: node.latitude,
+        longitude: node.longitude,
       );
     }
   }
@@ -425,6 +436,26 @@ class ImPageState extends State<ImPage> {
     );
   }
 
+  /// 选择位置
+  onSelectLocation() {
+    String desc = "北京";
+    double longitude = 116.397128;
+    double latitude = 39.916527;
+
+    this.sendMessage(
+      LocationMessageNode(
+        desc: desc,
+        longitude: longitude,
+        latitude: latitude,
+      ),
+      MessageLocation(
+        desc: desc,
+        longitude: longitude,
+        latitude: latitude,
+      ),
+    );
+  }
+
   /// 发送消息
   sendMessage(node, wd) {
     // 发送视频消息
@@ -432,9 +463,8 @@ class ImPageState extends State<ImPage> {
       sessionId: widget.id,
       sessionType: widget.type,
       node: node,
-    ).then((e) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
+    ).catchError((e){
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
     });
 
     int id = Random().nextInt(999999);
@@ -611,6 +641,7 @@ class ImPageState extends State<ImPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           userInfo != null
@@ -679,6 +710,15 @@ class ImPageState extends State<ImPage> {
                     child: Container(
                       child: Icon(
                         Icons.videocam,
+                      ),
+                      padding: EdgeInsets.only(left: 5, right: 5),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: onSelectLocation,
+                    child: Container(
+                      child: Icon(
+                        Icons.location_on,
                       ),
                       padding: EdgeInsets.only(left: 5, right: 5),
                     ),
@@ -989,6 +1029,39 @@ class MessageVideo extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 消息位置
+class MessageLocation extends StatelessWidget {
+  /// 描述
+  final String desc;
+
+  /// 经度
+  final double longitude;
+
+  /// 纬度
+  final double latitude;
+
+  const MessageLocation({Key key, this.desc, this.longitude, this.latitude})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => 0,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.grey,
+        child: Column(
+          children: <Widget>[
+            Text(desc),
+            Text("经度:$longitude"),
+            Text("纬度:$latitude"),
           ],
         ),
       ),

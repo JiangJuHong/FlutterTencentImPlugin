@@ -26,9 +26,9 @@ v0.2.0 主要更改了发送消息和消息节点，使用上更符合逻辑。
 
 ### 近期计划(已完成内容将会被移除)  
 [ ]【BUG】打包APK后，RefreshConversation 中的会话信息没有id和type  
-[ ]TIMLocationElem 节点  
 [ ]IOS端语音、视频的下载功能  
 [ ]视频上传回调功能
+[ ]视频下载可控
 
 ## 集成
 ### Flutter
