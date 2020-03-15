@@ -8,18 +8,19 @@ import com.tencent.imsdk.TIMMessage;
 import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.LocationMessageEntity;
 
 /**
  * 位置消息节点
  */
-public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem> {
+public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem, LocationMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    public void send(TIMConversation conversation, LocationMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
         TIMLocationElem locationElem = new TIMLocationElem();
-        locationElem.setDesc(super.getParam(params, "desc").toString());
-        locationElem.setLatitude(Double.parseDouble(super.getParam(params, "latitude").toString()));
-        locationElem.setLongitude(Double.parseDouble(super.getParam(params, "longitude").toString()));
+        locationElem.setDesc(entity.getDesc());
+        locationElem.setLatitude(entity.getLatitude());
+        locationElem.setLongitude(entity.getLongitude());
         message.addElement(locationElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
@@ -27,5 +28,10 @@ public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem> {
     @Override
     public String getNote(TIMLocationElem elem) {
         return "[位置消息]";
+    }
+
+    @Override
+    public Class<LocationMessageEntity> getEntityClass() {
+        return LocationMessageEntity.class;
     }
 }

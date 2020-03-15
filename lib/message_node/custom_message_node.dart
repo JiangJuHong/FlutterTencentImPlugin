@@ -9,7 +9,11 @@ class CustomMessageNode extends MessageNode {
 
   CustomMessageNode({
     @required this.data,
-  })  : super(MessageNodeType.Custom);
+  }) : super(MessageNodeType.Custom);
+
+  CustomMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Custom) {
+    data = json['data'];
+  }
 
   @override
   Map<String, dynamic> toJson() {

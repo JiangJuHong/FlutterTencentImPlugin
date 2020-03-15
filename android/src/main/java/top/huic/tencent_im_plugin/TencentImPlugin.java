@@ -84,6 +84,7 @@ import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
+import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.util.JsonUtil;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
@@ -420,13 +421,15 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void sendMessage(MethodCall methodCall, final Result result) {
-        Map node = JSON.parseObject(this.getParam(methodCall, result, "node").toString(), Map.class);
+        String nodeStr = this.getParam(methodCall, result, "node");
+        Map node = JSON.parseObject(nodeStr, Map.class);
         String sessionType = this.getParam(methodCall, result, "sessionType");
         String sessionId = this.getParam(methodCall, result, "sessionId");
         boolean ol = this.getParam(methodCall, result, "ol");
 
         // 发送消息
-        MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface().send(TencentImUtils.getSession(sessionId, sessionType), node, ol, new ValueCallBack<TIMMessage>(result) {
+        AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
+        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), JSON.parseObject(nodeStr, messageNode.getEntityClass()), ol, new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
                 TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {

@@ -31,6 +31,15 @@ class VideoMessageNode extends MessageNode {
     @required this.snapshotPath,
   }) : super(MessageNodeType.Video);
 
+  VideoMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Video) {
+    path = json['path'];
+    duration = json['duration'];
+    type = json['type'];
+    snapshotWidth = json['snapshotWidth'];
+    snapshotHeight = json['snapshotHeight'];
+    snapshotPath = json['snapshotPath'];
+  }
+
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();

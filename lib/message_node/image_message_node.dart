@@ -11,6 +11,10 @@ class ImageMessageNode extends MessageNode {
     @required this.path,
   }) : super(MessageNodeType.Image);
 
+  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Image) {
+    path = json['path'];
+  }
+
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();

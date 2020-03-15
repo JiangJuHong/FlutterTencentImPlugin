@@ -8,16 +8,17 @@ import com.tencent.imsdk.TIMTextElem;
 import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.CustomMessageEntity;
 
 /**
  * 自定义消息节点
  */
-public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem> {
+public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem, CustomMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    public void send(TIMConversation conversation, CustomMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
         TIMCustomElem customElem = new TIMCustomElem();
-        customElem.setData(super.getParam(params, "data").toString().getBytes());
+        customElem.setData(entity.getData().getBytes());
         message.addElement(customElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
@@ -25,5 +26,10 @@ public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem> {
     @Override
     public String getNote(TIMCustomElem elem) {
         return "[其它消息]";
+    }
+
+    @Override
+    public Class<CustomMessageEntity> getEntityClass() {
+        return CustomMessageEntity.class;
     }
 }

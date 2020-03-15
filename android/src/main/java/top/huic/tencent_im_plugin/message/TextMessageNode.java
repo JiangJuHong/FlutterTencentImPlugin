@@ -4,19 +4,18 @@ import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMTextElem;
 
-import java.util.Map;
-
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.TextMessageEntity;
 
 /**
  * 文本消息节点
  */
-public class TextMessageNode extends AbstractMessageNode<TIMTextElem> {
+public class TextMessageNode extends AbstractMessageNode<TIMTextElem, TextMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    public void send(TIMConversation conversation, TextMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
         TIMTextElem textElem = new TIMTextElem();
-        textElem.setText(super.getParam(params, "content").toString());
+        textElem.setText(entity.getContent());
         message.addElement(textElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
@@ -24,5 +23,10 @@ public class TextMessageNode extends AbstractMessageNode<TIMTextElem> {
     @Override
     public String getNote(TIMTextElem elem) {
         return elem.getText();
+    }
+
+    @Override
+    public Class<TextMessageEntity> getEntityClass() {
+        return TextMessageEntity.class;
     }
 }

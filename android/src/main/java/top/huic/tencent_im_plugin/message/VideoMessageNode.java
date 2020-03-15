@@ -10,13 +10,14 @@ import com.tencent.imsdk.TIMVideoElem;
 import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.VideoMessageEntity;
 
 /**
  * 视频消息节点
  */
-public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem> {
+public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    public void send(TIMConversation conversation, VideoMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         // 封装消息对象
         TIMMessage message = new TIMMessage();
         TIMVideoElem videoElem = new TIMVideoElem();
@@ -24,18 +25,18 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem> {
 
         // 封装视频信息
         TIMVideo video = new TIMVideo();
-        video.setType(super.getParam(params, "type").toString());
-        video.setDuaration(Integer.parseInt(super.getParam(params, "duration").toString()));
+        video.setType(entity.getType());
+        video.setDuaration(entity.getDuration());
 
         // 封装快照信息
         TIMSnapshot snapshot = new TIMSnapshot();
-        snapshot.setWidth(Integer.parseInt(super.getParam(params, "snapshotWidth").toString()));
-        snapshot.setHeight(Integer.parseInt(super.getParam(params, "snapshotHeight").toString()));
+        snapshot.setWidth(entity.getSnapshotWidth());
+        snapshot.setHeight(entity.getSnapshotHeight());
 
         videoElem.setSnapshot(snapshot);
         videoElem.setVideo(video);
-        videoElem.setSnapshotPath(super.getParam(params, "snapshotPath").toString());
-        videoElem.setVideoPath(super.getParam(params, "path").toString());
+        videoElem.setSnapshotPath(entity.getSnapshotPath());
+        videoElem.setVideoPath(entity.getPath());
         message.addElement(videoElem);
 
 
@@ -45,5 +46,10 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem> {
     @Override
     public String getNote(TIMVideoElem elem) {
         return "[视频]";
+    }
+
+    @Override
+    public Class<VideoMessageEntity> getEntityClass() {
+        return VideoMessageEntity.class;
     }
 }

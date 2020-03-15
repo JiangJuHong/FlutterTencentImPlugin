@@ -15,6 +15,11 @@ class SoundMessageNode extends MessageNode {
     @required this.duration,
   })  : super(MessageNodeType.Sound);
 
+  SoundMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Sound) {
+    path = json['path'];
+    duration = json['duration'];
+  }
+
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();

@@ -10,17 +10,18 @@ import com.tencent.imsdk.TIMVideoElem;
 import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.SoundMessageEntity;
 
 /**
  * 语音消息节点
  */
-public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem> {
+public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem, SoundMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, Map params, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    public void send(TIMConversation conversation, SoundMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
         TIMMessage message = new TIMMessage();
         TIMSoundElem soundElem = new TIMSoundElem();
-        soundElem.setPath(super.getParam(params, "path").toString());
-        soundElem.setDuration(Integer.parseInt(super.getParam(params, "duration").toString()));
+        soundElem.setPath(entity.getPath());
+        soundElem.setDuration(entity.getDuration());
         message.addElement(soundElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
@@ -28,5 +29,10 @@ public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem> {
     @Override
     public String getNote(TIMSoundElem elem) {
         return "[语音]";
+    }
+
+    @Override
+    public Class<SoundMessageEntity> getEntityClass() {
+        return SoundMessageEntity.class;
     }
 }
