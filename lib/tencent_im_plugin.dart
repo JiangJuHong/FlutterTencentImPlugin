@@ -25,7 +25,7 @@ import 'enums/receive_message_opt_enum.dart';
 
 class TencentImPlugin {
   static const MethodChannel _channel =
-  const MethodChannel('tencent_im_plugin');
+      const MethodChannel('tencent_im_plugin');
 
   /// 监听器对象
   static TencentImPluginListener listener;
@@ -77,9 +77,9 @@ class TencentImPlugin {
           {
             "sessionId": sessionId,
             "sessionType": sessionType.toString().replaceFirst(
-              "SessionType.",
-              "",
-            ),
+                  "SessionType.",
+                  "",
+                ),
             "node": jsonEncode(node),
             "ol": ol,
           },
@@ -123,11 +123,10 @@ class TencentImPlugin {
   }) async {
     return ListUtil.generateOBJList<MessageEntity>(
         jsonDecode(await _channel.invokeMethod('getLocalMessages', {
-          "sessionId": sessionId,
-          "sessionType": sessionType.toString().replaceFirst(
-              "SessionType.", ""),
-          "number": number,
-        })));
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "number": number,
+    })));
   }
 
   /// 根据会话ID获得消息列表
@@ -142,11 +141,10 @@ class TencentImPlugin {
   }) async {
     return ListUtil.generateOBJList<MessageEntity>(
         jsonDecode(await _channel.invokeMethod('getMessages', {
-          "sessionId": sessionId,
-          "sessionType": sessionType.toString().replaceFirst(
-              "SessionType.", ""),
-          "number": number,
-        })));
+      "sessionId": sessionId,
+      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "number": number,
+    })));
   }
 
   /// 删除会话
@@ -186,8 +184,9 @@ class TencentImPlugin {
 
   /// 创建群聊
   static Future<String> createGroup({
-    @required String
-    type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
+    @required
+        String
+            type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
     @required String name, // 群名称
     @required List<GroupMemberEntity> members, // 默认群成员，根据role决定身份
     String groupId, //群ID
@@ -262,8 +261,8 @@ class TencentImPlugin {
   }) async {
     return ListUtil.generateOBJList<GroupMemberEntity>(
         jsonDecode(await _channel.invokeMethod('getGroupMembers', {
-          "groupId": groupId,
-        })));
+      "groupId": groupId,
+    })));
   }
 
   /// 获得群列表
@@ -296,7 +295,7 @@ class TencentImPlugin {
   /// @return 群ID
   static Future<GroupInfoEntity> getGroupInfo({@required id}) async {
     final String result =
-    await _channel.invokeMethod('getGroupInfo', {"id": id});
+        await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
       return EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
     }
@@ -350,8 +349,8 @@ class TencentImPlugin {
       "receiveMessageOpt": receiveMessageOpt == null
           ? null
           : receiveMessageOpt
-          .toString()
-          .replaceAll("ReceiveMessageOptEnum.", ""),
+              .toString()
+              .replaceAll("ReceiveMessageOptEnum.", ""),
     });
   }
 
@@ -362,9 +361,9 @@ class TencentImPlugin {
   }) async {
     return GroupPendencyPageEntity.fromJson(
         jsonDecode(await _channel.invokeMethod('getGroupPendencyList', {
-          "timestamp": timestamp,
-          "numPerPage": numPerPage,
-        })));
+      "timestamp": timestamp,
+      "numPerPage": numPerPage,
+    })));
   }
 
   /// 上报未决已读
@@ -438,8 +437,9 @@ class TencentImPlugin {
 
   /// 修改自己的资料
   static Future<void> modifySelfProfile({
-    @required Map<String, dynamic>
-    params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E8.87.AA.E5.B7.B1.E7.9A.84.E8.B5.84.E6.96.99
+    @required
+        Map<String, dynamic>
+            params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E8.87.AA.E5.B7.B1.E7.9A.84.E8.B5.84.E6.96.99
   }) async {
     return await _channel.invokeMethod('modifySelfProfile', {
       "params": jsonEncode(params),
@@ -455,8 +455,9 @@ class TencentImPlugin {
   /// 修改好友资料
   static Future<void> modifyFriend({
     @required String identifier, // 好友id
-    @required Map<String, dynamic>
-    params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E5.A5.BD.E5.8F.8B
+    @required
+        Map<String, dynamic>
+            params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E5.A5.BD.E5.8F.8B
   }) async {
     return await _channel.invokeMethod('modifyFriend', {
       "identifier": identifier,
@@ -480,7 +481,7 @@ class TencentImPlugin {
       "addSource": addSource,
       "friendGroup": friendGroup,
       "addType":
-      addType == null ? null : FriendAddTypeTool.getIndexByEnum(addType),
+          addType == null ? null : FriendAddTypeTool.getIndexByEnum(addType),
     });
     return AddFriendResultEntity.fromJson(jsonDecode(data));
   }
@@ -619,9 +620,9 @@ class TencentImPlugin {
   }) async {
     return jsonDecode(
         await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
-          "ids": ids.join(","),
-          "groupName": groupName,
-        }));
+      "ids": ids.join(","),
+      "groupName": groupName,
+    }));
   }
 
   /// 重命名分组
@@ -752,7 +753,7 @@ class TencentImPluginListener {
 
       switch (methodCall.method) {
         case 'onListener':
-        // 获得原始类型和参数
+          // 获得原始类型和参数
           String typeStr = arguments['type'];
           var paramsStr = arguments['params'];
 

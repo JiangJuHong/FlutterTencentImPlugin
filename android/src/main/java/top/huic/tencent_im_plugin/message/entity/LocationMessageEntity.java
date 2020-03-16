@@ -1,11 +1,13 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import top.huic.tencent_im_plugin.enums.MessageNodeType;
+
 /**
  * 位置消息实体
  *
  * @author 蒋具宏
  */
-public class LocationMessageEntity {
+public class LocationMessageEntity extends AbstractMessageEntity {
     /**
      * 描述
      */
@@ -20,6 +22,10 @@ public class LocationMessageEntity {
      * 纬度
      */
     private double longitude;
+
+    public LocationMessageEntity() {
+        super(MessageNodeType.Location);
+    }
 
     public String getDesc() {
         return desc;

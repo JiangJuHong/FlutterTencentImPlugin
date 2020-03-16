@@ -2,12 +2,7 @@ package top.huic.tencent_im_plugin.message;
 
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMSnapshot;
 import com.tencent.imsdk.TIMSoundElem;
-import com.tencent.imsdk.TIMVideo;
-import com.tencent.imsdk.TIMVideoElem;
-
-import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.SoundMessageEntity;
@@ -29,6 +24,15 @@ public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem, SoundMes
     @Override
     public String getNote(TIMSoundElem elem) {
         return "[语音]";
+    }
+
+    @Override
+    public SoundMessageEntity analysis(TIMSoundElem elem) {
+        SoundMessageEntity entity = new SoundMessageEntity();
+        entity.setPath(elem.getPath());
+        entity.setDuration(elem.getDuration());
+        entity.setDataSize(elem.getDataSize());
+        return entity;
     }
 
     @Override

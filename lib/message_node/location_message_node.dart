@@ -19,7 +19,8 @@ class LocationMessageNode extends MessageNode {
     @required this.latitude,
   }) : super(MessageNodeType.Location);
 
-  LocationMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Location) {
+  LocationMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Location) {
     desc = json['desc'];
     longitude = json['longitude'];
     latitude = json['latitude'];

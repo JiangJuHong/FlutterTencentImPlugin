@@ -20,11 +20,6 @@ public class ImageEntity : NSObject{
     var type : ImageType?;
 
     /**
-     * uuid
-     */
-    var uuid : String?;
-
-    /**
      * url
      */
     var url : String?;
@@ -42,7 +37,6 @@ public class ImageEntity : NSObject{
         self.size = image.size;
         self.width = image.width;
         self.type = ImageType.getByTIMImage(image: image);
-        self.uuid = image.uuid;
         self.url = image.url;
         self.height = image.height;
     }

@@ -19,4 +19,18 @@ public class ImageMessageNode : AbstractMessageNode{
     override func getNote(elem: TIMElem) -> String {
         return "[图片]";
     }
+    
+    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
+        let imageElem = elem as! TIMImageElem;
+        let entity = ImageMessageEntity();
+        entity.imageFormat = imageElem.format.rawValue;
+        entity.level = imageElem.level.rawValue;
+        entity.path = imageElem.path;
+        entity.imageData = [];
+        for item in imageElem.imageList{
+            let image = item as! TIMImage;
+            entity.imageData!.append(ImageEntity(image: image));
+        }
+        return entity;
+    }
 }

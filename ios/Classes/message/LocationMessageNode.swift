@@ -21,4 +21,13 @@ public class LocationMessageNode : AbstractMessageNode{
     override func getNote(elem: TIMElem) -> String {
         return "[位置消息]";
     }
+    
+    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
+        let locationElem = elem as! TIMLocationElem;
+        let entity = LocationMessageEntity();
+        entity.desc = locationElem.desc;
+        entity.longitude = locationElem.longitude;
+        entity.latitude = locationElem.latitude;
+        return entity;
+    }
 }

@@ -50,13 +50,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
-  correct_camera_utils:
-    dependency: "direct main"
-    description:
-      name: correct_camera_utils
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.2"
   crypto:
     dependency: transitive
     description:
@@ -76,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.6"
   flutter_sound:
     dependency: "direct main"
     description:
@@ -100,6 +100,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.6.3+4"
   matcher:
     dependency: transitive
     description:
@@ -273,6 +280,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.2+1"
+  video_thumbnail:
+    dependency: "direct main"
+    description:
+      name: video_thumbnail
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
   xml:
     dependency: transitive
     description:

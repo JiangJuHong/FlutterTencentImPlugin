@@ -20,4 +20,13 @@ public class SoundMessageNode : AbstractMessageNode{
     override func getNote(elem: TIMElem) -> String {
         return "[语音]";
     }
+    
+    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
+        let soundElem = elem as! TIMSoundElem;
+        let entity = SoundMessageEntity();
+        entity.path = soundElem.path;
+        entity.dataSize = soundElem.dataSize;
+        entity.duration = soundElem.second;
+        return entity;
+    }
 }

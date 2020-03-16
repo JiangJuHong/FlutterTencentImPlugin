@@ -3,9 +3,6 @@ package top.huic.tencent_im_plugin.message;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMTextElem;
-
-import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.CustomMessageEntity;
@@ -26,6 +23,13 @@ public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem, Custom
     @Override
     public String getNote(TIMCustomElem elem) {
         return "[其它消息]";
+    }
+
+    @Override
+    public CustomMessageEntity analysis(TIMCustomElem elem) {
+        CustomMessageEntity entity = new CustomMessageEntity();
+        elem.setData(elem.getData());
+        return entity;
     }
 
     @Override

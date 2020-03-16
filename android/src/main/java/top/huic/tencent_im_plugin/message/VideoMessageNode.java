@@ -3,14 +3,13 @@ package top.huic.tencent_im_plugin.message;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSnapshot;
-import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
 
-import java.util.Map;
-
 import top.huic.tencent_im_plugin.ValueCallBack;
-import top.huic.tencent_im_plugin.message.entity.VideoMessageEntity;
+import top.huic.tencent_im_plugin.message.entity.video.VideoInfo;
+import top.huic.tencent_im_plugin.message.entity.video.VideoMessageEntity;
+import top.huic.tencent_im_plugin.message.entity.video.VideoSnapshotInfo;
 
 /**
  * 视频消息节点
@@ -25,18 +24,18 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMes
 
         // 封装视频信息
         TIMVideo video = new TIMVideo();
-        video.setType(entity.getType());
-        video.setDuaration(entity.getDuration());
+        video.setType(entity.getVideoInfo().getType());
+        video.setDuaration(entity.getVideoInfo().getDuration());
 
         // 封装快照信息
         TIMSnapshot snapshot = new TIMSnapshot();
-        snapshot.setWidth(entity.getSnapshotWidth());
-        snapshot.setHeight(entity.getSnapshotHeight());
+        snapshot.setWidth(entity.getVideoSnapshotInfo().getWidth());
+        snapshot.setHeight(entity.getVideoSnapshotInfo().getHeight());
 
         videoElem.setSnapshot(snapshot);
         videoElem.setVideo(video);
-        videoElem.setSnapshotPath(entity.getSnapshotPath());
-        videoElem.setVideoPath(entity.getPath());
+        videoElem.setSnapshotPath(entity.getVideoSnapshotInfo().getPath());
+        videoElem.setVideoPath(entity.getVideoInfo().getPath());
         message.addElement(videoElem);
 
 
@@ -46,6 +45,27 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMes
     @Override
     public String getNote(TIMVideoElem elem) {
         return "[视频]";
+    }
+
+    @Override
+    public VideoMessageEntity analysis(TIMVideoElem elem) {
+        VideoMessageEntity entity = new VideoMessageEntity();
+        VideoInfo videoInfo = new VideoInfo();
+        VideoSnapshotInfo videoSnapshotInfo = new VideoSnapshotInfo();
+
+        videoInfo.setPath(elem.getVideoPath());
+        videoInfo.setDuration(elem.getVideoInfo().getDuaration());
+        videoInfo.setSize(elem.getVideoInfo().getSize());
+        videoInfo.setType(elem.getVideoInfo().getType());
+
+        videoSnapshotInfo.setPath(elem.getSnapshotPath());
+        videoSnapshotInfo.setHeight(elem.getSnapshotInfo().getHeight());
+        videoSnapshotInfo.setWidth(elem.getSnapshotInfo().getWidth());
+        videoSnapshotInfo.setSize(elem.getSnapshotInfo().getSize());
+
+        entity.setVideoInfo(videoInfo);
+        entity.setVideoSnapshotInfo(videoSnapshotInfo);
+        return entity;
     }
 
     @Override

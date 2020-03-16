@@ -1,19 +1,17 @@
 package top.huic.tencent_im_plugin.message;
 
 import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMElem;
 import com.tencent.imsdk.TIMMessage;
 
-import java.util.Map;
-
 import top.huic.tencent_im_plugin.ValueCallBack;
+import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 
 /**
  * 消息节点接口
  *
  * @param <N> 节点类型，对应腾讯云 TIMElem
  */
-public abstract class AbstractMessageNode<N, E> {
+public abstract class AbstractMessageNode<N, E extends AbstractMessageEntity> {
     /**
      * 发送消息
      *
@@ -30,6 +28,14 @@ public abstract class AbstractMessageNode<N, E> {
      * @param elem 节点
      */
     public abstract String getNote(N elem);
+
+    /**
+     * 将节点解析为实体对象
+     *
+     * @param elem 节点
+     * @return 实体对象
+     */
+    public abstract E analysis(N elem);
 
     /**
      * 发送消息

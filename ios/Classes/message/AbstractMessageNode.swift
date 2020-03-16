@@ -28,6 +28,10 @@ public class AbstractMessageNode {
         return nil;
     }
     
+    func analysis(elem : TIMElem) -> AbstractMessageEntity?{
+        return nil;
+    }
+    
     
     /**
      * 发送消息

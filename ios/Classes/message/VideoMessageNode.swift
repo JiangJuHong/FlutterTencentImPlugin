@@ -34,4 +34,26 @@ public class VideoMessageNode : AbstractMessageNode{
     override func getNote(elem: TIMElem) -> String {
         return "[视频]";
     }
+    
+    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
+        let videoElem = elem as! TIMVideoElem;
+        let entity = VideoMessageEntity();
+        let videoInfo = VideoInfo();
+        let videoSnapshotInfo = VideoSnapshotInfo();
+        
+        videoInfo.duration = videoElem.video.duration;
+        videoInfo.path = videoElem.videoPath;
+        videoInfo.size = videoElem.video.size;
+        videoInfo.type = videoElem.video.type;
+        
+        videoSnapshotInfo.height = videoElem.snapshot.height;
+        videoSnapshotInfo.width = videoElem.snapshot.width;
+        videoSnapshotInfo.path = videoElem.snapshotPath;
+        videoSnapshotInfo.type = videoElem.snapshot.type;
+        videoSnapshotInfo.size = videoElem.snapshot.size;
+    
+        entity.videoInfo = videoInfo;
+        entity.videoSnapshotInfo = videoSnapshotInfo;
+        return entity;
+    }
 }

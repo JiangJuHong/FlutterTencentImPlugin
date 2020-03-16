@@ -122,22 +122,7 @@ public class TencentImUtils{
             }, fail: onFail);
         }
     }
-    
-    /**
-     * 根据Message对象获得所有节点
-     *
-     * @param message 消息对象
-     * @return 所有节点对象
-     */
-    public static func getArrayElement(message : TIMMessage) -> [NodeEntity]{
-        var elems : [NodeEntity] = [];
-        for index in 0..<message.elemCount() {
-            let elem : TIMElem = message.getElem(index)
-            elems.append(NodeEntity.getNodeEntityByTIMElem(elem: elem));
-        }
-        return elems;
-    }
-    
+
     /**
      * 根据会话ID和会话类型获得会话对象
      *

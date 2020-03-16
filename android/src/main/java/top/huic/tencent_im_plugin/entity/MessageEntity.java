@@ -7,10 +7,11 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageStatus;
 import com.tencent.imsdk.TIMUserProfile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
-import top.huic.tencent_im_plugin.util.TencentImUtils;
+import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 
 /**
  * 消息实体
@@ -91,7 +92,7 @@ public class MessageEntity {
     /**
      * 节点内容
      */
-    private List<TIMElem> elemList;
+    private List<AbstractMessageEntity> elemList;
 
     /**
      * 消息状态
@@ -123,7 +124,13 @@ public class MessageEntity {
         this.customInt = message.getCustomInt();
         this.customStr = message.getCustomStr();
         this.timestamp = message.timestamp();
-        this.elemList = TencentImUtils.getArrrElement(message);
+
+        this.elemList = new ArrayList<>(message.getElementCount());
+        for (int i = 0; i < message.getElementCount(); i++) {
+            TIMElem elem = message.getElement(i);
+            elemList.add(MessageNodeType.getTypeByTIMElemType(message.getElement(0).getType()).getMessageNodeInterface().analysis(elem));
+        }
+
         this.groupMemberInfo = message.getSenderGroupMemberProfile();
         this.sender = message.getSender();
         this.sessionId = message.getConversation().getPeer();
@@ -214,14 +221,6 @@ public class MessageEntity {
         this.groupMemberInfo = groupMemberInfo;
     }
 
-    public List<TIMElem> getElemList() {
-        return elemList;
-    }
-
-    public void setElemList(List<TIMElem> elemList) {
-        this.elemList = elemList;
-    }
-
     public String getSender() {
         return sender;
     }
@@ -276,5 +275,13 @@ public class MessageEntity {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public List<AbstractMessageEntity> getElemList() {
+        return elemList;
+    }
+
+    public void setElemList(List<AbstractMessageEntity> elemList) {
+        this.elemList = elemList;
     }
 }

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:correct_camera_utils/camera_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,14 +14,18 @@ import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
-import 'package:tencent_im_plugin/entity/node_entity.dart';
-import 'package:tencent_im_plugin/entity/node_image_entity.dart';
+import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/image_type.dart';
+import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/location_message_node.dart';
+import 'package:tencent_im_plugin/message_node/entity/video_info_entity.dart';
+import 'package:tencent_im_plugin/message_node/entity/video_snapshot_info_entity.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -241,7 +245,7 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 获得组件
-  getComponent(List elems) {
+  getComponent(List<MessageNode> elems) {
     if (elems == null || elems.length == 0) {
       return Text("");
     }
@@ -251,30 +255,33 @@ class ImPageState extends State<ImPage> {
     if (node == null) {
       return null;
     }
-    if (node.type == NodeType.Text) {
-      return MessageText(text: node.text);
-    } else if (node.type == NodeType.Image) {
-      return MessageImage(url: node.imageData[ImageType.Original].url);
-    } else if (node.type == NodeType.Sound) {
-      return MessageVoice(path: node.path, duration: node.duration);
-    } else if (node.type == NodeType.Video) {
-      return InkWell(
-        onTap: () {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: new Text('视频播放功能暂未实现')));
-        },
-        child: MessageVideo(
-          path: node.videoPath,
-          duration: node.videoInfo.duaration,
-          snapshotPath: node.snapshotPath,
-        ),
-      );
-    } else if (node.type == NodeType.Location) {
-      return MessageLocation(
-        desc: node.desc,
-        latitude: node.latitude,
-        longitude: node.longitude,
-      );
+
+    switch (node.nodeType) {
+      case MessageNodeType.Text:
+        TextMessageNode value = node;
+        return MessageText(text: value.content);
+      case MessageNodeType.Image:
+        ImageMessageNode value = node;
+        return MessageImage(url: value.imageData[ImageType.Original].url);
+      case MessageNodeType.Sound:
+        SoundMessageNode value = node;
+        return MessageVoice(path: value.path, duration: value.duration);
+      case MessageNodeType.Custom:
+        break;
+      case MessageNodeType.Video:
+        VideoMessageNode value = node;
+        return MessageVideo(
+          path: value.videoInfo.path,
+          duration: value.videoInfo.duration,
+          snapshotPath: value.videoSnapshotInfo.path,
+        );
+      case MessageNodeType.Location:
+        LocationMessageNode value = node;
+        return MessageLocation(
+          desc: value.desc,
+          latitude: value.latitude,
+          longitude: value.longitude,
+        );
     }
   }
 
@@ -387,14 +394,14 @@ class ImPageState extends State<ImPage> {
 
   /// 选择图片
   onSelectImage() async {
-    var image = await CameraUtils.pickImage;
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       this.sendMessage(
-        MessageImage(
-          path: image,
-        ),
         ImageMessageNode(
-          path: image,
+          path: image.path,
+        ),
+        MessageImage(
+          path: image.path,
         ),
       );
     }
@@ -403,37 +410,48 @@ class ImPageState extends State<ImPage> {
   /// 选择视频
   onSelectVideo() async {
     // 选择视频并截取后缀
-    final video = await CameraUtils.pickVideo;
-    String type = "";
-    List<String> suffix = video.split(".");
-    if (suffix.length >= 2) {
-      type = suffix[suffix.length - 1];
+    final video = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    if (video != null) {
+      String type = "";
+      List<String> suffix = video.path.split(".");
+      if (suffix.length >= 2) {
+        type = suffix[suffix.length - 1];
+      }
+
+      // 获得控制器并获得视频时长
+      VideoPlayerController playerController =
+          VideoPlayerController.file(File(video.path));
+      await playerController.initialize();
+      int duration = playerController.value.duration.inSeconds;
+
+      // 获得视频缩略图
+      String thumb = await VideoThumbnail.thumbnailFile(
+        video: video.path,
+        imageFormat: ImageFormat.JPEG,
+        quality: 25,
+      );
+
+
+      this.sendMessage(
+        VideoMessageNode(
+          videoInfo: VideoInfo(
+            path: video.path,
+            duration: duration,
+            type: type,
+          ),
+          videoSnapshotInfo: VideoSnapshotInfo(
+            path: thumb,
+            height: 0,
+            width: 0,
+          ),
+        ),
+        MessageVideo(
+          path: video.path,
+          snapshotPath: thumb,
+          duration: duration,
+        ),
+      );
     }
-
-    // 获得控制器并获得视频时长
-    VideoPlayerController playerController =
-        VideoPlayerController.file(File(video));
-    await playerController.initialize();
-    int duration = playerController.value.duration.inSeconds;
-
-    // 获得视频缩略图
-    String thumb = await CameraUtils.getThumbnail(video);
-
-    this.sendMessage(
-      VideoMessageNode(
-        path: video,
-        duration: duration,
-        type: type,
-        snapshotPath: thumb,
-        snapshotHeight: 0,
-        snapshotWidth: 0,
-      ),
-      MessageVideo(
-        path: video,
-        snapshotPath: thumb,
-        duration: duration,
-      ),
-    );
   }
 
   /// 选择位置
@@ -458,13 +476,13 @@ class ImPageState extends State<ImPage> {
 
   /// 发送消息
   sendMessage(node, wd) {
-    // 发送视频消息
     TencentImPlugin.sendMessage(
       sessionId: widget.id,
       sessionType: widget.type,
       node: node,
-    ).catchError((e){
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
+    ).catchError((e) {
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
     });
 
     int id = Random().nextInt(999999);

@@ -11,7 +11,8 @@ class CustomMessageNode extends MessageNode {
     @required this.data,
   }) : super(MessageNodeType.Custom);
 
-  CustomMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Custom) {
+  CustomMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Custom) {
     data = json['data'];
   }
 

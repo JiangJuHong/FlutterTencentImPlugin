@@ -11,7 +11,8 @@ class TextMessageNode extends MessageNode {
     @required this.content,
   }) : super(MessageNodeType.Text);
 
-  TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Text) {
+  TextMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Text) {
     content = json['content'];
   }
 

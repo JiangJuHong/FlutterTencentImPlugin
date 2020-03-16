@@ -6,34 +6,19 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupAddOpt;
-import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMImageElem;
 import com.tencent.imsdk.TIMLogLevel;
-import com.tencent.imsdk.TIMLogListener;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMMessageListener;
-import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
-import com.tencent.imsdk.TIMSnapshot;
-import com.tencent.imsdk.TIMSoundElem;
-import com.tencent.imsdk.TIMTextElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
-import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.imsdk.TIMVideo;
-import com.tencent.imsdk.TIMVideoElem;
-import com.tencent.imsdk.conversation.Msg;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
@@ -42,9 +27,6 @@ import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyListGetSucc;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
-import com.tencent.imsdk.ext.message.TIMMessageReceipt;
-import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
-import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 import com.tencent.imsdk.friendship.TIMCheckFriendResult;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.imsdk.friendship.TIMFriendCheckInfo;
@@ -56,9 +38,7 @@ import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
-
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,10 +61,10 @@ import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.PendencyEntity;
 import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
-import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
+import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 import top.huic.tencent_im_plugin.util.JsonUtil;
 import top.huic.tencent_im_plugin.util.TencentImUtils;
 
@@ -429,7 +409,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         // 发送消息
         AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
-        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), JSON.parseObject(nodeStr, messageNode.getEntityClass()), ol, new ValueCallBack<TIMMessage>(result) {
+        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
+        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), messageEntity, ol, new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
                 TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {

@@ -1,12 +1,8 @@
 package top.huic.tencent_im_plugin.message;
 
 import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMImage;
 import com.tencent.imsdk.TIMImageElem;
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMTextElem;
-
-import java.util.Map;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.ImageMessageEntity;
@@ -27,6 +23,16 @@ public class ImageMessageNode extends AbstractMessageNode<TIMImageElem, ImageMes
     @Override
     public String getNote(TIMImageElem elem) {
         return "[图片]";
+    }
+
+    @Override
+    public ImageMessageEntity analysis(TIMImageElem elem) {
+        ImageMessageEntity entity = new ImageMessageEntity();
+        entity.setPath(elem.getPath());
+        entity.setImageFormat(elem.getImageFormat());
+        entity.setLevel(elem.getLevel());
+        entity.setImageData(elem.getImageList());
+        return entity;
     }
 
     @Override

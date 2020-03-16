@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+import 'package:tencent_im_plugin/enums/message_node_type.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
-
-import 'node_entity.dart';
+import 'package:tencent_im_plugin/message_node/message_node.dart';
+import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 消息实体
 class MessageEntity {
@@ -24,7 +25,7 @@ class MessageEntity {
   bool read;
 
   // 节点列表
-  List<NodeEntity> elemList;
+  List<MessageNode> elemList;
 
   // 当前登录用户是否是发送方
   bool self;
@@ -82,11 +83,15 @@ class MessageEntity {
     customInt = json['customInt'];
     read = json['read'];
     if (json['elemList'] != null) {
-      List<NodeEntity> entitys = [];
+      elemList = [];
       for (var item in json['elemList']) {
-        entitys.add(NodeEntity.getEntity(item));
+        elemList.add(
+          MessageNodeTypeUtil.getMessageNodeByMessageNodeType(
+            EnumUtil.nameOf(MessageNodeType.values, item["nodeType"]),
+            item,
+          ),
+        );
       }
-      elemList = entitys;
     }
     self = json['self'];
     id = json['id'];

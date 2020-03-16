@@ -22,6 +22,11 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>App需要您的同意,才能访问相册</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -29,7 +34,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>App需要您的同意，才能访问麦克风</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App需要您的同意,才能访问相机</string>
+	<string>是否允许访问图片库？</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>是否允许保存图片？</string>
 	<key>Privacy - Calendars Usage Description</key>
 	<string>是否允许访问日历？</string>
 	<key>Privacy - Location Always Usage Description</key>
@@ -59,10 +66,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
-    </dict>
 </dict>
 </plist>

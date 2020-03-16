@@ -3,12 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/entity/session_entity.dart';
-import 'package:tencent_im_plugin/entity/message_entity.dart';
-import 'package:tencent_im_plugin/entity/node_entity.dart';
-import 'package:tencent_im_plugin/entity/node_text_entity.dart';
-import 'package:tencent_im_plugin/entity/node_sound_entity.dart';
-import 'package:tencent_im_plugin/entity/node_image_entity.dart';
-import 'package:tencent_im_plugin/entity/node_video_entity.dart';
 import 'package:tencent_im_plugin_example/page/im.dart';
 
 /// 消息列表

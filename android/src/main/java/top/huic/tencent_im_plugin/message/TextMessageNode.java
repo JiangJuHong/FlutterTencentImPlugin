@@ -26,6 +26,13 @@ public class TextMessageNode extends AbstractMessageNode<TIMTextElem, TextMessag
     }
 
     @Override
+    public TextMessageEntity analysis(TIMTextElem elem) {
+        TextMessageEntity entity = new TextMessageEntity();
+        entity.setContent(elem.getText());
+        return entity;
+    }
+
+    @Override
     public Class<TextMessageEntity> getEntityClass() {
         return TextMessageEntity.class;
     }

@@ -20,4 +20,10 @@ public class CustomMessageNode : AbstractMessageNode{
     override func getNote(elem: TIMElem) -> String {
         return "[其它消息]";
     }
+    
+    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
+        let entity = CustomMessageEntity();
+        entity.data = String(data: (elem as! TIMCustomElem).data, encoding: String.Encoding.utf8)!;
+        return entity;
+    }
 }

@@ -10,14 +10,19 @@ class SoundMessageNode extends MessageNode {
   /// 时长
   int duration;
 
+  /// 数据大小
+  int dataSize;
+
   SoundMessageNode({
     @required this.path,
     @required this.duration,
-  })  : super(MessageNodeType.Sound);
+  }) : super(MessageNodeType.Sound);
 
-  SoundMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Sound) {
+  SoundMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Sound) {
     path = json['path'];
     duration = json['duration'];
+    dataSize = json['dataSize'];
   }
 
   @override
