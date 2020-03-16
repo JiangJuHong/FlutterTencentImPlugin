@@ -2,7 +2,6 @@ package top.huic.tencent_im_plugin.listener;
 
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMGroupEventListener;
@@ -10,6 +9,7 @@ import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
+import com.tencent.imsdk.TIMUploadProgressListener;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageReceipt;
@@ -17,6 +17,7 @@ import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,14 @@ import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
  * 腾讯云IM监听器
+ *
  * @author 蒋具宏
  */
 public class TencentImListener implements TIMUserStatusListener,
         TIMConnListener, TIMGroupEventListener,
         TIMRefreshListener, TIMMessageRevokedListener,
-        TIMMessageListener, TIMMessageReceiptListener {
+        TIMMessageListener, TIMMessageReceiptListener,
+        TIMUploadProgressListener {
 
     /**
      * 日志签名
@@ -202,5 +205,34 @@ public class TencentImListener implements TIMUserStatusListener,
             }
         });
         return false;
+    }
+
+    /**
+     * 上传进度改变
+     *
+     * @param timMessage 消息对象
+     * @param elemId     节点ID
+     * @param taskId     任务ID
+     * @param progress   进程
+     */
+    @Override
+    public void onMessagesUpdate(TIMMessage timMessage, final int elemId, final int taskId, int progress) {
+        final int finalProgress = progress;
+        TencentImUtils.getMessageInfo(Collections.singletonList(timMessage), new ValueCallBack<List<MessageEntity>>(null) {
+            @Override
+            public void onSuccess(List<MessageEntity> messageEntities) {
+                Map<String, Object> params = new HashMap<>(4, 1);
+                params.put("message", messageEntities.get(0));
+                params.put("elemId", elemId);
+                params.put("taskId", taskId);
+                params.put("progress", finalProgress);
+                invokeListener(ListenerTypeEnum.MessagesUpload, params);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                Log.d(TencentImPlugin.TAG, "getUsersProfile failed, code: " + code + "|descr: " + desc);
+            }
+        });
     }
 }

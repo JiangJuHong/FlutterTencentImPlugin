@@ -846,15 +846,6 @@ enum ListenerTypeEnum {
   /// 群消息
   GroupTips,
 
-  /// 下载开始
-  DownloadStart,
-
-  /// 下载成功
-  DownloadSuccess,
-
-  /// 下载失败
-  DownloadFail,
-
   /// 已读(参数是已读会话ID集合)
   RecvReceipt,
 
@@ -866,4 +857,7 @@ enum ListenerTypeEnum {
 
   /// 连接中【IOS独享】
   Connecting,
+
+  /// 上传进度(图片、视频、语音等都会调用)
+  MessagesUpload,
 }

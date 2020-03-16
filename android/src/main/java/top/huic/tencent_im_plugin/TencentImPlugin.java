@@ -163,7 +163,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     .setRefreshListener(listener)
                     .setMessageRevokedListener(listener)
                     .setMessageReceiptListener(listener)
-                    .enableReadReceipt(true);
+                    .enableReadReceipt(true)
+                    .setUploadProgressListener(listener);
 
 
             TIMManager.getInstance().setUserConfig(userConfig);

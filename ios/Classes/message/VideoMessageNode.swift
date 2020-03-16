@@ -10,22 +10,25 @@ public class VideoMessageNode : AbstractMessageNode{
     
     override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
         
+        let videoInfo = params["videoInfo"] as! [String : Any];
+        let videoSnapshotInfo = params["videoSnapshotInfo"]  as! [String : Any];
+        
         // 视频数据
         let video = TIMVideo();
-        video.duration = getParam(params: params, paramKey: "duration")!;
-        video.type = getParam(params: params, paramKey: "type")!;
+        video.duration = videoInfo["duration"] as! Int32;
+        video.type = (videoInfo["type"] as! String);
 
         // 缩略图数据
         let snapshot = TIMSnapshot();
-        snapshot.width = getParam(params: params, paramKey: "snapshotWidth")!;
-        snapshot.height = getParam(params: params, paramKey: "snapshotHeight")!;
+        snapshot.width = videoSnapshotInfo["width"] as! Int32;
+        snapshot.height = videoSnapshotInfo["height"] as! Int32;
 
         // 消息数据
         let message = TIMMessage();
         let videoElem = TIMVideoElem();
-        videoElem.videoPath = getParam(params: params, paramKey: "path")!;
+        videoElem.videoPath = (videoInfo["path"] as! String);
         videoElem.video = video;
-        videoElem.snapshotPath = getParam(params: params, paramKey: "snapshotPath")!;
+        videoElem.snapshotPath = (videoSnapshotInfo["path"] as! String);
         videoElem.snapshot = snapshot;
         message.add(videoElem);
         sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
@@ -52,6 +55,8 @@ public class VideoMessageNode : AbstractMessageNode{
         videoSnapshotInfo.type = videoElem.snapshot.type;
         videoSnapshotInfo.size = videoElem.snapshot.size;
     
+        
+        
         entity.videoInfo = videoInfo;
         entity.videoSnapshotInfo = videoSnapshotInfo;
         return entity;

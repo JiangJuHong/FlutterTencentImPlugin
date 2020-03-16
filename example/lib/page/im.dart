@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -70,7 +71,7 @@ class ImPageState extends State<ImPage> {
   GroupInfoEntity groupInfoEntity;
 
   /// 当前消息列表
-  List<DataEntity> data = [];
+  List<MessageEntity> data = [];
 
   /// 代表是否讲话中
   bool speech = false;
@@ -172,10 +173,15 @@ class ImPageState extends State<ImPage> {
     if (type == ListenerTypeEnum.NewMessages) {
       // 更新消息列表
       this.setState(() {
-        addData(params);
+        data.add(params);
       });
       // 设置已读
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
+    }
+
+    if (type == ListenerTypeEnum.MessagesUpload) {
+      Map<String, dynamic> obj = jsonDecode(params);
+      MessageEntity message = MessageEntity.fromJson(obj["message"]);
     }
   }
 
@@ -217,31 +223,11 @@ class ImPageState extends State<ImPage> {
 
   /// 更新显示的数据
   resetDate(List<MessageEntity> messageEntity) {
-    this.data = [];
-    addData(messageEntity);
-  }
-
-  /// 添加显示数据
-  addData(List<MessageEntity> messageEntity) {
-    List<DataEntity> dataEntity = this.data;
-    for (var item in messageEntity) {
-      Widget widget = getComponent(item.elemList);
-      if (widget != null) {
-        dataEntity.add(
-          new DataEntity(
-            userInfo: item.userInfo,
-            self: item.self,
-            widget: widget,
-            message: item,
-          ),
-        );
-      }
-    }
-    this.setState(() {});
+    this.setState(() => this.data = messageEntity);
     Timer(
-        Duration(milliseconds: 200),
-        () =>
-            scrollController.jumpTo(scrollController.position.maxScrollExtent));
+      Duration(milliseconds: 200),
+      () => scrollController.jumpTo(scrollController.position.maxScrollExtent),
+    );
   }
 
   /// 获得组件
@@ -425,12 +411,12 @@ class ImPageState extends State<ImPage> {
       int duration = playerController.value.duration.inSeconds;
 
       // 获得视频缩略图
+      // TODO 在IOS获得缩略图有可能会报错，如果您报错了，建议您更改获得缩略图的方法
       String thumb = await VideoThumbnail.thumbnailFile(
         video: video.path,
         imageFormat: ImageFormat.JPEG,
         quality: 25,
       );
-
 
       this.sendMessage(
         VideoMessageNode(
@@ -480,27 +466,18 @@ class ImPageState extends State<ImPage> {
       sessionId: widget.id,
       sessionType: widget.type,
       node: node,
-    ).catchError((e) {
+    ).then((res) {
+      this.setState(() {
+        data.add(res);
+      });
+    }).catchError((e) {
       _scaffoldKey.currentState
           .showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
-    });
-
-    int id = Random().nextInt(999999);
-    // 封装数据对象
-    DataEntity dataEntity = DataEntity(
-      id: id.toString(),
-      userInfo: loginUserInfo,
-      widget: wd,
-      self: true,
-    );
-
-    this.setState(() {
-      data.add(dataEntity);
     });
   }
 
   /// 消息长按事件
-  onMessageLongPress(index, DataEntity item, BuildContext context) {
+  onMessageLongPress(index, MessageEntity item, BuildContext context) {
     final RenderBox renderBoxRed = context.findRenderObject();
     final positionRed = renderBoxRed.localToGlobal(Offset.zero);
     showMenu(
@@ -574,16 +551,16 @@ class ImPageState extends State<ImPage> {
         switch (res) {
           case 0:
             TencentImPlugin.revokeMessage(
-              sessionId: item.message.sessionId,
-              sessionType: item.message.sessionType,
-              rand: item.message.rand,
-              seq: item.message.seq,
-              timestamp: item.message.timestamp,
+              sessionId: item.sessionId,
+              sessionType: item.sessionType,
+              rand: item.rand,
+              seq: item.seq,
+              timestamp: item.timestamp,
             ).then((_) {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
-              this.setState(() =>
-                  data[index].message.status = MessageStatusEum.HasRevoked);
+              this.setState(
+                  () => data[index].status = MessageStatusEum.HasRevoked);
             }).catchError((e) {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
@@ -591,12 +568,12 @@ class ImPageState extends State<ImPage> {
             break;
           case 1:
             TencentImPlugin.removeMessage(
-              sessionId: item.message.sessionId,
-              sessionType: item.message.sessionType,
-              rand: item.message.rand,
-              seq: item.message.seq,
-              timestamp: item.message.timestamp,
-              self: item.message.self,
+              sessionId: item.sessionId,
+              sessionType: item.sessionType,
+              rand: item.rand,
+              seq: item.seq,
+              timestamp: item.timestamp,
+              self: item.self,
             ).then((result) {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息删除:$result')));
@@ -609,12 +586,12 @@ class ImPageState extends State<ImPage> {
           case 2:
             int value = new Random(0).nextInt(9999999);
             TencentImPlugin.setMessageCustomInt(
-              sessionId: item.message.sessionId,
-              sessionType: item.message.sessionType,
-              rand: item.message.rand,
-              seq: item.message.seq,
-              timestamp: item.message.timestamp,
-              self: item.message.self,
+              sessionId: item.sessionId,
+              sessionType: item.sessionType,
+              rand: item.rand,
+              seq: item.seq,
+              timestamp: item.timestamp,
+              self: item.self,
               value: value,
             ).then((result) {
               Scaffold.of(context).showSnackBar(SnackBar(
@@ -628,12 +605,12 @@ class ImPageState extends State<ImPage> {
             String value =
                 "string=${new Random(0).nextInt(9999999).toString()}";
             TencentImPlugin.setMessageCustomStr(
-              sessionId: item.message.sessionId,
-              sessionType: item.message.sessionType,
-              rand: item.message.rand,
-              seq: item.message.seq,
-              timestamp: item.message.timestamp,
-              self: item.message.self,
+              sessionId: item.sessionId,
+              sessionType: item.sessionType,
+              rand: item.rand,
+              seq: item.seq,
+              timestamp: item.timestamp,
+              self: item.self,
               value: value,
             ).then((result) {
               Scaffold.of(context).showSnackBar(SnackBar(
@@ -644,12 +621,12 @@ class ImPageState extends State<ImPage> {
             });
             break;
           case 4:
-            Scaffold.of(context).showSnackBar(SnackBar(
-                content: new Text('获得的自定义整型为:${item.message.customInt}')));
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: new Text('获得的自定义整型为:${item.customInt}')));
             break;
           case 5:
-            Scaffold.of(context).showSnackBar(SnackBar(
-                content: new Text('获得的自定义字符串为:${item.message.customStr}')));
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: new Text('获得的自定义字符串为:${item.customStr}')));
             break;
         }
       }
@@ -687,7 +664,10 @@ class ImPageState extends State<ImPage> {
                         return GestureDetector(
                           onLongPress: () =>
                               onMessageLongPress(index, data[index], context),
-                          child: MessageItem(data: data[index]),
+                          child: MessageItem(
+                            data: data[index],
+                            child: getComponent(data[index].elemList),
+                          ),
                         );
                       },
                     ),
@@ -832,36 +812,19 @@ class ImPageState extends State<ImPage> {
   }
 }
 
-/// 数据实体
-class DataEntity {
-  /// id，可自定义
-  final String id;
-
-  final MessageEntity message;
-
-  /// 用户信息
-  final UserInfoEntity userInfo;
-
-  /// 是否是自己
-  final bool self;
-
-  /// 显示组件
-  final Widget widget;
-
-  DataEntity({
-    this.id,
-    this.userInfo,
-    this.self,
-    this.widget,
-    this.message,
-  });
-}
-
 /// 消息条目
 class MessageItem extends StatelessWidget {
-  final DataEntity data;
+  /// 消息对象
+  final MessageEntity data;
 
-  const MessageItem({Key key, this.data}) : super(key: key);
+  /// 子组件
+  final Widget child;
+
+  const MessageItem({
+    Key key,
+    this.data,
+    this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -904,10 +867,10 @@ class MessageItem extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(3))),
-                  child: data.message != null &&
-                          data.message.status == MessageStatusEum.HasRevoked
-                      ? Text("[该消息已被撤回]")
-                      : data.widget,
+                  child:
+                      data != null && data.status == MessageStatusEum.HasRevoked
+                          ? Text("[该消息已被撤回]")
+                          : child,
                 ),
               ],
             ),

@@ -46,18 +46,6 @@ public enum ListenerType{
      */
     case GroupTips
     /**
-     * 开始下载
-     */
-    case DownloadStart
-    /**
-     * 下载成功
-     */
-    case DownloadSuccess
-    /**
-     * 下载失败
-     */
-    case DownloadFail
-    /**
      * 已读
      */
     case RecvReceipt
@@ -76,4 +64,9 @@ public enum ListenerType{
      * 连接中【IOS独享】
      */
     case Connecting
+
+    /**
+     *  上传进度
+     */
+    case MessagesUpload
 }

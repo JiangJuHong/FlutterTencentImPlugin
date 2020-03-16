@@ -55,19 +55,11 @@ public enum ListenerTypeEnum {
      */
     GroupTips,
     /**
-     * 开始下载
-     */
-    DownloadStart,
-    /**
-     * 下载成功
-     */
-    DownloadSuccess,
-    /**
-     * 下载失败
-     */
-    DownloadFail,
-    /**
      * 已读
      */
     RecvReceipt,
+    /**
+     * 上传进度
+     */
+    MessagesUpload,
 }
