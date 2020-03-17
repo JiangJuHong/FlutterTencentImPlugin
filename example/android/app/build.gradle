@@ -52,6 +52,11 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    // 减小应用程序大小的配置
+    aaptOptions {
+        ignoreAssetsPattern "!x86:!*ffprobe"
+    }
 }
 
 flutter {

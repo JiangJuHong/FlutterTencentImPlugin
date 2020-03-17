@@ -72,6 +72,17 @@ class SessionEntity {
     data['userProfile'] = this.userProfile.toJson();
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SessionEntity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          type == other.type;
+
+  @override
+  int get hashCode => id.hashCode ^ type.hashCode;
 }
 
 /// 会话类型

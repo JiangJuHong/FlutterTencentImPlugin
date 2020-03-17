@@ -25,4 +25,14 @@ class CheckFriendResultEntity {
     data['resultInfo'] = this.resultInfo;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CheckFriendResultEntity &&
+          runtimeType == other.runtimeType &&
+          identifier == other.identifier;
+
+  @override
+  int get hashCode => identifier.hashCode;
 }

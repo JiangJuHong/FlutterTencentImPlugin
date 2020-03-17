@@ -83,4 +83,14 @@ class GroupInfoEntity {
     data['lastInfoTime'] = this.lastInfoTime;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GroupInfoEntity &&
+          runtimeType == other.runtimeType &&
+          groupId == other.groupId;
+
+  @override
+  int get hashCode => groupId.hashCode;
 }

@@ -77,4 +77,15 @@ class GroupPendencyEntity {
     }
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GroupPendencyEntity &&
+          runtimeType == other.runtimeType &&
+          identifier == other.identifier &&
+          fromUser == other.fromUser;
+
+  @override
+  int get hashCode => identifier.hashCode ^ fromUser.hashCode;
 }

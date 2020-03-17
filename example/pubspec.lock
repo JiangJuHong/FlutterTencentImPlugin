@@ -88,6 +88,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_video_compress:
+    dependency: "direct main"
+    description:
+      name: flutter_video_compress
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.7+8"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -280,13 +287,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.2+1"
-  video_thumbnail:
-    dependency: "direct main"
-    description:
-      name: video_thumbnail
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.2.0"
   xml:
     dependency: transitive
     description:

@@ -149,4 +149,21 @@ class MessageEntity {
     data['note'] = this.note;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MessageEntity &&
+          runtimeType == other.runtimeType &&
+          rand == other.rand &&
+          seq == other.seq &&
+          self == other.self &&
+          sessionId == other.sessionId;
+
+  @override
+  int get hashCode =>
+      rand.hashCode ^
+      seq.hashCode ^
+      self.hashCode ^
+      sessionId.hashCode;
 }

@@ -3,7 +3,7 @@ enum FriendAddTypeEnum {
   // 单项加好友
   single,
   // 双向加好友
-  both
+  both,
 }
 
 /// 枚举工具

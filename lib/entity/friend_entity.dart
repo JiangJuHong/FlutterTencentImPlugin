@@ -2,18 +2,22 @@ import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 
 /// 好友实体
 class FriendEntity {
-  // ID
+  /// ID
   String identifier;
 
-  // 添加来源
+  /// 添加来源
   String addSource;
 
-  // 添加时间
+  /// 添加时间
   int addTime;
+
+  /// 申请描述
   String addWording;
-  // 备注
+
+  /// 备注
   String remark;
-  // 用户信息
+
+  /// 用户信息
   UserInfoEntity userInfoEntity;
 
   FriendEntity({
@@ -48,4 +52,14 @@ class FriendEntity {
     }
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FriendEntity &&
+          runtimeType == other.runtimeType &&
+          identifier == other.identifier;
+
+  @override
+  int get hashCode => identifier.hashCode;
 }

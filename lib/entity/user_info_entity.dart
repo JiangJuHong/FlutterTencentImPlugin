@@ -12,6 +12,7 @@ class UserInfoEntity {
   String allowType;
   String faceUrl;
   String location;
+
   // 该字段仅支持 Android 设备
   Map<String, dynamic> customInfoUint;
 
@@ -68,4 +69,14 @@ class UserInfoEntity {
     }
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserInfoEntity &&
+          runtimeType == other.runtimeType &&
+          identifier == other.identifier;
+
+  @override
+  int get hashCode => identifier.hashCode;
 }

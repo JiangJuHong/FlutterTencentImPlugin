@@ -39,4 +39,14 @@ class GroupMemberEntity {
         this.userProfile == null ? null : this.userProfile.toJson();
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GroupMemberEntity &&
+          runtimeType == other.runtimeType &&
+          user == other.user;
+
+  @override
+  int get hashCode => user.hashCode;
 }

@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -25,8 +26,8 @@ import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/location_message_node.dart';
 import 'package:tencent_im_plugin/message_node/entity/video_info_entity.dart';
 import 'package:tencent_im_plugin/message_node/entity/video_snapshot_info_entity.dart';
+import 'package:tencent_im_plugin_example/utils/dialog_util.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -71,7 +72,7 @@ class ImPageState extends State<ImPage> {
   GroupInfoEntity groupInfoEntity;
 
   /// 当前消息列表
-  List<MessageEntity> data = [];
+  List<DataEntity> data = [];
 
   /// 代表是否讲话中
   bool speech = false;
@@ -102,6 +103,9 @@ class ImPageState extends State<ImPage> {
 
   /// 用作显示提示框
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+  /// 视频压缩工具
+  final _flutterVideoCompress = FlutterVideoCompress();
 
   @override
   initState() {
@@ -139,7 +143,7 @@ class ImPageState extends State<ImPage> {
         sessionType: widget.type,
         number: 30,
       ).then((res) {
-        resetDate(res);
+        resetData(res);
       });
 
       refreshIndicator.currentState.show();
@@ -179,9 +183,19 @@ class ImPageState extends State<ImPage> {
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
     }
 
+    // 消息上传通知
     if (type == ListenerTypeEnum.MessagesUpload) {
       Map<String, dynamic> obj = jsonDecode(params);
+
+      // 获得进度和消息实体
+      int progress = obj["progress"];
       MessageEntity message = MessageEntity.fromJson(obj["message"]);
+
+      // 更新数据
+      this.updateData(DataEntity(
+        data: message,
+        progress: progress,
+      ));
     }
   }
 
@@ -215,19 +229,40 @@ class ImPageState extends State<ImPage> {
       sessionType: widget.type,
       number: data.length + 30,
     ).then((res) {
-      resetDate(res);
+      resetData(res);
       // 设置已读
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);
     });
   }
 
   /// 更新显示的数据
-  resetDate(List<MessageEntity> messageEntity) {
-    this.setState(() => this.data = messageEntity);
-    Timer(
-      Duration(milliseconds: 200),
-      () => scrollController.jumpTo(scrollController.position.maxScrollExtent),
-    );
+  resetData(List<MessageEntity> messageEntity) {
+    this.data = [];
+    for (var item in messageEntity) {
+      this.updateData(DataEntity(data: item));
+    }
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  }
+
+  /// 更新单个数据
+  updateData(DataEntity dataEntity) {
+    bool exist = false;
+    for (var index = 0; index < data.length; index++) {
+      DataEntity item = data[index];
+      if (item.data == dataEntity.data) {
+        this.data[index] = dataEntity;
+        exist = true;
+        break;
+      }
+    }
+
+    if (!exist) {
+      this.data.add(dataEntity);
+    }
+
+    this.setState(() {});
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
   /// 获得组件
@@ -404,36 +439,46 @@ class ImPageState extends State<ImPage> {
         type = suffix[suffix.length - 1];
       }
 
-      // 获得控制器并获得视频时长
-      VideoPlayerController playerController =
-          VideoPlayerController.file(File(video.path));
-      await playerController.initialize();
-      int duration = playerController.value.duration.inSeconds;
+      DialogUtil.showLoading(context, "处理中");
 
       // 获得视频缩略图
-      // TODO 在IOS获得缩略图有可能会报错，如果您报错了，建议您更改获得缩略图的方法
-      String thumb = await VideoThumbnail.thumbnailFile(
-        video: video.path,
-        imageFormat: ImageFormat.JPEG,
+      File thumb = await _flutterVideoCompress.getThumbnailWithFile(
+        video.path,
         quality: 25,
       );
 
+      // 视频压缩
+      final compressVideo = await _flutterVideoCompress.compressVideo(
+        video.path,
+        quality: VideoQuality.DefaultQuality,
+        deleteOrigin: false,
+      );
+
+      // 获得控制器并获得视频时长
+      VideoPlayerController playerController =
+          VideoPlayerController.file(File(compressVideo.path));
+      await playerController.initialize();
+      int duration = playerController.value.duration.inSeconds;
+
+      DialogUtil.cancelLoading(context);
+
+      // 发送视频
       this.sendMessage(
         VideoMessageNode(
           videoInfo: VideoInfo(
-            path: video.path,
+            path: compressVideo.path,
             duration: duration,
             type: type,
           ),
           videoSnapshotInfo: VideoSnapshotInfo(
-            path: thumb,
+            path: thumb.path,
             height: 0,
             width: 0,
           ),
         ),
         MessageVideo(
           path: video.path,
-          snapshotPath: thumb,
+          snapshotPath: thumb.path,
           duration: duration,
         ),
       );
@@ -468,7 +513,7 @@ class ImPageState extends State<ImPage> {
       node: node,
     ).then((res) {
       this.setState(() {
-        data.add(res);
+        this.updateData(DataEntity(data: res));
       });
     }).catchError((e) {
       _scaffoldKey.currentState
@@ -560,7 +605,7 @@ class ImPageState extends State<ImPage> {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
               this.setState(
-                  () => data[index].status = MessageStatusEum.HasRevoked);
+                  () => data[index].data.status = MessageStatusEum.HasRevoked);
             }).catchError((e) {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
@@ -662,11 +707,11 @@ class ImPageState extends State<ImPage> {
                       builder:
                           (BuildContext context, BoxConstraints constraints) {
                         return GestureDetector(
-                          onLongPress: () =>
-                              onMessageLongPress(index, data[index], context),
+                          onLongPress: () => onMessageLongPress(
+                              index, data[index].data, context),
                           child: MessageItem(
                             data: data[index],
-                            child: getComponent(data[index].elemList),
+                            child: getComponent(data[index].data.elemList),
                           ),
                         );
                       },
@@ -812,10 +857,24 @@ class ImPageState extends State<ImPage> {
   }
 }
 
+/// 数据实体
+class DataEntity {
+  /// 消息实体
+  final MessageEntity data;
+
+  /// 进度
+  final int progress;
+
+  DataEntity({
+    this.data,
+    this.progress,
+  });
+}
+
 /// 消息条目
 class MessageItem extends StatelessWidget {
   /// 消息对象
-  final MessageEntity data;
+  final DataEntity data;
 
   /// 子组件
   final Widget child;
@@ -834,14 +893,14 @@ class MessageItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          !data.self
+          !data.data.self
               ? Row(
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: data.userInfo.faceUrl == null
+                      backgroundImage: data.data.userInfo.faceUrl == null
                           ? null
                           : Image.network(
-                              data.userInfo.faceUrl,
+                              data.data.userInfo.faceUrl,
                               fit: BoxFit.cover,
                             ).image,
                     ),
@@ -852,10 +911,11 @@ class MessageItem extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment:
-                  data.self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: data.data.self
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: <Widget>[
-                Text(data.userInfo.nickName ?? ""),
+                Text(data.data.userInfo.nickName ?? ""),
                 Container(height: 5),
                 Container(
                   padding: EdgeInsets.only(
@@ -865,25 +925,32 @@ class MessageItem extends StatelessWidget {
                     right: 7,
                   ),
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(3))),
-                  child:
-                      data != null && data.status == MessageStatusEum.HasRevoked
-                          ? Text("[该消息已被撤回]")
-                          : child,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(3),
+                    ),
+                  ),
+                  child: data != null &&
+                          data.data.status == MessageStatusEum.HasRevoked
+                      ? Text("[该消息已被撤回]")
+                      : child,
                 ),
+                Container(),
+                data.progress != null && data.progress < 100
+                    ? Text("${data.progress}%")
+                    : Container(),
               ],
             ),
           ),
-          data.self
+          data.data.self
               ? Row(
                   children: <Widget>[
                     Container(width: 5),
                     CircleAvatar(
-                      backgroundImage: data.userInfo.faceUrl == null
+                      backgroundImage: data.data.userInfo.faceUrl == null
                           ? null
                           : Image.network(
-                              data.userInfo.faceUrl,
+                              data.data.userInfo.faceUrl,
                               fit: BoxFit.cover,
                             ).image,
                     ),

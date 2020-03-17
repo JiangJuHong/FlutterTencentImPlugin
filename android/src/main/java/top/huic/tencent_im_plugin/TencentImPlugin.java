@@ -38,6 +38,7 @@ import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
