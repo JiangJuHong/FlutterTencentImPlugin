@@ -70,3 +70,11 @@
 
 ## 0.1.22
 * 修复 setMessageCustomInt 和 setMessageCustomString 报错的问题
+
+## 0.2.0
+1. 将发送消息统一更改为 sendMessage ,使用不同消息节点即可发送不同消息
+1. MessageEntity 增加 note 属性，对非自定消息可直接用于展示
+1. 发送节点和接收实体合二为一，发送时仅需设置构造器参数即可，接收时会自动填充内容
+1. 视频、语音，将不再自动下载，提供语音/视频下载方法
+1. 视频、语音和图片提供上传/下载进度监听器，分别为:ListenerTypeEnum.UploadProgress/ListenerTypeEnum.DownloadProgress
+1. 除 PendencyPageEntity 和 GroupPendencyPageEntity 外的所有Entity 重写 == 和 hashCode，可直接进行判断是否相等
