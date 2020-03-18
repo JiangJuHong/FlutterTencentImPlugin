@@ -15,6 +15,7 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 1. MessageEntity 增加 note 属性，对非自定消息可直接用于展示
 1. 发送节点和接收实体合二为一，发送时仅需设置构造器参数即可，接收时会自动填充内容
 1. 视频、语音，将不再自动下载，提供语音/视频下载方法
+1. 视频、语音和图片提供上传/下载回调
 1. 除 PendencyPageEntity 和 GroupPendencyPageEntity 外的所有Entity 重写 == 和 hashCode，可直接进行判断是否相等
 
 ## 功能清单
@@ -143,3 +144,5 @@ Demo截图:
 | removeMessage | 删除一条消息(本地) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的'} | √ | √
 | setMessageCustomInt | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
 | setMessageCustomStr | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
+| downloadVideoImage | 获得视频图片(缩略图) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存截图的路径'} | √ | √
+| downloadVideo | 获得视频 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存截图的路径'} | √ | √

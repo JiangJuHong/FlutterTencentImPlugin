@@ -114,7 +114,7 @@ class MessageEntity {
       }
     }
     for (var item in SessionType.values) {
-      if (item.toString().replaceFirst("SessionType.", "") ==
+      if (EnumUtil.getEnumName(item) ==
           json['sessionType']) {
         sessionType = item;
       }

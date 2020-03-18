@@ -18,6 +18,18 @@ class DialogUtil {
     loading = true;
   }
 
+  /// 进度loading
+  static showProgressLoading(context) {
+    showDialog<Null>(
+      context: context, //BuildContext对象
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ProgressDialog();
+      },
+    );
+    loading = true;
+  }
+
   /// 关闭Loading
   static cancelLoading(context) {
     if (loading) {

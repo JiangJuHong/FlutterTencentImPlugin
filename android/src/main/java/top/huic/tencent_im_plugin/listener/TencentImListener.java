@@ -79,7 +79,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onForceOffline() {
-        Log.d(TAG, "onForceOffline: ");
         invokeListener(ListenerTypeEnum.ForceOffline, null);
     }
 
@@ -88,7 +87,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onUserSigExpired() {
-        Log.d(TAG, "onUserSigExpired: ");
         invokeListener(ListenerTypeEnum.UserSigExpired, null);
     }
 
@@ -97,7 +95,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onConnected() {
-        Log.d(TAG, "onConnected: ");
         invokeListener(ListenerTypeEnum.Connected, null);
     }
 
@@ -106,7 +103,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onDisconnected(int i, String s) {
-        Log.d(TAG, "onDisconnected: ");
         Map<String, Object> params = new HashMap<>(2, 1);
         params.put("code", i);
         params.put("msg", s);
@@ -118,7 +114,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onWifiNeedAuth(String s) {
-        Log.d(TAG, "onWifiNeedAuth: ");
         invokeListener(ListenerTypeEnum.WifiNeedAuth, s);
     }
 
@@ -127,7 +122,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
-        Log.d(TAG, "onGroupTipsEvent: ");
         invokeListener(ListenerTypeEnum.GroupTips, timGroupTipsElem);
     }
 
@@ -136,7 +130,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onRefresh() {
-        Log.d(TAG, "onRefresh: ");
         invokeListener(ListenerTypeEnum.Refresh, null);
     }
 
@@ -145,7 +138,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onRefreshConversation(List<TIMConversation> list) {
-        Log.d(TAG, "onRefreshConversation: ");
         // 获取资料后调用回调
         TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(null) {
             @Override
@@ -165,7 +157,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onMessageRevoked(TIMMessageLocator timMessageLocator) {
-        Log.d(TAG, "onMessageRevoked: ");
         invokeListener(ListenerTypeEnum.MessageRevoked, timMessageLocator);
     }
 
@@ -176,7 +167,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onRecvReceipt(List<TIMMessageReceipt> list) {
-        Log.d(TAG, "onRecvReceipt: ");
         List<String> rs = new ArrayList<>(list.size());
         for (TIMMessageReceipt timMessageReceipt : list) {
             rs.add(timMessageReceipt.getConversation().getPeer());
@@ -192,7 +182,6 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public boolean onNewMessages(List<TIMMessage> list) {
-        Log.d(TAG, "onNewMessages: " + list.toString());
         TencentImUtils.getMessageInfo(list, new ValueCallBack<List<MessageEntity>>(null) {
             @Override
             public void onSuccess(List<MessageEntity> messageEntities) {
@@ -226,7 +215,7 @@ public class TencentImListener implements TIMUserStatusListener,
                 params.put("elemId", elemId);
                 params.put("taskId", taskId);
                 params.put("progress", finalProgress);
-                invokeListener(ListenerTypeEnum.MessagesUpload, params);
+                invokeListener(ListenerTypeEnum.UploadProgress, params);
             }
 
             @Override

@@ -54,12 +54,19 @@ public enum ListenerTypeEnum {
      * 群消息
      */
     GroupTips,
+
     /**
      * 已读
      */
     RecvReceipt,
+
     /**
      * 上传进度
      */
-    MessagesUpload,
+    UploadProgress,
+
+    /**
+     * 下载进度
+     */
+    DownloadProgress,
 }

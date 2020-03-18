@@ -57,11 +57,13 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMes
         videoInfo.setDuration(elem.getVideoInfo().getDuaration());
         videoInfo.setSize(elem.getVideoInfo().getSize());
         videoInfo.setType(elem.getVideoInfo().getType());
+        videoInfo.setUuid(elem.getVideoInfo().getUuid());
 
         videoSnapshotInfo.setPath(elem.getSnapshotPath());
         videoSnapshotInfo.setHeight(elem.getSnapshotInfo().getHeight());
         videoSnapshotInfo.setWidth(elem.getSnapshotInfo().getWidth());
         videoSnapshotInfo.setSize(elem.getSnapshotInfo().getSize());
+        videoSnapshotInfo.setUuid(elem.getSnapshotInfo().getUuid());
 
         entity.setVideoInfo(videoInfo);
         entity.setVideoSnapshotInfo(videoSnapshotInfo);

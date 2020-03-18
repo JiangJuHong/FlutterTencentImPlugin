@@ -5,6 +5,9 @@
 //  Created by 蒋具宏 on 2020/3/15.
 //  视频信息
 public class VideoInfo : NSObject{
+    /// 视频ID
+    var uuid : String?;
+    
     /// 时长
     var duration : Int32?;
     

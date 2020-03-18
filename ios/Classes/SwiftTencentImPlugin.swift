@@ -181,6 +181,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "setMessageCustomStr":
             self.setMessageCustomStr(call: call, result: result);
             break;
+        case "downloadVideoImage":
+            self.downloadVideoImage(call: call, result: result);
+            break;
+        case "downloadVideo":
+            self.downloadVideo(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -1419,22 +1425,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      */
     private func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64 {
+            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String{
             if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
-                let locator = TIMMessageLocator();
-                locator.seq = seq;
-                locator.rand = rand;
-                locator.isSelf = true;
-                locator.time = time_t(timestamp);
-                session.findMessages([locator], succ: {
-                    (array) -> Void in
-                    session.revokeMessage((array![0] as! TIMMessage), succ: {
+                TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+                    (message) -> Void in
+                    session.revokeMessage(message, succ: {
                         result(nil);
                     }, fail: TencentImUtils.returnErrorClosures(result: result));
-                }, fail: TencentImUtils.returnErrorClosures(result: result))
+                });
             }
         }
     }
@@ -1446,24 +1444,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * @param result     返回结果对象
      */
     private func removeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
-                let locator = TIMMessageLocator();
-                locator.seq = seq;
-                locator.rand = rand;
-                locator.isSelf = `self`;
-                locator.time = time_t(timestamp);
-                session.findMessages([locator], succ: {
-                    (array) -> Void in
-                    result((array![0] as! TIMMessage).remove());
-                }, fail: TencentImUtils.returnErrorClosures(result: result))
-            }
-        }
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            result(message.remove());
+        });
     }
     
     /**
@@ -1473,25 +1457,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * @param result     返回结果对象
      */
     private func setMessageCustomInt(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
-            let value = CommonUtils.getParam(call: call, result: result, param: "value") as? Int32 {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
-                let locator = TIMMessageLocator();
-                locator.seq = seq;
-                locator.rand = rand;
-                locator.isSelf = `self`;
-                locator.time = time_t(timestamp);
-                session.findMessages([locator], succ: {
-                    (array) -> Void in
-                    (array![0] as! TIMMessage).setCustomInt(value);
-                    result(nil);
-                }, fail: TencentImUtils.returnErrorClosures(result: result))
-            }
+        if let value = CommonUtils.getParam(call: call, result: result, param: "value") as? Int32 {
+            TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+                (message) -> Void in
+                message.setCustomInt(value);
+                result(nil);
+            });
         }
     }
     
@@ -1503,26 +1474,109 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * @param result     返回结果对象
      */
     private func setMessageCustomStr(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64,
-            let timestamp = CommonUtils.getParam(call: call, result: result, param: "timestamp") as? UInt64,
-            let `self` = CommonUtils.getParam(call: call, result: result, param: "self") as? Bool,
-            let value = CommonUtils.getParam(call: call, result: result, param: "value") as? String {
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
-                let locator = TIMMessageLocator();
-                locator.seq = seq;
-                locator.rand = rand;
-                locator.isSelf = `self`;
-                locator.time = time_t(timestamp);
-                session.findMessages([locator], succ: {
-                    (array) -> Void in
-                    (array![0] as! TIMMessage).setCustomData(value.data(using: String.Encoding.utf8));
-                    result(nil);
-                }, fail: TencentImUtils.returnErrorClosures(result: result))
-            }
+        if let value = CommonUtils.getParam(call: call, result: result, param: "value") as? String {
+            TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+                (message) -> Void in
+                message.setCustomData(value.data(using: String.Encoding.utf8));
+                result(nil);
+            });
         }
+    }
+    
+    /**
+     * 下载视频图片
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func downloadVideoImage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let path = ((call.arguments as! [String: Any])["path"]) as? String;
+        if path != nil && FileManager.default.fileExists(atPath: path!) {
+            result(path);
+            return;
+        }
+        
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            let elem : TIMElem = message.getElem(0);
+            if elem is TIMVideoElem{
+                let videoElem : TIMVideoElem = elem as! TIMVideoElem;
+                var finalPath : String? = path;
+                if finalPath == nil || finalPath! == ""{
+                    finalPath = NSTemporaryDirectory() + "/" + videoElem.snapshot.uuid;
+                }
+                
+                // 如果文件存在则不进行下载
+                if (FileManager.default.fileExists(atPath: finalPath!)) {
+                    result(finalPath);
+                    return;
+                }
+                
+                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                    (array) -> Void in
+                    videoElem.snapshot!.getImage(finalPath!, progress: {
+                        (current,total) -> Void in
+                        self.invokeListener(type: ListenerType.DownloadProgress, params: [
+                            "message":array[0],
+                            "path": finalPath!,
+                            "currentSize":current,
+                            "totalSize":total
+                        ]);
+                    }, succ: {
+                        () -> Void in
+                        result(finalPath!);
+                    }, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, onFail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        });
+    }
+    
+    /**
+     * 下载视频
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func downloadVideo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let path = ((call.arguments as! [String: Any])["path"]) as? String;
+        if path != nil && FileManager.default.fileExists(atPath: path!) {
+            result(path!);
+            return;
+        }
+        
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            let elem : TIMElem = message.getElem(0);
+            if elem is TIMVideoElem{
+                let videoElem : TIMVideoElem = elem as! TIMVideoElem;
+                var finalPath : String? = path;
+                if finalPath == nil || finalPath! == ""{
+                    finalPath = NSTemporaryDirectory() + "/" + videoElem.video.uuid;
+                }
+                
+                // 如果文件存在则不进行下载
+                if (FileManager.default.fileExists(atPath: finalPath!)) {
+                    result(finalPath!);
+                    return;
+                }
+                
+                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                    (array) -> Void in
+                    videoElem.video!.getVideo(finalPath!, progress: {
+                        (current,total) -> Void in
+                        self.invokeListener(type: ListenerType.DownloadProgress, params: [
+                            "message":array[0],
+                            "path": finalPath!,
+                            "currentSize":current,
+                            "totalSize":total
+                        ]);
+                    }, succ: {
+                        () -> Void in
+                        result(finalPath!);
+                    }, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, onFail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        });
     }
     
     /**
@@ -1652,7 +1706,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     public func onUploadProgressCallback(_ msg: TIMMessage!, elemidx: UInt32, taskid: UInt32, progress: UInt32) {
         TencentImUtils.getMessageInfo(timMessages: [msg] as! [TIMMessage], onSuccess: {
             (array) -> Void in
-            self.invokeListener(type: ListenerType.MessagesUpload, params: [
+            self.invokeListener(type: ListenerType.UploadProgress, params: [
                 "message":array[0],
                 "elemId":elemidx,
                 "taskId":taskid,

@@ -146,6 +146,45 @@ public class TencentImUtils{
     }
     
     /**
+     *  获得腾讯云IM的Message
+     */
+    public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetTimMessage){
+        let timestamp = ((call.arguments as! [String: Any])["timestamp"]) as? UInt64;
+        let isSelf = ((call.arguments as! [String: Any])["self"]) as? Bool;
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
+            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64{
+            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
+                let locator = TIMMessageLocator();
+                locator.seq = seq;
+                locator.rand = rand;
+                locator.isSelf = isSelf ?? true;
+                if timestamp != nil{
+                 locator.time = time_t(timestamp!);
+                }
+                session.findMessages([locator], succ: {
+                    (array) -> Void in
+                    onCallback((array![0] as! TIMMessage));
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }
+        }
+    }
+    
+    /**
+     *  获得腾讯云IM的Message
+     */
+    public static func getMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetMessage){
+        getTimMessage(call: call, result: result, onCallback: {
+           (message) -> Void in
+            TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                (array) -> Void in
+                onCallback(array[0] as! MessageEntity);
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
+        });
+    }
+    
+    /**
      * 获得完整的消息对象
      *
      * @param timMessages 消息列表
@@ -204,3 +243,13 @@ public typealias GetInfoSuc = (_ array : [Any]) -> Void;
  *  获取信息失败回调
  */
 public typealias GetInfoFail = (_ code : Int32, _ desc : Optional<String>) -> Void;
+
+/**
+ *  获取TIM消息成功回调
+ */
+public typealias GetTimMessage = (_ message : TIMMessage) -> Void;
+
+/**
+ *  获取TIM消息成功回调
+ */
+public typealias GetMessage = (_ message : MessageEntity) -> Void;

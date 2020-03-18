@@ -10,6 +10,7 @@ import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/enums/add_group_opt_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
+import 'package:tencent_im_plugin/utils/enum_util.dart';
 import 'entity/friend_entity.dart';
 import 'entity/group_info_entity.dart';
 import 'entity/group_member_entity.dart';
@@ -76,10 +77,7 @@ class TencentImPlugin {
           'sendMessage',
           {
             "sessionId": sessionId,
-            "sessionType": sessionType.toString().replaceFirst(
-                  "SessionType.",
-                  "",
-                ),
+            "sessionType": EnumUtil.getEnumName(sessionType),
             "node": jsonEncode(node),
             "ol": ol,
           },
@@ -103,7 +101,7 @@ class TencentImPlugin {
   }) async {
     String result = await _channel.invokeMethod('getConversation', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
     });
     if (result == null) {
       return null;
@@ -124,7 +122,7 @@ class TencentImPlugin {
     return ListUtil.generateOBJList<MessageEntity>(
         jsonDecode(await _channel.invokeMethod('getLocalMessages', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
     })));
   }
@@ -142,7 +140,7 @@ class TencentImPlugin {
     return ListUtil.generateOBJList<MessageEntity>(
         jsonDecode(await _channel.invokeMethod('getMessages', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
     })));
   }
@@ -155,7 +153,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('deleteConversation', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "removeCache": removeCache,
     });
   }
@@ -167,7 +165,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('deleteLocalMessage', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
     });
   }
 
@@ -178,7 +176,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('setRead', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
     });
   }
 
@@ -655,7 +653,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('revokeMessage', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "rand": rand,
       "seq": seq,
       "timestamp": timestamp
@@ -673,7 +671,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('removeMessage', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "rand": rand,
       "seq": seq,
       "timestamp": timestamp,
@@ -693,7 +691,7 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('setMessageCustomInt', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "rand": rand,
       "seq": seq,
       "self": self,
@@ -714,12 +712,54 @@ class TencentImPlugin {
   }) async {
     return await _channel.invokeMethod('setMessageCustomStr', {
       "sessionId": sessionId,
-      "sessionType": sessionType.toString().replaceFirst("SessionType.", ""),
+      "sessionType": EnumUtil.getEnumName(sessionType),
       "rand": rand,
       "seq": seq,
       "self": self,
       "timestamp": timestamp,
       "value": value,
+    });
+  }
+
+  /// 获得视频图片
+  static Future<String> downloadVideoImage({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+    String path, // 保存截图的路径
+  }) async {
+    return await _channel.invokeMethod('downloadVideoImage', {
+      "sessionId": sessionId,
+      "sessionType": EnumUtil.getEnumName(sessionType),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "self": self,
+      "path": path,
+    });
+  }
+
+  /// 获得视频
+  static Future<String> downloadVideo({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+    String path, // 保存截图的路径
+  }) async {
+    return await _channel.invokeMethod('downloadVideo', {
+      "sessionId": sessionId,
+      "sessionType": EnumUtil.getEnumName(sessionType),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "self": self,
+      "path": path,
     });
   }
 
@@ -763,8 +803,7 @@ class TencentImPluginListener {
 
           // 初始化类型
           for (var item in ListenerTypeEnum.values) {
-            if (item.toString().replaceFirst("ListenerTypeEnum.", "") ==
-                typeStr) {
+            if (EnumUtil.getEnumName(item) == typeStr) {
               type = item;
               break;
             }
@@ -859,5 +898,8 @@ enum ListenerTypeEnum {
   Connecting,
 
   /// 上传进度(图片、视频、语音等都会调用)
-  MessagesUpload,
+  UploadProgress,
+
+  /// 下载进度(图片、视频、语音等)
+  DownloadProgress,
 }

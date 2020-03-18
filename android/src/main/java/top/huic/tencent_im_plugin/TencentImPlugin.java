@@ -8,6 +8,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMElem;
+import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupManager;
@@ -19,6 +21,8 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMVideoElem;
+import com.tencent.imsdk.conversation.ProgressInfo;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfo;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
@@ -26,7 +30,6 @@ import com.tencent.imsdk.ext.group.TIMGroupMemberResult;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyGetParam;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyListGetSucc;
-import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.friendship.TIMCheckFriendResult;
 import com.tencent.imsdk.friendship.TIMFriend;
 import com.tencent.imsdk.friendship.TIMFriendCheckInfo;
@@ -39,6 +42,7 @@ import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +66,7 @@ import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.PendencyEntity;
 import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
@@ -120,7 +125,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-        Log.d(TAG, "onMethodCall: " + call.method + ",param:" + call.arguments);
         try {
             Method method = this.getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
             method.invoke(this, call, result);
@@ -133,7 +137,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
-        Log.d(TAG, "onDetachedFromEngine: ");
     }
 
     /**
@@ -338,7 +341,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getMessages(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getMessages: ");
         this.getMessages(methodCall, result, false);
     }
 
@@ -349,7 +351,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getLocalMessages(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getLocalMessage: ");
         this.getMessages(methodCall, result, true);
     }
 
@@ -432,7 +433,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getFriendList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getFriendList: ");
         TIMFriendshipManager.getInstance().getFriendList(new ValueCallBack<List<TIMFriend>>(result));
     }
 
@@ -443,7 +443,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getGroupList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getGroupList: ");
         TIMGroupManager.getInstance().getGroupList(new ValueCallBack<List<TIMGroupBaseInfo>>(result) {
             @Override
             public void onSuccess(List<TIMGroupBaseInfo> groupBaseInfos) {
@@ -470,8 +469,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void addFriend(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "addFriend: ");
-
         // 用户Id
         String id = this.getParam(methodCall, result, "id");
         // 添加类型
@@ -516,8 +513,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void checkSingleFriends(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "checkSingleFriends: ");
-
         // 用户Id
         String id = this.getParam(methodCall, result, "id");
         // 类型
@@ -544,7 +539,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getPendencyList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getPendencyList: ");
         // 类型
         int type = this.getParam(methodCall, result, "type");
         // 未决列表序列号。建议客户端保存 seq 和未决列表，请求时填入 server 返回的 seq。如果 seq 是 server 最新的，则不返回数据
@@ -609,7 +603,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void pendencyReport(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "pendencyReport: ");
         // 已读时间戳，此时间戳以前的消息都将置为已读
         int timestamp = this.getParam(methodCall, result, "timestamp");
         TIMFriendshipManager.getInstance().pendencyReport(timestamp, new VoidCallBack(result));
@@ -622,7 +615,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deletePendency(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deletePendency: ");
         // 类型
         int type = this.getParam(methodCall, result, "type");
 
@@ -640,7 +632,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void examinePendency(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "examinePendency: ");
         // 类型
         int type = this.getParam(methodCall, result, "type");
         // 用户Id
@@ -663,7 +654,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteConversation(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteConversation: ");
         // 会话ID
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
@@ -688,7 +678,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteLocalMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteLocalMessage: ");
         // 会话ID
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
@@ -707,7 +696,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void createGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "createGroup: ");
         // 群类型
         String type = this.getParam(methodCall, result, "type");
         // 群名称
@@ -755,7 +743,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void inviteGroupMember(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "inviteGroupMember: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 用户ID集合
@@ -771,7 +758,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void applyJoinGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "applyJoinGroup: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 申请理由
@@ -787,7 +773,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void quitGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "quitGroup: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
 
@@ -801,7 +786,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteGroupMember(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteGroupMember: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 用户ID集合
@@ -819,7 +803,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getGroupMembers(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getGroupMembers: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
 
@@ -862,7 +845,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteGroup: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
 
@@ -876,7 +858,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void modifyGroupOwner(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "modifyGroupOwner: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 新群主ID
@@ -892,7 +873,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void modifyGroupInfo(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "modifyGroupInfo: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 群名
@@ -953,7 +933,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void modifyMemberInfo(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "modifyMemberInfo: ");
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 群成员ID
@@ -1006,7 +985,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getGroupPendencyList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getPendencyList: ");
         // 翻页时间戳，只用来翻页，server 返回0时表示没有更多数据，第一次请求填0
         final int timestamp = methodCall.argument("timestamp");
         // 每页的数量，请求时有效
@@ -1095,7 +1073,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void reportGroupPendency(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "reportGroupPendency: ");
         // 已读时间戳
         Long timestamp = this.getParam(methodCall, result, "timestamp");
         TIMGroupManager.getInstance().reportGroupPendency(timestamp, new VoidCallBack(result));
@@ -1108,7 +1085,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void groupPendencyAccept(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "groupPendencyAccept: ");
         // 理由
         final String msg = methodCall.argument("msg");
         // 群ID
@@ -1141,7 +1117,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void groupPendencyRefuse(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "groupPendencyAccept: ");
         // 理由
         final String msg = methodCall.argument("msg");
         // 群ID
@@ -1174,7 +1149,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getSelfProfile(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getSelfProfile: ");
         // 强制走后台拉取
         Boolean forceUpdate = methodCall.argument("forceUpdate");
         if (forceUpdate != null && forceUpdate) {
@@ -1197,8 +1171,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void modifySelfProfile(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "modifySelfProfile: ");
-
         HashMap params = JSON.parseObject(this.getParam(methodCall, result, "params").toString(), HashMap.class);
         TIMFriendshipManager.getInstance().modifySelfProfile(params, new VoidCallBack(result));
     }
@@ -1210,7 +1182,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void modifyFriend(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "modifyFriends: ");
         String identifier = this.getParam(methodCall, result, "identifier");
         HashMap params = JSON.parseObject(this.getParam(methodCall, result, "params").toString(), HashMap.class);
         TIMFriendshipManager.getInstance().modifyFriend(identifier, params, new VoidCallBack(result));
@@ -1223,7 +1194,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteFriends(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteFriends: ");
         int delFriendType = this.getParam(methodCall, result, "delFriendType");
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
 
@@ -1237,7 +1207,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void addBlackList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "addBlackList: ");
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().addBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
@@ -1250,7 +1219,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteBlackList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "addBlackList: ");
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().deleteBlackList(ids, new ValueCallBack<List<TIMFriendResult>>(result));
     }
@@ -1262,7 +1230,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getBlackList(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getBlackList: ");
         TIMFriendshipManager.getInstance().getBlackList(new ValueCallBack<List<TIMFriend>>(result));
     }
 
@@ -1273,7 +1240,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void createFriendGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "createFriendGroup: ");
         List<String> groupNames = Arrays.asList(this.getParam(methodCall, result, "groupNames").toString().split(","));
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().createFriendGroup(groupNames, ids, new ValueCallBack<List<TIMFriendResult>>(result));
@@ -1286,7 +1252,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteFriendGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteFriendGroup: ");
         List<String> groupNames = Arrays.asList(this.getParam(methodCall, result, "groupNames").toString().split(","));
         TIMFriendshipManager.getInstance().deleteFriendGroup(groupNames, new VoidCallBack(result));
     }
@@ -1298,7 +1263,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void addFriendsToFriendGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "addFriendsToFriendGroup: ");
         String groupName = this.getParam(methodCall, result, "groupName");
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().addFriendsToFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
@@ -1311,7 +1275,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void deleteFriendsFromFriendGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "deleteFriendsFromFriendGroup: ");
         String groupName = this.getParam(methodCall, result, "groupName");
         List<String> ids = Arrays.asList(this.getParam(methodCall, result, "ids").toString().split(","));
         TIMFriendshipManager.getInstance().deleteFriendsFromFriendGroup(groupName, ids, new ValueCallBack<List<TIMFriendResult>>(result));
@@ -1324,7 +1287,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void renameFriendGroup(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "renameFriendGroup: ");
         String oldGroupName = this.getParam(methodCall, result, "oldGroupName");
         String newGroupName = this.getParam(methodCall, result, "newGroupName");
         TIMFriendshipManager.getInstance().renameFriendGroup(oldGroupName, newGroupName, new VoidCallBack(result));
@@ -1337,7 +1299,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getFriendGroups(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "getFriendGroups: ");
         String groupNamesStr = methodCall.argument("groupNames");
         List<String> groupNames = null;
         if (groupNamesStr != null) {
@@ -1353,31 +1314,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void revokeMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "revokeMessage: ");
         // 获得参数
         String sessionId = this.getParam(methodCall, result, "sessionId");
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
-        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
-        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
 
         // 获得会话信息
         final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TIMMessageLocator locator = new TIMMessageLocator();
-        locator.setRand(rand);
-        locator.setSeq(seq);
-        locator.setSelf(true);
-        locator.setTimestamp(timestamp);
 
-        // 获得消息
-        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+        // 获得消息后撤回
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(List<TIMMessage> timMessages) {
-                // 撤回消息
-                conversation.revokeMessage(timMessages.get(0), new VoidCallBack(result));
+            public void onSuccess(TIMMessage message) {
+                conversation.revokeMessage(message, new VoidCallBack(result));
             }
         });
-
     }
 
     /**
@@ -1387,31 +1337,13 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void removeMessage(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "removeMessage: ");
-        // 获得参数
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
-        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
-        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
-        boolean self = this.getParam(methodCall, result, "self");
-
-        // 获得会话信息
-        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TIMMessageLocator locator = new TIMMessageLocator();
-        locator.setRand(rand);
-        locator.setSeq(seq);
-        locator.setTimestamp(timestamp);
-        locator.setSelf(self);
-
-        // 获得消息
-        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+        // 获得消息后删除
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(List<TIMMessage> timMessages) {
-                result.success(timMessages.get(0).remove());
+            public void onSuccess(TIMMessage message) {
+                result.success(message.remove());
             }
         });
-
     }
 
     /**
@@ -1421,33 +1353,15 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void setMessageCustomInt(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "removeMessage: ");
-        // 获得参数
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
-        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
-        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
-        boolean self = this.getParam(methodCall, result, "self");
         final int value = this.getParam(methodCall, result, "value");
-
-        // 获得会话信息
-        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TIMMessageLocator locator = new TIMMessageLocator();
-        locator.setRand(rand);
-        locator.setSeq(seq);
-        locator.setTimestamp(timestamp);
-        locator.setSelf(self);
-
-        // 获得消息
-        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+        // 获得消息后设置
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(List<TIMMessage> timMessages) {
-                timMessages.get(0).setCustomInt(value);
+            public void onSuccess(TIMMessage message) {
+                message.setCustomInt(value);
                 result.success(null);
             }
         });
-
     }
 
     /**
@@ -1457,34 +1371,144 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void setMessageCustomStr(MethodCall methodCall, final Result result) {
-        Log.d(TAG, "removeMessage: ");
-        // 获得参数
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-        long rand = Long.parseLong(this.getParam(methodCall, result, "rand").toString());
-        long seq = Long.parseLong(this.getParam(methodCall, result, "seq").toString());
-        long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
-        boolean self = this.getParam(methodCall, result, "self");
         final String value = this.getParam(methodCall, result, "value");
 
-        // 获得会话信息
-        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TIMMessageLocator locator = new TIMMessageLocator();
-        locator.setRand(rand);
-        locator.setSeq(seq);
-        locator.setTimestamp(timestamp);
-        locator.setSelf(self);
-
-        // 获得消息
-        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+        // 获得消息后设置
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
             @Override
-            public void onSuccess(List<TIMMessage> timMessages) {
-                timMessages.get(0).setCustomStr(value);
+            public void onSuccess(TIMMessage message) {
+                message.setCustomStr(value);
                 result.success(null);
             }
         });
-
     }
+
+    /**
+     * 腾讯云 获得视频缩略图
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadVideoImage(MethodCall methodCall, final Result result) {
+        final String path = methodCall.argument("path");
+
+        // 如果文件存在，则不进行下一步操作
+        if (path != null && new File(path).exists()) {
+            result.success(path);
+            return;
+        }
+
+        // 获得消息后设置
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(TIMMessage message) {
+                TIMElem elem = message.getElement(0);
+                if (elem.getType() == TIMElemType.Video) {
+                    final TIMVideoElem videoElem = (TIMVideoElem) elem;
+                    // 如果没有填充目录，则获得临时目录
+                    String finalPath = path;
+                    if (finalPath == null || "".equals(finalPath)) {
+                        finalPath = context.getExternalCacheDir().getPath() + File.separator + videoElem.getSnapshotInfo().getUuid();
+                    }
+
+                    // 如果文件存在则不进行下载
+                    if (new File(finalPath).exists()) {
+                        result.success(finalPath);
+                        return;
+                    }
+
+                    final String finalPath1 = finalPath;
+                    // 获得消息信息
+                    TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+                        @Override
+                        public void onSuccess(final List<MessageEntity> messageEntities) {
+                            // 下载图片
+                            videoElem.getSnapshotInfo().getImage(finalPath1, new ValueCallBack<ProgressInfo>(result) {
+                                @Override
+                                public void onSuccess(ProgressInfo progressInfo) {
+                                    Map<String, Object> params = new HashMap<>(3, 1);
+                                    params.put("message", messageEntities.get(0));
+                                    params.put("path", finalPath1);
+                                    params.put("currentSize", progressInfo.getCurrentSize());
+                                    params.put("totalSize", progressInfo.getTotalSize());
+                                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadProgress, params);
+                                }
+                            }, new VoidCallBack(result) {
+                                @Override
+                                public void onSuccess() {
+                                    result.success(finalPath1);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 下载视频
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadVideo(MethodCall methodCall, final Result result) {
+        final String path = methodCall.argument("path");
+
+        // 如果文件存在，则不进行下一步操作
+        if (path != null && new File(path).exists()) {
+            result.success(path);
+            return;
+        }
+
+        // 获得消息后设置
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(TIMMessage message) {
+                TIMElem elem = message.getElement(0);
+                if (elem.getType() == TIMElemType.Video) {
+                    final TIMVideoElem videoElem = (TIMVideoElem) elem;
+                    // 如果没有填充目录，则获得临时目录
+                    String finalPath = path;
+                    if (finalPath == null || "".equals(finalPath)) {
+                        finalPath = context.getExternalCacheDir().getPath() + File.separator + videoElem.getVideoInfo().getUuid();
+                    }
+
+                    // 如果文件存在则不进行下载
+                    if (new File(finalPath).exists()) {
+                        result.success(finalPath);
+                        return;
+                    }
+
+                    final String finalPath1 = finalPath;
+                    // 获得消息信息
+                    TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+                        @Override
+                        public void onSuccess(final List<MessageEntity> messageEntities) {
+                            // 下载图片
+                            videoElem.getVideoInfo().getVideo(finalPath1, new ValueCallBack<ProgressInfo>(result) {
+                                @Override
+                                public void onSuccess(ProgressInfo progressInfo) {
+                                    Map<String, Object> params = new HashMap<>(3, 1);
+                                    params.put("message", messageEntities.get(0));
+                                    params.put("path", finalPath1);
+                                    params.put("currentSize", progressInfo.getCurrentSize());
+                                    params.put("totalSize", progressInfo.getTotalSize());
+                                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadProgress, params);
+                                }
+                            }, new VoidCallBack(result) {
+                                @Override
+                                public void onSuccess() {
+                                    result.success(finalPath1);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
     /**
      * 通用方法，获得参数值，如未找到参数，则直接中断

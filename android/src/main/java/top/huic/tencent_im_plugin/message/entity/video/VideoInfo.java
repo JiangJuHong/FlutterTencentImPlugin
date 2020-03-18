@@ -7,6 +7,11 @@ package top.huic.tencent_im_plugin.message.entity.video;
  */
 public class VideoInfo {
     /**
+     * 视频ID
+     */
+    private String uuid;
+
+    /**
      * 时长
      */
     private Long duration;
@@ -56,5 +61,13 @@ public class VideoInfo {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

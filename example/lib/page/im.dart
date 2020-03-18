@@ -26,6 +26,8 @@ import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/location_message_node.dart';
 import 'package:tencent_im_plugin/message_node/entity/video_info_entity.dart';
 import 'package:tencent_im_plugin/message_node/entity/video_snapshot_info_entity.dart';
+import 'package:tencent_im_plugin_example/listener/ListenerFactory.dart';
+import 'package:tencent_im_plugin_example/page/video_player_page.dart';
 import 'package:tencent_im_plugin_example/utils/dialog_util.dart';
 import 'package:video_player/video_player.dart';
 
@@ -184,7 +186,7 @@ class ImPageState extends State<ImPage> {
     }
 
     // 消息上传通知
-    if (type == ListenerTypeEnum.MessagesUpload) {
+    if (type == ListenerTypeEnum.UploadProgress) {
       Map<String, dynamic> obj = jsonDecode(params);
 
       // 获得进度和消息实体
@@ -266,7 +268,8 @@ class ImPageState extends State<ImPage> {
   }
 
   /// 获得组件
-  getComponent(List<MessageNode> elems) {
+  getComponent(MessageEntity message) {
+    List<MessageNode> elems = message.elemList;
     if (elems == null || elems.length == 0) {
       return Text("");
     }
@@ -292,9 +295,8 @@ class ImPageState extends State<ImPage> {
       case MessageNodeType.Video:
         VideoMessageNode value = node;
         return MessageVideo(
-          path: value.videoInfo.path,
-          duration: value.videoInfo.duration,
-          snapshotPath: value.videoSnapshotInfo.path,
+          data: message,
+          videoNode: value,
         );
       case MessageNodeType.Location:
         LocationMessageNode value = node;
@@ -450,8 +452,6 @@ class ImPageState extends State<ImPage> {
       // 视频压缩
       final compressVideo = await _flutterVideoCompress.compressVideo(
         video.path,
-        quality: VideoQuality.DefaultQuality,
-        deleteOrigin: false,
       );
 
       // 获得控制器并获得视频时长
@@ -477,8 +477,8 @@ class ImPageState extends State<ImPage> {
           ),
         ),
         MessageVideo(
-          path: video.path,
-          snapshotPath: thumb.path,
+          image: thumb.path,
+          video: video.path,
           duration: duration,
         ),
       );
@@ -711,7 +711,7 @@ class ImPageState extends State<ImPage> {
                               index, data[index].data, context),
                           child: MessageItem(
                             data: data[index],
-                            child: getComponent(data[index].data.elemList),
+                            child: getComponent(data[index].data),
                           ),
                         );
                       },
@@ -992,10 +992,12 @@ class MessageImage extends StatelessWidget {
               File(path),
               fit: BoxFit.cover,
             )
-          : Image.network(
-              url,
-              fit: BoxFit.cover,
-            ),
+          : url != null
+              ? Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                )
+              : Container(),
     );
   }
 }
@@ -1038,29 +1040,125 @@ class MessageVoice extends StatelessWidget {
 }
 
 /// 消息视频
-class MessageVideo extends StatelessWidget {
-  // 封面截图
-  final String snapshotPath;
+class MessageVideo extends StatefulWidget {
+  /// 消息实体
+  final MessageEntity data;
 
-  // 路径
-  final String path;
+  /// 视频节点
+  final VideoMessageNode videoNode;
 
-  // 时间
+  /// 图片
+  final String image;
+
+  /// 视频
+  final String video;
+
+  /// 时长
   final int duration;
 
-  MessageVideo({Key key, this.path, this.duration, this.snapshotPath})
-      : super(key: key);
+  const MessageVideo({
+    Key key,
+    this.data,
+    this.videoNode,
+    this.image,
+    this.video,
+    this.duration,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => MessageVideoState();
+}
+
+class MessageVideoState extends State<MessageVideo> {
+  /// 缩略图文件
+  String snapshotImage;
+
+  /// 视频文件
+  String video;
+
+  @override
+  void initState() {
+    super.initState();
+
+    snapshotImage = widget.image ?? widget.videoNode.videoSnapshotInfo.path;
+    video = widget.video ?? widget.videoNode.videoInfo.path;
+
+    // 添加腾讯云IM监听器，监听进度
+    TencentImPlugin.addListener(tencentImListener);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      TencentImPlugin.downloadVideoImage(
+        sessionId: widget.data.sessionId,
+        sessionType: widget.data.sessionType,
+        rand: widget.data.rand,
+        seq: widget.data.seq,
+        timestamp: widget.data.timestamp,
+        self: widget.data.self,
+        path: snapshotImage,
+      ).then((res) {
+        snapshotImage = res;
+        if (this.mounted) {
+          this.setState(() {});
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    TencentImPlugin.removeListener(tencentImListener);
+  }
+
+  /// 腾讯云IM监听器
+  tencentImListener(type, params) {
+    if (type == ListenerTypeEnum.DownloadProgress) {
+      Map<String, dynamic> obj = jsonDecode(params);
+      if (widget.data == MessageEntity.fromJson(obj["message"])) {
+        ListenerFactory.progressDialogChangeNotifier.value =
+            obj["currentSize"] / obj["totalSize"];
+      }
+    }
+  }
+
+  /// 视频点击事件
+  onVideoClick() async {
+    // 如果视频文件为空，就下载视频
+    DialogUtil.showProgressLoading(context);
+    this.video = await TencentImPlugin.downloadVideo(
+      sessionId: widget.data.sessionId,
+      sessionType: widget.data.sessionType,
+      rand: widget.data.rand,
+      seq: widget.data.seq,
+      timestamp: widget.data.timestamp,
+      self: widget.data.self,
+      path: video,
+    );
+    DialogUtil.cancelLoading(context);
+    if (this.mounted) {
+      this.setState(() {});
+    }
+
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new VideoPlayerPage(
+          file: video,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => 0,
+      onTap: onVideoClick,
       child: Container(
         height: 100,
         width: 100,
         child: Stack(
           children: <Widget>[
-            MessageImage(path: snapshotPath),
+            MessageImage(path: snapshotImage),
             Align(
               alignment: new FractionalOffset(0.5, 0.5),
               child: Icon(
@@ -1073,7 +1171,7 @@ class MessageVideo extends StatelessWidget {
               right: 5,
               bottom: 5,
               child: Text(
-                "$duration″",
+                "${widget.duration ?? widget.videoNode.videoInfo.duration}″",
                 style: TextStyle(color: Colors.white),
               ),
             ),

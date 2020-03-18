@@ -7,6 +7,11 @@ package top.huic.tencent_im_plugin.message.entity.video;
  */
 public class VideoSnapshotInfo {
     /**
+     * 图片ID
+     */
+    private String uuid;
+
+    /**
      * 图片大小
      */
     private Long size;
@@ -69,5 +74,13 @@ public class VideoSnapshotInfo {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -48,13 +48,14 @@ public class VideoMessageNode : AbstractMessageNode{
         videoInfo.path = videoElem.videoPath;
         videoInfo.size = videoElem.video.size;
         videoInfo.type = videoElem.video.type;
+        videoInfo.uuid = videoElem.video.uuid;
         
         videoSnapshotInfo.height = videoElem.snapshot.height;
         videoSnapshotInfo.width = videoElem.snapshot.width;
         videoSnapshotInfo.path = videoElem.snapshotPath;
         videoSnapshotInfo.type = videoElem.snapshot.type;
         videoSnapshotInfo.size = videoElem.snapshot.size;
-    
+        videoSnapshotInfo.uuid = videoElem.snapshot.uuid;
         
         
         entity.videoInfo = videoInfo;

@@ -5,6 +5,9 @@
 //  Created by 蒋具宏 on 2020/3/15.
 //  视频缩略图信息
 public class VideoSnapshotInfo : NSObject{
+    /// 图片ID
+    var uuid : String?;
+    
     /// 宽度
     var width : Int32?;
     

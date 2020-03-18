@@ -4,39 +4,31 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMElemType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
-import com.tencent.imsdk.TIMVideoElem;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
+import com.tencent.imsdk.ext.message.TIMMessageLocator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 import top.huic.tencent_im_plugin.TencentImPlugin;
 import top.huic.tencent_im_plugin.ValueCallBack;
-import top.huic.tencent_im_plugin.VoidCallBack;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
-import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
-import top.huic.tencent_im_plugin.listener.TencentImListener;
 
 /**
  * 腾讯云IM工具类
@@ -188,6 +180,62 @@ public class TencentImUtils {
             throw new RuntimeException("Cannot find Conversation" + sessionId + "-" + sessionTypeStr);
         }
         return conversation;
+    }
+
+    /**
+     * 从结果中获得消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     操作结果
+     */
+    public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, final ValueCallBack<TIMMessage> onCallback) {
+        // 获得参数
+        String sessionId = CommonUtil.getParam(methodCall, result, "sessionId");
+        String sessionTypeStr = CommonUtil.getParam(methodCall, result, "sessionType");
+        long rand = Long.parseLong(CommonUtil.getParam(methodCall, result, "rand").toString());
+        long seq = Long.parseLong(CommonUtil.getParam(methodCall, result, "seq").toString());
+        Boolean self = methodCall.argument("self");
+        Object timestamp = methodCall.argument("timestamp");
+
+        // 获得会话信息
+        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        TIMMessageLocator locator = new TIMMessageLocator();
+        locator.setRand(rand);
+        locator.setSeq(seq);
+        if (timestamp != null) {
+            locator.setTimestamp(Long.parseLong(timestamp.toString()));
+        }
+        locator.setSelf(self == null ? true : self);
+
+        // 获得消息
+        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+            @Override
+            public void onSuccess(final List<TIMMessage> timMessages) {
+                TIMMessage message = timMessages.get(0);
+                onCallback.onSuccess(message);
+            }
+        });
+    }
+
+    /**
+     * 获得消息实体
+     *
+     * @param methodCall 消息调用
+     * @param result     操作结果
+     * @param onCallback 回调
+     */
+    public static void getMessage(MethodCall methodCall, final MethodChannel.Result result, final ValueCallBack<MessageEntity> onCallback) {
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(final TIMMessage message) {
+                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+                    @Override
+                    public void onSuccess(List<MessageEntity> messageEntities) {
+                        onCallback.onSuccess(messageEntities.get(0));
+                    }
+                });
+            }
+        });
     }
 
     /**

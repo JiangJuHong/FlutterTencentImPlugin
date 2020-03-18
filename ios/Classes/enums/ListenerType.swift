@@ -68,5 +68,10 @@ public enum ListenerType{
     /**
      *  上传进度
      */
-    case MessagesUpload
+    case UploadProgress
+    
+    /**
+     *  下载进度
+     */
+    case DownloadProgress
 }

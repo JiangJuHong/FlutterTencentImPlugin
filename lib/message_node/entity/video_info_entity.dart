@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 /// 视频信息
 class VideoInfo {
+  /// 视频ID
+  String uuid;
+
   /// 时长
   int duration;
 
@@ -21,6 +24,7 @@ class VideoInfo {
   });
 
   VideoInfo.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
     duration = json['duration'];
     size = json['size'];
     type = json['type'];

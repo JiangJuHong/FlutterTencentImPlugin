@@ -1,6 +1,7 @@
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
+import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 会话实体
 class SessionEntity {
@@ -45,7 +46,7 @@ class SessionEntity {
     nickname = json['nickname'];
     id = json['id'];
     for (var item in SessionType.values) {
-      if (item.toString().replaceFirst("SessionType.", "") == json['type']) {
+      if (EnumUtil.getEnumName(item) == json['type']) {
         type = item;
       }
     }

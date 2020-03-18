@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 /// 视频缩略图信息
 class VideoSnapshotInfo {
+  /// 图片Id
+  String uuid;
+
   /// 图片大小
   int size;
 
@@ -21,6 +24,7 @@ class VideoSnapshotInfo {
   });
 
   VideoSnapshotInfo.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
     size = json['size'];
     width = json['width'];
     height = json['height'];
