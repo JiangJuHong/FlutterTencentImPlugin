@@ -78,3 +78,6 @@
 1. 视频、语音，将不再自动下载，提供语音/视频下载方法
 1. 视频、语音和图片提供上传/下载进度监听器，分别为:ListenerTypeEnum.UploadProgress/ListenerTypeEnum.DownloadProgress
 1. 除 PendencyPageEntity 和 GroupPendencyPageEntity 外的所有Entity 重写 == 和 hashCode，可直接进行判断是否相等
+
+## 0.2.1
+* 修订文档
