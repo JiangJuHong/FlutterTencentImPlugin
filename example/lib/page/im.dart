@@ -608,7 +608,7 @@ class ImPageState extends State<ImPage> {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
               this.setState(
-                  () => data[index].data.status = MessageStatusEum.HasRevoked);
+                  () => data[index].data.status = MessageStatusEnum.HasRevoked);
             }).catchError((e) {
               Scaffold.of(context)
                   .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
@@ -934,7 +934,7 @@ class MessageItem extends StatelessWidget {
                     ),
                   ),
                   child: data != null &&
-                          data.data.status == MessageStatusEum.HasRevoked
+                          data.data.status == MessageStatusEnum.HasRevoked
                       ? Text("[该消息已被撤回]")
                       : child,
                 ),
