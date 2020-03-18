@@ -1,5 +1,5 @@
 /// 消息状态
-enum MessageStatusEum {
+enum MessageStatusEnum {
   /// 发送中
   Sending,
 
