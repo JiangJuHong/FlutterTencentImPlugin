@@ -15,7 +15,7 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 1. MessageEntity 增加 note 属性，对非自定消息可直接用于展示
 1. 发送节点和接收实体合二为一，发送时仅需设置构造器参数即可，接收时会自动填充内容
 1. 视频、语音，将不再自动下载，提供语音/视频下载方法
-1. 视频、语音和图片提供上传/下载回调
+1. 视频、语音和图片提供上传/下载进度监听器，分别为:ListenerTypeEnum.UploadProgress/ListenerTypeEnum.DownloadProgress
 1. 除 PendencyPageEntity 和 GroupPendencyPageEntity 外的所有Entity 重写 == 和 hashCode，可直接进行判断是否相等
 
 ## 功能清单
@@ -32,7 +32,7 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 
 ### 下版本计划(0.3.0)
 1. 将不同类别的方法封装到不同实体
-2. 离线推送可配置
+1. 离线推送可配置
 
 ## 集成
 ### Flutter
