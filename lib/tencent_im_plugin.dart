@@ -750,9 +750,30 @@ class TencentImPlugin {
     @required int seq, //消息序列号
     @required int timestamp, // 消息时间戳
     @required bool self, // 是否是本人发送的
-    String path, // 保存截图的路径
+    String path, // 保存视频的路径
   }) async {
     return await _channel.invokeMethod('downloadVideo', {
+      "sessionId": sessionId,
+      "sessionType": EnumUtil.getEnumName(sessionType),
+      "rand": rand,
+      "seq": seq,
+      "timestamp": timestamp,
+      "self": self,
+      "path": path,
+    });
+  }
+
+  /// 获得语音
+  static Future<String> downloadSound({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int rand, // 消息随机码
+    @required int seq, //消息序列号
+    @required int timestamp, // 消息时间戳
+    @required bool self, // 是否是本人发送的
+    String path, // 保存语音的路径
+  }) async {
+    return await _channel.invokeMethod('downloadSound', {
       "sessionId": sessionId,
       "sessionType": EnumUtil.getEnumName(sessionType),
       "rand": rand,

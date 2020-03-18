@@ -32,6 +32,7 @@ public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem, SoundMes
         entity.setPath(elem.getPath());
         entity.setDuration(elem.getDuration());
         entity.setDataSize(elem.getDataSize());
+        entity.setUuid(elem.getUuid());
         return entity;
     }
 

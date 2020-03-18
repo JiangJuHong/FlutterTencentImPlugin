@@ -145,4 +145,5 @@ Demo截图:
 | setMessageCustomInt | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
 | setMessageCustomStr | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
 | downloadVideoImage | 获得视频图片(缩略图) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存截图的路径'} | √ | √
-| downloadVideo | 获得视频 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存截图的路径'} | √ | √
+| downloadVideo | 获得视频 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存视频的路径'} | √ | √
+| downloadSound | 获得语音 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存语音的路径'} | √ | √

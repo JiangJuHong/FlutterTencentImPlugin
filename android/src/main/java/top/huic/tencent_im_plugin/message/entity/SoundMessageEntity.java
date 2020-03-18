@@ -8,6 +8,12 @@ import top.huic.tencent_im_plugin.enums.MessageNodeType;
  * @author 蒋具宏
  */
 public class SoundMessageEntity extends AbstractMessageEntity {
+
+    /**
+     * 语音ID
+     */
+    private String uuid;
+
     /**
      * 路径
      */
@@ -49,5 +55,13 @@ public class SoundMessageEntity extends AbstractMessageEntity {
 
     public void setDataSize(Long dataSize) {
         this.dataSize = dataSize;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

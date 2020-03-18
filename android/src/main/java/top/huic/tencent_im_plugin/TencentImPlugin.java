@@ -19,6 +19,7 @@ import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMVideoElem;
@@ -1485,8 +1486,71 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
                         @Override
                         public void onSuccess(final List<MessageEntity> messageEntities) {
-                            // 下载图片
+                            // 下载视频
                             videoElem.getVideoInfo().getVideo(finalPath1, new ValueCallBack<ProgressInfo>(result) {
+                                @Override
+                                public void onSuccess(ProgressInfo progressInfo) {
+                                    Map<String, Object> params = new HashMap<>(3, 1);
+                                    params.put("message", messageEntities.get(0));
+                                    params.put("path", finalPath1);
+                                    params.put("currentSize", progressInfo.getCurrentSize());
+                                    params.put("totalSize", progressInfo.getTotalSize());
+                                    TencentImListener.invokeListener(ListenerTypeEnum.DownloadProgress, params);
+                                }
+                            }, new VoidCallBack(result) {
+                                @Override
+                                public void onSuccess() {
+                                    result.success(finalPath1);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 腾讯云 下载语音
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadSound(MethodCall methodCall, final Result result) {
+        final String path = methodCall.argument("path");
+
+        // 如果文件存在，则不进行下一步操作
+        if (path != null && new File(path).exists()) {
+            result.success(path);
+            return;
+        }
+
+        // 获得消息后设置
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(TIMMessage message) {
+                TIMElem elem = message.getElement(0);
+                if (elem.getType() == TIMElemType.Sound) {
+                    final TIMSoundElem soundElem = (TIMSoundElem) elem;
+                    // 如果没有填充目录，则获得临时目录
+                    String finalPath = path;
+                    if (finalPath == null || "".equals(finalPath)) {
+                        finalPath = context.getExternalCacheDir().getPath() + File.separator + soundElem.getUuid();
+                    }
+
+                    // 如果文件存在则不进行下载
+                    if (new File(finalPath).exists()) {
+                        result.success(finalPath);
+                        return;
+                    }
+
+                    final String finalPath1 = finalPath;
+                    // 获得消息信息
+                    TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+                        @Override
+                        public void onSuccess(final List<MessageEntity> messageEntities) {
+                            // 下载语音
+                            soundElem.getSoundToFile(finalPath1, new ValueCallBack<ProgressInfo>(result) {
                                 @Override
                                 public void onSuccess(ProgressInfo progressInfo) {
                                     Map<String, Object> params = new HashMap<>(3, 1);

@@ -27,6 +27,7 @@ public class SoundMessageNode : AbstractMessageNode{
         entity.path = soundElem.path;
         entity.dataSize = soundElem.dataSize;
         entity.duration = soundElem.second;
+        entity.uuid = soundElem.uuid;
         return entity;
     }
 }

@@ -187,6 +187,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "downloadVideo":
             self.downloadVideo(call: call, result: result);
             break;
+        case "downloadSound":
+            self.downloadSound(call: call, result: result);
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -1578,6 +1580,55 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             }
         });
     }
+    
+    /**
+     * 下载语音
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func downloadSound(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let path = ((call.arguments as! [String: Any])["path"]) as? String;
+        if path != nil && FileManager.default.fileExists(atPath: path!) {
+            result(path!);
+            return;
+        }
+        
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            let elem : TIMElem = message.getElem(0);
+            if elem is TIMSoundElem{
+                let soundElem : TIMSoundElem = elem as! TIMSoundElem;
+                var finalPath : String? = path;
+                if finalPath == nil || finalPath! == ""{
+                    finalPath = NSTemporaryDirectory() + "/" + soundElem.uuid;
+                }
+                
+                // 如果文件存在则不进行下载
+                if (FileManager.default.fileExists(atPath: finalPath!)) {
+                    result(finalPath!);
+                    return;
+                }
+                
+                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                    (array) -> Void in
+                    soundElem.getSound(finalPath!, progress: {
+                            (current,total) -> Void in
+                            self.invokeListener(type: ListenerType.DownloadProgress, params: [
+                                "message":array[0],
+                                "path": finalPath!,
+                                "currentSize":current,
+                                "totalSize":total
+                            ]);
+                        }, succ: {
+                            () -> Void in
+                            result(finalPath!);
+                        }, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, onFail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        });
+    }
+    
     
     /**
      * 调用监听器

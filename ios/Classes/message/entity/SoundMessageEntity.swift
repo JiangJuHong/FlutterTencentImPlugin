@@ -2,6 +2,9 @@
 //  语音消息实体
 public class SoundMessageEntity : AbstractMessageEntity{
    
+    /// 语音ID
+    var uuid : String?;
+    
     /// 路径
     var path : String?;
 
