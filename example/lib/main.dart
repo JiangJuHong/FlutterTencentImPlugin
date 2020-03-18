@@ -23,7 +23,8 @@ class _MyAppState extends State<MyApp> {
     // 初始化SDK
     await TencentImPlugin.init(appid: "1400290273");
     // 初始化本地存储
-    await TencentImPlugin.initStorage(identifier: "98a6f9541f1b455480bf460aa5208497");
+    await TencentImPlugin.initStorage(
+        identifier: "98a6f9541f1b455480bf460aa5208497");
   }
 
   @override

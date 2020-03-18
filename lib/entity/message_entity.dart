@@ -114,8 +114,7 @@ class MessageEntity {
       }
     }
     for (var item in SessionType.values) {
-      if (EnumUtil.getEnumName(item) ==
-          json['sessionType']) {
+      if (EnumUtil.getEnumName(item) == json['sessionType']) {
         sessionType = item;
       }
     }
@@ -162,8 +161,5 @@ class MessageEntity {
 
   @override
   int get hashCode =>
-      rand.hashCode ^
-      seq.hashCode ^
-      self.hashCode ^
-      sessionId.hashCode;
+      rand.hashCode ^ seq.hashCode ^ self.hashCode ^ sessionId.hashCode;
 }
