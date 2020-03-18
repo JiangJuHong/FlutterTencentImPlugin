@@ -1,5 +1,6 @@
 package top.huic.tencent_im_plugin.entity;
 
+import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.ext.group.TIMGroupDetailInfoResult;
@@ -50,15 +51,22 @@ public class SessionEntity {
      */
     private TIMUserProfile userProfile;
 
+    public SessionEntity() {
+    }
+
+    public SessionEntity(TIMConversation conversation){
+        this.id = conversation.getPeer();
+        this.nickname = conversation.getGroupName();
+        this.type = conversation.getType();
+        this.unreadMessageNum = conversation.getUnreadMessageNum();
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public SessionEntity() {
     }
 
     public String getNickname() {

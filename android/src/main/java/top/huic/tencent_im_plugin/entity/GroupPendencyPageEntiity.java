@@ -2,6 +2,7 @@ package top.huic.tencent_im_plugin.entity;
 
 import com.tencent.imsdk.ext.group.TIMGroupPendencyMeta;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,14 +11,14 @@ import java.util.List;
  *
  * @author 蒋具宏
  */
-public class GroupPendencyPageEntiity {
+public class GroupPendencyPageEntiity implements Serializable {
 
     private long nextStartTimestamp;
 
     private long reportedTimestamp;
 
     private long unReadCount;
-    
+
     private List<GroupPendencyEntity> items;
 
     public GroupPendencyPageEntiity(TIMGroupPendencyMeta pendencyMeta, List<GroupPendencyEntity> resultData) {

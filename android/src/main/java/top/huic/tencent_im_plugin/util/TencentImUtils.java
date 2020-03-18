@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMFriendshipManager;
@@ -58,11 +59,7 @@ public class TencentImUtils {
         // 获取会话列表
         for (final TIMConversation timConversation : conversations) {
             // 封装会话信息
-            SessionEntity entity = new SessionEntity();
-            entity.setId(timConversation.getPeer());
-            entity.setNickname(timConversation.getGroupName());
-            entity.setType(timConversation.getType());
-            entity.setUnreadMessageNum(timConversation.getUnreadMessageNum());
+            SessionEntity entity = new SessionEntity(timConversation);
 
             // 获取资料
             if (timConversation.getType() == TIMConversationType.C2C) {

@@ -24,6 +24,12 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+//// 28 - 30 行为打包参数
+//def keystorePropertiesFile = rootProject.file("key.properties")
+//def keystoreProperties = new Properties()
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//
+
 android {
     compileSdkVersion 28
 
@@ -41,11 +47,27 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+//    // 51 - 58 行为打包参数
+//    signingConfigs {
+//        release {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            // 打包时将 signingConfig signingConfigs.debug 更改为 signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.release
+//
+//            // 开启混淆
+//            minifyEnabled true
+//            useProguard true
         }
     }
     compileOptions {

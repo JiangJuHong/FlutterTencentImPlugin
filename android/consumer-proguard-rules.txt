@@ -1,2 +1,17 @@
 # 腾讯云IM
 -keep class com.tencent.** { *; }
+
+# FastJson
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.**{*;}
+
+# 泛型
+-keepattributes Signature
+
+# 不混淆Serializable接口的子类
+-keepclassmembers class * implements java.io.Serializable { *; }
+
+# 忽略实体类
+-keep class top.huic.tencent_im_plugin.**.*Entity { *; }
+-keep class top.huic.tencent_im_plugin.entity.** { *; }
+-keep class top.huic.tencent_im_plugin.message.entity.** { *; }

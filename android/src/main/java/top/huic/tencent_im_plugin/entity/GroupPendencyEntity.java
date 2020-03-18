@@ -7,12 +7,14 @@ import com.tencent.imsdk.ext.group.TIMGroupPendencyHandledStatus;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyItem;
 import com.tencent.imsdk.ext.group.TIMGroupPendencyOperationType;
 
+import java.io.Serializable;
+
 /**
  * 群未决实体
  *
  * @author 蒋具宏
  */
-public class GroupPendencyEntity {
+public class GroupPendencyEntity implements Serializable {
     /**
      * 来自(请求人/邀请人)
      */

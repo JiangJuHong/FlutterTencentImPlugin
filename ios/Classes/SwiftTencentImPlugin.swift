@@ -59,6 +59,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             break;
         case "sendMessage":
             self.sendMessage(call: call, result: result);
+            break;
         case "getFriendList":
             self.getFriendList(call: call, result: result);
             break;
@@ -112,6 +113,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             break;
         case "modifyGroupOwner":
             self.modifyGroupOwner(call: call, result: result);
+            break;
         case "modifyGroupInfo":
             self.modifyGroupInfo(call: call, result: result);
             break;
@@ -189,6 +191,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             break;
         case "downloadSound":
             self.downloadSound(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }

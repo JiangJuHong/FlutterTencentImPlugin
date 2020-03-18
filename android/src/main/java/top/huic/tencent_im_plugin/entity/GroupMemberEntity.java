@@ -3,12 +3,14 @@ package top.huic.tencent_im_plugin.entity;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMUserProfile;
 
+import java.io.Serializable;
+
 /**
  * 群成员实体
  *
  * @author 蒋具宏
  */
-public class GroupMemberEntity {
+public class GroupMemberEntity implements Serializable {
     /**
      * 加群时间
      */

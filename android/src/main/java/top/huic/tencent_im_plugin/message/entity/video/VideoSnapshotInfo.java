@@ -1,11 +1,13 @@
 package top.huic.tencent_im_plugin.message.entity.video;
 
+import java.io.Serializable;
+
 /**
  * 视频缩略图信息
  *
  * @author 蒋具宏
  */
-public class VideoSnapshotInfo {
+public class VideoSnapshotInfo implements Serializable {
     /**
      * 图片ID
      */

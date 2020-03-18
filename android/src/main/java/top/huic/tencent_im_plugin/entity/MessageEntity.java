@@ -7,6 +7,7 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageStatus;
 import com.tencent.imsdk.TIMUserProfile;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
  *
  * @author 蒋具宏
  */
-public class MessageEntity {
+public class MessageEntity  implements Serializable {
     /**
      * 消息ID
      */

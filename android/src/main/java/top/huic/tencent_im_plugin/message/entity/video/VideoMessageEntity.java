@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity.video;
 
+import java.io.Serializable;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 
@@ -8,7 +10,7 @@ import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
  *
  * @author 蒋具宏
  */
-public class VideoMessageEntity extends AbstractMessageEntity {
+public class VideoMessageEntity extends AbstractMessageEntity implements Serializable {
 
     /**
      * 视频信息

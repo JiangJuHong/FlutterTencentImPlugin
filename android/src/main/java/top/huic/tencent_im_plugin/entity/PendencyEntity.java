@@ -3,12 +3,14 @@ package top.huic.tencent_im_plugin.entity;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
 
+import java.io.Serializable;
+
 /**
  * 未决实体
  *
  * @author 蒋具宏
  */
-public class PendencyEntity {
+public class PendencyEntity implements Serializable {
     /**
      * 用户ID
      */

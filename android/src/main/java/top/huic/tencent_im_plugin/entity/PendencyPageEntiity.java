@@ -2,6 +2,7 @@ package top.huic.tencent_im_plugin.entity;
 
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author 蒋具宏
  */
-public class PendencyPageEntiity {
+public class PendencyPageEntiity implements Serializable {
     private long seq;
     private long timestamp;
     private long unreadCnt;

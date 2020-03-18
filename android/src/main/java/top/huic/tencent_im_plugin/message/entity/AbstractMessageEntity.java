@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import java.io.Serializable;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -7,7 +9,7 @@ import top.huic.tencent_im_plugin.enums.MessageNodeType;
  *
  * @author 蒋具宏
  */
-public class AbstractMessageEntity {
+public class AbstractMessageEntity implements Serializable {
     private MessageNodeType nodeType;
 
     public AbstractMessageEntity(MessageNodeType nodeType) {
