@@ -833,9 +833,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         boolean res;
         if (removeCache) {
-            res = TIMManager.getInstance().deleteConversation(sessionType, sessionId);
-        } else {
             res = TIMManager.getInstance().deleteConversationAndLocalMsgs(sessionType, sessionId);
+        } else {
+            res = TIMManager.getInstance().deleteConversation(sessionType, sessionId);
         }
         result.success(res);
     }
