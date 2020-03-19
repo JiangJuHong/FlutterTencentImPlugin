@@ -80,9 +80,9 @@ Demo截图:
 |  TIMLocationElem  |  √ |  已完成 |
 |  TIMProfileSystemElem  |  - |  暂不考虑 |
 |  TIMSNSSystemElem  |  - |  暂不考虑 |
-|  TIMSoundElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
+|  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
-|  TIMVideoElem  |  ⊙ |  有缺陷，但不影响使用(IOS端未实现下载功能) |
+|  TIMVideoElem  |  √ |  已完成 |
 
 ### 接口
 |  接口   | 说明  | 参数  | Android | IOS |
