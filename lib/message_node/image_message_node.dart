@@ -21,14 +21,7 @@ class ImageMessageNode extends MessageNode {
   ImageMessageNode({
     @required path,
     this.level: 1,
-  }) : super(MessageNodeType.Image) {
-    this.path = path;
-    this.imageData = {
-      ImageType.Large: path,
-      ImageType.Original: path,
-      ImageType.Thumb: path,
-    };
-  }
+  }) : super(MessageNodeType.Image);
 
   ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Image) {
     imageFormat = json['imageFormat'];
