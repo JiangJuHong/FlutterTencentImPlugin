@@ -23,7 +23,8 @@ class ImageMessageNode extends MessageNode {
     this.level: 1,
   }) : super(MessageNodeType.Image);
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Image) {
+  ImageMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Image) {
     imageFormat = json['imageFormat'];
     path = json['path'];
     level = json['level'];
