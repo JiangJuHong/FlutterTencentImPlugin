@@ -28,7 +28,7 @@ public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem, Custom
     @Override
     public CustomMessageEntity analysis(TIMCustomElem elem) {
         CustomMessageEntity entity = new CustomMessageEntity();
-        elem.setData(elem.getData());
+        entity.setData(new String((elem.getData())));
         return entity;
     }
 
