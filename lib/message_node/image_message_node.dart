@@ -19,7 +19,7 @@ class ImageMessageNode extends MessageNode {
   Map<ImageType, ImageEntity> imageData;
 
   ImageMessageNode({
-    @required path,
+    @required this.path,
     this.level: 1,
   }) : super(MessageNodeType.Image);
 
