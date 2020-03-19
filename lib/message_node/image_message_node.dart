@@ -19,11 +19,18 @@ class ImageMessageNode extends MessageNode {
   Map<ImageType, ImageEntity> imageData;
 
   ImageMessageNode({
-    @required this.path,
-  }) : super(MessageNodeType.Image);
+    @required path,
+    this.level: 1,
+  }) : super(MessageNodeType.Image) {
+    this.path = path;
+    this.imageData = {
+      ImageType.Large: path,
+      ImageType.Original: path,
+      ImageType.Thumb: path,
+    };
+  }
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Image) {
+  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Image) {
     imageFormat = json['imageFormat'];
     path = json['path'];
     level = json['level'];
@@ -42,6 +49,7 @@ class ImageMessageNode extends MessageNode {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data["path"] = this.path;
+    data["level"] = this.level;
     return data;
   }
 }
