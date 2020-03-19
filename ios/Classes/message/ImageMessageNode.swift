@@ -12,6 +12,7 @@ public class ImageMessageNode : AbstractMessageNode{
         let message = TIMMessage();
         let imageElem = TIMImageElem();
         imageElem.path = getParam(params: params, paramKey: "path")!;
+        imageElem.level = TIM_IMAGE_COMPRESS_TYPE.init(rawValue: getParam(params: params, paramKey: "level")!)!;
         message.add(imageElem);
         sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
     }

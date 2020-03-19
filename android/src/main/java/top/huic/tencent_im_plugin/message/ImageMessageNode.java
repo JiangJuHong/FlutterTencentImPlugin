@@ -16,6 +16,7 @@ public class ImageMessageNode extends AbstractMessageNode<TIMImageElem, ImageMes
         TIMMessage message = new TIMMessage();
         TIMImageElem imageElem = new TIMImageElem();
         imageElem.setPath(entity.getPath());
+        imageElem.setLevel(entity.getLevel());
         message.addElement(imageElem);
         super.sendMessage(conversation, message, ol, onCallback);
     }
