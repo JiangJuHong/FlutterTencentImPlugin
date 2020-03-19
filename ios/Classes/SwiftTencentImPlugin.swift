@@ -669,10 +669,16 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      */
     private func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
-            TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
-            result(nil);
-        }
+                    let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+                     let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool
+                {
+                    if removeCache{
+                     TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                    }else{
+                        TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                    }
+                    result(nil);
+                }
     }
     
     /**
