@@ -395,21 +395,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
             let number = CommonUtils.getParam(call: call, result: result, param: "number") as? Int32 {
             if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionTypeStr, result: result) {
-                
-                // 成功回调
-                let successCallback = {
-                    (array: Any) -> Void in
-                    TencentImUtils.getMessageInfo(timMessages: array as! [TIMMessage], onSuccess: {
-                        (array) -> Void in
-                        result(JsonUtil.toJson(array));
-                    }, onFail: TencentImUtils.returnErrorClosures(result: result));
-                };
-                // 获取本地消息记录或云端消息记录
-                if local {
-                    session.getLocalMessage(number, last: nil, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
-                } else {
-                    session.getMessage(number, last: nil, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
-                }
+                TencentImUtils.getTimMessage(call: call, result: result,name:"lastMessage", onCallback: {
+                    (message) -> Void in
+                    // 成功回调
+                    let successCallback = {
+                        (array: Any) -> Void in
+                        TencentImUtils.getMessageInfo(timMessages: array as! [TIMMessage], onSuccess: {
+                            (array) -> Void in
+                            result(JsonUtil.toJson(array));
+                        }, onFail: TencentImUtils.returnErrorClosures(result: result));
+                    };
+                    // 获取本地消息记录或云端消息记录
+                    if local {
+                        session.getLocalMessage(number, last: message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
+                    } else {
+                        session.getMessage(number, last: message, succ: successCallback, fail: TencentImUtils.returnErrorClosures(result: result))
+                    }
+                });
             }
         }
     }
@@ -669,16 +671,16 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      */
     private func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-                    let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-                     let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool
-                {
-                    if removeCache{
-                     TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
-                    }else{
-                        TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
-                    }
-                    result(nil);
-                }
+            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool
+        {
+            if removeCache{
+                TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+            }else{
+                TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+            }
+            result(nil);
+        }
     }
     
     /**
@@ -1435,17 +1437,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * @param result     返回结果对象
      */
     private func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String{
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
-                TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
-                    (message) -> Void in
-                    session.revokeMessage(message, succ: {
-                        result(nil);
-                    }, fail: TencentImUtils.returnErrorClosures(result: result));
-                });
-            }
-        }
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            message!.getConversation()!.revokeMessage(message, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        });
     }
     
     /**
@@ -1457,7 +1454,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     private func removeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
             (message) -> Void in
-            result(message.remove());
+            result(message!.remove());
         });
     }
     
@@ -1471,7 +1468,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         if let value = CommonUtils.getParam(call: call, result: result, param: "value") as? Int32 {
             TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
                 (message) -> Void in
-                message.setCustomInt(value);
+                message!.setCustomInt(value);
                 result(nil);
             });
         }
@@ -1488,7 +1485,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         if let value = CommonUtils.getParam(call: call, result: result, param: "value") as? String {
             TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
                 (message) -> Void in
-                message.setCustomData(value.data(using: String.Encoding.utf8));
+                message!.setCustomData(value.data(using: String.Encoding.utf8));
                 result(nil);
             });
         }
@@ -1509,7 +1506,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         
         TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
             (message) -> Void in
-            let elem : TIMElem = message.getElem(0);
+            let elem : TIMElem = message!.getElem(0);
             if elem is TIMVideoElem{
                 let videoElem : TIMVideoElem = elem as! TIMVideoElem;
                 var finalPath : String? = path;
@@ -1523,7 +1520,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     return;
                 }
                 
-                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
                     (array) -> Void in
                     videoElem.snapshot!.getImage(finalPath!, progress: {
                         (current,total) -> Void in
@@ -1557,7 +1554,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         
         TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
             (message) -> Void in
-            let elem : TIMElem = message.getElem(0);
+            let elem : TIMElem = message!.getElem(0);
             if elem is TIMVideoElem{
                 let videoElem : TIMVideoElem = elem as! TIMVideoElem;
                 var finalPath : String? = path;
@@ -1571,7 +1568,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     return;
                 }
                 
-                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
                     (array) -> Void in
                     videoElem.video!.getVideo(finalPath!, progress: {
                         (current,total) -> Void in
@@ -1605,7 +1602,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         
         TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
             (message) -> Void in
-            let elem : TIMElem = message.getElem(0);
+            let elem : TIMElem = message!.getElem(0);
             if elem is TIMSoundElem{
                 let soundElem : TIMSoundElem = elem as! TIMSoundElem;
                 var finalPath : String? = path;
@@ -1619,20 +1616,20 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     return;
                 }
                 
-                TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+                TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
                     (array) -> Void in
                     soundElem.getSound(finalPath!, progress: {
-                            (current,total) -> Void in
-                            self.invokeListener(type: ListenerType.DownloadProgress, params: [
-                                "message":array[0],
-                                "path": finalPath!,
-                                "currentSize":current,
-                                "totalSize":total
-                            ]);
-                        }, succ: {
-                            () -> Void in
-                            result(finalPath!);
-                        }, fail: TencentImUtils.returnErrorClosures(result: result))
+                        (current,total) -> Void in
+                        self.invokeListener(type: ListenerType.DownloadProgress, params: [
+                            "message":array[0],
+                            "path": finalPath!,
+                            "currentSize":current,
+                            "totalSize":total
+                        ]);
+                    }, succ: {
+                        () -> Void in
+                        result(finalPath!);
+                    }, fail: TencentImUtils.returnErrorClosures(result: result))
                 }, onFail: TencentImUtils.returnErrorClosures(result: result));
             }
         });

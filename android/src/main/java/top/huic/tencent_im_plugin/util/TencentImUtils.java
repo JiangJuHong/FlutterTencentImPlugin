@@ -170,48 +170,82 @@ public class TencentImUtils {
      */
     public static TIMConversation getSession(String sessionId, String sessionTypeStr) {
         TIMConversationType sessionType = TIMConversationType.valueOf(sessionTypeStr);
+        return getSession(sessionId, sessionType);
+    }
 
+    /**
+     * 根据会话ID和会话类型获得会话对象
+     *
+     * @param sessionId   会话ID
+     * @param sessionType 会话类型
+     * @return 会话对象
+     */
+    public static TIMConversation getSession(String sessionId, TIMConversationType sessionType) {
         // 获得会话信息
         TIMConversation conversation = TIMManager.getInstance().getConversation(sessionType, sessionId);
         if (conversation == null) {
-            throw new RuntimeException("Cannot find Conversation" + sessionId + "-" + sessionTypeStr);
+            throw new RuntimeException("Cannot find Conversation" + sessionId + "-" + sessionType.toString());
         }
         return conversation;
     }
+
+
+    /**
+     * 从结果中获得消息(名称默认为message)
+     *
+     * @param methodCall 方法调用对象
+     * @param result     操作结果
+     * @param onCallback 操作回调
+     */
+    public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, final ValueCallBack<TIMMessage> onCallback) {
+        getTimMessage(methodCall, result, "message", onCallback);
+    }
+
 
     /**
      * 从结果中获得消息
      *
      * @param methodCall 方法调用对象
      * @param result     操作结果
+     * @param name       变量名
+     * @param onCallback 操作回调
      */
-    public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, final ValueCallBack<TIMMessage> onCallback) {
-        // 获得参数
-        String sessionId = CommonUtil.getParam(methodCall, result, "sessionId");
-        String sessionTypeStr = CommonUtil.getParam(methodCall, result, "sessionType");
-        long rand = Long.parseLong(CommonUtil.getParam(methodCall, result, "rand").toString());
-        long seq = Long.parseLong(CommonUtil.getParam(methodCall, result, "seq").toString());
-        Boolean self = methodCall.argument("self");
-        Object timestamp = methodCall.argument("timestamp");
-
-        // 获得会话信息
-        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-        TIMMessageLocator locator = new TIMMessageLocator();
-        locator.setRand(rand);
-        locator.setSeq(seq);
-        if (timestamp != null) {
-            locator.setTimestamp(Long.parseLong(timestamp.toString()));
-        }
-        locator.setSelf(self == null ? true : self);
-
-        // 获得消息
-        conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
-            @Override
-            public void onSuccess(final List<TIMMessage> timMessages) {
-                TIMMessage message = timMessages.get(0);
-                onCallback.onSuccess(message);
+    public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, String name, final ValueCallBack<TIMMessage> onCallback) {
+        String messageStr = methodCall.argument(name);
+        if (messageStr != null) {
+            Map messageMap = JSON.parseObject(messageStr, Map.class);
+            // 参数检测
+            Object sessionId = messageMap.get("sessionId");
+            Object sessionType = messageMap.get("sessionType");
+            Object rand = messageMap.get("rand");
+            Object seq = messageMap.get("seq");
+            Object timestamp = messageMap.get("timestamp");
+            Object self = messageMap.get("self");
+            if (sessionId == null || sessionType == null || rand == null || seq == null) {
+                throw new RuntimeException("Parameter `sessionId` or `sessionType` or `rand` or `seq` is null!");
             }
-        });
+
+            // 获得会话信息
+            final TIMConversation conversation = TencentImUtils.getSession(sessionId.toString(), sessionType.toString());
+            TIMMessageLocator locator = new TIMMessageLocator();
+            locator.setRand(Long.parseLong(rand.toString()));
+            locator.setSeq(Long.parseLong(seq.toString()));
+            if (timestamp != null) {
+                locator.setTimestamp(Long.parseLong(timestamp.toString()));
+            }
+            locator.setSelf(self == null || Boolean.parseBoolean(self.toString()));
+
+            // 获得消息
+            conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
+                @Override
+                public void onSuccess(final List<TIMMessage> timMessages) {
+                    TIMMessage message = timMessages.get(0);
+                    onCallback.onSuccess(message);
+                }
+            });
+        } else {
+            onCallback.onSuccess(null);
+        }
     }
 
     /**

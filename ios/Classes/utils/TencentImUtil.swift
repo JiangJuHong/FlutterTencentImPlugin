@@ -146,28 +146,48 @@ public class TencentImUtils{
     }
     
     /**
+    *  获得腾讯云IM的Message
+    */
+    public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetTimMessage){
+        getTimMessage(call: call, result: result, name: "message", onCallback: onCallback);
+    }
+    
+    /**
      *  获得腾讯云IM的Message
      */
-    public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetTimMessage){
-        let timestamp = ((call.arguments as! [String: Any])["timestamp"]) as? UInt64;
-        let isSelf = ((call.arguments as! [String: Any])["self"]) as? Bool;
-        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
-            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
-            let rand = CommonUtils.getParam(call: call, result: result, param: "rand") as? UInt64,
-            let seq = CommonUtils.getParam(call: call, result: result, param: "seq") as? UInt64{
-            if let session = TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result) {
+    public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,name : String, onCallback : @escaping GetTimMessage){
+        let messageStr = ((call.arguments as! [String: Any])[name]) as? String;
+        if messageStr != nil{
+            let message = JsonUtil.getDictionaryFromJSONString(jsonString: messageStr!);
+            let sessionId = message["sessionId"];
+            let sessionType = message["sessionType"];
+            let rand = message["rand"];
+            let seq = message["seq"];
+            let timestamp = message["timestamp"];
+            let isSelf = message["self"];
+            if sessionId == nil || sessionType == nil || rand == nil || seq == nil {
+                result(
+                   FlutterError(code: "5",  message: "Missing parameter",details: "Parameter `sessionId` or `sessionType` or `rand` or `seq` is null!")
+               );
+                return;
+            }
+            
+            if let session = TencentImUtils.getSession(sessionId: sessionId as! String, sessionTypeStr: sessionType as! String, result: result) {
                 let locator = TIMMessageLocator();
-                locator.seq = seq;
-                locator.rand = rand;
-                locator.isSelf = isSelf ?? true;
+                locator.seq = seq as! UInt64;
+                locator.rand = rand as! UInt64;
+                locator.isSelf = isSelf == nil || (isSelf as! Bool);
                 if timestamp != nil{
-                 locator.time = time_t(timestamp!);
+                 locator.time = time_t(timestamp as! UInt64);
                 }
+                
                 session.findMessages([locator], succ: {
                     (array) -> Void in
                     onCallback((array![0] as! TIMMessage));
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }
+        }else{
+            onCallback(nil);
         }
     }
     
@@ -177,7 +197,7 @@ public class TencentImUtils{
     public static func getMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetMessage){
         getTimMessage(call: call, result: result, onCallback: {
            (message) -> Void in
-            TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
+            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
                 (array) -> Void in
                 onCallback(array[0] as! MessageEntity);
             }, onFail: TencentImUtils.returnErrorClosures(result: result));
@@ -247,7 +267,7 @@ public typealias GetInfoFail = (_ code : Int32, _ desc : Optional<String>) -> Vo
 /**
  *  获取TIM消息成功回调
  */
-public typealias GetTimMessage = (_ message : TIMMessage) -> Void;
+public typealias GetTimMessage = (_ message : TIMMessage?) -> Void;
 
 /**
  *  获取TIM消息成功回调

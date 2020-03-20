@@ -530,40 +530,45 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      * @param local      是否是获取本地消息
      */
-    private void getMessages(MethodCall methodCall, final Result result, boolean local) {
+    private void getMessages(MethodCall methodCall, final Result result, final boolean local) {
         // 会话ID
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
         // 消息数量
-        Integer number = this.getParam(methodCall, result, "number");
+        final Integer number = this.getParam(methodCall, result, "number");
         // 获得会话信息
-        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
+        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
 
-        // 获得聊天记录
-        if (local) {
-            conversation.getLocalMessage(number, null, new ValueCallBack<List<TIMMessage>>(result) {
-                @Override
-                public void onSuccess(List<TIMMessage> timMessages) {
-                    if (timMessages == null || timMessages.size() == 0) {
-                        result.success(JsonUtil.toJSONString(new ArrayList<>()));
-                        return;
-                    }
-                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
+        TencentImUtils.getTimMessage(methodCall, result, "lastMessage", new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(TIMMessage message) {
+                // 获得聊天记录
+                if (local) {
+                    conversation.getLocalMessage(number, message, new ValueCallBack<List<TIMMessage>>(result) {
+                        @Override
+                        public void onSuccess(List<TIMMessage> timMessages) {
+                            if (timMessages == null || timMessages.size() == 0) {
+                                result.success(JsonUtil.toJSONString(new ArrayList<>()));
+                                return;
+                            }
+                            TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
+                        }
+                    });
+                } else {
+                    conversation.getMessage(number, message, new ValueCallBack<List<TIMMessage>>(result) {
+                        @Override
+                        public void onSuccess(List<TIMMessage> timMessages) {
+                            if (timMessages == null || timMessages.size() == 0) {
+                                result.success(JsonUtil.toJSONString(new ArrayList<>()));
+                                return;
+                            }
+                            TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
+                        }
+                    });
                 }
-            });
-        } else {
-            conversation.getMessage(number, null, new ValueCallBack<List<TIMMessage>>(result) {
-                @Override
-                public void onSuccess(List<TIMMessage> timMessages) {
-                    if (timMessages == null || timMessages.size() == 0) {
-                        result.success(JsonUtil.toJSONString(new ArrayList<>()));
-                        return;
-                    }
-                    TencentImUtils.getMessageInfo(timMessages, new ValueCallBack<List<MessageEntity>>(result));
-                }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -1483,18 +1488,11 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void revokeMessage(MethodCall methodCall, final Result result) {
-        // 获得参数
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        String sessionTypeStr = this.getParam(methodCall, result, "sessionType");
-
-        // 获得会话信息
-        final TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-
         // 获得消息后撤回
         TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
-                conversation.revokeMessage(message, new VoidCallBack(result));
+                message.getConversation().revokeMessage(message, new VoidCallBack(result));
             }
         });
     }

@@ -103,3 +103,7 @@
 
 ## 0.2.8
 修复删除会话无法删除本地消息的问题
+
+## 0.2.9
+* 修复MessageEntity传递方式
+* getMessages 和 getLocalMessages 增加根据lastMessage来筛选
