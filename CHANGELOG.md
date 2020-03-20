@@ -107,3 +107,6 @@
 ## 0.2.9
 * 修复MessageEntity传递方式
 * getMessages 和 getLocalMessages 增加根据lastMessage来筛选
+
+## 0.2.10
+* 修复 getMessage 和 getLocalMessage 根据lastMessage筛选 无效的问题

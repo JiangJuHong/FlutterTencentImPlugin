@@ -121,7 +121,7 @@ class TencentImPlugin {
       "sessionId": sessionId,
       "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
-      "message": jsonEncode(lastMessage),
+      "lastMessage": jsonEncode(lastMessage),
     })));
   }
 
@@ -137,7 +137,7 @@ class TencentImPlugin {
       "sessionId": sessionId,
       "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
-      "message": jsonEncode(lastMessage),
+      "lastMessage": jsonEncode(lastMessage),
     })));
   }
 
