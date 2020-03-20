@@ -157,7 +157,7 @@ public class TencentImUtils{
      */
     public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,name : String, onCallback : @escaping GetTimMessage){
         let messageStr = ((call.arguments as! [String: Any])[name]) as? String;
-        if messageStr != nil{
+        if messageStr != nil && messageStr != "null"{
             let message = JsonUtil.getDictionaryFromJSONString(jsonString: messageStr!);
             let sessionId = message["sessionId"];
             let sessionType = message["sessionType"];
