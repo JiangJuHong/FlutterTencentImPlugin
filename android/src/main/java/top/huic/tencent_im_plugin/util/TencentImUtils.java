@@ -212,8 +212,8 @@ public class TencentImUtils {
      */
     public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, String name, final ValueCallBack<TIMMessage> onCallback) {
         String messageStr = methodCall.argument(name);
-        if (messageStr != null) {
-            Map messageMap = JSON.parseObject(messageStr, Map.class);
+        if (messageStr != null && !messageStr.equals("null")) {
+            Map<String,Object> messageMap = JSON.parseObject(messageStr, Map.class);
             // 参数检测
             Object sessionId = messageMap.get("sessionId");
             Object sessionType = messageMap.get("sessionType");
