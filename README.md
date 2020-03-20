@@ -29,7 +29,6 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 
 ### 近期计划(已完成内容将会被移除)  
 [ ]将非实现节点用统一格式返回  
-[ ]修改聊天记录拉取的方式  
 
 ### 下版本计划(0.3.0)
 1. 将不同类别的方法封装到不同实体
@@ -98,8 +97,8 @@ Demo截图:
 | getGroupInfo  | 获得群信息(云端) | {id:'群ID'} | √ | √
 | getUserInfo  | 获得用户信息 | {id:'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √
 | setRead  | 设置已读 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
-| getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
-| getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量"} | √ | √
+| getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
+| getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
 | getGroupList  | 获得群组列表 | - | √ | √
@@ -138,10 +137,10 @@ Demo截图:
 | deleteFriendsFromFriendGroup  | 从分组删除好友 | {groupName:'组名',ids:'ID列表'} | √ | √
 | renameFriendGroup  | 重命名分组 | {oldGroupName:'旧名称',newGroupName:'新名称'} | √ | √
 | getFriendGroups  | 获得好友分组 | {groupNames:'组名'} | √ | √
-| revokeMessage | 撤回一条发送成功的消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳'} | √ | √
-| removeMessage | 删除一条消息(本地) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的'} | √ | √
-| setMessageCustomInt | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
-| setMessageCustomStr | 设置自定义整数 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',self:'是否是自己发送的',value:'自定义值'} | √ | √
-| downloadVideoImage | 获得视频图片(缩略图) | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存截图的路径'} | √ | √
-| downloadVideo | 获得视频 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存视频的路径'} | √ | √
-| downloadSound | 获得语音 | {sessionId:'会话ID',sessionType:'会话类型',rand:'消息随机码',seq:'消息序列号',timestamp:'消息时间戳',path:'保存语音的路径'} | √ | √
+| revokeMessage | 撤回一条发送成功的消息 | {message:'消息对象'} | √ | √
+| removeMessage | 删除一条消息(本地) | {message:'消息对象'} | √ | √
+| setMessageCustomInt | 设置自定义整数 | {message:'消息对象',value:'自定义值'} | √ | √
+| setMessageCustomStr | 设置自定义整数 | {message:'消息对象',value:'自定义值'} | √ | √
+| downloadVideoImage | 获得视频图片(缩略图) | {message:'消息对象',path:'保存截图的路径'} | √ | √
+| downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
+| downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √

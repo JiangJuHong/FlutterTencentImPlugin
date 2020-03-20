@@ -165,12 +165,7 @@ class ImPageState extends State<ImPage> {
 
   /// 初始化
   init() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions([
-      PermissionGroup.storage,
-      PermissionGroup.storage,
-      PermissionGroup.microphone
-    ]);
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage, PermissionGroup.storage, PermissionGroup.microphone]);
   }
 
   /// 监听器
@@ -204,8 +199,7 @@ class ImPageState extends State<ImPage> {
   /// 发送事件
   onSend() async {
     if (controller.text == null || controller.text.trim() == "") {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('不能发送空值!'), duration: Duration(milliseconds: 2000)));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('不能发送空值!'), duration: Duration(milliseconds: 2000)));
       return;
     }
 
@@ -218,10 +212,7 @@ class ImPageState extends State<ImPage> {
 
     controller.text = "";
 
-    Timer(
-        Duration(milliseconds: 200),
-        () =>
-            scrollController.jumpTo(scrollController.position.maxScrollExtent));
+    Timer(Duration(milliseconds: 200), () => scrollController.jumpTo(scrollController.position.maxScrollExtent));
   }
 
   /// 获取消息列表事件
@@ -401,8 +392,7 @@ class ImPageState extends State<ImPage> {
   /// 发送语音
   sendVoice(path, duration) {
     if (duration <= 1) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('时间太短!'), duration: Duration(milliseconds: 2000)));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('时间太短!'), duration: Duration(milliseconds: 2000)));
       return;
     }
 
@@ -458,8 +448,7 @@ class ImPageState extends State<ImPage> {
       );
 
       // 获得控制器并获得视频时长
-      VideoPlayerController playerController =
-          VideoPlayerController.file(File(compressVideo.path));
+      VideoPlayerController playerController = VideoPlayerController.file(File(compressVideo.path));
       await playerController.initialize();
       int duration = playerController.value.duration.inSeconds;
 
@@ -519,8 +508,7 @@ class ImPageState extends State<ImPage> {
         this.updateData(DataEntity(data: res));
       });
     }).catchError((e) {
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: new Text('消息发送失败:$e')));
     });
   }
 
@@ -599,82 +587,51 @@ class ImPageState extends State<ImPage> {
         switch (res) {
           case 0:
             TencentImPlugin.revokeMessage(
-              sessionId: item.sessionId,
-              sessionType: item.sessionType,
-              rand: item.rand,
-              seq: item.seq,
-              timestamp: item.timestamp,
+              message: item,
             ).then((_) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
-              this.setState(
-                  () => data[index].data.status = MessageStatusEnum.HasRevoked);
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
+              this.setState(() => data[index].data.status = MessageStatusEnum.HasRevoked);
             }).catchError((e) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
             });
             break;
           case 1:
             TencentImPlugin.removeMessage(
-              sessionId: item.sessionId,
-              sessionType: item.sessionType,
-              rand: item.rand,
-              seq: item.seq,
-              timestamp: item.timestamp,
-              self: item.self,
+              message: item,
             ).then((result) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('消息删除:$result')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息删除:$result')));
               this.setState(() => data.removeAt(index));
             }).catchError((e) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('消息删除失败:$e')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息删除失败:$e')));
             });
             break;
           case 2:
             int value = new Random(0).nextInt(9999999);
             TencentImPlugin.setMessageCustomInt(
-              sessionId: item.sessionId,
-              sessionType: item.sessionType,
-              rand: item.rand,
-              seq: item.seq,
-              timestamp: item.timestamp,
-              self: item.self,
+              message: item,
               value: value,
             ).then((result) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: new Text('设置自定义整型成功:$value，为了确保成功，请返回界面后重试')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('设置自定义整型成功:$value，为了确保成功，请返回界面后重试')));
             }).catchError((e) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('设置自定义整型失败:$e')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('设置自定义整型失败:$e')));
             });
             break;
           case 3:
-            String value =
-                "string=${new Random(0).nextInt(9999999).toString()}";
+            String value = "string=${new Random(0).nextInt(9999999).toString()}";
             TencentImPlugin.setMessageCustomStr(
-              sessionId: item.sessionId,
-              sessionType: item.sessionType,
-              rand: item.rand,
-              seq: item.seq,
-              timestamp: item.timestamp,
-              self: item.self,
+              message: item,
               value: value,
             ).then((result) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: new Text('设置自定义字符串成功:$value，为了确保成功，请返回界面后重试')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('设置自定义字符串成功:$value，为了确保成功，请返回界面后重试')));
             }).catchError((e) {
-              Scaffold.of(context)
-                  .showSnackBar(SnackBar(content: new Text('设置自定义字符串失败:$e')));
+              Scaffold.of(context).showSnackBar(SnackBar(content: new Text('设置自定义字符串失败:$e')));
             });
             break;
           case 4:
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: new Text('获得的自定义整型为:${item.customInt}')));
+            Scaffold.of(context).showSnackBar(SnackBar(content: new Text('获得的自定义整型为:${item.customInt}')));
             break;
           case 5:
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: new Text('获得的自定义字符串为:${item.customStr}')));
+            Scaffold.of(context).showSnackBar(SnackBar(content: new Text('获得的自定义字符串为:${item.customStr}')));
             break;
         }
       }
@@ -687,11 +644,7 @@ class ImPageState extends State<ImPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          userInfo != null
-              ? userInfo.nickName
-              : (groupInfoEntity != null
-                  ? "${groupInfoEntity.groupName}(${groupInfoEntity.memberNum})"
-                  : ""),
+          userInfo != null ? userInfo.nickName : (groupInfoEntity != null ? "${groupInfoEntity.groupName}(${groupInfoEntity.memberNum})" : ""),
         ),
       ),
       body: Container(
@@ -707,11 +660,9 @@ class ImPageState extends State<ImPage> {
                   children: List.generate(
                     data.length,
                     (index) => LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
+                      builder: (BuildContext context, BoxConstraints constraints) {
                         return GestureDetector(
-                          onLongPress: () => onMessageLongPress(
-                              index, data[index].data, context),
+                          onLongPress: () => onMessageLongPress(index, data[index].data, context),
                           child: MessageItem(
                             data: data[index],
                             child: getComponent(data[index].data),
@@ -732,8 +683,7 @@ class ImPageState extends State<ImPage> {
               child: Row(
                 children: <Widget>[
                   InkWell(
-                    onTap: () =>
-                        this.setState(() => voiceWindow = !voiceWindow),
+                    onTap: () => this.setState(() => voiceWindow = !voiceWindow),
                     child: Container(
                       child: Icon(
                         Icons.mic,
@@ -813,8 +763,7 @@ class ImPageState extends State<ImPage> {
                                 width: 150,
                                 child: CircularProgressIndicator(
                                   backgroundColor: Colors.grey[200],
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.red),
+                                  valueColor: AlwaysStoppedAnimation(Colors.red),
                                   value: voiceCurrentSecond / voiceMaxSecond,
                                 ),
                               ),
@@ -822,9 +771,7 @@ class ImPageState extends State<ImPage> {
                                 width: 150,
                                 height: 150,
                                 decoration: BoxDecoration(
-                                  color: speech
-                                      ? (removeVoice ? Colors.red : Colors.blue)
-                                      : Colors.grey,
+                                  color: speech ? (removeVoice ? Colors.red : Colors.blue) : Colors.grey,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(150),
                                   ),
@@ -914,9 +861,7 @@ class MessageItem extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: data.data.self
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
+              crossAxisAlignment: data.data.self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: <Widget>[
                 Text(data.data.userInfo.nickName ?? ""),
                 Container(height: 5),
@@ -933,15 +878,10 @@ class MessageItem extends StatelessWidget {
                       Radius.circular(3),
                     ),
                   ),
-                  child: data != null &&
-                          data.data.status == MessageStatusEnum.HasRevoked
-                      ? Text("[该消息已被撤回]")
-                      : child,
+                  child: data != null && data.data.status == MessageStatusEnum.HasRevoked ? Text("[该消息已被撤回]") : child,
                 ),
                 Container(),
-                data.progress != null && data.progress < 100
-                    ? Text("${data.progress}%")
-                    : Container(),
+                data.progress != null && data.progress < 100 ? Text("${data.progress}%") : Container(),
               ],
             ),
           ),
@@ -1019,9 +959,7 @@ class MessageVoice extends StatefulWidget {
   /// 时间
   final int duration;
 
-  const MessageVoice(
-      {Key key, this.data, this.soundNode, this.path, this.duration})
-      : super(key: key);
+  const MessageVoice({Key key, this.data, this.soundNode, this.path, this.duration}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => MessageVoiceState();
@@ -1058,8 +996,7 @@ class MessageVoiceState extends State<MessageVoice> {
     if (type == ListenerTypeEnum.DownloadProgress) {
       Map<String, dynamic> obj = jsonDecode(params);
       if (widget.data == MessageEntity.fromJson(obj["message"])) {
-        ListenerFactory.progressDialogChangeNotifier.value =
-            obj["currentSize"] / obj["totalSize"];
+        ListenerFactory.progressDialogChangeNotifier.value = obj["currentSize"] / obj["totalSize"];
       }
     }
   }
@@ -1069,12 +1006,7 @@ class MessageVoiceState extends State<MessageVoice> {
     // 如果视频文件为空，就下载视频
     DialogUtil.showProgressLoading(context);
     this.path = await TencentImPlugin.downloadSound(
-      sessionId: widget.data.sessionId,
-      sessionType: widget.data.sessionType,
-      rand: widget.data.rand,
-      seq: widget.data.seq,
-      timestamp: widget.data.timestamp,
-      self: widget.data.self,
+      message: widget.data,
       path: path,
     );
     DialogUtil.cancelLoading(context);
@@ -1153,12 +1085,7 @@ class MessageVideoState extends State<MessageVideo> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       TencentImPlugin.downloadVideoImage(
-        sessionId: widget.data.sessionId,
-        sessionType: widget.data.sessionType,
-        rand: widget.data.rand,
-        seq: widget.data.seq,
-        timestamp: widget.data.timestamp,
-        self: widget.data.self,
+        message: widget.data,
         path: snapshotImage,
       ).then((res) {
         snapshotImage = res;
@@ -1180,8 +1107,7 @@ class MessageVideoState extends State<MessageVideo> {
     if (type == ListenerTypeEnum.DownloadProgress) {
       Map<String, dynamic> obj = jsonDecode(params);
       if (widget.data == MessageEntity.fromJson(obj["message"])) {
-        ListenerFactory.progressDialogChangeNotifier.value =
-            obj["currentSize"] / obj["totalSize"];
+        ListenerFactory.progressDialogChangeNotifier.value = obj["currentSize"] / obj["totalSize"];
       }
     }
   }
@@ -1191,12 +1117,7 @@ class MessageVideoState extends State<MessageVideo> {
     // 如果视频文件为空，就下载视频
     DialogUtil.showProgressLoading(context);
     this.video = await TencentImPlugin.downloadVideo(
-      sessionId: widget.data.sessionId,
-      sessionType: widget.data.sessionType,
-      rand: widget.data.rand,
-      seq: widget.data.seq,
-      timestamp: widget.data.timestamp,
-      self: widget.data.self,
+      message: widget.data,
       path: video,
     );
     DialogUtil.cancelLoading(context);
@@ -1258,8 +1179,7 @@ class MessageLocation extends StatelessWidget {
   /// 纬度
   final double latitude;
 
-  const MessageLocation({Key key, this.desc, this.longitude, this.latitude})
-      : super(key: key);
+  const MessageLocation({Key key, this.desc, this.longitude, this.latitude}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

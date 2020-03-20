@@ -25,8 +25,7 @@ import 'enums/pendency_type_enum.dart';
 import 'enums/receive_message_opt_enum.dart';
 
 class TencentImPlugin {
-  static const MethodChannel _channel =
-      const MethodChannel('tencent_im_plugin');
+  static const MethodChannel _channel = const MethodChannel('tencent_im_plugin');
 
   /// 监听器对象
   static TencentImPluginListener listener;
@@ -41,16 +40,14 @@ class TencentImPlugin {
     @required String identifier, // 用户ID
     @required String userSig, // 用户签名
   }) async {
-    return await _channel
-        .invokeMethod('login', {"identifier": identifier, "userSig": userSig});
+    return await _channel.invokeMethod('login', {"identifier": identifier, "userSig": userSig});
   }
 
   /// 初始化本地存储，可以在无网络情况下加载本地会话和消息
   static Future<void> initStorage({
     @required String identifier, // 登录用户ID
   }) async {
-    return await _channel
-        .invokeMethod('initStorage', {"identifier": identifier});
+    return await _channel.invokeMethod('initStorage', {"identifier": identifier});
   }
 
   /// 退出登录腾讯云IM
@@ -89,8 +86,7 @@ class TencentImPlugin {
   /// 获得当前登录用户会话列表
   /// @return 会话列表集合
   static Future<List<SessionEntity>> getConversationList() async {
-    return ListUtil.generateOBJList<SessionEntity>(
-        jsonDecode(await _channel.invokeMethod('getConversationList')));
+    return ListUtil.generateOBJList<SessionEntity>(jsonDecode(await _channel.invokeMethod('getConversationList')));
   }
 
   /// 获得当前登录用户会话列表
@@ -110,38 +106,32 @@ class TencentImPlugin {
   }
 
   /// 根据会话ID获得本地消息列表
-  /// @param sessionId 会话ID
-  /// @param sessionType 会话类型
-  /// @param number 拉取消息数量
-  /// @return 消息列表集合
   static Future<List<MessageEntity>> getLocalMessages({
-    @required String sessionId,
-    @required SessionType sessionType,
-    @required int number,
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int number, // 拉取数量
+    MessageEntity lastMessage, // 最后一条消息
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(
-        jsonDecode(await _channel.invokeMethod('getLocalMessages', {
+    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(await _channel.invokeMethod('getLocalMessages', {
       "sessionId": sessionId,
       "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
+      "message": jsonEncode(lastMessage),
     })));
   }
 
   /// 根据会话ID获得消息列表
-  /// @param sessionId 会话ID
-  /// @param sessionType 会话类型
-  /// @param number 拉取消息数量
-  /// @return 消息列表集合
   static Future<List<MessageEntity>> getMessages({
-    @required String sessionId,
-    @required SessionType sessionType,
-    @required int number,
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required int number, // 拉取数量
+    MessageEntity lastMessage, // 最后一条消息
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(
-        jsonDecode(await _channel.invokeMethod('getMessages', {
+    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(await _channel.invokeMethod('getMessages', {
       "sessionId": sessionId,
       "sessionType": EnumUtil.getEnumName(sessionType),
       "number": number,
+      "message": jsonEncode(lastMessage),
     })));
   }
 
@@ -182,9 +172,7 @@ class TencentImPlugin {
 
   /// 创建群聊
   static Future<String> createGroup({
-    @required
-        String
-            type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
+    @required String type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
     @required String name, // 群名称
     @required List<GroupMemberEntity> members, // 默认群成员，根据role决定身份
     String groupId, //群ID
@@ -255,16 +243,14 @@ class TencentImPlugin {
   static Future<List<GroupMemberEntity>> getGroupMembers({
     @required String groupId, //群ID
   }) async {
-    return ListUtil.generateOBJList<GroupMemberEntity>(
-        jsonDecode(await _channel.invokeMethod('getGroupMembers', {
+    return ListUtil.generateOBJList<GroupMemberEntity>(jsonDecode(await _channel.invokeMethod('getGroupMembers', {
       "groupId": groupId,
     })));
   }
 
   /// 获得群列表
   static Future<List<GroupInfoEntity>> getGroupList() async {
-    return ListUtil.generateOBJList<GroupInfoEntity>(
-        jsonDecode(await _channel.invokeMethod('getGroupList')));
+    return ListUtil.generateOBJList<GroupInfoEntity>(jsonDecode(await _channel.invokeMethod('getGroupList')));
   }
 
   /// 解散群组
@@ -290,8 +276,7 @@ class TencentImPlugin {
   /// 获得群信息
   /// @return 群ID
   static Future<GroupInfoEntity> getGroupInfo({@required id}) async {
-    final String result =
-        await _channel.invokeMethod('getGroupInfo', {"id": id});
+    final String result = await _channel.invokeMethod('getGroupInfo', {"id": id});
     if (result != null) {
       return EntityFactory.generateOBJ<GroupInfoEntity>(jsonDecode(result));
     }
@@ -317,9 +302,7 @@ class TencentImPlugin {
       "notification": notification,
       "introduction": introduction,
       "faceUrl": faceUrl,
-      "addOption": addOption == null
-          ? null
-          : addOption.toString().replaceAll("AddGroupOptEnum.", ""),
+      "addOption": addOption == null ? null : addOption.toString().replaceAll("AddGroupOptEnum.", ""),
       "maxMemberNum": maxMemberNum,
       "visable": visable,
       "silenceAll": silenceAll,
@@ -342,11 +325,7 @@ class TencentImPlugin {
       "nameCard": nameCard,
       "silence": silence,
       "role": role,
-      "receiveMessageOpt": receiveMessageOpt == null
-          ? null
-          : receiveMessageOpt
-              .toString()
-              .replaceAll("ReceiveMessageOptEnum.", ""),
+      "receiveMessageOpt": receiveMessageOpt == null ? null : receiveMessageOpt.toString().replaceAll("ReceiveMessageOptEnum.", ""),
     });
   }
 
@@ -355,8 +334,7 @@ class TencentImPlugin {
     int timestamp, // 翻页时间戳
     int numPerPage, // 每页数量
   }) async {
-    return GroupPendencyPageEntity.fromJson(
-        jsonDecode(await _channel.invokeMethod('getGroupPendencyList', {
+    return GroupPendencyPageEntity.fromJson(jsonDecode(await _channel.invokeMethod('getGroupPendencyList', {
       "timestamp": timestamp,
       "numPerPage": numPerPage,
     })));
@@ -407,8 +385,7 @@ class TencentImPlugin {
   static Future<UserInfoEntity> getSelfProfile({
     bool forceUpdate: true, // 是否强制走服务器获取
   }) async {
-    final String result = await _channel
-        .invokeMethod('getSelfProfile', {"forceUpdate": forceUpdate});
+    final String result = await _channel.invokeMethod('getSelfProfile', {"forceUpdate": forceUpdate});
     if (result != null) {
       return EntityFactory.generateOBJ<UserInfoEntity>(jsonDecode(result));
     }
@@ -433,9 +410,7 @@ class TencentImPlugin {
 
   /// 修改自己的资料
   static Future<void> modifySelfProfile({
-    @required
-        Map<String, dynamic>
-            params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E8.87.AA.E5.B7.B1.E7.9A.84.E8.B5.84.E6.96.99
+    @required Map<String, dynamic> params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E8.87.AA.E5.B7.B1.E7.9A.84.E8.B5.84.E6.96.99
   }) async {
     return await _channel.invokeMethod('modifySelfProfile', {
       "params": jsonEncode(params),
@@ -444,16 +419,13 @@ class TencentImPlugin {
 
   /// 获得好友列表
   static Future<List<FriendEntity>> getFriendList() async {
-    return ListUtil.generateOBJList<FriendEntity>(
-        jsonDecode(await _channel.invokeMethod('getFriendList')));
+    return ListUtil.generateOBJList<FriendEntity>(jsonDecode(await _channel.invokeMethod('getFriendList')));
   }
 
   /// 修改好友资料
   static Future<void> modifyFriend({
     @required String identifier, // 好友id
-    @required
-        Map<String, dynamic>
-            params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E5.A5.BD.E5.8F.8B
+    @required Map<String, dynamic> params, // 参数，参见腾讯云修改自己资料文档 https://cloud.tencent.com/document/product/269/33926#.E4.BF.AE.E6.94.B9.E5.A5.BD.E5.8F.8B
   }) async {
     return await _channel.invokeMethod('modifyFriend', {
       "identifier": identifier,
@@ -476,8 +448,7 @@ class TencentImPlugin {
       "addWording": addWording,
       "addSource": addSource,
       "friendGroup": friendGroup,
-      "addType":
-          addType == null ? null : FriendAddTypeTool.getIndexByEnum(addType),
+      "addType": addType == null ? null : FriendAddTypeTool.getIndexByEnum(addType),
     });
     return AddFriendResultEntity.fromJson(jsonDecode(data));
   }
@@ -574,8 +545,7 @@ class TencentImPlugin {
 
   /// 获得黑名单列表
   static Future<List<FriendEntity>> getBlackList() async {
-    return ListUtil.generateOBJList<FriendEntity>(
-        jsonDecode(await _channel.invokeMethod('getBlackList')));
+    return ListUtil.generateOBJList<FriendEntity>(jsonDecode(await _channel.invokeMethod('getBlackList')));
   }
 
   /// 创建好友分组
@@ -614,8 +584,7 @@ class TencentImPlugin {
     @required List<String> ids,
     @required String groupName,
   }) async {
-    return jsonDecode(
-        await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
+    return jsonDecode(await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
       "ids": ids.join(","),
       "groupName": groupName,
     }));
@@ -642,142 +611,81 @@ class TencentImPlugin {
   }
 
   /// 撤回
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<void> revokeMessage({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
+    @required MessageEntity message, // 消息对象
   }) async {
     return await _channel.invokeMethod('revokeMessage', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "timestamp": timestamp
+      "message": jsonEncode(message),
     });
   }
 
   /// 删除(仅会删除本地)
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<bool> removeMessage({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
   }) async {
     return await _channel.invokeMethod('removeMessage', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "timestamp": timestamp,
-      "self": self,
+      "message": jsonEncode(message),
     });
   }
 
   /// 设置自定义整型
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<void> setMessageCustomInt({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
     @required int value, // 会话ID
   }) async {
     return await _channel.invokeMethod('setMessageCustomInt', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "self": self,
-      "timestamp": timestamp,
+      "message": jsonEncode(message),
       "value": value,
     });
   }
 
   /// 设置自定义字符串
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<void> setMessageCustomStr({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
     @required String value, // 会话ID
   }) async {
     return await _channel.invokeMethod('setMessageCustomStr', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "self": self,
-      "timestamp": timestamp,
+      "message": jsonEncode(message),
       "value": value,
     });
   }
 
   /// 获得视频图片
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<String> downloadVideoImage({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
     String path, // 保存截图的路径
   }) async {
     return await _channel.invokeMethod('downloadVideoImage', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "timestamp": timestamp,
-      "self": self,
+      "message": jsonEncode(message),
       "path": path,
     });
   }
 
   /// 获得视频
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<String> downloadVideo({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
     String path, // 保存视频的路径
   }) async {
     return await _channel.invokeMethod('downloadVideo', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "timestamp": timestamp,
-      "self": self,
+      "message": jsonEncode(message),
       "path": path,
     });
   }
 
   /// 获得语音
+  /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<String> downloadSound({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    @required int rand, // 消息随机码
-    @required int seq, //消息序列号
-    @required int timestamp, // 消息时间戳
-    @required bool self, // 是否是本人发送的
+    @required MessageEntity message, // 消息对象
     String path, // 保存语音的路径
   }) async {
     return await _channel.invokeMethod('downloadSound', {
-      "sessionId": sessionId,
-      "sessionType": EnumUtil.getEnumName(sessionType),
-      "rand": rand,
-      "seq": seq,
-      "timestamp": timestamp,
-      "self": self,
+      "message": jsonEncode(message),
       "path": path,
     });
   }
@@ -835,11 +743,9 @@ class TencentImPluginListener {
 
           // 根据类型初始化参数
           if (type == ListenerTypeEnum.NewMessages) {
-            params =
-                ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
+            params = ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
           } else if (type == ListenerTypeEnum.RefreshConversation) {
-            params =
-                ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
+            params = ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
           } else if (type == ListenerTypeEnum.RecvReceipt) {
             params = jsonDecode(paramsStr);
           } else {

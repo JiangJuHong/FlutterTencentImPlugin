@@ -101,9 +101,7 @@ class MessageEntity {
     peerReaded = json['peerReaded'];
     sender = json['sender'];
     sessionId = json['sessionId'];
-    userInfo = json['userInfo'] == null
-        ? null
-        : UserInfoEntity.fromJson(json['userInfo']);
+    userInfo = json['userInfo'] == null ? null : UserInfoEntity.fromJson(json['userInfo']);
     if (json['status'] != null) {
       for (var item in MessageStatusEnum.values) {
         if (EnumUtil.getEnumName(item) == json['status']) {
@@ -137,10 +135,10 @@ class MessageEntity {
     data['peerReaded'] = this.peerReaded;
     data['sender'] = this.sender;
     data['sessionId'] = this.sessionId;
+    data['sessionType'] = EnumUtil.getEnumName(this.sessionType);
     data['userInfo'] = this.userInfo == null ? null : this.userInfo.toJson();
 
-    data['status'] =
-        this.status == null ? null : EnumUtil.getEnumName(this.status);
+    data['status'] = this.status == null ? null : EnumUtil.getEnumName(this.status);
     data['rand'] = this.rand;
     data['seq'] = this.seq;
     data['note'] = this.note;
@@ -148,16 +146,8 @@ class MessageEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MessageEntity &&
-          runtimeType == other.runtimeType &&
-          rand == other.rand &&
-          seq == other.seq &&
-          self == other.self &&
-          sessionId == other.sessionId;
+  bool operator ==(Object other) => identical(this, other) || other is MessageEntity && runtimeType == other.runtimeType && rand == other.rand && seq == other.seq && self == other.self && sessionId == other.sessionId;
 
   @override
-  int get hashCode =>
-      rand.hashCode ^ seq.hashCode ^ self.hashCode ^ sessionId.hashCode;
+  int get hashCode => rand.hashCode ^ seq.hashCode ^ self.hashCode ^ sessionId.hashCode;
 }
