@@ -110,3 +110,6 @@
 
 ## 0.2.10
 * 修复 getMessage 和 getLocalMessage 根据lastMessage筛选 无效的问题
+
+## 0.2.11
+* 修复IOS无法获得消息的问题
