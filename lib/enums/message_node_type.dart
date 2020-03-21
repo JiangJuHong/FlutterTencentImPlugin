@@ -1,4 +1,5 @@
 import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
+import 'package:tencent_im_plugin/message_node/group_tips_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/location_message_node.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
@@ -27,6 +28,9 @@ enum MessageNodeType {
   // 位置
   Location,
 
+  // 群提示
+  GroupTips,
+
   // 其它
   Other,
 }
@@ -52,6 +56,9 @@ class MessageNodeTypeUtil {
         break;
       case MessageNodeType.Location:
         return LocationMessageNode.fromJson(json);
+        break;
+      case MessageNodeType.GroupTips:
+        return GroupTipsMessageNode.fromJson(json);
         break;
       case MessageNodeType.Other:
         return OtherMessageNode.fromJson(json);

@@ -285,6 +285,7 @@ class ImPageState extends State<ImPage> {
           soundNode: value,
         );
       case MessageNodeType.Custom:
+        return MessageText(text: "[自定义节点，未指定解析规则]");
         break;
       case MessageNodeType.Video:
         VideoMessageNode value = node;
@@ -299,8 +300,10 @@ class ImPageState extends State<ImPage> {
           latitude: value.latitude,
           longitude: value.longitude,
         );
+      case MessageNodeType.GroupTips:
+        return MessageText(text: "[群提示节点，未指定解析规则]");
       case MessageNodeType.Other:
-        return MessageText(text: "不支持的消息节点");
+        return MessageText(text: "[不支持的消息节点]");
     }
   }
 
