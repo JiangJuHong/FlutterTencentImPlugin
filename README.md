@@ -85,7 +85,7 @@ Demo截图:
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  √ |  已完成 |
-|  OtherMessageNode  |  Android |  已完成 |
+|  OtherMessageNode  |  仅Android(√) |  已完成 |
 
 ### 接口
 |  接口   | 说明  | 参数  | Android | IOS |
