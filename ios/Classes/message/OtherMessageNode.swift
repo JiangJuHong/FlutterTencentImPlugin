@@ -19,7 +19,7 @@ public class OtherMessageNode : AbstractMessageNode{
     override func analysis(elem: TIMElem) -> AbstractMessageEntity {
         let entity = OtherMessageEntity();
         entity.params = "{\"note\":\"IOS暂不支持该节点!\"}";
-        entity.node = "\(type(of:elem))";
+        entity.type = "\(type(of:elem))";
         return entity;
     }
 }

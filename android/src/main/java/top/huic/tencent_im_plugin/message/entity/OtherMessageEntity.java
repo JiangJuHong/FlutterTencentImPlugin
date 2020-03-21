@@ -16,7 +16,7 @@ public class OtherMessageEntity extends AbstractMessageEntity {
     /**
      * 节点
      */
-    private String node;
+    private String type;
 
     public OtherMessageEntity() {
         super(MessageNodeType.Other);
@@ -30,11 +30,11 @@ public class OtherMessageEntity extends AbstractMessageEntity {
         this.params = params;
     }
 
-    public String getNode() {
-        return node;
+    public String getType() {
+        return type;
     }
 
-    public void setNode(String node) {
-        this.node = node;
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -25,7 +25,7 @@ public class OtherMessageNode extends AbstractMessageNode<TIMElem, OtherMessageE
     @Override
     public OtherMessageEntity analysis(TIMElem elem) {
         OtherMessageEntity entity = new OtherMessageEntity();
-        entity.setNode(elem.getType().toString());
+        entity.setType(elem.getType().toString());
         entity.setParams(JsonUtil.toJSONString(elem));
         return entity;
     }

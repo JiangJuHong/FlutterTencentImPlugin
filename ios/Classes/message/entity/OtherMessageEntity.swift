@@ -9,7 +9,7 @@ public class OtherMessageEntity : AbstractMessageEntity{
     var params : String?;
     
     /// 节点类型
-    var node : String?;
+    var type : String?;
     
     override init() {
         super.init(MessageNodeType.Other);

@@ -7,14 +7,14 @@ class OtherMessageNode extends MessageNode {
   /// 参数
   Map<String, dynamic> params;
 
-  /// 节点
-  String node;
+  /// 节点类型
+  String type;
 
   OtherMessageNode() : super(MessageNodeType.Other);
 
   OtherMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Other) {
     params = jsonDecode(json['params']);
-    node = json['node'];
+    type = json['type'];
   }
 
   @override
