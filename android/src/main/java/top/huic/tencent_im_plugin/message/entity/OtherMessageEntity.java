@@ -13,6 +13,11 @@ public class OtherMessageEntity extends AbstractMessageEntity {
      */
     private String params;
 
+    /**
+     * 节点
+     */
+    private String node;
+
     public OtherMessageEntity() {
         super(MessageNodeType.Other);
     }
@@ -23,5 +28,13 @@ public class OtherMessageEntity extends AbstractMessageEntity {
 
     public void setParams(String params) {
         this.params = params;
+    }
+
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
     }
 }
