@@ -69,7 +69,6 @@ Demo截图:
 |  VideoMessageNode  |  √ |  视频消息 |
 |  CustomMessageNode  |  √ | 自定义消息 |
 |  LocationMessageNode  |  √ | 位置消息 |
-|  OtherMessageNode  | Android | 其它节点 |
 
 ### 消息接收节点
 |  节点  |  进度  |  说明  |
@@ -86,6 +85,7 @@ Demo截图:
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  √ |  已完成 |
+|  OtherMessageNode  |  Android |  已完成 |
 
 ### 接口
 |  接口   | 说明  | 参数  | Android | IOS |
