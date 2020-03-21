@@ -28,7 +28,10 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 [ ]离线推送  
 
 ### 近期计划(已完成内容将会被移除)  
-腾讯云离线推送
+[ ] 腾讯云离线推送  
+[ ] TIMSNSSystemElem  
+[ ] TIMProfileSystemElem  
+[ ] TIMGroupSystemElem  
 
 ### 下版本计划(0.3.0)
 1. 将不同类别的方法封装到不同实体
@@ -74,12 +77,12 @@ Demo截图:
 |  TIMCustomElem  |  √ |  已完成 |
 |  TIMFaceElem  |  - |  暂不考虑 |
 |  TIMFileElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
-|  TIMGroupSystemElem  |  - |  暂不考虑 |
+|  TIMGroupSystemElem  |  - |  计划内 |
 |  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  √ |  已完成 |
-|  TIMProfileSystemElem  |  - |  暂不考虑 |
-|  TIMSNSSystemElem  |  - |  暂不考虑 |
+|  TIMProfileSystemElem  |  - |  计划内容 |
+|  TIMSNSSystemElem  |  - |  计划内 |
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  √ |  已完成 |
