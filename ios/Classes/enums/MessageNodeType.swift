@@ -22,8 +22,12 @@ enum MessageNodeType{
     /// 位置节点
     case Location
     
+    /// 群提示节点
+    case GroupTips
+    
     /// 其它节点
     case Other
+
     
     func messageNodeInterface() -> AbstractMessageNode {
         switch self {
@@ -39,6 +43,8 @@ enum MessageNodeType{
             return CustomMessageNode()
         case .Location:
             return LocationMessageNode();
+        case .GroupTips:
+            return GroupTipsMessageNode();
         default:
             return OtherMessageNode();
         }
@@ -59,6 +65,8 @@ enum MessageNodeType{
             return MessageNodeType.Custom;
         case "Location":
             return MessageNodeType.Location;
+        case "GroupTips":
+            return MessageNodeType.GroupTips;
         default:
             return MessageNodeType.Other;
         }
@@ -88,6 +96,10 @@ enum MessageNodeType{
         
         if type is TIMLocationElem{
             return MessageNodeType.Location;
+        }
+        
+        if type is TIMGroupTipsElem{
+            return MessageNodeType.GroupTips;
         }
         
         return MessageNodeType.Other;
