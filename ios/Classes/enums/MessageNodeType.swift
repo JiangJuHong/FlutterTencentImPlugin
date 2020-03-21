@@ -20,7 +20,10 @@ enum MessageNodeType{
     case Custom
     
     /// 位置节点
-    case Location;
+    case Location
+    
+    /// 其它节点
+    case Other
     
     func messageNodeInterface() -> AbstractMessageNode {
         switch self {
@@ -36,6 +39,8 @@ enum MessageNodeType{
             return CustomMessageNode()
         case .Location:
             return LocationMessageNode();
+        default:
+            return OtherMessageNode();
         }
     }
     
@@ -55,7 +60,7 @@ enum MessageNodeType{
         case "Location":
             return MessageNodeType.Location;
         default:
-            return nil;
+            return MessageNodeType.Other;
         }
     }
     
@@ -85,6 +90,6 @@ enum MessageNodeType{
             return MessageNodeType.Location;
         }
         
-        return nil;
+        return MessageNodeType.Other;
     }
 }

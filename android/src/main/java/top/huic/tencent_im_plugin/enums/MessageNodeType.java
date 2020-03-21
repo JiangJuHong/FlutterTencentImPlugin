@@ -1,10 +1,12 @@
 package top.huic.tencent_im_plugin.enums;
 
 import com.tencent.imsdk.TIMElemType;
+
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.CustomMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
+import top.huic.tencent_im_plugin.message.OtherMessageNode;
 import top.huic.tencent_im_plugin.message.SoundMessageNode;
 import top.huic.tencent_im_plugin.message.TextMessageNode;
 import top.huic.tencent_im_plugin.message.VideoMessageNode;
@@ -43,7 +45,12 @@ public enum MessageNodeType {
     /**
      * 位置
      */
-    Location(new LocationMessageNode());
+    Location(new LocationMessageNode()),
+
+    /**
+     * 其它节点
+     */
+    Other(new OtherMessageNode());
 
     /**
      * 消息节点接口
@@ -81,7 +88,7 @@ public enum MessageNodeType {
             case Location:
                 return MessageNodeType.Location;
             default:
-                throw new RuntimeException("The node：`" + elemType + "` is not implemented！");
+                return MessageNodeType.Other;
         }
     }
 }
