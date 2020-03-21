@@ -4,6 +4,7 @@ import com.tencent.imsdk.TIMElemType;
 
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.CustomMessageNode;
+import top.huic.tencent_im_plugin.message.GroupTipsMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
 import top.huic.tencent_im_plugin.message.OtherMessageNode;
@@ -48,6 +49,11 @@ public enum MessageNodeType {
     Location(new LocationMessageNode()),
 
     /**
+     * 群提示
+     */
+    GroupTips(new GroupTipsMessageNode()),
+
+    /**
      * 其它节点
      */
     Other(new OtherMessageNode());
@@ -87,6 +93,8 @@ public enum MessageNodeType {
                 return MessageNodeType.Video;
             case Location:
                 return MessageNodeType.Location;
+            case GroupTips:
+                return MessageNodeType.GroupTips;
             default:
                 return MessageNodeType.Other;
         }
