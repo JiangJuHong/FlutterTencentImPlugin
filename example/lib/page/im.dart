@@ -595,7 +595,10 @@ class ImPageState extends State<ImPage> {
               message: item,
             ).then((_) {
               Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
-              this.setState(() => data[index].data.status = MessageStatusEnum.HasRevoked);
+              data[index].data.status = MessageStatusEnum.HasRevoked;
+              if(this.mounted){
+                this.setState((){});
+              }
             }).catchError((e) {
               Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));
             });

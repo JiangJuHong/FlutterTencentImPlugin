@@ -1441,6 +1441,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             (message) -> Void in
             message!.getConversation()!.revokeMessage(message, succ: {
                 result(nil);
+                
+                // 一对一才发送撤回通知(群聊会自动进入撤回监听器)
+                if message?.getConversation()!.getType() == TIMConversationType.C2C{
+                    self.invokeListener(type: ListenerType.MessageRevoked, params: MessageLocatorEntity(locator: message!.locator()));
+                }
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         });
     }

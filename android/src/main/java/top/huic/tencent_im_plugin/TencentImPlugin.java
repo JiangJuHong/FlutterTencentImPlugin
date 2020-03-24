@@ -1493,6 +1493,11 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(TIMMessage message) {
                 message.getConversation().revokeMessage(message, new VoidCallBack(result));
+
+                // 一对一才发送撤回通知(群聊会自动进入撤回监听器)
+                if (message.getConversation().getType() == TIMConversationType.C2C) {
+                    TencentImListener.invokeListener(ListenerTypeEnum.MessageRevoked, message.getMessageLocator());
+                }
             }
         });
     }
