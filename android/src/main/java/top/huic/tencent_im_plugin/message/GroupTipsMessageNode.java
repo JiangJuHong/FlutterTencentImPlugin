@@ -4,11 +4,7 @@ import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMGroupTipsElem;
 import com.tencent.imsdk.TIMMessage;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import top.huic.tencent_im_plugin.ValueCallBack;
-import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
 import top.huic.tencent_im_plugin.message.entity.GroupTipsMessageEntity;
 
 /**
@@ -27,29 +23,7 @@ public class GroupTipsMessageNode extends AbstractMessageNode<TIMGroupTipsElem, 
 
     @Override
     public GroupTipsMessageEntity analysis(TIMGroupTipsElem elem) {
-        GroupTipsMessageEntity entity = new GroupTipsMessageEntity();
-
-        if (elem.getChangedGroupMemberInfo() != null) {
-            Map<String, GroupMemberEntity> memberEntityMap = new HashMap<>();
-            for (String key : elem.getChangedGroupMemberInfo().keySet()) {
-                memberEntityMap.put(key, new GroupMemberEntity(elem.getChangedGroupMemberInfo().get(key)));
-            }
-            entity.setChangedGroupMemberInfo(memberEntityMap);
-        }
-
-        entity.setChangedUserInfo(elem.getChangedUserInfo());
-        entity.setGroupId(elem.getGroupId());
-        entity.setGroupName(elem.getGroupName());
-        entity.setGroupInfoList(elem.getGroupInfoList());
-        entity.setMemberInfoList(elem.getMemberInfoList());
-        entity.setMemberNum(elem.getMemberNum());
-        entity.setOpGroupMemberInfo(elem.getOpGroupMemberInfo());
-        entity.setOpUser(elem.getOpUser());
-        entity.setOpUserInfo(elem.getOpUserInfo());
-        entity.setPlatform(elem.getPlatform());
-        entity.setTipsType(elem.getTipsType());
-        entity.setUserList(elem.getUserList());
-        return entity;
+        return new GroupTipsMessageEntity(elem);
     }
 
     @Override

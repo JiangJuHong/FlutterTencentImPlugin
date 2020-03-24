@@ -1709,7 +1709,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * 群Tips回调
      */
     public func onGroupTipsEvent(_ elem: TIMGroupTipsElem!) {
-        self.invokeListener(type: ListenerType.GroupTips, params: nil);
+        self.invokeListener(type: ListenerType.GroupTips, params: GroupTipsMessageEntity(elem: elem));
     }
     
     /**
