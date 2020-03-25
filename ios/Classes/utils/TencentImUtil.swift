@@ -183,6 +183,14 @@ public class TencentImUtils{
                 
                 session.findMessages([locator], succ: {
                     (array) -> Void in
+                    if array == nil || array!.count == 0{
+                        result(
+                            FlutterError(code: "-1",  message: "No messages found",details: "No messages found")
+                        );
+                        return;
+                    }
+                    
+                    
                     onCallback((array![0] as! TIMMessage));
                 }, fail: TencentImUtils.returnErrorClosures(result: result))
             }

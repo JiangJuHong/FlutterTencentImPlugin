@@ -213,13 +213,13 @@ public class TencentImUtils {
     public static void getTimMessage(MethodCall methodCall, final MethodChannel.Result result, String name, final ValueCallBack<TIMMessage> onCallback) {
         String messageStr = methodCall.argument(name);
         if (messageStr != null && !messageStr.equals("null")) {
-            Map<String,Object> messageMap = JSON.parseObject(messageStr, Map.class);
+            Map<String, Object> messageMap = JSON.parseObject(messageStr, Map.class);
             // 参数检测
             Object sessionId = messageMap.get("sessionId");
             Object sessionType = messageMap.get("sessionType");
             Object rand = messageMap.get("rand");
             Object seq = messageMap.get("seq");
-            Object timestamp = messageMap.get("timestamp");
+            final Object timestamp = messageMap.get("timestamp");
             Object self = messageMap.get("self");
             if (sessionId == null || sessionType == null || rand == null || seq == null) {
                 throw new RuntimeException("Parameter `sessionId` or `sessionType` or `rand` or `seq` is null!");
@@ -239,6 +239,10 @@ public class TencentImUtils {
             conversation.findMessages(Collections.singletonList(locator), new ValueCallBack<List<TIMMessage>>(result) {
                 @Override
                 public void onSuccess(final List<TIMMessage> timMessages) {
+                    if (timMessages == null || timMessages.size() == 0) {
+                        onCallback.onError(-1,"No messages found");
+                        return;
+                    }
                     TIMMessage message = timMessages.get(0);
                     onCallback.onSuccess(message);
                 }
