@@ -29,7 +29,6 @@ v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。
 
 ### 近期计划(已完成内容将会被移除)  
 [ ] 腾讯云离线推送  
-[ ] TIMSNSSystemElem  
 [ ] TIMProfileSystemElem  
 [ ] TIMGroupSystemElem  
 
@@ -81,7 +80,7 @@ Demo截图:
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  √ |  已完成 |
 |  TIMProfileSystemElem  |  - |  计划内容 |
-|  TIMSNSSystemElem  |  - |  计划内 |
+|  TIMSNSSystemElem  |  √ |  已完成 |
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  √ |  已完成 |

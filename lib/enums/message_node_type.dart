@@ -7,6 +7,7 @@ import 'package:tencent_im_plugin/message_node/other_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
+import 'package:tencent_im_plugin/message_node/sns_tips_message_node.dart';
 
 /// 消息节点类型
 enum MessageNodeType {
@@ -30,6 +31,9 @@ enum MessageNodeType {
 
   // 群提示
   GroupTips,
+
+  // 关系链操作
+  SnsTips,
 
   // 其它
   Other,
@@ -59,6 +63,9 @@ class MessageNodeTypeUtil {
         break;
       case MessageNodeType.GroupTips:
         return GroupTipsMessageNode.fromJson(json);
+        break;
+      case MessageNodeType.SnsTips:
+        return SnsTipsMessageNode.fromJson(json);
         break;
       case MessageNodeType.Other:
         return OtherMessageNode.fromJson(json);

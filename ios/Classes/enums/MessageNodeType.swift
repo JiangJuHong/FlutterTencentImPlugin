@@ -25,6 +25,9 @@ enum MessageNodeType{
     /// 群提示节点
     case GroupTips
     
+    /// 关系链变更
+    case SnsTips
+    
     /// 其它节点
     case Other
 
@@ -45,6 +48,8 @@ enum MessageNodeType{
             return LocationMessageNode();
         case .GroupTips:
             return GroupTipsMessageNode();
+        case .SnsTips:
+            return SnsTipsMessageNode();
         default:
             return OtherMessageNode();
         }
@@ -67,6 +72,8 @@ enum MessageNodeType{
             return MessageNodeType.Location;
         case "GroupTips":
             return MessageNodeType.GroupTips;
+        case "SnsTips":
+            return MessageNodeType.SnsTips;
         default:
             return MessageNodeType.Other;
         }
@@ -100,6 +107,10 @@ enum MessageNodeType{
         
         if type is TIMGroupTipsElem{
             return MessageNodeType.GroupTips;
+        }
+        
+        if type is TIMSNSSystemElem{
+            return MessageNodeType.SnsTips;
         }
         
         return MessageNodeType.Other;

@@ -303,8 +303,10 @@ class ImPageState extends State<ImPage> {
       case MessageNodeType.GroupTips:
         return MessageText(text: "[群提示节点，未指定解析规则]");
       case MessageNodeType.Other:
-        return MessageText(text: "[不支持的消息节点]");
+      case MessageNodeType.SnsTips:
+        break;
     }
+    return MessageText(text: "[不支持的消息节点]");
   }
 
   /// 显示界面
@@ -596,8 +598,8 @@ class ImPageState extends State<ImPage> {
             ).then((_) {
               Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回成功!')));
               data[index].data.status = MessageStatusEnum.HasRevoked;
-              if(this.mounted){
-                this.setState((){});
+              if (this.mounted) {
+                this.setState(() {});
               }
             }).catchError((e) {
               Scaffold.of(context).showSnackBar(SnackBar(content: new Text('消息撤回失败:$e')));

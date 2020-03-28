@@ -8,6 +8,7 @@ import top.huic.tencent_im_plugin.message.GroupTipsMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
 import top.huic.tencent_im_plugin.message.OtherMessageNode;
+import top.huic.tencent_im_plugin.message.SnsTipsMessageNode;
 import top.huic.tencent_im_plugin.message.SoundMessageNode;
 import top.huic.tencent_im_plugin.message.TextMessageNode;
 import top.huic.tencent_im_plugin.message.VideoMessageNode;
@@ -54,6 +55,11 @@ public enum MessageNodeType {
     GroupTips(new GroupTipsMessageNode()),
 
     /**
+     * 关系链相关操作后，后台push同步下来的消息元素
+     */
+    SnsTips(new SnsTipsMessageNode()),
+
+    /**
      * 其它节点
      */
     Other(new OtherMessageNode());
@@ -95,6 +101,8 @@ public enum MessageNodeType {
                 return MessageNodeType.Location;
             case GroupTips:
                 return MessageNodeType.GroupTips;
+            case SNSTips:
+                return MessageNodeType.SnsTips;
             default:
                 return MessageNodeType.Other;
         }

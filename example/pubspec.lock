@@ -237,7 +237,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.13"
+    version: "0.2.18"
   term_glyph:
     dependency: transitive
     description:
