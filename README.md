@@ -4,19 +4,10 @@
 腾讯云IM插件
 
 ## Getting Started
-集成腾讯云IM SDK，同时支持 Android 和 IOS  
-**注意：当前为测试版本(包含基本功能，但不保证稳定性)，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**
+### 即将发布稳定版本(v1.0.0)
 
-### v0.2.x 改版说明
-v0.2.x 主要更改了发送消息和消息节点，使用上更符合逻辑。 
- 
-#### 更新步骤
-1. 将发送消息统一更改为 sendMessage ,使用不同消息节点即可发送不同消息
-1. MessageEntity 增加 note 属性，对非自定消息可直接用于展示
-1. 发送节点和接收实体合二为一，发送时仅需设置构造器参数即可，接收时会自动填充内容
-1. 视频、语音，将不再自动下载，提供语音/视频下载方法
-1. 视频、语音和图片提供上传/下载进度监听器，分别为:ListenerTypeEnum.UploadProgress/ListenerTypeEnum.DownloadProgress
-1. 除 PendencyPageEntity 和 GroupPendencyPageEntity 外的所有Entity 重写 == 和 hashCode，可直接进行判断是否相等
+集成腾讯云IM SDK，同时支持 Android 和 IOS  
+**注意：当前为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**
 
 ## 功能清单
 [x]初始化  
