@@ -687,6 +687,28 @@ class TencentImPlugin {
     });
   }
 
+  /// 查找消息对象
+  static Future<MessageEntity> findMessage({
+    @required sessionId,
+    @required SessionType sessionType,
+    @required int rand,
+    @required int seq,
+    int timestamp,
+    bool self: true,
+  }) async {
+    String data = await _channel.invokeMethod('findMessage', {
+      "message": jsonEncode({
+        "sessionId": sessionId,
+        "sessionType": EnumUtil.getEnumName(sessionType),
+        "rand": rand,
+        "seq": seq,
+        "timestamp": timestamp,
+        "self": self,
+      }),
+    });
+    return data == null ? null : MessageEntity.fromJson(jsonDecode(data));
+  }
+
   /// 获得语音
   /// 注意：message 对象必须包含: sessionId、sessionType、rand、seq 属性
   static Future<String> downloadSound({
