@@ -13,7 +13,8 @@ class SnsTipsMessageNode extends MessageNode {
 
   SnsTipsMessageNode() : super(MessageNodeType.SnsTips);
 
-  SnsTipsMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.SnsTips) {
+  SnsTipsMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.SnsTips) {
     pendencyReportTimestamp = json["pendencyReportTimestamp"];
     subType = EnumUtil.nameOf(SnsTipsType.values, json["subType"]);
   }

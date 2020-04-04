@@ -42,7 +42,8 @@ enum MessageNodeType {
 /// 消息节点类型工具类
 class MessageNodeTypeUtil {
   /// 根据枚举获得消息节点
-  static MessageNode getMessageNodeByMessageNodeType(MessageNodeType nodeType, Map<String, dynamic> json) {
+  static MessageNode getMessageNodeByMessageNodeType(
+      MessageNodeType nodeType, Map<String, dynamic> json) {
     switch (nodeType) {
       case MessageNodeType.Text:
         return TextMessageNode.fromJson(json);

@@ -61,7 +61,11 @@ class ImListState extends State<ImList> {
   /// list排序
   sort() {
     data.sort(
-      (i1, i2) => i1.message == null ? 0 : i2.message == null ? -1 : i2.message.timestamp.compareTo(i1.message.timestamp),
+      (i1, i2) => i1.message == null
+          ? 0
+          : i2.message == null
+              ? -1
+              : i2.message.timestamp.compareTo(i1.message.timestamp),
     );
   }
 
@@ -96,7 +100,10 @@ class ImListState extends State<ImList> {
         physics: const AlwaysScrollableScrollPhysics(),
         children: data.map(
           (item) {
-            DateTime dateTime = item.message != null ? DateTime.fromMillisecondsSinceEpoch(item.message.timestamp * 1000) : null;
+            DateTime dateTime = item.message != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    item.message.timestamp * 1000)
+                : null;
             return InkWell(
               onTap: () => onClick(item),
               child: ListTile(
@@ -112,11 +119,15 @@ class ImListState extends State<ImList> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        item.nickname == null ? (item.type == SessionType.System ? "系统账号" : "") : item.nickname,
+                        item.nickname == null
+                            ? (item.type == SessionType.System ? "系统账号" : "")
+                            : item.nickname,
                       ),
                     ),
                     Text(
-                      dateTime == null ? "" : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
+                      dateTime == null
+                          ? ""
+                          : "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
@@ -128,7 +139,9 @@ class ImListState extends State<ImList> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        item.message != null && item.message.note != null ? item.message.note : "",
+                        item.message != null && item.message.note != null
+                            ? item.message.note
+                            : "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -137,3 +137,7 @@
 
 ## 0.2.19
 * 增加: SNSSystemElem 的解析
+
+## 0.2.20
+* 增加：findMessage、saveMessage
+* 增加：init 时可配置日志相关内容
