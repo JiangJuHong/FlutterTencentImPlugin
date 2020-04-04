@@ -135,3 +135,4 @@ Demo截图:
 | downloadVideoImage | 获得视频图片(缩略图) | {message:'消息对象',path:'保存截图的路径'} | √ | √
 | downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
+| findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √

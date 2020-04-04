@@ -296,6 +296,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "downloadSound":
                 this.downloadSound(call, result);
                 break;
+            case "findMessage":
+                this.findMessage(call, result);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -1745,6 +1748,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         });
     }
 
+    /**
+     * 腾讯云 查找一条消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void findMessage(MethodCall methodCall, final Result result) {
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(final TIMMessage message) {
+                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result));
+            }
+        });
+    }
 
     /**
      * 通用方法，获得参数值，如未找到参数，则直接中断

@@ -240,7 +240,7 @@ public class TencentImUtils {
                 @Override
                 public void onSuccess(final List<TIMMessage> timMessages) {
                     if (timMessages == null || timMessages.size() == 0) {
-                        onCallback.onError(-1,"No messages found");
+                        onCallback.onError(-1, "No messages found");
                         return;
                     }
                     TIMMessage message = timMessages.get(0);
@@ -250,27 +250,6 @@ public class TencentImUtils {
         } else {
             onCallback.onSuccess(null);
         }
-    }
-
-    /**
-     * 获得消息实体
-     *
-     * @param methodCall 消息调用
-     * @param result     操作结果
-     * @param onCallback 回调
-     */
-    public static void getMessage(MethodCall methodCall, final MethodChannel.Result result, final ValueCallBack<MessageEntity> onCallback) {
-        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
-            @Override
-            public void onSuccess(final TIMMessage message) {
-                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
-                    @Override
-                    public void onSuccess(List<MessageEntity> messageEntities) {
-                        onCallback.onSuccess(messageEntities.get(0));
-                    }
-                });
-            }
-        });
     }
 
     /**

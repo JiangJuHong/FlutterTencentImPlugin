@@ -192,6 +192,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "downloadSound":
             self.downloadSound(call: call, result: result);
             break;
+        case "findMessage":
+            self.findMessage(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -1641,6 +1644,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     }, fail: TencentImUtils.returnErrorClosures(result: result))
                 }, onFail: TencentImUtils.returnErrorClosures(result: result));
             }
+        });
+    }
+    
+    /**
+     * 查找一条消息
+     */
+    private func findMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
+                (array) -> Void in
+                result(JsonUtil.toJson(array[0] as! MessageEntity));
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
         });
     }
     
