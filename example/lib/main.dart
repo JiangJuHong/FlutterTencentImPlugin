@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
+import 'package:tencent_im_plugin/enums/log_print_level.dart';
 
 import 'page/home.dart';
 
@@ -21,10 +22,9 @@ class _MyAppState extends State<MyApp> {
 
   init() async {
     // 初始化SDK
-    await TencentImPlugin.init(appid: "1400290273");
+    await TencentImPlugin.init(appid: "1400290273", logPrintLevel: LogPrintLevel.info);
     // 初始化本地存储
-    await TencentImPlugin.initStorage(
-        identifier: "98a6f9541f1b455480bf460aa5208497");
+    await TencentImPlugin.initStorage(identifier: "98a6f9541f1b455480bf460aa5208497");
   }
 
   @override
@@ -45,8 +45,7 @@ class LoginPageState extends State<LoginPage> {
   onLogin() {
     TencentImPlugin.login(
       identifier: "98a6f9541f1b455480bf460aa5208497",
-      userSig:
-          "eJwtjcsOgjAURP*lWwy5Lb3QkrjxtTDEhRgS3ZXQSiHKQ0SN8d8lwHLO5Mx8ySmK3V63JCTMBbIYs830vbPGjlgK5RuJnBqackQuIDXcB6WQgeAymJ1HVqq6thkJKQdgEljgTY1*17bVA0ccFICJdvY2MuEFSBnj84q9DpfbrtoUptrnziXZlcn62GDhNLU8Q9HLuM0DWB2en0ggvJbk9wfJKDdD",
+      userSig: "eJwtjcsOgjAURP*lWwy5Lb3QkrjxtTDEhRgS3ZXQSiHKQ0SN8d8lwHLO5Mx8ySmK3V63JCTMBbIYs830vbPGjlgK5RuJnBqackQuIDXcB6WQgeAymJ1HVqq6thkJKQdgEljgTY1*17bVA0ccFICJdvY2MuEFSBnj84q9DpfbrtoUptrnziXZlcn62GDhNLU8Q9HLuM0DWB2en0ggvJbk9wfJKDdD",
     ).then((_) {
       Navigator.push(
         context,

@@ -78,7 +78,7 @@ Demo截图:
 ### 接口
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
-| init  | 初始化 | {appid:"xxxxxx"} | √ | √
+| init  | 初始化 | {appid:"xxxxxx",enabledLogPrint:"是否启用日志打印",logPrintLevel:"日志打印级别"} | √ | √
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √

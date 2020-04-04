@@ -201,11 +201,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * 初始化腾讯云IM
      */
     public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String {
+        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String,
+            let enabledLogPrint = CommonUtils.getParam(call: call, result: result, param: "enabledLogPrint") as? Bool,
+            let logPrintLevel = CommonUtils.getParam(call: call, result: result, param: "logPrintLevel") as? Int{
+            
             // 初始化SDK配置
             let sdkConfig = TIMSdkConfig();
+            sdkConfig.disableLogPrint = enabledLogPrint;
             sdkConfig.sdkAppId = (appid as NSString).intValue;
-            sdkConfig.logLevel = TIMLogLevel.LOG_WARN;
+            sdkConfig.logLevel = TIMLogLevel.init(rawValue: logPrintLevel)!;
             sdkConfig.connListener = self;
             TIMManager.sharedInstance()?.initSdk(sdkConfig);
             

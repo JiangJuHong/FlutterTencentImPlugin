@@ -15,7 +15,6 @@ import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
-import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSdkConfig;
@@ -317,6 +316,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void init(MethodCall methodCall, Result result) {
         // 应用appid
         String appid = this.getParam(methodCall, result, "appid");
+        Boolean enabledLogPrint = this.getParam(methodCall, result, "enabledLogPrint");
+        Integer logPrintLevel = this.getParam(methodCall, result, "logPrintLevel");
 
         // 主线程才初始化SDK
         if (SessionWrapper.isMainProcess(context)) {
@@ -324,8 +325,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
             // 初始化 SDK
             TIMManager.getInstance().init(context, new TIMSdkConfig(Integer.parseInt(appid))
-                    .enableLogPrint(true)
-                    .setLogLevel(TIMLogLevel.WARN)
+                    .enableLogPrint(enabledLogPrint)
+                    .setLogLevel(logPrintLevel)
             );
 
             // 基本用户配置
