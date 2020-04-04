@@ -92,6 +92,30 @@ class TencentImPlugin {
     );
   }
 
+  /// 向本地消息列表中添加一条消息，但并不将其发送出去。
+  static Future<MessageEntity> saveMessage({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required MessageNode node, // 消息节点
+    @required String sender, // 发送人
+    @required bool isReaded, // 是否已读
+  }) async {
+    return MessageEntity.fromJson(
+      jsonDecode(
+        await _channel.invokeMethod(
+          'saveMessage',
+          {
+            "sessionId": sessionId,
+            "sessionType": EnumUtil.getEnumName(sessionType),
+            "node": jsonEncode(node),
+            "sender": sender,
+            "isReaded": isReaded,
+          },
+        ),
+      ),
+    );
+  }
+
   /// 获得当前登录用户会话列表
   /// @return 会话列表集合
   static Future<List<SessionEntity>> getConversationList() async {

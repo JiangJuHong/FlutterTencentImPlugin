@@ -1,10 +1,8 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSNSSystemElem;
 
-import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.SnsTipsMessageEntity;
 
 /**
@@ -12,7 +10,7 @@ import top.huic.tencent_im_plugin.message.entity.SnsTipsMessageEntity;
  */
 public class SnsTipsMessageNode extends AbstractMessageNode<TIMSNSSystemElem, SnsTipsMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, SnsTipsMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    protected TIMMessage getSendMessage(SnsTipsMessageEntity entity) {
         throw new RuntimeException("This node does not support sending");
     }
 

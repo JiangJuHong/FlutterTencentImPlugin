@@ -91,6 +91,7 @@ Demo截图:
 | getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
+| saveMessage  | 向本地消息列表中添加一条消息，但并不将其发送出去。 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',node:消息节点对象,sender:"发送人",isReaded:'是否已读'} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
 | getGroupList  | 获得群组列表 | - | √ | √
 | addFriend  | 添加好友 | {id:'用户ID',addType:'添加类型',remark:'备注',addWording:'请求说明',addSource:'添加来源',friendGroup:'分组名'} | √ | √

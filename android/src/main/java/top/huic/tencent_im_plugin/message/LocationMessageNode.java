@@ -1,10 +1,8 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMLocationElem;
 import com.tencent.imsdk.TIMMessage;
 
-import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.LocationMessageEntity;
 
 /**
@@ -12,14 +10,14 @@ import top.huic.tencent_im_plugin.message.entity.LocationMessageEntity;
  */
 public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem, LocationMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, LocationMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    protected TIMMessage getSendMessage(LocationMessageEntity entity) {
         TIMMessage message = new TIMMessage();
         TIMLocationElem locationElem = new TIMLocationElem();
         locationElem.setDesc(entity.getDesc());
         locationElem.setLatitude(entity.getLatitude());
         locationElem.setLongitude(entity.getLongitude());
         message.addElement(locationElem);
-        super.sendMessage(conversation, message, ol, onCallback);
+        return message;
     }
 
     @Override
