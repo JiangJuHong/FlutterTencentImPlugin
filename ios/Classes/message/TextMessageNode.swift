@@ -8,12 +8,12 @@ import ImSDK
 //  文本消息节点
 public class TextMessageNode : AbstractMessageNode{
     
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
+    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
         let message = TIMMessage();
         let textElem = TIMTextElem();
         textElem.text = getParam(params: params, paramKey: "content")!;
         message.add(textElem);
-        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
+        return message;
     }
     
     override func getNote(elem: TIMElem) -> String {

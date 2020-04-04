@@ -8,13 +8,13 @@ import ImSDK
 //  图片消息节点
 public class ImageMessageNode : AbstractMessageNode{
     
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
+    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
         let message = TIMMessage();
         let imageElem = TIMImageElem();
         imageElem.path = getParam(params: params, paramKey: "path")!;
         imageElem.level = TIM_IMAGE_COMPRESS_TYPE.init(rawValue: getParam(params: params, paramKey: "level")!)!;
         message.add(imageElem);
-        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
+        return message;
     }
     
     override func getNote(elem: TIMElem) -> String {

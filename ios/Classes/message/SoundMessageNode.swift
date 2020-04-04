@@ -8,13 +8,13 @@ import ImSDK
 //  语音消息节点
 public class SoundMessageNode : AbstractMessageNode{
     
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
+    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
         let message = TIMMessage();
         let soundElem = TIMSoundElem();
         soundElem.path = getParam(params: params, paramKey: "path")!;
         soundElem.second = getParam(params: params, paramKey: "duration")!
         message.add(soundElem);
-        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
+        return message;
     }
     
     override func getNote(elem: TIMElem) -> String {

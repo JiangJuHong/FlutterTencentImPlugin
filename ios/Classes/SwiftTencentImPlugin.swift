@@ -60,6 +60,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "sendMessage":
             self.sendMessage(call: call, result: result);
             break;
+        case "saveMessage":
+            self.saveMessage(call: call, result: result);
+            break;
         case "getFriendList":
             self.getFriendList(call: call, result: result);
             break;
@@ -448,6 +451,31 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                 }, onFail: TencentImUtils.returnErrorClosures(result: result));
                 
             }, onFailCalback: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+    
+    /**
+     * 发送消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func saveMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String,
+            let sender = CommonUtils.getParam(call: call, result: result, param: "sender") as? String,
+        let isReaded = CommonUtils.getParam(call: call, result: result, param: "isReaded") as? Bool{
+            // 将节点信息解析
+            let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+            
+            // 通过多态发送消息
+            let message = MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().save(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, sender: sender,isReaded:isReaded);
+        
+            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
+                (array) -> Void in
+                result(JsonUtil.toJson(array[0]));
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
     

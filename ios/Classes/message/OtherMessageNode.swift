@@ -7,11 +7,7 @@ import ImSDK
 //  Created by 蒋具宏 on 2020/3/13.
 //  其它消息节点
 public class OtherMessageNode : AbstractMessageNode{
-    
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
-        
-    }
-    
+
     override func getNote(elem: TIMElem) -> String {
         return "[其它消息]";
     }
