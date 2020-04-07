@@ -75,7 +75,7 @@ Demo截图:
 |  TIMVideoElem  |  √ |  已完成 |
 |  OtherMessageNode  |  √ |  已完成，仅Android（IOS能够解析，但是内容体没有数据） |
 
-### 接口
+### 接口(右滑查看详细参数)
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
 | init  | 初始化 | {appid:"xxxxxx",enabledLogPrint:"是否启用日志打印",logPrintLevel:"日志打印级别"} | √ | √
