@@ -127,7 +127,7 @@ class MessageEntity {
     data['customInt'] = this.customInt;
     data['read'] = this.read;
     if (this.elemList != null) {
-      data['elemList'] = elemList == null ? null : jsonEncode(elemList);
+      data['elemList'] = elemList == null ? null : elemList;
     }
     data['self'] = this.self;
     data['id'] = this.id;
