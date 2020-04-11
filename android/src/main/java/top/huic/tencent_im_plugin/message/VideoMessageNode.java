@@ -1,12 +1,10 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSnapshot;
 import com.tencent.imsdk.TIMVideo;
 import com.tencent.imsdk.TIMVideoElem;
 
-import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.video.VideoInfo;
 import top.huic.tencent_im_plugin.message.entity.video.VideoMessageEntity;
 import top.huic.tencent_im_plugin.message.entity.video.VideoSnapshotInfo;
@@ -16,7 +14,7 @@ import top.huic.tencent_im_plugin.message.entity.video.VideoSnapshotInfo;
  */
 public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, VideoMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    protected TIMMessage getSendMessage(VideoMessageEntity entity) {
         // 封装消息对象
         TIMMessage message = new TIMMessage();
         TIMVideoElem videoElem = new TIMVideoElem();
@@ -37,9 +35,7 @@ public class VideoMessageNode extends AbstractMessageNode<TIMVideoElem, VideoMes
         videoElem.setSnapshotPath(entity.getVideoSnapshotInfo().getPath());
         videoElem.setVideoPath(entity.getVideoInfo().getPath());
         message.addElement(videoElem);
-
-
-        super.sendMessage(conversation, message, ol, onCallback);
+        return message;
     }
 
     @Override

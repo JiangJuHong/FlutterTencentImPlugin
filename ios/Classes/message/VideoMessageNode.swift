@@ -8,8 +8,7 @@ import ImSDK
 //  视频消息节点
 public class VideoMessageNode : AbstractMessageNode{
     
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
-        
+    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
         let videoInfo = params["videoInfo"] as! [String : Any];
         let videoSnapshotInfo = params["videoSnapshotInfo"]  as! [String : Any];
         
@@ -17,12 +16,12 @@ public class VideoMessageNode : AbstractMessageNode{
         let video = TIMVideo();
         video.duration = videoInfo["duration"] as! Int32;
         video.type = (videoInfo["type"] as! String);
-
+        
         // 缩略图数据
         let snapshot = TIMSnapshot();
         snapshot.width = videoSnapshotInfo["width"] as! Int32;
         snapshot.height = videoSnapshotInfo["height"] as! Int32;
-
+        
         // 消息数据
         let message = TIMMessage();
         let videoElem = TIMVideoElem();
@@ -31,7 +30,7 @@ public class VideoMessageNode : AbstractMessageNode{
         videoElem.snapshotPath = (videoSnapshotInfo["path"] as! String);
         videoElem.snapshot = snapshot;
         message.add(videoElem);
-        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
+        return message;
     }
     
     override func getNote(elem: TIMElem) -> String {

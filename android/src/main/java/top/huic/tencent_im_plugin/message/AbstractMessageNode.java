@@ -13,6 +13,14 @@ import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
  */
 public abstract class AbstractMessageNode<N, E extends AbstractMessageEntity> {
     /**
+     * 获得发送的消息体
+     *
+     * @param entity 消息实体
+     * @return 结果
+     */
+    protected abstract TIMMessage getSendMessage(E entity);
+
+    /**
      * 发送消息
      *
      * @param conversation 会话
@@ -20,7 +28,22 @@ public abstract class AbstractMessageNode<N, E extends AbstractMessageEntity> {
      * @param entity       实体
      * @param ol           是否在线消息
      */
-    public abstract void send(TIMConversation conversation, E entity, boolean ol, ValueCallBack<TIMMessage> onCallback);
+    public void send(TIMConversation conversation, E entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+        sendMessage(conversation, getSendMessage(entity), ol, onCallback);
+    }
+
+    /**
+     * 向本地消息列表中添加一条消息，但并不将其发送出去。
+     *
+     * @param conversation 会话
+     * @param entity       实体
+     * @param sender       发送方
+     * @param isReaded     是否已读，如果发送方是自己，默认已读
+     * @return 消息对象
+     */
+    public TIMMessage save(TIMConversation conversation, E entity, String sender, Boolean isReaded) {
+        return saveMessage(conversation, getSendMessage(entity), sender, isReaded);
+    }
 
     /**
      * 根据消息节点获得描述
@@ -51,6 +74,20 @@ public abstract class AbstractMessageNode<N, E extends AbstractMessageEntity> {
         } else {
             conversation.sendMessage(message, onCallback);
         }
+    }
+
+    /**
+     * 向本地消息列表中添加一条消息，但并不将其发送出去。
+     *
+     * @param conversation 会话
+     * @param message      消息内容
+     * @param sender       发送方
+     * @param isReaded     是否已读，如果发送方是自己，默认已读
+     * @return 消息对象
+     */
+    TIMMessage saveMessage(TIMConversation conversation, TIMMessage message, String sender, Boolean isReaded) {
+        conversation.saveMessage(message, sender, isReaded);
+        return message;
     }
 
     /**

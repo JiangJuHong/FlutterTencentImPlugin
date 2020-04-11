@@ -8,14 +8,14 @@ import ImSDK
 //  位置消息节点
 public class LocationMessageNode : AbstractMessageNode{
     
-    override func send(conversation: TIMConversation, params: [String : Any], ol: Bool, onCallback: @escaping (TIMMessage) -> Void, onFailCalback: @escaping GetInfoFail) {
+    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
         let message = TIMMessage();
         let locationElem = TIMLocationElem();
         locationElem.desc = getParam(params: params, paramKey: "desc")!
         locationElem.longitude = getParam(params: params, paramKey: "longitude")!;
         locationElem.latitude = getParam(params: params, paramKey: "latitude")!;
         message.add(locationElem);
-        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback);
+        return message;
     }
     
     override func getNote(elem: TIMElem) -> String {

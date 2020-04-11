@@ -73,12 +73,12 @@ Demo截图:
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
 |  TIMVideoElem  |  √ |  已完成 |
-|  OtherMessageNode  |  √ |  已完成，仅Android |
+|  OtherMessageNode  |  √ |  已完成，仅Android（IOS能够解析，但是内容体没有数据） |
 
-### 接口
+### 接口(右滑查看详细参数)
 |  接口   | 说明  | 参数  | Android | IOS |
 |  ----  | ----  | ----  | ----  | ----  |
-| init  | 初始化 | {appid:"xxxxxx"} | √ | √
+| init  | 初始化 | {appid:"xxxxxx",enabledLogPrint:"是否启用日志打印",logPrintLevel:"日志打印级别"} | √ | √
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
@@ -91,6 +91,7 @@ Demo截图:
 | getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
+| saveMessage  | 向本地消息列表中添加一条消息，但并不将其发送出去。 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',node:消息节点对象,sender:"发送人",isReaded:'是否已读'} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
 | getGroupList  | 获得群组列表 | - | √ | √
 | addFriend  | 添加好友 | {id:'用户ID',addType:'添加类型',remark:'备注',addWording:'请求说明',addSource:'添加来源',friendGroup:'分组名'} | √ | √
@@ -116,8 +117,8 @@ Demo截图:
 | groupPendencyAccept  | 群未决审核（同意）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | groupPendencyRefuse  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | getSelfProfile  | 获取登录用户资料 | {forceUpdate:"是否强制走后台拉取"} | √ | √
-| modifySelfProfile  | 修改登录用户资料 | {params:'修改参数'} | √ | √
-| modifyFriend  | 修改好友资料 | {identifier:'好友ID',params:'修改参数'} | √ | √
+| modifySelfProfile  | 修改登录用户资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {params:'修改参数'} | √ | √
+| modifyFriend  | 修改好友资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {identifier:'好友ID',params:'修改参数'} | √ | √
 | deleteFriends  | 删除好友 | {ids:"用户ID列表",delFriendType:'删除类型'} | √ | √
 | addBlackList  | 添加到黑名单 | {ids:"用户ID列表"} | √ | √
 | deleteBlackList  | 从黑名单删除 | {ids:"用户ID列表"} | √ | √
@@ -135,3 +136,4 @@ Demo截图:
 | downloadVideoImage | 获得视频图片(缩略图) | {message:'消息对象',path:'保存截图的路径'} | √ | √
 | downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
+| findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √

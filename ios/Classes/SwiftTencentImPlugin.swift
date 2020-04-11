@@ -60,6 +60,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "sendMessage":
             self.sendMessage(call: call, result: result);
             break;
+        case "saveMessage":
+            self.saveMessage(call: call, result: result);
+            break;
         case "getFriendList":
             self.getFriendList(call: call, result: result);
             break;
@@ -192,6 +195,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "downloadSound":
             self.downloadSound(call: call, result: result);
             break;
+        case "findMessage":
+            self.findMessage(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -201,11 +207,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * 初始化腾讯云IM
      */
     public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String {
+        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String,
+            let enabledLogPrint = CommonUtils.getParam(call: call, result: result, param: "enabledLogPrint") as? Bool,
+            let logPrintLevel = CommonUtils.getParam(call: call, result: result, param: "logPrintLevel") as? Int{
+            
             // 初始化SDK配置
             let sdkConfig = TIMSdkConfig();
+            sdkConfig.disableLogPrint = enabledLogPrint;
             sdkConfig.sdkAppId = (appid as NSString).intValue;
-            sdkConfig.logLevel = TIMLogLevel.LOG_WARN;
+            sdkConfig.logLevel = TIMLogLevel.init(rawValue: logPrintLevel)!;
             sdkConfig.connListener = self;
             TIMManager.sharedInstance()?.initSdk(sdkConfig);
             
@@ -441,6 +451,31 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                 }, onFail: TencentImUtils.returnErrorClosures(result: result));
                 
             }, onFailCalback: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+    
+    /**
+     * 发送消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private func saveMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
+            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
+            let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String,
+            let sender = CommonUtils.getParam(call: call, result: result, param: "sender") as? String,
+        let isReaded = CommonUtils.getParam(call: call, result: result, param: "isReaded") as? Bool{
+            // 将节点信息解析
+            let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+            
+            // 通过多态发送消息
+            let message = MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().save(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, sender: sender,isReaded:isReaded);
+        
+            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
+                (array) -> Void in
+                result(JsonUtil.toJson(array[0]));
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
     
@@ -1637,6 +1672,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     }, fail: TencentImUtils.returnErrorClosures(result: result))
                 }, onFail: TencentImUtils.returnErrorClosures(result: result));
             }
+        });
+    }
+    
+    /**
+     * 查找一条消息
+     */
+    private func findMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
+            (message) -> Void in
+            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
+                (array) -> Void in
+                result(JsonUtil.toJson(array[0] as! MessageEntity));
+            }, onFail: TencentImUtils.returnErrorClosures(result: result));
         });
     }
     

@@ -1,10 +1,8 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMImageElem;
 import com.tencent.imsdk.TIMMessage;
 
-import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.ImageMessageEntity;
 
 /**
@@ -12,13 +10,13 @@ import top.huic.tencent_im_plugin.message.entity.ImageMessageEntity;
  */
 public class ImageMessageNode extends AbstractMessageNode<TIMImageElem, ImageMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, ImageMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    protected TIMMessage getSendMessage(ImageMessageEntity entity) {
         TIMMessage message = new TIMMessage();
         TIMImageElem imageElem = new TIMImageElem();
         imageElem.setPath(entity.getPath());
         imageElem.setLevel(entity.getLevel());
         message.addElement(imageElem);
-        super.sendMessage(conversation, message, ol, onCallback);
+        return message;
     }
 
     @Override

@@ -15,7 +15,6 @@ import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
-import com.tencent.imsdk.TIMLogLevel;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSdkConfig;
@@ -165,6 +164,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "sendMessage":
                 this.sendMessage(call, result);
                 break;
+            case "saveMessage":
+                this.saveMessage(call, result);
+                break;
             case "getFriendList":
                 this.getFriendList(call, result);
                 break;
@@ -297,6 +299,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "downloadSound":
                 this.downloadSound(call, result);
                 break;
+            case "findMessage":
+                this.findMessage(call, result);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -317,6 +322,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void init(MethodCall methodCall, Result result) {
         // 应用appid
         String appid = this.getParam(methodCall, result, "appid");
+        Boolean enabledLogPrint = this.getParam(methodCall, result, "enabledLogPrint");
+        Integer logPrintLevel = this.getParam(methodCall, result, "logPrintLevel");
 
         // 主线程才初始化SDK
         if (SessionWrapper.isMainProcess(context)) {
@@ -324,8 +331,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
             // 初始化 SDK
             TIMManager.getInstance().init(context, new TIMSdkConfig(Integer.parseInt(appid))
-                    .enableLogPrint(true)
-                    .setLogLevel(TIMLogLevel.WARN)
+                    .enableLogPrint(enabledLogPrint)
+                    .setLogLevel(logPrintLevel)
             );
 
             // 基本用户配置
@@ -596,6 +603,32 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         result.success(JsonUtil.toJSONString(messageEntities.get(0)));
                     }
                 });
+            }
+        });
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void saveMessage(MethodCall methodCall, final Result result) {
+        String nodeStr = this.getParam(methodCall, result, "node");
+        Map node = JSON.parseObject(nodeStr, Map.class);
+        String sessionType = this.getParam(methodCall, result, "sessionType");
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        String sender = this.getParam(methodCall, result, "sender");
+        Boolean isReaded = this.getParam(methodCall, result, "isReaded");
+
+        // 发送消息
+        AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
+        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
+        TIMMessage message = messageNode.save(TencentImUtils.getSession(sessionId, sessionType), messageEntity, sender, isReaded);
+        TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+            @Override
+            public void onSuccess(List<MessageEntity> messageEntities) {
+                result.success(JsonUtil.toJSONString(messageEntities.get(0)));
             }
         });
     }
@@ -1744,6 +1777,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         });
     }
 
+    /**
+     * 腾讯云 查找一条消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void findMessage(MethodCall methodCall, final Result result) {
+        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(final TIMMessage message) {
+                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result));
+            }
+        });
+    }
 
     /**
      * 通用方法，获得参数值，如未找到参数，则直接中断

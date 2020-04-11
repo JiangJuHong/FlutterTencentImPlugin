@@ -12,7 +12,8 @@ class OtherMessageNode extends MessageNode {
 
   OtherMessageNode() : super(MessageNodeType.Other);
 
-  OtherMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.Other) {
+  OtherMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.Other) {
     params = jsonDecode(json['params']);
     type = json['type'];
   }

@@ -20,6 +20,7 @@ import 'entity/session_entity.dart';
 import 'entity/user_info_entity.dart';
 import 'enums/friend_add_type_enum.dart';
 import 'enums/friend_check_type_enum.dart';
+import 'enums/log_print_level.dart';
 import 'enums/pendency_examine_type_enum.dart';
 import 'enums/pendency_type_enum.dart';
 import 'enums/receive_message_opt_enum.dart';
@@ -32,14 +33,22 @@ class TencentImPlugin {
   static TencentImPluginListener listener;
 
   /// 初始化腾讯云IM插件
-  static Future<void> init({@required String appid}) async {
-    await _channel.invokeMethod('init', {"appid": appid});
+  static Future<void> init({
+    @required String appid, // 应用ID
+    bool enabledLogPrint: true, // 是否启用日志打印
+    LogPrintLevel logPrintLevel: LogPrintLevel.warn, // 日志打印级别
+  }) async {
+    await _channel.invokeMethod('init', {
+      "appid": appid,
+      "enabledLogPrint": enabledLogPrint,
+      "logPrintLevel": LogPrintLevelTool.toInt(logPrintLevel),
+    });
   }
 
   /// 登录腾讯云IM
   static Future<void> login({
     @required String identifier, // 用户ID
-    @required String userSig, // 用户签名
+    @required String userSig, // 用户签名s
   }) async {
     return await _channel
         .invokeMethod('login', {"identifier": identifier, "userSig": userSig});
@@ -80,6 +89,30 @@ class TencentImPlugin {
             "sessionType": EnumUtil.getEnumName(sessionType),
             "node": jsonEncode(node),
             "ol": ol,
+          },
+        ),
+      ),
+    );
+  }
+
+  /// 向本地消息列表中添加一条消息，但并不将其发送出去。
+  static Future<MessageEntity> saveMessage({
+    @required String sessionId, // 会话ID
+    @required SessionType sessionType, // 会话类型
+    @required MessageNode node, // 消息节点
+    @required String sender, // 发送人
+    @required bool isReaded, // 是否已读
+  }) async {
+    return MessageEntity.fromJson(
+      jsonDecode(
+        await _channel.invokeMethod(
+          'saveMessage',
+          {
+            "sessionId": sessionId,
+            "sessionType": EnumUtil.getEnumName(sessionType),
+            "node": jsonEncode(node),
+            "sender": sender,
+            "isReaded": isReaded,
           },
         ),
       ),
@@ -703,6 +736,28 @@ class TencentImPlugin {
       "message": jsonEncode(message),
       "path": path,
     });
+  }
+
+  /// 查找消息对象
+  static Future<MessageEntity> findMessage({
+    @required sessionId,
+    @required SessionType sessionType,
+    @required int rand,
+    @required int seq,
+    int timestamp,
+    bool self: true,
+  }) async {
+    String data = await _channel.invokeMethod('findMessage', {
+      "message": jsonEncode({
+        "sessionId": sessionId,
+        "sessionType": EnumUtil.getEnumName(sessionType),
+        "rand": rand,
+        "seq": seq,
+        "timestamp": timestamp,
+        "self": self,
+      }),
+    });
+    return data == null ? null : MessageEntity.fromJson(jsonDecode(data));
   }
 
   /// 获得语音

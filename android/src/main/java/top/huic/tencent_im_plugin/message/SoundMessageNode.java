@@ -1,10 +1,8 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMSoundElem;
 
-import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.SoundMessageEntity;
 
 /**
@@ -12,13 +10,13 @@ import top.huic.tencent_im_plugin.message.entity.SoundMessageEntity;
  */
 public class SoundMessageNode extends AbstractMessageNode<TIMSoundElem, SoundMessageEntity> {
     @Override
-    public void send(TIMConversation conversation, SoundMessageEntity entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+    protected TIMMessage getSendMessage(SoundMessageEntity entity) {
         TIMMessage message = new TIMMessage();
         TIMSoundElem soundElem = new TIMSoundElem();
         soundElem.setPath(entity.getPath());
         soundElem.setDuration(entity.getDuration());
         message.addElement(soundElem);
-        super.sendMessage(conversation, message, ol, onCallback);
+        return message;
     }
 
     @Override

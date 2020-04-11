@@ -53,7 +53,8 @@ class GroupTipsMessageNode extends MessageNode {
 
   GroupTipsMessageNode() : super(MessageNodeType.GroupTips);
 
-  GroupTipsMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.GroupTips) {
+  GroupTipsMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.GroupTips) {
     groupId = json["groupId"];
     groupName = json["groupName"];
 
@@ -74,11 +75,13 @@ class GroupTipsMessageNode extends MessageNode {
     }
 
     if (json["groupInfoList"] != null) {
-      groupInfoList = ListUtil.generateOBJList<GroupTipsElemGroupInfoEntity>(json["groupInfoList"]);
+      groupInfoList = ListUtil.generateOBJList<GroupTipsElemGroupInfoEntity>(
+          json["groupInfoList"]);
     }
 
     if (json["memberInfoList"] != null) {
-      memberInfoList = ListUtil.generateOBJList<GroupTipsElemMemberInfoEntity>(json["memberInfoList"]);
+      memberInfoList = ListUtil.generateOBJList<GroupTipsElemMemberInfoEntity>(
+          json["memberInfoList"]);
     }
 
     memberNum = json["memberNum"];

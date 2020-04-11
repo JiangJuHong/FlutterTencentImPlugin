@@ -200,19 +200,6 @@ public class TencentImUtils{
     }
     
     /**
-     *  获得腾讯云IM的Message
-     */
-    public static func getMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetMessage){
-        getTimMessage(call: call, result: result, onCallback: {
-           (message) -> Void in
-            TencentImUtils.getMessageInfo(timMessages: [message!], onSuccess: {
-                (array) -> Void in
-                onCallback(array[0] as! MessageEntity);
-            }, onFail: TencentImUtils.returnErrorClosures(result: result));
-        });
-    }
-    
-    /**
      * 获得完整的消息对象
      *
      * @param timMessages 消息列表
