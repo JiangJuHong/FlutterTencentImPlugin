@@ -17,6 +17,8 @@
 [ ]离线推送  
 
 ### 近期计划(已完成内容将会被移除)  
+[ ] 验证 MessageEntity 序列化 toJson 问题  
+[ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [ ] 腾讯云离线推送  
 [ ] TIMProfileSystemElem  
 [ ] TIMGroupSystemElem  
