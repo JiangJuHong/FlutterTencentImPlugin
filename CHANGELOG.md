@@ -141,3 +141,6 @@
 ## 0.2.20
 * 增加：findMessage、saveMessage
 * 增加：init 时可配置日志相关内容
+
+## 0.2.21
+* 修复：IOS onReConnFailed、onConnFailed和onDisconnect 回调时崩溃的问题
