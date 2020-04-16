@@ -517,7 +517,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getMessages(MethodCall methodCall, final Result result) {
-        this.s(methodCall, result, false);
+        this.getMessages(methodCall, result, false);
     }
 
     /**
