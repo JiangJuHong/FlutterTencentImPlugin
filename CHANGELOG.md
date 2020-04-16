@@ -144,3 +144,6 @@
 
 ## 0.2.21
 * 修复：IOS onReConnFailed、onConnFailed和onDisconnect 回调时崩溃的问题
+
+## 0.2.22
+* 修复：获取会话用户时，有时候获取不到
