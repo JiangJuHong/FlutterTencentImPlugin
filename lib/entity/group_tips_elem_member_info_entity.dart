@@ -1,6 +1,3 @@
-import 'package:tencent_im_plugin/enums/group_tips_group_info_type.dart';
-import 'package:tencent_im_plugin/utils/enum_util.dart';
-
 /// 群tips，成员变更信息
 class GroupTipsElemMemberInfoEntity {
   /// 消息内容

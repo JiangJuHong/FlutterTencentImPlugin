@@ -1715,7 +1715,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * 断线重连失败【IOS独享】
      */
     public func onReConnFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err!]);
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err as Any]);
     }
     
     /**
@@ -1732,18 +1732,20 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         self.invokeListener(type: ListenerType.Connected, params: nil);
     }
     
+    
+    
     /**
      * 网络连接失败【IOS独享】
      */
-    // public func onConnFailed(_ code: Int32, err: String!) {
-    //     self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err!]);
-    // }
+    public func onConnFailed(_ code: Int32, err: String!) {
+        self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err as Any]);
+    }
     
     /**
      * 网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
      */
     public func onDisconnect(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err!]);
+        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err as Any]);
     }
     
     /**

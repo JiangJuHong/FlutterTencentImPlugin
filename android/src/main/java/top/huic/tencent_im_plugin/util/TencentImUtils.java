@@ -50,8 +50,8 @@ public class TencentImUtils {
             return;
         }
 
-        // 需要获取用户信息的列表
-        final Map<String, SessionEntity> userInfo = new HashMap<>();
+        // 需要获取用户信息的列表(因为有可能一个用户同时存在多个会话，所以需要使用List存储(session、lastMsg))
+        final Map<String, List<SessionEntity>> userInfo = new HashMap<>();
 
         // 需要获取的群信息列表
         final Map<String, SessionEntity> groupInfo = new HashMap<>();
@@ -63,7 +63,12 @@ public class TencentImUtils {
 
             // 获取资料
             if (timConversation.getType() == TIMConversationType.C2C) {
-                userInfo.put(timConversation.getPeer(), entity);
+                List<SessionEntity> sessionArray = userInfo.get(timConversation.getPeer());
+                if (sessionArray == null) {
+                    sessionArray = new ArrayList<>();
+                }
+                sessionArray.add(entity);
+                userInfo.put(timConversation.getPeer(), sessionArray);
             } else if (timConversation.getType() == TIMConversationType.Group) {
                 groupInfo.put(timConversation.getPeer(), entity);
             }
@@ -72,7 +77,12 @@ public class TencentImUtils {
             TIMMessage lastMsg = timConversation.getLastMsg();
             if (lastMsg != null) {
                 // 加入到获取用户的队列
-                userInfo.put(lastMsg.getSender(), entity);
+                List<SessionEntity> sessionArray = userInfo.get(lastMsg.getSender());
+                if (sessionArray == null) {
+                    sessionArray = new ArrayList<>();
+                }
+                sessionArray.add(entity);
+                userInfo.put(lastMsg.getSender(), sessionArray);
                 // 封装消息信息
                 entity.setMessage(new MessageEntity(lastMsg));
             }
@@ -138,17 +148,22 @@ public class TencentImUtils {
                 public void onSuccess(List<TIMUserProfile> timUserProfiles) {
                     // 设置用户资料
                     for (TIMUserProfile timUserProfile : timUserProfiles) {
-                        SessionEntity sessionEntity = userInfo.get(timUserProfile.getIdentifier());
-                        // 会话用户ID
-                        if (sessionEntity != null && timUserProfile.getIdentifier().equals(sessionEntity.getId())) {
-                            sessionEntity.setUserProfile(timUserProfile);
-                            sessionEntity.setNickname(timUserProfile.getNickName());
-                            sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
-                        }
+                        // 填充每一个Session对象
+                        List<SessionEntity> sessionArray = userInfo.get(timUserProfile.getIdentifier());
+                        if (sessionArray != null && sessionArray.size() != 0) {
+                            for (SessionEntity sessionEntity : sessionArray) {
+                                // 会话用户ID
+                                if (sessionEntity != null && timUserProfile.getIdentifier().equals(sessionEntity.getId())) {
+                                    sessionEntity.setUserProfile(timUserProfile);
+                                    sessionEntity.setNickname(timUserProfile.getNickName());
+                                    sessionEntity.setFaceUrl(timUserProfile.getFaceUrl());
+                                }
 
-                        // 最后一条消息用户ID
-                        if (sessionEntity != null && sessionEntity.getMessage() != null && timUserProfile.getIdentifier().equals(sessionEntity.getMessage().getSender())) {
-                            sessionEntity.getMessage().setUserInfo(timUserProfile);
+                                // 最后一条消息用户ID
+                                if (sessionEntity != null && sessionEntity.getMessage() != null && timUserProfile.getIdentifier().equals(sessionEntity.getMessage().getSender())) {
+                                    sessionEntity.getMessage().setUserInfo(timUserProfile);
+                                }
+                            }
                         }
                     }
 

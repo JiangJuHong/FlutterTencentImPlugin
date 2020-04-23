@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/entity/group_tips_elem_group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/group_tips_elem_member_info_entity.dart';

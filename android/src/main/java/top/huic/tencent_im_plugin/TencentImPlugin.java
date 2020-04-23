@@ -538,7 +538,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param local      是否是获取本地消息
      */
     private void getMessages(MethodCall methodCall, final Result result, final boolean local) {
-        // 会话ID
+        // 会话IDgetMessage
         String sessionId = this.getParam(methodCall, result, "sessionId");
         // 会话类型
         String sessionTypeStr = this.getParam(methodCall, result, "sessionType");

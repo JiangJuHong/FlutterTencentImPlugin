@@ -141,3 +141,15 @@
 ## 0.2.20
 * 增加：findMessage、saveMessage
 * 增加：init 时可配置日志相关内容
+
+## 0.2.21
+* 修复：IOS onReConnFailed、onConnFailed和onDisconnect 回调时崩溃的问题
+
+## 0.2.22
+* 修复：获取会话用户时，有时候获取不到
+
+## 0.2.23
+* 解决代码错误
+
+## 0.2.24
+* 修复Android：获取会话用户时，有时候获取不到

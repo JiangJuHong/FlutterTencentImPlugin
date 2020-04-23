@@ -30,7 +30,7 @@ public class TencentImUtils{
         }
         
         // 需要获取用户信息的列表
-        var userInfo = [String: SessionEntity]();
+        var userInfo = [String: [SessionEntity]]();
         // 需要获取群信息列表
         var groupInfo = [String: SessionEntity]();
         
@@ -45,7 +45,9 @@ public class TencentImUtils{
             
             // 封装获取资料对象
             if timConversation.getType() == TIMConversationType.C2C {
-                userInfo[timConversation.getReceiver()] = entity;
+                var sessionArrry : [SessionEntity] = userInfo[timConversation.getReceiver()] ?? [];
+                sessionArrry.append(entity);
+                userInfo[timConversation.getReceiver()] = sessionArrry;
             } else if timConversation.getType() == TIMConversationType.GROUP {
                 groupInfo[timConversation.getReceiver()] = entity;
             }
@@ -53,7 +55,9 @@ public class TencentImUtils{
             // 获取最后一条消息
             let lastMsg = timConversation.getLastMsg();
             if (lastMsg != nil) {
-                userInfo[lastMsg!.sender()] = entity;
+                var sessionArrry : [SessionEntity] = userInfo[lastMsg!.sender()] ?? [];
+                sessionArrry.append(entity);
+                userInfo[lastMsg!.sender()] = sessionArrry;
                 entity.message = MessageEntity(message: lastMsg!);
             }
             resultData.append(entity);
@@ -99,19 +103,23 @@ public class TencentImUtils{
                 for item in array!{
                     let userProfile = item as TIMUserProfile;
                     
-                    let sessionEntity = userInfo[userProfile.identifier];
-                    
-                    // 会话用户ID
-                    if sessionEntity != nil && userProfile.identifier == sessionEntity?.id{
-                        sessionEntity!.userProfile = UserInfoEntity(userProfile: userProfile);
-                        sessionEntity!.nickname = userProfile.nickname;
-                        sessionEntity!.faceUrl = userProfile.faceURL;
+                    let sessionArrays : [SessionEntity]? = userInfo[userProfile.identifier];
+                    if sessionArrays != nil && sessionArrays?.count != 0{
+                        for sessionEntity in sessionArrays!{
+                            // 会话用户ID
+                            if userProfile.identifier == sessionEntity.id{
+                                sessionEntity.userProfile = UserInfoEntity(userProfile: userProfile);
+                                sessionEntity.nickname = userProfile.nickname;
+                                sessionEntity.faceUrl = userProfile.faceURL;
+                            }
+                            
+                            // 最后一条消息用户ID
+                            if userProfile.identifier == sessionEntity.message?.sender{
+                                sessionEntity.message?.userInfo = UserInfoEntity(userProfile: userProfile);
+                            }
+                        }
                     }
                     
-                    // 最后一条消息用户ID
-                    if sessionEntity != nil && userProfile.identifier == sessionEntity?.message?.sender{
-                        sessionEntity?.message?.userInfo = UserInfoEntity(userProfile: userProfile);
-                    }
                 }
                 
                 // 回调成功
@@ -122,7 +130,7 @@ public class TencentImUtils{
             }, fail: onFail);
         }
     }
-
+    
     /**
      * 根据会话ID和会话类型获得会话对象
      *
@@ -146,8 +154,8 @@ public class TencentImUtils{
     }
     
     /**
-    *  获得腾讯云IM的Message
-    */
+     *  获得腾讯云IM的Message
+     */
     public static func getTimMessage(call: FlutterMethodCall, result: @escaping FlutterResult,onCallback : @escaping GetTimMessage){
         getTimMessage(call: call, result: result, name: "message", onCallback: onCallback);
     }
@@ -167,8 +175,8 @@ public class TencentImUtils{
             let isSelf = message["self"];
             if sessionId == nil || sessionType == nil || rand == nil || seq == nil {
                 result(
-                   FlutterError(code: "5",  message: "Missing parameter",details: "Parameter `sessionId` or `sessionType` or `rand` or `seq` is null!")
-               );
+                    FlutterError(code: "5",  message: "Missing parameter",details: "Parameter `sessionId` or `sessionType` or `rand` or `seq` is null!")
+                );
                 return;
             }
             
@@ -178,7 +186,7 @@ public class TencentImUtils{
                 locator.rand = rand as! UInt64;
                 locator.isSelf = isSelf == nil || (isSelf as! Bool);
                 if timestamp != nil{
-                 locator.time = time_t(timestamp as! UInt64);
+                    locator.time = time_t(timestamp as! UInt64);
                 }
                 
                 session.findMessages([locator], succ: {
@@ -224,7 +232,7 @@ public class TencentImUtils{
             (o1,o2)-> Bool in
             return (o1.timestamp?.compare(o2.timestamp!).rawValue)! <= 0
         });
-
+        
         // 获取用户资料(存储Key和下标，方便添加时快速查找)
         var userIds = [String: [Int]]();
         for i in 0..<resultData.count{
