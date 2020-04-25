@@ -73,10 +73,16 @@ target 'Runner' do
   system('rm -rf .symlinks')
   system('mkdir -p .symlinks/plugins')
   plugin_pods = parse_KV_file('../.flutter-plugins')
+  # plugin_pods.each do |name, path|
+  #   symlink = File.join('.symlinks', 'plugins', name)
+  #   File.symlink(path, symlink)
+  #   pod name, :path => File.join(symlink, 'ios')
+  # end
+
+  # 将 symlink 引入方式更改为 path，以便可以在 AppCode 中打开
   plugin_pods.each do |name, path|
-    symlink = File.join('.symlinks', 'plugins', name)
-    File.symlink(path, symlink)
-    pod name, :path => File.join(symlink, 'ios')
+    specPath = "#{path}/ios/#{name}.podspec"
+    pod name,:path=>specPath
   end
 end
 
