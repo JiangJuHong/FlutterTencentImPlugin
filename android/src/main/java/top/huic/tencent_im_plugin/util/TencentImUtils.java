@@ -90,7 +90,7 @@ public class TencentImUtils {
         }
 
         // 如果未登录，直接返回信息，不包含群信息和用户信息
-        if(TIMManager.getInstance().getLoginUser() == null){
+        if (TIMManager.getInstance().getLoginUser() == null) {
             callback.onSuccess(resultData);
             return;
         }
@@ -298,6 +298,12 @@ public class TencentImUtils {
                 return o1.getTimestamp().compareTo(o2.getTimestamp());
             }
         });
+
+        // 如果未登录，则直接返回
+        if (TIMManager.getInstance().getLoginUser() == null) {
+            callBack.onSuccess(resultData);
+            return;
+        }
 
         // 获取用户资料(存储Key和下标，方便添加时快速查找)
         final Map<String, List<Integer>> userIds = new HashMap<>(resultData.size(), 1);

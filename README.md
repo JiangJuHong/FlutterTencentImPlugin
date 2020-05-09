@@ -18,7 +18,6 @@
 
 ### 近期计划(已完成内容将会被移除)  
 [ ] 验证 MessageEntity 序列化 toJson 问题  
-[ ] 验证 initStorage 和 getLocalMessages 无效问题  
 [ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [ ] 腾讯云离线推送  
 [ ] TIMProfileSystemElem  
@@ -85,14 +84,14 @@ Demo截图:
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
-| initStorage  | 初始化本地存储 | {identifier: '用户ID'} | √ | √
+| initStorage  | 初始化本地存储(如果这个方法在 login 后进行 await 调用，则会造成卡死) | {identifier: '用户ID'} | √ | √
 | getConversationList  | 获得会话列表(如果是离线状态，则获取出来的会话列表不包含: Group、UserProfile 信息) | - | √ | √ 
-| getConversation  | 获得单个会话 | {id:'会话ID',sessionType:'会话类型} | √ | √ 
+| getConversation  | 获得单个会话(如果是离线状态，则获取出来的会话列表不包含: Group、UserProfile 信息) | {id:'会话ID',sessionType:'会话类型} | √ | √ 
 | getGroupInfo  | 获得群信息(云端) | {id:'群ID'} | √ | √
 | getUserInfo  | 获得用户信息 | {id:'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √
 | setRead  | 设置已读 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
-| getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
-| getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
+| getMessages  | 获得消息列表(如果是离线状态，则获取出来的消息不包含 UserProfile 信息) | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
+| getLocalMessages  | 获得本地消息列表(如果是离线状态，则获取出来的消息不包含 UserProfile 信息) | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
 | saveMessage  | 向本地消息列表中添加一条消息，但并不将其发送出去。 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',node:消息节点对象,sender:"发送人",isReaded:'是否已读'} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
