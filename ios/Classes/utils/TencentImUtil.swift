@@ -62,7 +62,14 @@ public class TencentImUtils{
             }
             resultData.append(entity);
         }
-        
+
+        // 如果未登录，直接返回信息，不包含群信息和用户信息
+        if(TIMManager.sharedInstance().getLoginUser() == nil){
+            onSuccess(resultData);
+            return;
+        }
+
+
         // 初始化计数器
         let  maxIndex = (userInfo.count != 0 ? 1 : 0) + (groupInfo.count != 0 ? 1 : 0);
         if (maxIndex == 0) {

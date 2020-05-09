@@ -86,7 +86,7 @@ Demo截图:
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
 | initStorage  | 初始化本地存储 | {identifier: '用户ID'} | √ | √
-| getConversationList  | 获得会话列表 | - | √ | √ 
+| getConversationList  | 获得会话列表(如果是离线状态，则获取出来的会话列表不包含: Group、UserProfile 信息) | - | √ | √ 
 | getConversation  | 获得单个会话 | {id:'会话ID',sessionType:'会话类型} | √ | √ 
 | getGroupInfo  | 获得群信息(云端) | {id:'群ID'} | √ | √
 | getUserInfo  | 获得用户信息 | {id:'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √

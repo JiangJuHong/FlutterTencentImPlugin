@@ -89,6 +89,12 @@ public class TencentImUtils {
             resultData.add(entity);
         }
 
+        // 如果未登录，直接返回信息，不包含群信息和用户信息
+        if(TIMManager.getInstance().getLoginUser() == null){
+            callback.onSuccess(resultData);
+            return;
+        }
+
         // 初始化计数器
         final int maxIndex = (userInfo.size() != 0 ? 1 : 0) + (groupInfo.size() != 0 ? 1 : 0);
         if (maxIndex == 0) {
