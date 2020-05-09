@@ -139,3 +139,23 @@ Demo截图:
 | downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
 | findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
+
+### 消息监听
+通过 `TencentImPlugin.addListener` 和 `TencentImPlugin.removeListener` 可进行事件监听  
+````dart
+@override
+vodi initState(){
+  super.initState();
+  TencentImPlugin.addListener(_messageListener);
+}
+@override
+void dispose() {
+  super.dispose();
+  TencentImPlugin.removeListener(_messageListener);
+}
+
+ _messageListener(ListenerTypeEnum type, params) {
+  // you code
+};
+````
+注意：addListener 后，请注意在必要时进行 removeListener
