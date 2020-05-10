@@ -84,14 +84,14 @@ Demo截图:
 | login  | 登录 | {identifier:'用户ID',userSig:'用户签名'} | √ | √
 | logout  | 登出 | - | √ | √
 | getLoginUser  | 获得当前登录用户ID | - | √ | √
-| initStorage  | 初始化本地存储 | {identifier: '用户ID'} | √ | √
-| getConversationList  | 获得会话列表 | - | √ | √ 
-| getConversation  | 获得单个会话 | {id:'会话ID',sessionType:'会话类型} | √ | √ 
+| initStorage  | 初始化本地存储(如果这个方法在 login 后进行 await 调用，则会造成卡死) | {identifier: '用户ID'} | √ | √
+| getConversationList  | 获得会话列表(如果是离线状态，则获取出来的会话列表不包含: Group、UserProfile 信息) | - | √ | √ 
+| getConversation  | 获得单个会话(如果是离线状态，则获取出来的会话列表不包含: Group、UserProfile 信息) | {id:'会话ID',sessionType:'会话类型} | √ | √ 
 | getGroupInfo  | 获得群信息(云端) | {id:'群ID'} | √ | √
 | getUserInfo  | 获得用户信息 | {id:'用户ID',forceUpdate:"是否从云端拉取数据，默认为false"} | √ | √
 | setRead  | 设置已读 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType' } | √ | √
-| getMessages  | 获得消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
-| getLocalMessages  | 获得本地消息列表 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
+| getMessages  | 获得消息列表(如果是离线状态，则获取出来的消息不包含 UserProfile 信息) | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
+| getLocalMessages  | 获得本地消息列表(如果是离线状态，则获取出来的消息不包含 UserProfile 信息) | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',number:"会话数量",lastMessage:'最后一条消息'} | √ | √
 | sendMessage  | 发送消息 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',ol:"是否是在线消息（无痕）",node:消息节点对象} | √ | √
 | saveMessage  | 向本地消息列表中添加一条消息，但并不将其发送出去。 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',node:消息节点对象,sender:"发送人",isReaded:'是否已读'} | √ | √
 | getFriendList  | 获得好友列表 | - | √ | √
@@ -139,3 +139,23 @@ Demo截图:
 | downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
 | findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
+
+### 消息监听
+通过 `TencentImPlugin.addListener` 和 `TencentImPlugin.removeListener` 可进行事件监听  
+````dart
+@override
+vodi initState(){
+  super.initState();
+  TencentImPlugin.addListener(_messageListener);
+}
+@override
+void dispose() {
+  super.dispose();
+  TencentImPlugin.removeListener(_messageListener);
+}
+
+ _messageListener(ListenerTypeEnum type, params) {
+  // you code
+};
+````
+注意：addListener 后，请注意在必要时进行 removeListener

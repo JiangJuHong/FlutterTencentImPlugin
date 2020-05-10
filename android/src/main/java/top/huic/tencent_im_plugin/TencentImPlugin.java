@@ -384,9 +384,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void logout(MethodCall methodCall, final Result result) {
-        if (!TextUtils.isEmpty(TIMManager.getInstance().getLoginUser())) {
-            TIMManager.getInstance().logout(new VoidCallBack(result));
-        }
+        TIMManager.getInstance().logout(new VoidCallBack(result));
     }
 
     /**
