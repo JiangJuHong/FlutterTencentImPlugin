@@ -59,6 +59,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
+import top.huic.tencent_im_plugin.entity.GroupMemberInfo;
 import top.huic.tencent_im_plugin.entity.GroupPendencyEntity;
 import top.huic.tencent_im_plugin.entity.GroupPendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
@@ -918,7 +919,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 最大群成员数
         Integer maxMemberNum = methodCall.argument("maxMemberNum");
         // 默认群成员
-        List<TIMGroupMemberInfo> members = JSON.parseArray(this.getParam(methodCall, result, "members").toString(), TIMGroupMemberInfo.class);
+        List<TIMGroupMemberInfo> members = new ArrayList<TIMGroupMemberInfo>(JSON.parseArray(this.getParam(methodCall, result, "members").toString(), GroupMemberInfo.class));
 
         // 创建参数对象
         TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam(type, name);
