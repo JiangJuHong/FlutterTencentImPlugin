@@ -768,9 +768,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                 groupInfo.maxMemberNum = maxMemberNum!;
             }
             if members != nil {
+                var memberInfo: [TIMCreateGroupMemberInfo] = [];
                 if let ms = [GroupMemberEntity].deserialize(from: members) {
-                    print(ms);
+                    for item in ms {
+                        memberInfo.append(item!.toTIMCreateGroupMemberInfo());
+                    }
                 }
+                groupInfo.membersInfo = memberInfo;
             }
             groupInfo.groupType = type;
             groupInfo.groupName = name;
