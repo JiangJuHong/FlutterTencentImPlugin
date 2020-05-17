@@ -1,6 +1,7 @@
 package top.huic.tencent_im_plugin;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,6 +18,8 @@ import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMOfflinePushSettings;
+import com.tencent.imsdk.TIMOfflinePushToken;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserConfig;
@@ -302,6 +305,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 break;
             case "findMessage":
                 this.findMessage(call, result);
+                break;
+            case "setOfflinePushSettings":
+                this.setOfflinePushSettings(call, result);
+                break;
+            case "setOfflinePushToken":
+                this.setOfflinePushToken(call, result);
                 break;
             default:
                 result.notImplemented();
@@ -1789,6 +1798,47 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result));
             }
         });
+    }
+
+
+    /**
+     * 腾讯云 设置离线推送设置
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setOfflinePushSettings(MethodCall methodCall, final Result result) {
+        TIMOfflinePushSettings settings = new TIMOfflinePushSettings();
+        Boolean enabled = methodCall.argument("enabled");
+        if (enabled != null) {
+            settings.setEnabled(true);
+        }
+        String c2cSound = methodCall.argument("c2cSound");
+        if (c2cSound != null) {
+            settings.setC2cMsgRemindSound(Uri.fromFile(new File(c2cSound)));
+        }
+        String groupSound = methodCall.argument("groupSound");
+        if (groupSound != null) {
+            settings.setGroupMsgRemindSound(Uri.fromFile(new File(groupSound)));
+        }
+        String videoSound = methodCall.argument("videoSound");
+        if (videoSound != null) {
+            settings.setVideoSound(Uri.fromFile(new File(videoSound)));
+        }
+        TIMManager.getInstance().setOfflinePushSettings(settings);
+        result.success(null);
+    }
+
+    /**
+     * 腾讯云 设置离线推送Token
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setOfflinePushToken(MethodCall methodCall, final Result result) {
+        String token = this.getParam(methodCall, result, "token");
+        long bussid = this.getParam(methodCall, result, "bussid");
+        TIMManager.getInstance().setOfflinePushToken(new TIMOfflinePushToken(bussid, token), new VoidCallBack(result));
     }
 
     /**

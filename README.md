@@ -139,6 +139,8 @@ Demo截图:
 | downloadVideo | 获得视频 | {message:'消息对象',path:'保存视频的路径'} | √ | √
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
 | findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
+| setOfflinePushSettings | 设置离线推送相关设置(请保证该方法在登录后调用) | {enabled:'是否启用',c2cSound:'C2C音频文件',groupSound:'Group音频文件',videoSound:'视频邀请语音'} | √ | √
+| setOfflinePushToken | 设置离线推送相关Token | {token:'各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取',bussid:'推送证书 ID，是在 IM 控制台上生成的'} | √ | √
 
 ### 消息监听
 通过 `TencentImPlugin.addListener` 和 `TencentImPlugin.removeListener` 可进行事件监听  
@@ -159,3 +161,17 @@ void dispose() {
 };
 ````
 注意：addListener 后，请注意在必要时进行 removeListener
+
+### 离线推送
+注意: 本插件仅在腾讯云IM上进行封装，并未集成小米、华为等推送方的SDK，故集成离线推送时根据腾讯云文档进行集成。已封装离线推送配置方法。  
+
+#### 离线推送相关接口
+`setOfflinePushSettings`: 设置离线推送相关设置，包含：是否启用、C2C消息语音、群聊消息语音和视频邀请语音。请保证该方法在登录后调用！  
+`setOfflinePushToken`: 设置离线推送相关Token，token 是各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取； bussid 是推送证书 ID，是在 IM 控制台上生成的， 具体步骤请参考 https://cloud.tencent.com/document/product/269/9234
+
+#### 根据腾讯云IM文档进行集成第三方SDK，并配置Token
+[Android](https://cloud.tencent.com/document/product/269/44516)  
+[IOS](https://cloud.tencent.com/document/product/269/44517)
+
+#### 设置离线推送配置
+示例代码: 文档暂未更新
