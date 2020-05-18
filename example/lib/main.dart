@@ -1,12 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
+import 'package:tencent_im_plugin_example/tencent_im_plugin_example.dart';
 
 import 'page/home.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // 运行程序
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,16 +22,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  init() async {
-    // 初始化SDK
-    await TencentImPlugin.init(
-        appid: "1400290273", logPrintLevel: LogPrintLevel.info);
-    // 初始化本地存储
-    await TencentImPlugin.initStorage(
-        identifier: "98a6f9541f1b455480bf460aa5208497");
+    // 设置监听器
+    TencentImPluginExample.setListener();
+    // 初始化SDK(每次仅调用一次)
+    TencentImPlugin.init(appid: "1400294314", logPrintLevel: LogPrintLevel.info);
   }
 
   @override
@@ -45,14 +44,17 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   /// 登录
   onLogin() async {
-    await TencentImPlugin.initStorage(
-        identifier: "98a6f9541f1b455480bf460aa5208497");
+    await TencentImPlugin.initStorage(identifier: "dev");
 
     await TencentImPlugin.login(
-      identifier: "98a6f9541f1b455480bf460aa5208497",
-      userSig:
-          "eJwtjcsOgjAURP*lWwy5Lb3QkrjxtTDEhRgS3ZXQSiHKQ0SN8d8lwHLO5Mx8ySmK3V63JCTMBbIYs830vbPGjlgK5RuJnBqackQuIDXcB6WQgeAymJ1HVqq6thkJKQdgEljgTY1*17bVA0ccFICJdvY2MuEFSBnj84q9DpfbrtoUptrnziXZlcn62GDhNLU8Q9HLuM0DWB2en0ggvJbk9wfJKDdD",
+      identifier: "dev",
+      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
+
+    // 注册离线推送
+    if(TencentImPluginExample.miPushToken != null){
+      await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
+    }
 
     Navigator.push(
       context,

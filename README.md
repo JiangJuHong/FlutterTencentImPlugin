@@ -5,9 +5,9 @@
 
 ## Getting Started
 集成腾讯云IM SDK，同时支持 Android 和 IOS  
+**🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**  
 **注意：当前为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**  
 **注意：由于腾讯云IM升级了新版本，但是本插件基于上一个版本，所以浏览开发文档时请通过以下地址：[Android](https://cloud.tencent.com/document/product/269/36909) [IOS](https://cloud.tencent.com/document/product/269/36910) ，在完成基本工作后，插件将进行相应更新**  
-**🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**
 
 ## 功能清单
 [x]初始化  
@@ -180,83 +180,161 @@ void dispose() {
 2. 在 `android/app` 目录创建 `libs` 文件夹，并将小米推送SDK拷贝
     `android/app/libs/MiPush_SDK_Client_3_7_6.jar`
 3. 编写 `app/build.gradle` 文件，引入 libs 的jar包
-   ````diff
+   ````
    dependencies {
-       + api fileTree(include: ['*.jar'], dir: 'libs')
+       api fileTree(include: ['*.jar'], dir: 'libs')
    }
    ````
-4. 编写 `android/app/src/main/AndroidManifest.xml` 文件
-    ````diff
-    + <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    + <uses-permission android:name="android.permission.INTERNET" />
-    + <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    + <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    + <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    + <uses-permission android:name="android.permission.GET_TASKS" />
-    + <uses-permission android:name="android.permission.VIBRATE" />
+4. 编写 `android/app/src/main/AndroidManifest.xml` 文件，添加权限
+    ````
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    + <permission
-    +     android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE"
-    +     android:protectionLevel="signature" />
-    + <uses-permission android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE" /> 
-   <application
-           android:name="io.flutter.app.FlutterApplication"
-           android:icon="@mipmap/ic_launcher"
-           android:label="tencent_im_plugin_example"
-           tools:replace="android:label">
-           <activity
-               android:name=".MainActivity"
-               android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-               android:hardwareAccelerated="true"
-               android:launchMode="singleTop"
-               android:theme="@style/LaunchTheme"
-               android:windowSoftInputMode="adjustResize">
-               <intent-filter>
-                   <action android:name="android.intent.action.MAIN" />
-                   <category android:name="android.intent.category.LAUNCHER" />
-               </intent-filter>
-           </activity>
-           <!-- Don't delete the meta-data below.
-                This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
-           <meta-data
-               android:name="flutterEmbedding"
-               android:value="2" />
-           + <service
-           +     android:name="com.xiaomi.push.service.XMPushService"
-           +     android:enabled="true"
-           +     android:process=":pushservice" />
-           + <service
-           +     android:name="com.xiaomi.push.service.XMJobService"
-           +     android:enabled="true"
-           +     android:exported="false"
-           +     android:permission="android.permission.BIND_JOB_SERVICE"
-           +     android:process=":pushservice" />
-           + <service
-           +     android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-           +     android:enabled="true"
-           +     android:exported="true" />
-           + <service
-           +     android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-           +     android:enabled="true" />
-           + <receiver
-           +     android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-           +     android:exported="true">
-           +     <intent-filter>
-           +         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-           +         <category android:name="android.intent.category.DEFAULT" />
-           +     </intent-filter>
-           + </receiver>
-           + <receiver
-           +     android:name="com.xiaomi.push.service.receivers.PingReceiver"
-           +     android:exported="false"
-           +     android:process=":pushservice">
-           +     <intent-filter>
-           +         <action android:name="com.xiaomi.push.PING_TIMER" />
-           +     </intent-filter>
-           + </receiver>
-       </application>
+    <permission
+        android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE" /> 
    ````
    注意: 请将 `top.huic.tencent_im_plugin_example` 替换为你的包名
+   
+5. 编写 `android/app/src/main/AndroidManifest.xml`，在 `application` 标签中添加
+    ````
+   <service
+       android:name="com.xiaomi.push.service.XMPushService"
+       android:enabled="true"
+       android:process=":pushservice" />
+   <service
+       android:name="com.xiaomi.push.service.XMJobService"
+       android:enabled="true"
+       android:exported="false"
+       android:permission="android.permission.BIND_JOB_SERVICE"
+       android:process=":pushservice" />
+   <service
+       android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+       android:enabled="true"
+       android:exported="true" />
+   <service
+       android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+       android:enabled="true" />
+   <receiver
+       android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+       android:exported="true">
+       <intent-filter>
+           <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+           <category android:name="android.intent.category.DEFAULT" />
+       </intent-filter>
+   </receiver>
+   <receiver
+       android:name="com.xiaomi.push.service.receivers.PingReceiver"
+       android:exported="false"
+       android:process=":pushservice">
+       <intent-filter>
+           <action android:name="com.xiaomi.push.PING_TIMER" />
+       </intent-filter>
+   </receiver>
+   ````
+6. 更改 `android/app/src/main/MainActivity.java` 文件，加入如下代码
+    ````java
+   
+   /**
+    * Flutter 通知器
+    */
+    public static MethodChannel channel;
+   
+   @Override
+   protected void onCreate(@Nullable Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+       if (shouldInit()) {
+           MiPushClient.registerPush(this, APP_ID, APP_KEY);
+       }
+       channel = new MethodChannel(this.getFlutterEngine().getDartExecutor(), "tencent_im_plugin_example");
+   }
+   
+   /**
+    * 通过判断手机里的所有进程是否有这个App的进程
+    * 从而判断该App是否有打开
+    *
+    * @return 是否需要初始化 -true 需要
+    */
+   private boolean shouldInit() {
+       // 通过ActivityManager我们可以获得系统里正在运行的activities
+       // 包括进程(Process)等、应用程序/包、服务(Service)、任务(Task)信息。
+       ActivityManager am = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
+       List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+       String mainProcessName = getPackageName();
+
+       // 获取本App的唯一标识
+       int myPid = android.os.Process.myPid();
+       // 利用一个增强for循环取出手机里的所有进程
+       for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+           // 通过比较进程的唯一标识和包名判断进程里是否存在该App
+           if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+               return true;
+           }
+       }
+       return false;
+   }
+    ````
+6. 在`android/app/src/main/` 中创建包 `push`(非必须)
+7. 在 `android/app/src/main/push` 创建类:`XiaomiMsgReceiver`
+    ````java
+   public class XiaomiMsgReceiver extends PushMessageReceiver {
+       @Override
+       public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
+           String command = message.getCommand();
+           List<String> arguments = message.getCommandArguments();
+           String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
+   
+           String token = null;
+           if (MiPushClient.COMMAND_REGISTER.equals(command)) {
+               if (message.getResultCode() == ErrorCode.SUCCESS) {
+                   token = cmdArg1;
+               }
+           }
+   
+           // 调用通知监听器传递到Flutter层
+           Handler mainHandler = new Handler(Looper.getMainLooper());
+           String finalToken = token;
+           mainHandler.post(() -> MainActivity.channel.invokeMethod("miPushTokenListener", finalToken));
+       }
+   }
+   ````
+   支持，Android开发工作完成，接下来就是Flutter端工作
+8. 在 lib 目录创建 `tencent_im_plugin_example.dart`
+    ````
+   class TencentImPluginExample {
+     static const MethodChannel _channel = const MethodChannel('tencent_im_plugin_example');
+   
+     /// 小米推送TOken
+     static String miPushToken;
+   
+     /// 设置监听器
+     static setListener(){
+       _channel.setMethodCallHandler((call) {
+         if (call.method == 'miPushTokenListener') {
+           miPushToken = call.arguments as String;
+         }
+         return null;
+       });
+     }
+   }
+   ````
+9. 在程序启动后调用
+   ````
+   TencentImPluginExample.setListener();
+   ````
+9. 最后，在登录之后调用 `setOfflinePushToken` 即可，可使用 腾讯云离线推送自查工具查看是否注册成功
+    ````
+   if(TencentImPluginExample.miPushToken != null){
+     await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
+   }
+   ````
+10.example已经集成小米推送，可参考进行配置
 
 
 #### 缺陷

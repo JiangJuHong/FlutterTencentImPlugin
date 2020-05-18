@@ -1837,7 +1837,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void setOfflinePushToken(MethodCall methodCall, final Result result) {
         String token = this.getParam(methodCall, result, "token");
-        long bussid = this.getParam(methodCall, result, "bussid");
+        Long bussid = Long.parseLong(this.getParam(methodCall, result, "bussid").toString());
         TIMManager.getInstance().setOfflinePushToken(new TIMOfflinePushToken(bussid, token), new VoidCallBack(result));
     }
 
