@@ -143,7 +143,7 @@ Demo截图:
 | downloadSound | 获得语音 | {message:'消息对象',path:'保存语音的路径'} | √ | √
 | findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
 | setOfflinePushSettings | 设置离线推送相关设置(请保证该方法在登录后调用) | {enabled:'是否启用',c2cSound:'C2C音频文件',groupSound:'Group音频文件',videoSound:'视频邀请语音'} | √ | √
-| setOfflinePushToken | 设置离线推送相关Token | {token:'各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取',bussid:'推送证书 ID，是在 IM 控制台上生成的'} | √ | √
+| setOfflinePushToken | 设置离线推送相关Token(登录之后调用) | {token:'各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取',bussid:'推送证书 ID，是在 IM 控制台上生成的'} | √ | √
 
 ### 消息监听
 通过 `TencentImPlugin.addListener` 和 `TencentImPlugin.removeListener` 可进行事件监听  
@@ -174,7 +174,90 @@ void dispose() {
 
 #### 根据腾讯云IM文档进行集成第三方SDK，并配置Token
 [Android](https://cloud.tencent.com/document/product/269/44516)  
-[IOS](https://cloud.tencent.com/document/product/269/44517)
+[IOS](https://cloud.tencent.com/document/product/269/44517)  
+示例: 小米推送
+1. 根据腾讯云文档配置证书(bussid)并下载小米推送SDK  
+2. 在 `android/app` 目录创建 `libs` 文件夹，并将小米推送SDK拷贝
+    `android/app/libs/MiPush_SDK_Client_3_7_6.jar`
+3. 编写 `app/build.gradle` 文件，引入 libs 的jar包
+   ````diff
+   dependencies {
+       + api fileTree(include: ['*.jar'], dir: 'libs')
+   }
+   ````
+4. 编写 `android/app/src/main/AndroidManifest.xml` 文件
+    ````diff
+    + <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    + <uses-permission android:name="android.permission.INTERNET" />
+    + <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    + <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    + <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    + <uses-permission android:name="android.permission.GET_TASKS" />
+    + <uses-permission android:name="android.permission.VIBRATE" />
 
-#### 设置离线推送配置
-示例代码: 文档暂未更新
+    + <permission
+    +     android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE"
+    +     android:protectionLevel="signature" />
+    + <uses-permission android:name="top.huic.tencent_im_plugin_example.permission.MIPUSH_RECEIVE" /> 
+   <application
+           android:name="io.flutter.app.FlutterApplication"
+           android:icon="@mipmap/ic_launcher"
+           android:label="tencent_im_plugin_example"
+           tools:replace="android:label">
+           <activity
+               android:name=".MainActivity"
+               android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+               android:hardwareAccelerated="true"
+               android:launchMode="singleTop"
+               android:theme="@style/LaunchTheme"
+               android:windowSoftInputMode="adjustResize">
+               <intent-filter>
+                   <action android:name="android.intent.action.MAIN" />
+                   <category android:name="android.intent.category.LAUNCHER" />
+               </intent-filter>
+           </activity>
+           <!-- Don't delete the meta-data below.
+                This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+           <meta-data
+               android:name="flutterEmbedding"
+               android:value="2" />
+           + <service
+           +     android:name="com.xiaomi.push.service.XMPushService"
+           +     android:enabled="true"
+           +     android:process=":pushservice" />
+           + <service
+           +     android:name="com.xiaomi.push.service.XMJobService"
+           +     android:enabled="true"
+           +     android:exported="false"
+           +     android:permission="android.permission.BIND_JOB_SERVICE"
+           +     android:process=":pushservice" />
+           + <service
+           +     android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+           +     android:enabled="true"
+           +     android:exported="true" />
+           + <service
+           +     android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+           +     android:enabled="true" />
+           + <receiver
+           +     android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+           +     android:exported="true">
+           +     <intent-filter>
+           +         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+           +         <category android:name="android.intent.category.DEFAULT" />
+           +     </intent-filter>
+           + </receiver>
+           + <receiver
+           +     android:name="com.xiaomi.push.service.receivers.PingReceiver"
+           +     android:exported="false"
+           +     android:process=":pushservice">
+           +     <intent-filter>
+           +         <action android:name="com.xiaomi.push.PING_TIMER" />
+           +     </intent-filter>
+           + </receiver>
+       </application>
+   ````
+   注意: 请将 `top.huic.tencent_im_plugin_example` 替换为你的包名
+
+
+#### 缺陷
+如果您要集成多个平台，那么需要频繁修改 Android 配置和 Android 代码，这对Flutter新手是极其不友好的，故计划提供分支插件(不确定什么时候):小米、华为等推送SDK集成，如果您已经有类似插件，请告诉我，我会使用它并编写接入文档
