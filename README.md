@@ -5,8 +5,9 @@
 
 ## Getting Started
 集成腾讯云IM SDK，同时支持 Android 和 IOS  
-**注意：当前为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**
-**注意：由于腾讯云IM升级了新版本，但是本插件基于上一个版本，所以浏览开发文档时请通过以下地址：[Android](https://cloud.tencent.com/document/product/269/36909) [IOS](https://cloud.tencent.com/document/product/269/36910) ，在完成基本工作后，插件将进行相应更新**
+**注意：当前为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**  
+**注意：由于腾讯云IM升级了新版本，但是本插件基于上一个版本，所以浏览开发文档时请通过以下地址：[Android](https://cloud.tencent.com/document/product/269/36909) [IOS](https://cloud.tencent.com/document/product/269/36910) ，在完成基本工作后，插件将进行相应更新**  
+**🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**
 
 ## 功能清单
 [x]初始化  
