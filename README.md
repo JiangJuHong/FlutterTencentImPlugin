@@ -304,8 +304,25 @@ void dispose() {
        }
    }
    ````
-   支持，Android开发工作完成，接下来就是Flutter端工作
-9. 在 lib 目录创建 `tencent_im_plugin_example.dart`
+9. 编写 `android/app/src/main/AndroidManifest.xml`，在 `application` 标签中添加
+    ````
+   <receiver
+       android:exported="true"
+       android:name="top.huic.tencent_im_plugin_example.push.XiaomiMsgReceiver">
+       <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
+       <intent-filter>
+           <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+       </intent-filter>
+       <intent-filter>
+           <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+       </intent-filter>
+       <intent-filter>
+           <action android:name="com.xiaomi.mipush.ERROR" />
+       </intent-filter>
+   </receiver>
+   ````
+   `top.huic.tencent_im_plugin_example.push.XiaomiMsgReceiver` 修改为 XiaomiMsgReceiver的包路径
+10. 在 lib 目录创建 `tencent_im_plugin_example.dart`
     ````
    class TencentImPluginExample {
      static const MethodChannel _channel = const MethodChannel('tencent_im_plugin_example');
@@ -324,17 +341,17 @@ void dispose() {
      }
    }
    ````
-10. 在程序启动后调用
+11. 在程序启动后调用
    ````
    TencentImPluginExample.setListener();
    ````
-11. 最后，在登录之后调用 `setOfflinePushToken` 即可，可使用 腾讯云离线推送自查工具查看是否注册成功
+12. 最后，在登录之后调用 `setOfflinePushToken` 即可，可使用 腾讯云离线推送自查工具查看是否注册成功
    ````
    if(TencentImPluginExample.miPushToken != null){
      await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
    }
    ````
-12. example已经集成小米推送，可参考进行配置
+13. example已经集成小米推送，可参考进行配置
 
 
 #### 缺陷
