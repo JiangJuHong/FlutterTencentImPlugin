@@ -1733,8 +1733,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         if let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
            let bussid = CommonUtils.getParam(call: call, result: result, param: "bussid") as? UInt32 {
 
-            var config = TIMTokenParam();
-            config.token = token;
+            let config = TIMTokenParam();
+            config.token = token.data(using: String.Encoding.utf8);
             config.busiId = bussid;
             TIMManager.sharedInstance().setToken(config, succ: {
                 result(nil);
