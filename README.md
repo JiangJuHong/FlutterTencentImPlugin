@@ -307,23 +307,23 @@ void dispose() {
 9. 编写 `android/app/src/main/AndroidManifest.xml`，在 `application` 标签中添加
     ````
    <receiver
-       android:exported="true"
-       android:name="top.huic.tencent_im_plugin_example.push.XiaomiMsgReceiver">
-       <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
-       <intent-filter>
-           <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-       </intent-filter>
-       <intent-filter>
-           <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-       </intent-filter>
-       <intent-filter>
-           <action android:name="com.xiaomi.mipush.ERROR" />
-       </intent-filter>
-   </receiver>
+          android:exported="true"
+          android:name="top.huic.tencent_im_plugin_example.push.XiaomiMsgReceiver">
+          <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
+          <intent-filter>
+              <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+          </intent-filter>
+          <intent-filter>
+              <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+          </intent-filter>
+          <intent-filter>
+              <action android:name="com.xiaomi.mipush.ERROR" />
+          </intent-filter>
+      </receiver>
    ````
    `top.huic.tencent_im_plugin_example.push.XiaomiMsgReceiver` 修改为 XiaomiMsgReceiver的包路径
 10. 在 lib 目录创建 `tencent_im_plugin_example.dart`
-    ````
+   ````
    class TencentImPluginExample {
      static const MethodChannel _channel = const MethodChannel('tencent_im_plugin_example');
    
