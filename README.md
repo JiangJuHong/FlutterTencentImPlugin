@@ -280,8 +280,8 @@ void dispose() {
        return false;
    }
     ````
-6. 在`android/app/src/main/` 中创建包 `push`(非必须)
-7. 在 `android/app/src/main/push` 创建类:`XiaomiMsgReceiver`
+7. 在`android/app/src/main/` 中创建包 `push`(非必须)
+8. 在 `android/app/src/main/push` 创建类:`XiaomiMsgReceiver`
     ````java
    public class XiaomiMsgReceiver extends PushMessageReceiver {
        @Override
@@ -305,7 +305,7 @@ void dispose() {
    }
    ````
    支持，Android开发工作完成，接下来就是Flutter端工作
-8. 在 lib 目录创建 `tencent_im_plugin_example.dart`
+9. 在 lib 目录创建 `tencent_im_plugin_example.dart`
     ````
    class TencentImPluginExample {
      static const MethodChannel _channel = const MethodChannel('tencent_im_plugin_example');
@@ -324,17 +324,17 @@ void dispose() {
      }
    }
    ````
-9. 在程序启动后调用
+10. 在程序启动后调用
    ````
    TencentImPluginExample.setListener();
    ````
-9. 最后，在登录之后调用 `setOfflinePushToken` 即可，可使用 腾讯云离线推送自查工具查看是否注册成功
-    ````
+11. 最后，在登录之后调用 `setOfflinePushToken` 即可，可使用 腾讯云离线推送自查工具查看是否注册成功
+   ````
    if(TencentImPluginExample.miPushToken != null){
      await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
    }
    ````
-10.example已经集成小米推送，可参考进行配置
+12. example已经集成小米推送，可参考进行配置
 
 
 #### 缺陷
