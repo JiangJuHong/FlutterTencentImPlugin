@@ -50,7 +50,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       faceUrl: data['faceUrl'],
       addOption: data['addOption'],
       maxMemberNum: data['maxMemberNum'],
-      members: [GroupMemberEntity(user: self.identifier, role: 400)],
+      members: [GroupMemberEntity(user: self.identifier, role: 300)],
     );
 
     if (data['type'] == 'Private') {

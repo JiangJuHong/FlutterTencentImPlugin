@@ -358,24 +358,24 @@ class TencentImPlugin {
 
   /// 修改群成员资料
   static Future<void> modifyMemberInfo({
-    @required String name, // 群名称
+    @required String groupId, // 群ID
     @required String identifier, // 成员ID
     String nameCard, // 成员名片
     int silence, // 禁言时间
     int role, // 角色
     ReceiveMessageOptEnum receiveMessageOpt, // 接收消息选项
+    Map<String, dynamic> customInfo, // 自定义信息
   }) async {
     return await _channel.invokeMethod('modifyMemberInfo', {
-      "name": name,
+      "groupId": groupId,
       "identifier": identifier,
       "nameCard": nameCard,
       "silence": silence,
       "role": role,
+      "customInfo": customInfo == null ? null : jsonEncode(customInfo),
       "receiveMessageOpt": receiveMessageOpt == null
           ? null
-          : receiveMessageOpt
-              .toString()
-              .replaceAll("ReceiveMessageOptEnum.", ""),
+          : EnumUtil.getEnumName(receiveMessageOpt),
     });
   }
 
@@ -769,6 +769,32 @@ class TencentImPlugin {
     return await _channel.invokeMethod('downloadSound', {
       "message": jsonEncode(message),
       "path": path,
+    });
+  }
+
+  /// 设置离线推送配置
+  static Future<void> setOfflinePushSettings({
+    bool enabled, // 是否启用
+    String c2cSound, // C2C音频文件
+    String groupSound, // Group音频文件
+    String videoSound, // 视频邀请音频文件
+  }) async {
+    return await _channel.invokeMethod('setOfflinePushSettings', {
+      "enabled": enabled,
+      "c2cSound": c2cSound,
+      "groupSound": groupSound,
+      "videoSound": videoSound,
+    });
+  }
+
+  /// 设置离线推送Token
+  static Future<void> setOfflinePushToken({
+    String token, // Token
+    int bussid, // 推送证书 ID，是在 IM 控制台上生成的
+  }) async {
+    return await _channel.invokeMethod('setOfflinePushToken', {
+      "token": token,
+      "bussid": bussid,
     });
   }
 

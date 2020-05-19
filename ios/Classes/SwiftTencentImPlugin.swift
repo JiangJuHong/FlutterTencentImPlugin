@@ -198,6 +198,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "findMessage":
             self.findMessage(call: call, result: result);
             break;
+        case "setOfflinePushSettings":
+            self.setOfflinePushSettings(call: call, result: result);
+            break;
+        case "setOfflinePushToken":
+            self.setOfflinePushToken(call: call, result: result);
+            break;
         default:
             result(FlutterMethodNotImplemented);
         }
@@ -768,9 +774,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                 groupInfo.maxMemberNum = maxMemberNum!;
             }
             if members != nil {
+                var memberInfo: [TIMCreateGroupMemberInfo] = [];
                 if let ms = [GroupMemberEntity].deserialize(from: members) {
-                    print(ms);
+                    for item in ms {
+                        memberInfo.append(item!.toTIMCreateGroupMemberInfo());
+                    }
                 }
+                groupInfo.membersInfo = memberInfo;
             }
             groupInfo.groupType = type;
             groupInfo.groupName = name;
@@ -1685,6 +1695,51 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                 result(JsonUtil.toJson(array[0] as! MessageEntity));
             }, onFail: TencentImUtils.returnErrorClosures(result: result));
         });
+    }
+
+    /**
+     * 设置离线推送配置
+     */
+    private func setOfflinePushSettings(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let enabled = ((call.arguments as! [String: Any])["enabled"]) as? Bool;
+        let c2cSound = ((call.arguments as! [String: Any])["c2cSound"]) as? String;
+        let groupSound = ((call.arguments as! [String: Any])["groupSound"]) as? String;
+        let videoSound = ((call.arguments as! [String: Any])["videoSound"]) as? String;
+
+
+        let config = TIMAPNSConfig();
+        if enabled != nil {
+            config.openPush = enabled! == true ? 1 : 2;
+        }
+        if c2cSound != nil {
+            config.c2cSound = c2cSound!;
+        }
+        if groupSound != nil {
+            config.groupSound = groupSound!;
+        }
+        if videoSound != nil {
+            config.videoSound = videoSound!;
+        }
+
+        TIMManager.sharedInstance().setAPNS(config, succ: {
+            result(nil);
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
+    }
+
+    /**
+     * 设置离线推送Token
+     */
+    private func setOfflinePushToken(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
+           let bussid = CommonUtils.getParam(call: call, result: result, param: "bussid") as? UInt32 {
+
+            let config = TIMTokenParam();
+            config.token = token.data(using: String.Encoding.utf8);
+            config.busiId = bussid;
+            TIMManager.sharedInstance().setToken(config, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
 
 
