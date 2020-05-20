@@ -1157,7 +1157,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 接收消息选项
         String receiveMessageOpt = methodCall.argument("receiveMessageOpt");
         // 禁言时间
-        Long silence = methodCall.argument("silence");
+        Long silence = null;
+        if(methodCall.argument("silence") != null){
+            silence = Long.parseLong(methodCall.argument("silence").toString());
+        }
         // 角色
         Integer role = methodCall.argument("role");
         // 自定义信息
@@ -1201,14 +1204,24 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getGroupPendencyList(MethodCall methodCall, final Result result) {
         // 翻页时间戳，只用来翻页，server 返回0时表示没有更多数据，第一次请求填0
-        final int timestamp = methodCall.argument("timestamp");
+        Long timestamp = null;
+        if (methodCall.argument("timestamp") != null) {
+            timestamp = Long.parseLong(methodCall.argument("timestamp").toString());
+        }
         // 每页的数量，请求时有效
-        int numPerPage = methodCall.argument("numPerPage");
+        Long numPerPage = null;
+        if (methodCall.argument("numPerPage") != null) {
+            numPerPage = Long.parseLong(methodCall.argument("numPerPage").toString());
+        }
 
         // 封装请求对象
         TIMGroupPendencyGetParam request = new TIMGroupPendencyGetParam();
-        request.setTimestamp(timestamp);
-        request.setNumPerPage(numPerPage);
+        if (timestamp != null) {
+            request.setTimestamp(timestamp);
+        }
+        if (numPerPage != null) {
+            request.setNumPerPage(numPerPage);
+        }
 
         TIMGroupManager.getInstance().getGroupPendencyList(request, new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
             @Override
@@ -1289,7 +1302,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void reportGroupPendency(MethodCall methodCall, final Result result) {
         // 已读时间戳
-        Long timestamp = this.getParam(methodCall, result, "timestamp");
+        Long timestamp = Long.parseLong(this.getParam(methodCall, result, "timestamp").toString());
         TIMGroupManager.getInstance().reportGroupPendency(timestamp, new VoidCallBack(result));
     }
 
@@ -1307,7 +1320,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 申请人ID
         final String identifier = this.getParam(methodCall, result, "identifier");
         // 申请时间
-        final long addTime = this.getParam(methodCall, result, "addTime");
+        final long addTime = Long.parseLong(this.getParam(methodCall, result, "addTime").toString());
 
         TIMGroupManager.getInstance().getGroupPendencyList(new TIMGroupPendencyGetParam(), new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
             @Override
@@ -1339,7 +1352,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 申请人ID
         final String identifier = this.getParam(methodCall, result, "identifier");
         // 申请时间
-        final long addTime = this.getParam(methodCall, result, "addTime");
+        final long addTime = Long.parseLong(this.getParam(methodCall, result, "addTime").toString());
 
         TIMGroupManager.getInstance().getGroupPendencyList(new TIMGroupPendencyGetParam(), new ValueCallBack<TIMGroupPendencyListGetSucc>(result) {
             @Override
