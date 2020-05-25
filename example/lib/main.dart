@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
-import 'package:tencent_im_plugin_example/tencent_im_plugin_example.dart';
+import 'package:xiao_mi_push_plugin/xiao_mi_push_plugin.dart';
+import 'package:xiao_mi_push_plugin/xiao_mi_push_plugin_listener.dart';
 
 import 'page/home.dart';
 
@@ -22,8 +23,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // 设置监听器
-    TencentImPluginExample.setListener();
     // 初始化SDK(每次仅调用一次)
     TencentImPlugin.init(appid: "1400294314", logPrintLevel: LogPrintLevel.info);
   }
@@ -51,9 +50,14 @@ class LoginPageState extends State<LoginPage> {
       userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
 
-    // 注册离线推送
-    if(TencentImPluginExample.miPushToken != null){
-      await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
+    // 初始化小米推送
+    {
+      XiaoMiPushPlugin.addListener((type, params) {
+        if (type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult) {
+          TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0], bussid: 10301);
+        }
+      });
+      XiaoMiPushPlugin.init(appId: "2882303761518400514", appKey: "5241840023514");
     }
 
     Navigator.push(

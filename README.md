@@ -166,12 +166,52 @@ void dispose() {
 
 ### 离线推送
 注意: 本插件仅在腾讯云IM上进行封装，并未集成小米、华为等推送方的SDK，故集成离线推送时根据腾讯云文档进行集成。已封装离线推送配置方法。  
+如果你要集成
 
 #### 离线推送相关接口
 `setOfflinePushSettings`: 设置离线推送相关设置，包含：是否启用、C2C消息语音、群聊消息语音和视频邀请语音。请保证该方法在登录后调用！  
 `setOfflinePushToken`: 设置离线推送相关Token，token 是各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取； bussid 是推送证书 ID，是在 IM 控制台上生成的， 具体步骤请参考 https://cloud.tencent.com/document/product/269/9234
 
-#### 根据腾讯云IM文档进行集成第三方SDK，并配置Token
+#### 1. 插件集成步骤
+##### 小米
+[xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin)  
+1. 修改 `AndroidManifest.xml` 文件，增加:  
+````
+<permission android:name="你的包名.permission.MIPUSH_RECEIVE" android:protectionLevel="signature"/>
+<uses-permission android:name="你的包名.permission.MIPUSH_RECEIVE"/>
+````
+2. 初始化以及绑定监听器  
+````dart
+void bindXiaoMiPush(){
+  XiaoMiPushPlugin.addListener((type,params){
+    if(type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult){
+      TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0],bussid: BUSSID)
+    }  
+  });
+
+  XiaoMiPushPlugin.init(appId: APP_ID, appKey: APP_KEY);
+}
+````
+3. 消息接收等使用方法请参考 [xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin) 插件
+##### 华为
+暂无符合要求的插件
+
+##### Google FCM 推送
+暂无符合要求的插件
+
+##### 魅族推送
+暂无符合要求的插件
+
+##### OPPO 推送
+暂无符合要求的插件
+
+##### vivo 推送
+暂无符合要求的插件
+
+#### Apple
+暂无
+
+#### 2. 自行集成步骤
 [Android](https://cloud.tencent.com/document/product/269/44516)  
 [IOS](https://cloud.tencent.com/document/product/269/44517)  
 示例: 小米推送
@@ -350,8 +390,6 @@ void dispose() {
      await TencentImPlugin.setOfflinePushToken(token: TencentImPluginExample.miPushToken,bussid: 10301);
    }
    ````
-13. example已经集成小米推送，可参考进行配置
-
 
 #### 缺陷
-如果您要集成多个平台，那么需要频繁修改 Android 配置和 Android 代码，这对Flutter新手是极其不友好的，故计划提供分支插件(不确定什么时候):小米、华为等推送SDK集成，如果您已经有类似插件，请告诉我，我会使用它并编写接入文档
+如果您要集成多个平台，那么需要频繁修改 Android 配置和 Android 代码，这对Flutter新手是极其不友好的，故计划提供分支插件(不确定什么时候):小米(已完成)、华为等推送SDK集成，如果您已经有类似插件，请告诉我，我会使用它并编写接入文档

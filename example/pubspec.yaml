@@ -22,7 +22,8 @@ dependencies:
   flutter_video_compress: 0.3.7+8
   # 相册选择(https://pub.dev/packages/image_picker)
   image_picker: 0.6.3+4
-
+  # 小米推送SDK(https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)
+  xiao_mi_push_plugin: 1.0.0
 
 dev_dependencies:
   flutter_test:
