@@ -215,7 +215,7 @@ class TencentImPlugin {
         String
             type, // 群类型，参考腾讯云IM文档，``目前支持的群类型：私有群（Private）、公开群（Public）、 聊天室（ChatRoom）、互动直播聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）``
     @required String name, // 群名称
-    @required List<GroupMemberEntity> members, // 默认群成员，根据role决定身份
+    List<GroupMemberEntity> members, // 默认群成员，根据role决定身份
     String groupId, //群ID
     String notification, //群公告
     String introduction, // 群简介
@@ -232,14 +232,14 @@ class TencentImPlugin {
       "faceUrl": faceUrl,
       "addOption": addOption == null ? null : EnumUtil.getEnumName(addOption),
       "maxMemberNum": maxMemberNum,
-      "members": jsonEncode(members),
+      "members": members == null ? null : jsonEncode(members),
     });
   }
 
   /// 邀请用户加入群组
   static Future<List<dynamic>> inviteGroupMember({
     @required String groupId, //群ID
-    @required List<String> ids, // 用户I集合
+    @required List<String> ids, // 用户集合
   }) async {
     return jsonDecode(await _channel.invokeMethod('inviteGroupMember', {
       "groupId": groupId,
@@ -829,7 +829,8 @@ class TencentImPluginListener {
       switch (methodCall.method) {
         case 'onListener':
           // 获得原始类型和参数
-          ListenerTypeEnum type = EnumUtil.nameOf(ListenerTypeEnum.values, arguments['type']);
+          ListenerTypeEnum type =
+              EnumUtil.nameOf(ListenerTypeEnum.values, arguments['type']);
           var paramsStr = arguments['params'];
 
           // 封装回调类型和参数

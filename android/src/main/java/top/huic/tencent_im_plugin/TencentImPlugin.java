@@ -928,7 +928,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 最大群成员数
         Integer maxMemberNum = methodCall.argument("maxMemberNum");
         // 默认群成员
-        List<TIMGroupMemberInfo> members = new ArrayList<TIMGroupMemberInfo>(JSON.parseArray(this.getParam(methodCall, result, "members").toString(), GroupMemberInfo.class));
+        List<TIMGroupMemberInfo> members = methodCall.argument("members") == null ? new ArrayList() : new ArrayList<TIMGroupMemberInfo>(JSON.parseArray(this.getParam(methodCall, result, "members").toString(), GroupMemberInfo.class));
 
         // 创建参数对象
         TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam(type, name);

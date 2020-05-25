@@ -24,7 +24,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // 初始化SDK(每次仅调用一次)
-    TencentImPlugin.init(appid: "1400294314", logPrintLevel: LogPrintLevel.info);
+    TencentImPlugin.init(
+        appid: "1400294314", logPrintLevel: LogPrintLevel.info);
   }
 
   @override
@@ -47,17 +48,20 @@ class LoginPageState extends State<LoginPage> {
 
     await TencentImPlugin.login(
       identifier: "dev",
-      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+      userSig:
+          "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
 
     // 初始化小米推送
     {
       XiaoMiPushPlugin.addListener((type, params) {
         if (type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult) {
-          TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0], bussid: 10301);
+          TencentImPlugin.setOfflinePushToken(
+              token: params.commandArguments[0], bussid: 10301);
         }
       });
-      XiaoMiPushPlugin.init(appId: "2882303761518400514", appKey: "5241840023514");
+      XiaoMiPushPlugin.init(
+          appId: "2882303761518400514", appKey: "5241840023514");
     }
 
     Navigator.push(
