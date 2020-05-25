@@ -173,8 +173,7 @@ void dispose() {
 `setOfflinePushToken`: 设置离线推送相关Token，token 是各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取； bussid 是推送证书 ID，是在 IM 控制台上生成的， 具体步骤请参考 https://cloud.tencent.com/document/product/269/9234
 
 #### 1. 插件集成步骤
-##### 小米
-[xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin)  
+##### 小米 [xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin)  
 0. 引入插件
 ````
 xiao_mi_push_plugin: 1.0.0
