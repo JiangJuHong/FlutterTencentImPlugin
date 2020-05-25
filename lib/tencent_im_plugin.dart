@@ -829,20 +829,11 @@ class TencentImPluginListener {
       switch (methodCall.method) {
         case 'onListener':
           // 获得原始类型和参数
-          String typeStr = arguments['type'];
+          ListenerTypeEnum type = EnumUtil.nameOf(ListenerTypeEnum.values, arguments['type']);
           var paramsStr = arguments['params'];
 
           // 封装回调类型和参数
-          ListenerTypeEnum type;
           var params;
-
-          // 初始化类型
-          for (var item in ListenerTypeEnum.values) {
-            if (EnumUtil.getEnumName(item) == typeStr) {
-              type = item;
-              break;
-            }
-          }
 
           // 没有找到类型就返回
           if (type == null) {
