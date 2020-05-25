@@ -175,6 +175,11 @@ void dispose() {
 #### 1. 插件集成步骤
 ##### 小米
 [xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin)  
+0. 引入插件
+````
+xiao_mi_push_plugin: 1.0.0
+````
+
 1. 修改 `AndroidManifest.xml` 文件，增加:  
 ````
 <permission android:name="你的包名.permission.MIPUSH_RECEIVE" android:protectionLevel="signature"/>
