@@ -179,7 +179,7 @@ class ImPageState extends State<ImPage> {
     if (type == ListenerTypeEnum.NewMessages) {
       // 更新消息列表
       this.setState(() {
-        data.add(params);
+        data.add(DataEntity(data: params));
       });
       // 设置已读
       TencentImPlugin.setRead(sessionId: widget.id, sessionType: widget.type);

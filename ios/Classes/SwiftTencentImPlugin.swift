@@ -821,7 +821,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      */
     private func applyJoinGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-           let reason = CommonUtils.getParam(call: call, result: result, param: "ids") as? String {
+           let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
             TIMGroupManager.sharedInstance()?.joinGroup(groupId, msg: reason, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))

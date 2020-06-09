@@ -179,3 +179,7 @@
 
 ## 0.2.31
 * 创建群组的群成员设置为可选属性
+
+## 0.2.32
+* 修复IOS applyJoinGroup 包错问题
+* 修复Demo NewMessages 监听器添加数据失败
