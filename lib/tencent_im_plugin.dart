@@ -250,7 +250,7 @@ class TencentImPlugin {
   /// 申请加入群组
   static Future<void> applyJoinGroup({
     @required String groupId, //群ID
-    String reason, //申请理由
+    @required String reason, //申请理由
   }) async {
     return await _channel.invokeMethod('applyJoinGroup', {
       "groupId": groupId,

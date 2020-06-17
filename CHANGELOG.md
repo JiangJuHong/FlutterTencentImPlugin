@@ -183,3 +183,7 @@
 ## 0.2.32
 * 修复IOS applyJoinGroup 包错问题
 * 修复Demo NewMessages 监听器添加数据失败
+
+## 0.2.33
+* 修复IOS申请加入群组闪退问题
+* 修改申请加入群组 reason 为必传

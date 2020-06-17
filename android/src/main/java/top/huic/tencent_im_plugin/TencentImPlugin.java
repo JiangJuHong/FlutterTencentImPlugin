@@ -976,7 +976,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         // 群ID
         String groupId = this.getParam(methodCall, result, "groupId");
         // 申请理由
-        String reason = methodCall.argument("reason");
+        String reason = this.getParam(methodCall, result, "reason");
 
         TIMGroupManager.getInstance().applyJoinGroup(groupId, reason, new VoidCallBack(result));
     }
