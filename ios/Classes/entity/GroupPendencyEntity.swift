@@ -18,7 +18,7 @@ public class GroupPendencyEntity : NSObject{
     /**
      * 处理状态
      */
-    var handlerStatus : GroupPendencyHandledStatus?;
+    var handledStatus : GroupPendencyHandledStatus?;
 
     /**
      * 申请人ID
@@ -70,7 +70,7 @@ public class GroupPendencyEntity : NSObject{
     
     init(item : TIMGroupPendencyItem) {
         super.init();
-        self.handlerStatus = GroupPendencyHandledStatus.getByGroupPendencyHandledStatus(status: item.handleStatus);
+        self.handledStatus = GroupPendencyHandledStatus.getByGroupPendencyHandledStatus(status: item.handleStatus);
         self.operationType = GroupPendencyOperationType.getByTIMGroupPendencyHandleResult(type: item.handleResult);
         self.pendencyType = GroupPendencyGetType.getByTIMGroupPendencyGetType(type: item.getType);
         self.fromUser = item.fromUser;
