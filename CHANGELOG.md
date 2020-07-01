@@ -190,3 +190,6 @@
 
 ## 0.2.34
 * 修复 Native 和 Flutter 模型参数不一致
+
+## 0.2.35
+* 解决群未决处理TIMGroupPendencyItem的selfIdentifier为空的问题
