@@ -1068,7 +1068,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             (meta, array) -> Void in
             // 如果没有数据就直接返回
             if array?.count == 0 {
-                result("[]");
+                result(JsonUtil.toJson(GroupPendencyPageEntiity(meta: meta!, list: [])));
                 return;
             }
 
@@ -1078,9 +1078,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
 
             var resultData: [GroupPendencyEntity] = [];
             for item in array! {
+                if item.selfIdentifier.isEmpty {
+                    item.selfIdentifier = TIMManager.sharedInstance()?.getLoginUser();
+                }
                 resultData.append(GroupPendencyEntity(item: item));
                 groupIds.insert(item.groupId);
                 userIds.insert(item.selfIdentifier);
+                userIds.insert(item.fromUser);
                 userIds.insert(item.toUser);
             }
 
@@ -1116,7 +1120,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
                     for resultDatum in resultData {
                         for item in array! {
                             let userInfo = item;
-                            if userInfo.identifier == resultDatum.identifier {
+                            if userInfo.identifier == resultDatum.fromUser {
                                 resultDatum.applyUserInfo = UserInfoEntity(userProfile: item);
                             }
 
@@ -1157,12 +1161,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     private func groupPendencyAccept(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let msg = ((call.arguments as! [String: Any])["msg"]) as? String;
         if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+//           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
            let addTime = CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64 {
             TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
                 (_, array) -> Void in
                 for item in array! {
-                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime {
+                    if item.groupId == groupId && item.addTime == addTime {
                         item.accept(msg, succ: {
                             result(nil);
                         }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -1181,12 +1185,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     private func groupPendencyRefuse(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let msg = ((call.arguments as! [String: Any])["msg"]) as? String;
         if let groupId = CommonUtils.getParam(call: call, result: result, param: "groupId") as? String,
-           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+//           let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
            let addTime = CommonUtils.getParam(call: call, result: result, param: "addTime") as? UInt64 {
             TIMGroupManager.sharedInstance()?.getPendencyFromServer(TIMGroupPendencyOption(), succ: {
                 (_, array) -> Void in
                 for item in array! {
-                    if item.groupId == groupId && item.selfIdentifier == identifier && item.addTime == addTime {
+                    if item.groupId == groupId && item.addTime == addTime {
                         item.refuse(msg, succ: {
                             result(nil);
                         }, fail: TencentImUtils.returnErrorClosures(result: result))
