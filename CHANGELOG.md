@@ -193,3 +193,6 @@
 
 ## 0.2.35
 * 解决群未决处理TIMGroupPendencyItem的selfIdentifier为空的问题
+
+## 0.2.36
+* 解决发送图片后可能出现的错误

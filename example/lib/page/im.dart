@@ -286,7 +286,7 @@ class ImPageState extends State<ImPage> {
         return MessageText(text: value.content);
       case MessageNodeType.Image:
         ImageMessageNode value = node;
-        return MessageImage(url: value.imageData[ImageType.Original].url);
+        return MessageImage(url: value.imageData[ImageType.Original]?.url, path: value.path);
       case MessageNodeType.Sound:
         SoundMessageNode value = node;
         return MessageVoice(
