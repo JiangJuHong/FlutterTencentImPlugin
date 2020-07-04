@@ -121,8 +121,8 @@ Demo截图:
 | groupPendencyAccept  | 群未决审核（同意）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | groupPendencyRefuse  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | getSelfProfile  | 获取登录用户资料 | {forceUpdate:"是否强制走后台拉取"} | √ | √
-| modifySelfProfile  | 修改登录用户资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {params:'修改参数'} | √ | √
-| modifyFriend  | 修改好友资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {identifier:'好友ID',params:'修改参数'} | √ | √
+| modifySelfProfile  | 修改登录用户资料 [字段参考文档](https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {params:'修改参数'} | √ | √
+| modifyFriend  | 修改好友资料 [字段参考文档](https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {identifier:'好友ID',params:'修改参数'} | √ | √
 | deleteFriends  | 删除好友 | {ids:"用户ID列表",delFriendType:'删除类型'} | √ | √
 | addBlackList  | 添加到黑名单 | {ids:"用户ID列表"} | √ | √
 | deleteBlackList  | 从黑名单删除 | {ids:"用户ID列表"} | √ | √
