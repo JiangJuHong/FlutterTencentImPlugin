@@ -137,13 +137,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_video_compress:
-    dependency: "direct main"
-    description:
-      name: flutter_video_compress
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.7+8"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -248,26 +241,12 @@ packages:
     source: hosted
     version: "1.6.4"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.6.5"
-  path_provider_macos:
-    dependency: transitive
-    description:
-      name: path_provider_macos
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.4"
-  path_provider_platform_interface:
-    dependency: transitive
-    description:
-      name: path_provider_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.1"
+    version: "1.4.5"
   pedantic:
     dependency: transitive
     description:
@@ -296,13 +275,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.1"
-  plugin_platform_interface:
-    dependency: transitive
-    description:
-      name: plugin_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.2"
   pub_semver:
     dependency: transitive
     description:
@@ -370,7 +342,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.34"
+    version: "0.2.35"
   term_glyph:
     dependency: transitive
     description:
@@ -420,6 +392,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.2+1"
+  video_thumbnail:
+    dependency: "direct main"
+    description:
+      name: video_thumbnail
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.1"
   watcher:
     dependency: transitive
     description:

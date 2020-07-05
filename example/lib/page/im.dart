@@ -6,8 +6,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,6 +30,7 @@ import 'package:tencent_im_plugin_example/listener/ListenerFactory.dart';
 import 'package:tencent_im_plugin_example/page/video_player_page.dart';
 import 'package:tencent_im_plugin_example/utils/dialog_util.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 /// 聊天页面
 class ImPage extends StatefulWidget {
@@ -105,9 +106,6 @@ class ImPageState extends State<ImPage> {
 
   /// 用作显示提示框
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-
-  /// 视频压缩工具
-  final _flutterVideoCompress = FlutterVideoCompress();
 
   @override
   initState() {
@@ -286,7 +284,8 @@ class ImPageState extends State<ImPage> {
         return MessageText(text: value.content);
       case MessageNodeType.Image:
         ImageMessageNode value = node;
-        return MessageImage(url: value.imageData[ImageType.Original]?.url, path: value.path);
+        return MessageImage(
+            url: value.imageData[ImageType.Original]?.url, path: value.path);
       case MessageNodeType.Sound:
         SoundMessageNode value = node;
         return MessageVoice(
@@ -454,19 +453,16 @@ class ImPageState extends State<ImPage> {
       DialogUtil.showLoading(context, "处理中");
 
       // 获得视频缩略图
-      File thumb = await _flutterVideoCompress.getThumbnailWithFile(
-        video.path,
+      String thumb = await VideoThumbnail.thumbnailFile(
+        video: video.path,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.WEBP,
         quality: 25,
-      );
-
-      // 视频压缩
-      final compressVideo = await _flutterVideoCompress.compressVideo(
-        video.path,
       );
 
       // 获得控制器并获得视频时长
       VideoPlayerController playerController =
-          VideoPlayerController.file(File(compressVideo.path));
+          VideoPlayerController.file(File(video.path));
       await playerController.initialize();
       int duration = playerController.value.duration.inSeconds;
 
@@ -476,18 +472,18 @@ class ImPageState extends State<ImPage> {
       this.sendMessage(
         VideoMessageNode(
           videoInfo: VideoInfo(
-            path: compressVideo.path,
+            path: video.path,
             duration: duration,
             type: type,
           ),
           videoSnapshotInfo: VideoSnapshotInfo(
-            path: thumb.path,
+            path: thumb,
             height: 0,
             width: 0,
           ),
         ),
         MessageVideo(
-          image: thumb.path,
+          image: thumb,
           video: video.path,
           duration: duration,
         ),

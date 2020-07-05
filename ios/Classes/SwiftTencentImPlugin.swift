@@ -751,6 +751,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         let addOption = ((call.arguments as! [String: Any])["addOption"]) as? String;
         let maxMemberNum = ((call.arguments as! [String: Any])["maxMemberNum"]) as? UInt32;
         let members = ((call.arguments as! [String: Any])["members"]) as? String;
+        let customInfo = ((call.arguments as! [String: Any])["customInfo"]) as? String;
         if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? String,
            let name = CommonUtils.getParam(call: call, result: result, param: "name") as? String {
             // 封装群对象
@@ -784,6 +785,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             }
             groupInfo.groupType = type;
             groupInfo.groupName = name;
+
+            if customInfo != nil {
+                let ci = JsonUtil.getDictionaryFromJSONString(jsonString: customInfo!);
+                var customInfoData: [String: Data] = [:];
+                for (key, value) in ci {
+                    customInfoData[key] = "\(value)".data(using: String.Encoding.utf8);
+                }
+                groupInfo.customInfo = customInfoData;
+            }
 
             // 创建群
             TIMGroupManager.sharedInstance()?.createGroup(groupInfo, succ: {

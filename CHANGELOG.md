@@ -196,3 +196,6 @@
 
 ## 0.2.36
 * 解决发送图片后可能出现的错误
+* createGroup 接口增加 customInfo 信息
+* 替换Demo中视频缩略图获取的方案
+* 解决IOS Pod Install 后会报错

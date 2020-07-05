@@ -929,6 +929,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         Integer maxMemberNum = methodCall.argument("maxMemberNum");
         // 默认群成员
         List<TIMGroupMemberInfo> members = methodCall.argument("members") == null ? new ArrayList() : new ArrayList<TIMGroupMemberInfo>(JSON.parseArray(this.getParam(methodCall, result, "members").toString(), GroupMemberInfo.class));
+        // 自定义信息
+        String customInfo = methodCall.argument("customInfo");
 
         // 创建参数对象
         TIMGroupManager.CreateGroupParam param = new TIMGroupManager.CreateGroupParam(type, name);
@@ -940,6 +942,22 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         param.setAddOption(addOption != null ? TIMGroupAddOpt.valueOf(addOption) : null);
         if (maxMemberNum != null) {
             param.setMaxMemberNum(maxMemberNum);
+        }
+        try {
+            if (customInfo != null) {
+                Map<String, Object> customInfoData = JSON.parseObject(customInfo);
+                Map<String, byte[]> customInfoParams = new HashMap<>(customInfoData.size(), 1);
+                for (String s : customInfoData.keySet()) {
+                    if (customInfoData.get(s) != null) {
+                        customInfoParams.put(s, customInfoData.get(s).toString().getBytes("utf-8"));
+                    }
+                }
+                for (String key : customInfoParams.keySet()) {
+                    param.setCustomInfo(key, customInfoParams.get(key));
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "modifyGroupInfo: set customInfo error", e);
         }
 
         // 创建群
@@ -1158,7 +1176,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String receiveMessageOpt = methodCall.argument("receiveMessageOpt");
         // 禁言时间
         Long silence = null;
-        if(methodCall.argument("silence") != null){
+        if (methodCall.argument("silence") != null) {
             silence = Long.parseLong(methodCall.argument("silence").toString());
         }
         // 角色

@@ -222,6 +222,7 @@ class TencentImPlugin {
     String faceUrl, // 群头像
     AddGroupOptEnum addOption, // 加群选项
     int maxMemberNum, // 最大群成员数
+    Map<String, dynamic> customInfo, // 自定义信息
   }) async {
     return await _channel.invokeMethod('createGroup', {
       "type": type,
@@ -233,6 +234,7 @@ class TencentImPlugin {
       "addOption": addOption == null ? null : EnumUtil.getEnumName(addOption),
       "maxMemberNum": maxMemberNum,
       "members": members == null ? null : jsonEncode(members),
+      "customInfo": customInfo == null ? null : jsonEncode(customInfo),
     });
   }
 
