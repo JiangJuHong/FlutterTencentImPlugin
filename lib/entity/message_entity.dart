@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/enums/message_node_type.dart';
