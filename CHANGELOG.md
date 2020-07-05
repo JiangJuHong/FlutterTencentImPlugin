@@ -199,3 +199,6 @@
 * createGroup 接口增加 customInfo 信息
 * 替换Demo中视频缩略图获取的方案
 * 解决IOS Pod Install 后会报错
+
+## 0.2.37
+* 更换离线推送Token字符串解析方式(原方式不支持APNS)
