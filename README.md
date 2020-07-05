@@ -213,7 +213,7 @@ void bindXiaoMiPush(){
 暂无符合要求的插件
 
 #### Apple
-推荐 `flutter-apns`(暂未集成测试)
+推荐 `flutter-apns`或`apns_flutter`(暂未集成测试)
 
 #### 2. 自行集成步骤
 [Android](https://cloud.tencent.com/document/product/269/44516)  
