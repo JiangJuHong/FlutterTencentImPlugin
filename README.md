@@ -199,7 +199,7 @@ void bindXiaoMiPush(){
 hua_wei_push_plugin: 1.0.0
 ````
 
-1. 根据 xiao_mi_push_plugin 插件文档进行配置
+1. 根据 hua_wei_push_plugin 插件文档进行配置
 
 2. 获得Token并上传到腾讯云IM
 ````dart
