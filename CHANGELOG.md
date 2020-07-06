@@ -202,3 +202,6 @@
 
 ## 0.2.37
 * 更换离线推送Token字符串解析方式(原方式不支持APNS)
+
+## 0.2.38
+* 修改 android getConversation 传入非存在sessionId的时候闪退问题
