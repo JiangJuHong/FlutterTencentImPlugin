@@ -14,7 +14,7 @@ public enum GroupTipsGroupInfoType : Int{
     /**
      * 根据腾讯云获得枚举
      */
-    static func getByTIM_GROUP_INFO_CHANGE_TYPE(type : TIM_GROUP_INFO_CHANGE_TYPE)->GroupTipsGroupInfoType{
-        return (GroupTipsGroupInfoType(rawValue: type.rawValue) ?? nil)!;
+    static func getByTIM_GROUP_INFO_CHANGE_TYPE(type : TIM_GROUP_INFO_CHANGE_TYPE)->GroupTipsGroupInfoType?{
+        return (GroupTipsGroupInfoType(rawValue: type.rawValue) ?? nil);
     }
 }

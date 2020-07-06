@@ -106,7 +106,7 @@ Demo截图:
 | examinePendency  | 未决审核 | {id:'用户ID',type:'类型',remark:'备注'} | √ | √ 
 | deleteConversation  | 删除会话 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType',removeCache:'是否删除本地消息缓存'} | √ | √
 | deleteLocalMessage  | 删除会话内的本地聊天记录 | {sessionId:'会话ID',sessionType:'会话类型，枚举值:SessionType'} | √ | √
-| createGroup  | 创建群组 | {groupId:'指定群ID',notification:'群公告',introduction:'描述',faceUrl:'头像',addOption:'入群类型',maxMemberNum:'最大成员数量',members:'成员集合',type:'类型',name:'群名'} | √ | √
+| createGroup  | 创建群组 | {groupId:'指定群ID',notification:'群公告',introduction:'描述',faceUrl:'头像',addOption:'入群类型',maxMemberNum:'最大成员数量',members:'成员集合',type:'类型',name:'群名',customInfo:'自定义数据'} | √ | √
 | inviteGroupMember  | 邀请加入群组 | {groupId:'群ID',ids:'群成员ID'} | √ | √
 | applyJoinGroup  | 申请加入群组 | {groupId:'群ID',reason:'申请说明'} | √ | √
 | quitGroup  | 退出群组 | {groupId:'群ID'} | √ | √
@@ -121,8 +121,8 @@ Demo截图:
 | groupPendencyAccept  | 群未决审核（同意）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | groupPendencyRefuse  | 群未决审核（拒绝）会遍历所有未决列表来获得未审核的列表，存在性能隐患 | {msg:'审核意见',groupId:'群ID',identifier:'申请人ID',addTime:'申请时间'} | √ | √
 | getSelfProfile  | 获取登录用户资料 | {forceUpdate:"是否强制走后台拉取"} | √ | √
-| modifySelfProfile  | 修改登录用户资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {params:'修改参数'} | √ | √
-| modifyFriend  | 修改好友资料(https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {identifier:'好友ID',params:'修改参数'} | √ | √
+| modifySelfProfile  | 修改登录用户资料 [字段参考文档](https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {params:'修改参数'} | √ | √
+| modifyFriend  | 修改好友资料 [字段参考文档](https://cloud.tencent.com/document/product/269/1500#.E6.A0.87.E9.85.8D.E8.B5.84.E6.96.99.E5.AD.97.E6.AE.B5) | {identifier:'好友ID',params:'修改参数'} | √ | √
 | deleteFriends  | 删除好友 | {ids:"用户ID列表",delFriendType:'删除类型'} | √ | √
 | addBlackList  | 添加到黑名单 | {ids:"用户ID列表"} | √ | √
 | deleteBlackList  | 从黑名单删除 | {ids:"用户ID列表"} | √ | √
@@ -213,7 +213,7 @@ void bindXiaoMiPush(){
 暂无符合要求的插件
 
 #### Apple
-推荐 `flutter-apns`(暂未集成测试)
+推荐 `flutter-apns`或`apns_flutter`(暂未集成测试)
 
 #### 2. 自行集成步骤
 [Android](https://cloud.tencent.com/document/product/269/44516)  

@@ -50,6 +50,9 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       faceUrl: data['faceUrl'],
       addOption: data['addOption'],
       maxMemberNum: data['maxMemberNum'],
+      customInfo: {
+        "testTag": 1,
+      },
     );
 
     if (data['type'] == 'Private') {

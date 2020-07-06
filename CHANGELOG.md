@@ -183,3 +183,22 @@
 ## 0.2.32
 * 修复IOS applyJoinGroup 包错问题
 * 修复Demo NewMessages 监听器添加数据失败
+
+## 0.2.33
+* 修复IOS申请加入群组闪退问题
+* 修改申请加入群组 reason 为必传
+
+## 0.2.34
+* 修复 Native 和 Flutter 模型参数不一致
+
+## 0.2.35
+* 解决群未决处理TIMGroupPendencyItem的selfIdentifier为空的问题
+
+## 0.2.36
+* 解决发送图片后可能出现的错误
+* createGroup 接口增加 customInfo 信息
+* 替换Demo中视频缩略图获取的方案
+* 解决IOS Pod Install 后会报错
+
+## 0.2.37
+* 更换离线推送Token字符串解析方式(原方式不支持APNS)
