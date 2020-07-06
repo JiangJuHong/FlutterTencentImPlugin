@@ -22,6 +22,8 @@ dependencies:
   image_picker: 0.6.3+4
   # 小米推送SDK(https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)
   xiao_mi_push_plugin: 1.0.0
+  # 华为推送SDK（https://github.com/JiangJuHong/FlutterHuaWeiPushPlugin）
+  hua_wei_push_plugin: 1.0.0
   # 视频封面获取
   video_thumbnail: 0.2.1
   # 路径管理(https://pub.dev/packages/path_provider)

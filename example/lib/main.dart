@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hua_wei_push_plugin/hua_wei_push_plugin.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
 import 'package:xiao_mi_push_plugin/xiao_mi_push_plugin.dart';
@@ -24,8 +25,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // 初始化SDK(每次仅调用一次)
-    TencentImPlugin.init(
-        appid: "1400294314", logPrintLevel: LogPrintLevel.info);
+    TencentImPlugin.init(appid: "1400294314", logPrintLevel: LogPrintLevel.info);
   }
 
   @override
@@ -48,21 +48,12 @@ class LoginPageState extends State<LoginPage> {
 
     await TencentImPlugin.login(
       identifier: "dev",
-      userSig:
-          "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
 
-    // 初始化小米推送
-    {
-      XiaoMiPushPlugin.addListener((type, params) {
-        if (type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult) {
-          TencentImPlugin.setOfflinePushToken(
-              token: params.commandArguments[0], bussid: 10301);
-        }
-      });
-      XiaoMiPushPlugin.init(
-          appId: "2882303761518400514", appKey: "5241840023514");
-    }
+    // 初始化推送通道
+    bindXiaoMiPush();
+    bindHuaWeiPush();
 
     Navigator.push(
       context,
@@ -73,6 +64,25 @@ class LoginPageState extends State<LoginPage> {
   /// 退出登录
   onLogout() {
     TencentImPlugin.logout();
+  }
+
+  /// 绑定小米推送
+  bindXiaoMiPush() {
+    XiaoMiPushPlugin.addListener((type, params) {
+      if (type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult) {
+        TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0], bussid: 10301);
+      }
+    });
+    XiaoMiPushPlugin.init(appId: "2882303761518400514", appKey: "5241840023514");
+  }
+
+  /// 绑定华为推送
+  bindHuaWeiPush() {
+    HuaWeiPushPlugin.getToken().then((token) {
+      TencentImPlugin.setOfflinePushToken(token: token, bussid: 10524);
+    }).catchError((e) {
+      print("华为离线推送绑定失败!");
+    });
   }
 
   @override

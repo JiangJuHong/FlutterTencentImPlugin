@@ -179,29 +179,38 @@ void dispose() {
 xiao_mi_push_plugin: 1.0.0
 ````
 
-1. 修改 `AndroidManifest.xml` 文件，增加:  
-````
-<permission android:name="你的包名.permission.MIPUSH_RECEIVE" android:protectionLevel="signature"/>
-<uses-permission android:name="你的包名.permission.MIPUSH_RECEIVE"/>
-````
+1. 根据 xiao_mi_push_plugin 插件文档进行配置
+
 2. 初始化以及绑定监听器  
 ````dart
 void bindXiaoMiPush(){
   XiaoMiPushPlugin.addListener((type,params){
     if(type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult){
-      TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0],bussid: BUSSID)
+      TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0],bussid: BUSSID);
     }  
   });
-
   XiaoMiPushPlugin.init(appId: APP_ID, appKey: APP_KEY);
 }
 ````
 3. 消息接收等使用方法请参考 [xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin) 插件
-##### 华为
-暂无符合要求的插件
+##### 华为 [hua_wei_push_plugin](https://github.com/JiangJuHong/FlutterHuaWeiPushPlugin)  [![pub package](https://img.shields.io/pub/v/hua_wei_push_plugin.svg)](https://pub.dartlang.org/packages/hua_wei_push_plugin)  
+0. 引入插件
+````
+hua_wei_push_plugin: 1.0.0
+````
 
-##### Google FCM 推送
-暂无符合要求的插件
+1. 根据 xiao_mi_push_plugin 插件文档进行配置
+
+2. 获得Token并上传到腾讯云IM
+````dart
+  void bindHuaWeiPush() {
+    HuaWeiPushPlugin.getToken().then((token) {
+      TencentImPlugin.setOfflinePushToken(token: token, bussid: BUSSID);
+    }).catchError((e) {
+      print("华为离线推送绑定失败!");
+    });
+  }
+````
 
 ##### 魅族推送
 暂无符合要求的插件
@@ -210,6 +219,9 @@ void bindXiaoMiPush(){
 暂无符合要求的插件
 
 ##### vivo 推送
+暂无符合要求的插件
+
+##### Google FCM 推送
 暂无符合要求的插件
 
 #### Apple
