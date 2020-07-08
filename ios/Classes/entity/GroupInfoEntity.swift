@@ -94,6 +94,8 @@ public class GroupInfoEntity : NSObject{
      */
     var lastInfoTime : UInt32?;
     
+    var unReadMessageNum : Int32?;
+    
     override init() {
     }
     
@@ -117,5 +119,11 @@ public class GroupInfoEntity : NSObject{
         self.lastMsgTime = groupInfo.lastMsgTime;
         self.onlineMemberNum = groupInfo.onlineMemberNum;
         self.lastInfoTime = groupInfo.lastInfoTime;
+        let session = TIMManager.sharedInstance()?.getConversation(TIMConversationType.GROUP, receiver: self.groupId);
+        if session != nil{
+            self.unReadMessageNum = session?.getUnReadMessageNum();
+        } else {
+            self.unReadMessageNum = 0;
+        }
     }
 }

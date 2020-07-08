@@ -1,3 +1,4 @@
+
 class GroupInfoEntity {
   String groupType;
   int maxMemberNum;
@@ -17,6 +18,8 @@ class GroupInfoEntity {
   int lastMsgTime;
   int onlineMemberNum;
   int lastInfoTime;
+  int unReadMessageNum;
+
 
   GroupInfoEntity(
       {this.groupType,
@@ -36,7 +39,9 @@ class GroupInfoEntity {
       this.silenceAll,
       this.lastMsgTime,
       this.onlineMemberNum,
-      this.lastInfoTime});
+      this.lastInfoTime,
+      this.unReadMessageNum,
+      });
 
   GroupInfoEntity.fromJson(Map<String, dynamic> json) {
     groupType = json['groupType'];
@@ -57,6 +62,7 @@ class GroupInfoEntity {
     lastMsgTime = json['lastMsgTime'];
     onlineMemberNum = json['onlineMemberNum'];
     lastInfoTime = json['lastInfoTime'];
+    unReadMessageNum = json['unReadMessageNum'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +87,7 @@ class GroupInfoEntity {
     data['lastMsgTime'] = this.lastMsgTime;
     data['onlineMemberNum'] = this.onlineMemberNum;
     data['lastInfoTime'] = this.lastInfoTime;
+    data['unReadMessageNum'] = unReadMessageNum;
     return data;
   }
 

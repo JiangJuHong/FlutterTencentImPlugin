@@ -24,6 +24,7 @@ import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMSoundElem;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.TIMVideoElem;
 import com.tencent.imsdk.conversation.ProgressInfo;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
@@ -61,6 +62,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import top.huic.tencent_im_plugin.entity.GroupInfoEntity;
 import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
 import top.huic.tencent_im_plugin.entity.GroupMemberInfo;
 import top.huic.tencent_im_plugin.entity.GroupPendencyEntity;
@@ -660,7 +662,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getGroupList(MethodCall methodCall, final Result result) {
         TIMGroupManager.getInstance().getGroupList(new ValueCallBack<List<TIMGroupBaseInfo>>(result) {
             @Override
-            public void onSuccess(List<TIMGroupBaseInfo> groupBaseInfos) {
+            public void onSuccess(final List<TIMGroupBaseInfo> groupBaseInfos) {
                 List<String> ids = new ArrayList<>(groupBaseInfos.size());
                 for (TIMGroupBaseInfo groupBaseInfo : groupBaseInfos) {
                     ids.add(groupBaseInfo.getGroupId());
@@ -670,9 +672,45 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                     result.success(JsonUtil.toJSONString(new ArrayList<>()));
                     return;
                 }
+                TIMGroupManager.getInstance().getGroupInfo(ids, new TIMValueCallBack<List<TIMGroupDetailInfoResult>>() {
+                    @Override
+                    public void onError(int i, String s) {
+                        result.success(JsonUtil.toJSONString(new ArrayList<>()));
+                    }
 
+                    @Override
+                    public void onSuccess(List<TIMGroupDetailInfoResult> timGroupDetailInfoResults) {
+                        List<GroupInfoEntity> groupInfoEntities = new ArrayList<>();
+                        for (TIMGroupDetailInfoResult infoResult:timGroupDetailInfoResults) {
+                            GroupInfoEntity entity = new GroupInfoEntity();
+                            entity.setGroupId(infoResult.getGroupId());
+                            entity.setGroupOwner(infoResult.getGroupOwner());
+                            entity.setGroupNotice(infoResult.getGroupNotification());
+                            entity.setGroupIntroduction(infoResult.getGroupIntroduction());
+                            entity.setGroupFaceUrl(infoResult.getFaceUrl());
+                            entity.setGroupType(infoResult.getGroupType());
+                            entity.setCreateTime(infoResult.getCreateTime());
+                            entity.setLastInfoTime(infoResult.getLastInfoTime());
+                            entity.setLastMsgTime(infoResult.getLastMsgTime());
+                            entity.setMemberNum(infoResult.getMemberNum());
+                            entity.setMaxMemberNum(infoResult.getMaxMemberNum());
+                            entity.setOnlineMemberNum(infoResult.getOnlineMemberNum());
+                            entity.setAddOption(infoResult.getAddOption());
+                            entity.setSilenceAll(infoResult.isSilenceAll());
+                            entity.setLastMsg(infoResult.getLastMsg());
+                            entity.setCustom(infoResult.getCustom());
+                            for (TIMGroupBaseInfo groupBaseInfo : groupBaseInfos) {
+                                if (groupBaseInfo.getGroupId().equals(infoResult.getGroupId())) {
+                                    entity.setUnreadMessageNum(groupBaseInfo.getUnReadMessageNum());
+                                }
+                            }
+                            groupInfoEntities.add(entity);
+                        }
+                        result.success(JsonUtil.toJSONString(groupInfoEntities));
+                    }
+                });
                 // 获得群资料
-                TIMGroupManager.getInstance().getGroupInfo(ids, new ValueCallBack<List<TIMGroupDetailInfoResult>>(result));
+//                TIMGroupManager.getInstance().getGroupInfo(ids, new ValueCallBack<List<TIMGroupDetailInfoResult>>(result));
             }
         });
     }
