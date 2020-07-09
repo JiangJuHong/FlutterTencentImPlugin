@@ -25,9 +25,6 @@
 [ ] TIMProfileSystemElem  
 [ ] TIMGroupSystemElem  
 
-### 下版本计划(0.3.0)
-1. 将不同类别的方法封装到不同实体
-
 ## 集成
 ### Flutter
 ```
