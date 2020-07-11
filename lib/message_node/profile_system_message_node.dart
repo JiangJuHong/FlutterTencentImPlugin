@@ -13,12 +13,8 @@ class ProfileSystemMessageNode extends MessageNode {
   /// 资料变更的用户名
   String fromUser;
 
-  /// 集合列表
-  Map<String, dynamic> itemMap;
-
   ProfileSystemMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.GroupSystem) {
     this.subType = json["subType"];
     this.fromUser = json["fromUser"];
-    this.itemMap = json["itemMap"];
   }
 }

@@ -21,11 +21,6 @@ public class ProfileSystemEntity extends AbstractMessageEntity {
      */
     private String fromUser;
 
-    /**
-     * 集合列表
-     */
-    private Map<String, Object> itemMap;
-
     public ProfileSystemEntity() {
         super(MessageNodeType.ProfileSystem);
     }
@@ -34,7 +29,6 @@ public class ProfileSystemEntity extends AbstractMessageEntity {
         super(MessageNodeType.ProfileSystem);
         this.subType = elem.getSubType();
         this.fromUser = elem.getFromUser();
-        this.itemMap = elem.getItemMap();
     }
 
     public int getSubType() {
@@ -51,13 +45,5 @@ public class ProfileSystemEntity extends AbstractMessageEntity {
 
     public void setFromUser(String fromUser) {
         this.fromUser = fromUser;
-    }
-
-    public Map<String, Object> getItemMap() {
-        return itemMap;
-    }
-
-    public void setItemMap(Map<String, Object> itemMap) {
-        this.itemMap = itemMap;
     }
 }
