@@ -9,6 +9,7 @@ import top.huic.tencent_im_plugin.message.GroupTipsMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
 import top.huic.tencent_im_plugin.message.OtherMessageNode;
+import top.huic.tencent_im_plugin.message.ProfileSystemMessageNode;
 import top.huic.tencent_im_plugin.message.SnsTipsMessageNode;
 import top.huic.tencent_im_plugin.message.SoundMessageNode;
 import top.huic.tencent_im_plugin.message.TextMessageNode;
@@ -61,6 +62,11 @@ public enum MessageNodeType {
     GroupSystem(new GroupSystemMessageNode()),
 
     /**
+     * 用户资料变更系统通知
+     */
+    ProfileSystem(new ProfileSystemMessageNode()),
+
+    /**
      * 关系链相关操作后，后台push同步下来的消息元素
      */
     SnsTips(new SnsTipsMessageNode()),
@@ -111,6 +117,8 @@ public enum MessageNodeType {
                 return MessageNodeType.SnsTips;
             case GroupSystem:
                 return MessageNodeType.GroupSystem;
+            case ProfileTips:
+                return MessageNodeType.ProfileSystem;
             default:
                 return MessageNodeType.Other;
         }

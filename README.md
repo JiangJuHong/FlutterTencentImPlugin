@@ -22,7 +22,6 @@
 [ ] 升级IM SDK版本  
 [ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [-] 腾讯云离线推送  
-[ ] TIMProfileSystemElem  
 
 ## 集成
 ### Flutter
@@ -68,7 +67,7 @@ Demo截图:
 |  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  √ |  已完成 |
-|  TIMProfileSystemElem  |  - |  计划内容 |
+|  TIMProfileSystemElem  |  √ |  已完成 |
 |  TIMSNSSystemElem  |  √ |  已完成 |
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |

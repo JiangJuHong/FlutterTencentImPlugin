@@ -208,3 +208,6 @@
 
 ## 0.2.39
 * 增加 GroupSystem 节点解析
+
+## 0.2.49
+* 增加 TIMProfileSystemElem 节点解析
