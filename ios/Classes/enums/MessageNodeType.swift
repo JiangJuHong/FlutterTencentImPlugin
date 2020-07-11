@@ -31,6 +31,9 @@ enum MessageNodeType {
     /// 关系链变更
     case SnsTips
 
+    /// 资料变更
+    case ProfileSystem
+
     /// 其它节点
     case Other
 
@@ -55,6 +58,8 @@ enum MessageNodeType {
             return GroupSystemMessageNode();
         case .SnsTips:
             return SnsTipsMessageNode();
+        case .ProfileSystem:
+            return ProfileSystemMessageNode();
         default:
             return OtherMessageNode();
         }
@@ -81,6 +86,8 @@ enum MessageNodeType {
             return MessageNodeType.GroupSystem;
         case "SnsTips":
             return MessageNodeType.SnsTips;
+        case "ProfileSystem":
+            return MessageNodeType.ProfileSystem;
         default:
             return MessageNodeType.Other;
         }
@@ -122,6 +129,10 @@ enum MessageNodeType {
 
         if type is TIMSNSSystemElem {
             return MessageNodeType.SnsTips;
+        }
+
+        if type is TIMProfileSystemElem {
+            return MessageNodeType.ProfileSystem;
         }
 
         return MessageNodeType.Other;
