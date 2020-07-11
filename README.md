@@ -23,7 +23,6 @@
 [ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [-] 腾讯云离线推送  
 [ ] TIMProfileSystemElem  
-[ ] TIMGroupSystemElem  
 
 ## 集成
 ### Flutter
@@ -63,9 +62,9 @@ Demo截图:
 |  节点  |  进度  |  说明  |
 |  ----  | ---- |  ---- |
 |  TIMCustomElem  |  √ |  已完成 |
-|  TIMFaceElem  |  - |  暂不考虑 |
+|  TIMFaceElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
 |  TIMFileElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
-|  TIMGroupSystemElem  |  - |  计划内 |
+|  TIMGroupSystemElem  |  √ |  已完成 |
 |  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  √ |  已完成 |

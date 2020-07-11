@@ -205,3 +205,6 @@
 
 ## 0.2.38
 * 修改 android getConversation 传入非存在sessionId的时候闪退问题
+
+## 0.2.39
+* 增加 GroupSystem 节点解析

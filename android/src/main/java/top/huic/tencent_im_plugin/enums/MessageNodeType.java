@@ -4,6 +4,7 @@ import com.tencent.imsdk.TIMElemType;
 
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.CustomMessageNode;
+import top.huic.tencent_im_plugin.message.GroupSystemMessageNode;
 import top.huic.tencent_im_plugin.message.GroupTipsMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
@@ -55,6 +56,11 @@ public enum MessageNodeType {
     GroupTips(new GroupTipsMessageNode()),
 
     /**
+     * 群系统消息
+     */
+    GroupSystem(new GroupSystemMessageNode()),
+
+    /**
      * 关系链相关操作后，后台push同步下来的消息元素
      */
     SnsTips(new SnsTipsMessageNode()),
@@ -103,6 +109,8 @@ public enum MessageNodeType {
                 return MessageNodeType.GroupTips;
             case SNSTips:
                 return MessageNodeType.SnsTips;
+            case GroupSystem:
+                return MessageNodeType.GroupSystem;
             default:
                 return MessageNodeType.Other;
         }
