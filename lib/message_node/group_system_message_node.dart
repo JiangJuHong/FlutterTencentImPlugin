@@ -28,7 +28,8 @@ class GroupSystemMessageNode extends MessageNode {
 
   GroupSystemMessageNode() : super(MessageNodeType.GroupSystem);
 
-  GroupSystemMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.GroupSystem) {
+  GroupSystemMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageNodeType.GroupSystem) {
     this.platform = json["platform"];
     this.groupId = json["groupId"];
     this.subtype = GroupSystemTypeTool.intToGroupSystemType(json["subtype"]);
@@ -36,7 +37,8 @@ class GroupSystemMessageNode extends MessageNode {
       opUserInfo = UserInfoEntity.fromJson(json["opUserInfo"]);
     }
     if (json["opGroupMemberInfo"] != null) {
-      this.opGroupMemberInfo = GroupMemberEntity.fromJson(json["opGroupMemberInfo"]);
+      this.opGroupMemberInfo =
+          GroupMemberEntity.fromJson(json["opGroupMemberInfo"]);
     }
   }
 }
