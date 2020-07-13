@@ -6,12 +6,12 @@
 ## Getting Started
 集成腾讯云IM SDK，同时支持 Android 和 IOS.  
 **🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**  
+错误码参考: [点我进入](https://cloud.tencent.com/document/product/269/1671)  
 IMSDK版本:
 |  平台  |  版本 | 文档地址 |
 |  ----  | ---- | ---- |
 |  Android  | v4.6.1 | [Android](https://cloud.tencent.com/document/product/269/36909) |
 |  IOS  | v4.6.58 | [IOS](https://cloud.tencent.com/document/product/269/36910) |
-
 
 ## 功能清单
 [x]初始化  
