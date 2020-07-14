@@ -95,7 +95,9 @@ class GroupTipsMessageNode extends MessageNode {
     }
     platform = json["platform"];
     tipsType = EnumUtil.nameOf(GroupTipsType.values, json["tipsType"]);
-    userList = List<String>.from(json["userList"]);
+    if (json["userList"] != null) {
+      userList = List<String>.from(json["userList"]);
+    }
   }
 
   @override

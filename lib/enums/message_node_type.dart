@@ -1,9 +1,11 @@
 import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
+import 'package:tencent_im_plugin/message_node/group_system_message_node.dart';
 import 'package:tencent_im_plugin/message_node/group_tips_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/location_message_node.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/message_node/other_message_node.dart';
+import 'package:tencent_im_plugin/message_node/profile_system_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
@@ -35,6 +37,12 @@ enum MessageNodeType {
   // 关系链操作
   SnsTips,
 
+  // 群系统消息
+  GroupSystem,
+
+  // 用户资料变更系统通知
+  ProfileSystem,
+
   // 其它
   Other,
 }
@@ -42,8 +50,7 @@ enum MessageNodeType {
 /// 消息节点类型工具类
 class MessageNodeTypeUtil {
   /// 根据枚举获得消息节点
-  static MessageNode getMessageNodeByMessageNodeType(
-      MessageNodeType nodeType, Map<String, dynamic> json) {
+  static MessageNode getMessageNodeByMessageNodeType(MessageNodeType nodeType, Map<String, dynamic> json) {
     switch (nodeType) {
       case MessageNodeType.Text:
         return TextMessageNode.fromJson(json);
@@ -68,8 +75,13 @@ class MessageNodeTypeUtil {
       case MessageNodeType.SnsTips:
         return SnsTipsMessageNode.fromJson(json);
         break;
+      case MessageNodeType.GroupSystem:
+        return GroupSystemMessageNode.fromJson(json);
       case MessageNodeType.Other:
         return OtherMessageNode.fromJson(json);
+        break;
+      case MessageNodeType.ProfileSystem:
+        return ProfileSystemMessageNode.fromJson(json);
         break;
     }
     return null;

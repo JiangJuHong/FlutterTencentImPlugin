@@ -446,7 +446,10 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result) {
             @Override
             public void onSuccess(List<SessionEntity> sessionEntities) {
-                result.success(JsonUtil.toJSONString(sessionEntities.get(0)));
+                if (sessionEntities.size() > 0)
+                    result.success(JsonUtil.toJSONString(sessionEntities.get(0)));
+                else
+                    result.success(null);
             }
         }, Collections.singletonList(conversation));
     }

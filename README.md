@@ -4,10 +4,14 @@
 腾讯云IM插件
 
 ## Getting Started
-集成腾讯云IM SDK，同时支持 Android 和 IOS  
+集成腾讯云IM SDK，同时支持 Android 和 IOS.  
 **🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**  
-**注意：当前为测试版本，如果您要集成到正式项目，请保持关注新版本。稳定版本将大于等于 `v1.0.0`**  
-**注意：由于腾讯云IM升级了新版本，但是本插件基于上一个版本，所以浏览开发文档时请通过以下地址：[Android](https://cloud.tencent.com/document/product/269/36909) [IOS](https://cloud.tencent.com/document/product/269/36910) ，在完成基本工作后，插件将进行相应更新**  
+错误码参考: [点我进入](https://cloud.tencent.com/document/product/269/1671)  
+IMSDK版本:
+|  平台  |  版本 | 文档地址 |
+|  ----  | ---- | ---- |
+|  Android  | v4.6.1 | [Android](https://cloud.tencent.com/document/product/269/36909) |
+|  IOS  | v4.6.58 | [IOS](https://cloud.tencent.com/document/product/269/36910) |
 
 ## 功能清单
 [x]初始化  
@@ -19,14 +23,10 @@
 [-]离线推送  
 
 ### 近期计划(已完成内容将会被移除)  
-[ ] 升级IM SDK版本  
-[ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [-] 腾讯云离线推送  
-[ ] TIMProfileSystemElem  
-[ ] TIMGroupSystemElem  
-
-### 下版本计划(0.3.0)
-1. 将不同类别的方法封装到不同实体
+[ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
+[ ] 升级IM SDK版本  
+[ ] 优化使用文档  
 
 ## 集成
 ### Flutter
@@ -66,13 +66,13 @@ Demo截图:
 |  节点  |  进度  |  说明  |
 |  ----  | ---- |  ---- |
 |  TIMCustomElem  |  √ |  已完成 |
-|  TIMFaceElem  |  - |  暂不考虑 |
+|  TIMFaceElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
 |  TIMFileElem  |  - |  暂不考虑，建议使用 TIMCustomElem 代替 |
-|  TIMGroupSystemElem  |  - |  计划内 |
+|  TIMGroupSystemElem  |  √ |  已完成 |
 |  TIMGroupTipsElem  | √ |  已完成 |
 |  TIMImageElem  |  √ |  已完成 |
 |  TIMLocationElem  |  √ |  已完成 |
-|  TIMProfileSystemElem  |  - |  计划内容 |
+|  TIMProfileSystemElem  |  √ |  已完成 |
 |  TIMSNSSystemElem  |  √ |  已完成 |
 |  TIMSoundElem  |  √ |  已完成 |
 |  TIMTextElem  |  √ |  已完成 |
@@ -179,29 +179,38 @@ void dispose() {
 xiao_mi_push_plugin: 1.0.0
 ````
 
-1. 修改 `AndroidManifest.xml` 文件，增加:  
-````
-<permission android:name="你的包名.permission.MIPUSH_RECEIVE" android:protectionLevel="signature"/>
-<uses-permission android:name="你的包名.permission.MIPUSH_RECEIVE"/>
-````
+1. 根据 xiao_mi_push_plugin 插件文档进行配置
+
 2. 初始化以及绑定监听器  
 ````dart
 void bindXiaoMiPush(){
   XiaoMiPushPlugin.addListener((type,params){
     if(type == XiaoMiPushListenerTypeEnum.ReceiveRegisterResult){
-      TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0],bussid: BUSSID)
+      TencentImPlugin.setOfflinePushToken(token: params.commandArguments[0],bussid: BUSSID);
     }  
   });
-
   XiaoMiPushPlugin.init(appId: APP_ID, appKey: APP_KEY);
 }
 ````
 3. 消息接收等使用方法请参考 [xiao_mi_push_plugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin) 插件
-##### 华为
-暂无符合要求的插件
+##### 华为 [hua_wei_push_plugin](https://github.com/JiangJuHong/FlutterHuaWeiPushPlugin)  [![pub package](https://img.shields.io/pub/v/hua_wei_push_plugin.svg)](https://pub.dartlang.org/packages/hua_wei_push_plugin)  
+0. 引入插件
+````
+hua_wei_push_plugin: 1.0.0
+````
 
-##### Google FCM 推送
-暂无符合要求的插件
+1. 根据 hua_wei_push_plugin 插件文档进行配置
+
+2. 获得Token并上传到腾讯云IM
+````dart
+  void bindHuaWeiPush() {
+    HuaWeiPushPlugin.getToken().then((token) {
+      TencentImPlugin.setOfflinePushToken(token: token, bussid: BUSSID);
+    }).catchError((e) {
+      print("华为离线推送绑定失败!");
+    });
+  }
+````
 
 ##### 魅族推送
 暂无符合要求的插件
@@ -210,6 +219,9 @@ void bindXiaoMiPush(){
 暂无符合要求的插件
 
 ##### vivo 推送
+暂无符合要求的插件
+
+##### Google FCM 推送
 暂无符合要求的插件
 
 #### Apple
@@ -400,12 +412,14 @@ void bindXiaoMiPush(){
 
 ## 其它插件
 ````
-我同时维护的还有如下插件，如果您感兴趣与我一起进行维护，请通过Github联系我，欢迎 issues 和 PR。
+我同时维护的还有以下插件，如果您感兴趣与我一起进行维护，请通过Github联系我，欢迎 issues 和 PR。
 ````
-| 平台 | 插件  |  描述  |  版本  | - |
-| ---- | ----  | ---- |  ---- | ---- |
-| Flutter | [FlutterTencentImPlugin](https://github.com/JiangJuHong/FlutterTencentImPlugin)  | 腾讯云IM插件 | [![pub package](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin) | ![](https://img.shields.io/github/stars/JiangJuHong/FlutterTencentImPlugin?style=social) |
-| Flutter | [FlutterTencentRtcPlugin](https://github.com/JiangJuHong/FlutterTencentRtcPlugin)  | 腾讯云Rtc插件 | [![pub package](https://img.shields.io/pub/v/tencent_rtc_plugin.svg)](https://pub.dartlang.org/packages/tencent_rtc_plugin) | ![](https://img.shields.io/github/stars/JiangJuHong/FlutterTencentRtcPlugin?style=social) |
-| Flutter | [FlutterXiaoMiPushPlugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  | 小米推送SDK插件 | [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin) | ![](https://img.shields.io/github/stars/JiangJuHong/FlutterXiaoMiPushPlugin?style=social) |
-| Flutter | [FlutterTextSpanField](https://github.com/JiangJuHong/FlutterTextSpanField)  | 自定义文本样式输入框 | [![pub package](https://img.shields.io/pub/v/text_span_field.svg)](https://pub.dartlang.org/packages/text_span_field) | ![](https://img.shields.io/github/stars/JiangJuHong/FlutterTextSpanField?style=social) |
-| Flutter | [FlutterQiniucloudLivePlugin](https://github.com/JiangJuHong/FlutterQiniucloudLivePlugin)  | Flutter 七牛云直播云插件 | 暂未发布，通过 git 集成 | ![](https://img.shields.io/github/stars/JiangJuHong/FlutterQiniucloudLivePlugin?style=social) |
+| 平台 | 插件  |  描述  |  版本  |
+| ---- | ----  | ---- |  ---- | 
+| Flutter | [FlutterTencentImPlugin](https://github.com/JiangJuHong/FlutterTencentImPlugin)  | 腾讯云IM插件 | [![pub package](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin) | 
+| Flutter | [FlutterTencentRtcPlugin](https://github.com/JiangJuHong/FlutterTencentRtcPlugin)  | 腾讯云Rtc插件 | [![pub package](https://img.shields.io/pub/v/tencent_rtc_plugin.svg)](https://pub.dartlang.org/packages/tencent_rtc_plugin) | 
+| Flutter | [FlutterXiaoMiPushPlugin](https://github.com/JiangJuHong/FlutterXiaoMiPushPlugin)  | 小米推送SDK插件 | [![pub package](https://img.shields.io/pub/v/xiao_mi_push_plugin.svg)](https://pub.dartlang.org/packages/xiao_mi_push_plugin) | 
+| Flutter | [FlutterHuaWeiPushPlugin](https://github.com/JiangJuHong/FlutterHuaWeiPushPlugin)  | 华为推送(HMS Push)插件 | [![pub package](https://img.shields.io/pub/v/hua_wei_push_plugin.svg)](https://pub.dartlang.org/packages/hua_wei_push_plugin) | 
+| Flutter | [FlutterTextSpanField](https://github.com/JiangJuHong/FlutterTextSpanField)  | 自定义文本样式输入框 | [![pub package](https://img.shields.io/pub/v/text_span_field.svg)](https://pub.dartlang.org/packages/text_span_field) | 
+| Flutter | [FlutterClipboardListener](https://github.com/JiangJuHong/FlutterClipboardListener)  | 粘贴板监听器 | [![pub package](https://img.shields.io/pub/v/clipboard_listener.svg)](https://pub.dartlang.org/packages/clipboard_listener) | 
+| Flutter | [FlutterQiniucloudLivePlugin](https://github.com/JiangJuHong/FlutterQiniucloudLivePlugin)  | Flutter 七牛云直播云插件 | 暂未发布，通过 git 集成 | 

@@ -55,7 +55,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       },
     );
 
-    if (data['type'] == 'Private') {
+    if (data['type'] == 'Private' && friendData.length >= 1) {
       await TencentImPlugin.inviteGroupMember(
         groupId: id,
         ids: friendData.map((item) => item.identifier).toList(),
