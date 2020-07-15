@@ -209,5 +209,8 @@
 ## 0.2.39
 * 增加 GroupSystem 节点解析
 
-## 0.2.49
+## 0.2.40
 * 增加 TIMProfileSystemElem 节点解析
+
+## 0.2.41
+* 修复IOS设备下 deleteConversation 接口无法接收返回值的问题

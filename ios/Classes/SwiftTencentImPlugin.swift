@@ -714,12 +714,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
            let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool {
+
+            var res: Bool;
             if removeCache {
-                TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                res = TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
             } else {
-                TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                res = TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
             }
-            result(nil);
+            result(res);
         }
     }
 
@@ -732,8 +734,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     private func deleteLocalMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
-            TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
-            result(nil);
+            result(TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
         }
     }
 
