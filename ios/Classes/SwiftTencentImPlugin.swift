@@ -715,13 +715,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
            let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool {
 
-            var res: Bool;
             if removeCache {
-                res = TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                result(TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
             } else {
-                res = TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId);
+                result(TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
             }
-            result(res);
         }
     }
 
