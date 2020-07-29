@@ -4,8 +4,7 @@
 腾讯云IM插件
 
 ## Getting Started
-集成腾讯云IM SDK，同时支持 Android 和 IOS.  
-**🎉🎉🎉🎉🎉离线推送部分接口已实现，关注：`setOfflinePushSettings`和`setOfflinePushToken`🎉🎉🎉🎉🎉**  
+集成腾讯云IM SDK，同时支持 Android 和 IOS，支持离线推送.  
 错误码参考: [点我进入](https://cloud.tencent.com/document/product/269/1671)  
 IMSDK版本:
 |  平台  |  版本 | 文档地址 |
@@ -20,10 +19,9 @@ IMSDK版本:
 [x]未读计数  
 [x]群组相关  
 [x]用户资料与关系链  
-[-]离线推送  
+[x]离线推送  
 
 ### 近期计划(已完成内容将会被移除)  
-[-] 腾讯云离线推送  
 [ ] 验证 群提示消息修改时 不能获取到具体类型的问题  
 [ ] 升级IM SDK版本  
 [ ] 优化使用文档  
