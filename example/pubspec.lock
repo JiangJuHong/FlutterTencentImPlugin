@@ -349,7 +349,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.38"
+    version: "0.2.43"
   term_glyph:
     dependency: transitive
     description:
