@@ -248,20 +248,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     public func login(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
            let userSig = CommonUtils.getParam(call: call, result: result, param: "userSig") as? String {
-            // 如果已经登录，则不允许重复登录
-            if TIMManager.sharedInstance()?.getLoginUser() != nil {
-                result(
-                        FlutterError(code: "login failed.", message: "user is login", details: "user is already login ,you should login out first")
-                );
-            } else {
-                // 登录操作
-                let loginParam = TIMLoginParam();
-                loginParam.identifier = identifier;
-                loginParam.userSig = userSig;
-                TIMManager.sharedInstance()?.login(loginParam, succ: {
-                    result(nil);
-                }, fail: TencentImUtils.returnErrorClosures(result: result))
-            }
+           // 登录操作
+           let loginParam = TIMLoginParam();
+           loginParam.identifier = identifier;
+           loginParam.userSig = userSig;
+           TIMManager.sharedInstance()?.login(loginParam, succ: {
+               result(nil);
+           }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
 

@@ -145,6 +145,7 @@ Demo截图:
 | findMessage | 查找一条消息 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
 | setOfflinePushSettings | 设置离线推送相关设置(请保证该方法在登录后调用) | {enabled:'是否启用',c2cSound:'C2C音频文件',groupSound:'Group音频文件',videoSound:'视频邀请语音'} | √ | √
 | setOfflinePushToken | 设置离线推送相关Token(登录之后调用) | {token:'各个手机厂商的推送服务对客户端的唯一标识，需要集成各个厂商的推送服务获取',bussid:'推送证书 ID，是在 IM 控制台上生成的'} | √ | √
+| setMessageOfflinePushSettings | 设置单条消息的离线推送配置 | {sessionId:'会话ID',sessionType:'会话类型',rand:'随机码',seq:'消息系列号',timestamp:'消息时间戳',self:'是否是自己发送的消息'} | √ | √
 
 ### 消息监听
 通过 `TencentImPlugin.addListener` 和 `TencentImPlugin.removeListener` 可进行事件监听  

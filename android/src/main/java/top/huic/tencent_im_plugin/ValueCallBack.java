@@ -43,7 +43,7 @@ public class ValueCallBack<T> implements TIMValueCallBack<T> {
     @Override
     public void onError(int code, String desc) {
         if (this.result != null) {
-            result.error(desc, String.valueOf(code), null);
+            result.error(String.valueOf(code), desc, desc);
         }
     }
 }
