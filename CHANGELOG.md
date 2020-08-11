@@ -209,5 +209,18 @@
 ## 0.2.39
 * 增加 GroupSystem 节点解析
 
-## 0.2.49
+## 0.2.40
 * 增加 TIMProfileSystemElem 节点解析
+
+## 0.2.41
+* 修复IOS设备下 deleteConversation 接口无法接收返回值的问题
+
+## 0.2.42
+* 修复IOS运行报错
+
+## 0.2.43
+* 修复 ValueCallBack 错误码和描述信息反了的问题
+* 对登录操作不再做 isEmpty 验证
+
+## 0.2.44
+* 优化文本节点隐晦出现BUG的问题

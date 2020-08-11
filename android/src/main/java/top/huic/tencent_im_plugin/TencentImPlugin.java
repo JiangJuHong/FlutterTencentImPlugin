@@ -374,14 +374,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void login(MethodCall methodCall, final Result result) {
         // 用户ID和签名
-        final String identifier = this.getParam(methodCall, result, "identifier");
+        String identifier = this.getParam(methodCall, result, "identifier");
         String userSig = this.getParam(methodCall, result, "userSig");
-
-        // 如果用户已登录，则不允许重复登录
-        if (!TextUtils.isEmpty(TIMManager.getInstance().getLoginUser())) {
-            result.error("login failed. ", "user is login", "user is already login ,you should login out first");
-            return;
-        }
 
         // 登录操作
         TIMManager.getInstance().login(identifier, userSig, new VoidCallBack(result));
