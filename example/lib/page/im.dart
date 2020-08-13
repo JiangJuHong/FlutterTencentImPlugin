@@ -456,7 +456,7 @@ class ImPageState extends State<ImPage> {
       String thumb = await VideoThumbnail.thumbnailFile(
         video: video.path,
         thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.WEBP,
+        imageFormat: ImageFormat.JPEG,
         quality: 25,
       );
 
