@@ -234,6 +234,9 @@ hua_wei_push_plugin: 1.0.0
 [Android](https://cloud.tencent.com/document/product/269/44516)  
 [IOS](https://cloud.tencent.com/document/product/269/44517)  
 
+## 赞助
+[https://www.yuque.com/jiangjuhong/default/aso8g5](https://www.yuque.com/jiangjuhong/default/aso8g5)  感谢您的赞助!
+
 ## 其它插件
 ````
 我同时维护的还有以下插件，如果您感兴趣与我一起进行维护，请通过Github联系我，欢迎 issues 和 PR。
