@@ -9,10 +9,12 @@
 集成腾讯云IM SDK，同时支持 Android 和 IOS，支持离线推送.  
 错误码参考:
 [点我进入](https://cloud.tencent.com/document/product/269/1671)  
-IMSDK版本: | 平台 | 版本 | 文档地址 | | ---- | ---- | ---- | | Android |
-v4.6.1 | [Android](https://cloud.tencent.com/document/product/269/36909)
-| | IOS | v4.6.58 |
-[IOS](https://cloud.tencent.com/document/product/269/36910) |
+IMSDK版本:
+
+| 平台    | 版本     | 文档地址                                                         |
+|:--------|:--------|:----------------------------------------------------------------|
+| Android | v4.6.1  | [Android](https://cloud.tencent.com/document/product/269/36909) |
+| IOS     | v4.6.58 | [IOS](https://cloud.tencent.com/document/product/269/36910)     |
 
 ## 功能清单
 
@@ -286,7 +288,9 @@ hua_wei_push_plugin: 1.0.0
 [IOS](https://cloud.tencent.com/document/product/269/44517)
 
 ## 赞助
-[https://www.yuque.com/jiangjuhong/default/aso8g5](https://www.yuque.com/jiangjuhong/default/aso8g5)  感谢您的赞助!
+
+[https://www.yuque.com/jiangjuhong/default/aso8g5](https://www.yuque.com/jiangjuhong/default/aso8g5)
+感谢您的赞助!
 
 ## 其它插件
 
