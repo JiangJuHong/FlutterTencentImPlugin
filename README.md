@@ -16,6 +16,11 @@ IMSDK版本:
 | Android | v4.6.1  | [Android](https://cloud.tencent.com/document/product/269/36909) |
 | IOS     | v4.6.58 | [IOS](https://cloud.tencent.com/document/product/269/36910)     |
 
+## 讨论群
+<img
+src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/other/qq-group.jpg"
+height="300em" style="max-width:100%;display: inline-block;"/>
+
 ## 功能清单
 
 \[x]初始化  
