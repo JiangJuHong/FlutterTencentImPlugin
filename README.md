@@ -19,7 +19,9 @@ IMSDK版本:
 ## 讨论群
 <img
 src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/other/qq-group.jpg"
-height="300em" style="max-width:100%;display: inline-block;"/>
+height="300em" style="max-width:100%;display: inline-block;"/>  
+[点击加入群聊](https://jq.qq.com/?_wv=1027&k=QxCWMlUf)  
+
 
 ## 功能清单
 
