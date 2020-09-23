@@ -67,10 +67,10 @@ class SessionEntity {
     data['unreadMessageNum'] = this.unreadMessageNum;
     data['nickname'] = this.nickname;
     data['id'] = this.id;
-    data['type'] = this.type.toString();
+    data['type'] = this.type?.toString();
     data['message'] = this.message.toJson();
-    data['group'] = this.group.toJson();
-    data['userProfile'] = this.userProfile.toJson();
+    data['group'] = this.group?.toJson();
+    data['userProfile'] = this.userProfile?.toJson();
     return data;
   }
 
