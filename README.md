@@ -22,6 +22,22 @@ src="https://raw.githubusercontent.com/JiangJuHong/access-images/master/other/qq
 height="300em" style="max-width:100%;display: inline-block;"/>  
 [点击加入群聊](https://jq.qq.com/?_wv=1027&k=QxCWMlUf)  
 
+## 关于作者
+
+### 介绍
+
+个人以及公司承接外包(**定制开发或二次开发**)，坐标：四川成都，包括但不限于：
+* 网站
+* 移动APP
+* PC客户端应用
+* 微信小程序
+* 插件开发
+* 等
+
+### 联系方式
+
+邮箱：690717394@qq.com  
+扣扣：690717394
 
 ## 功能清单
 
@@ -293,23 +309,6 @@ hua_wei_push_plugin: 1.0.0
 
 [Android](https://cloud.tencent.com/document/product/269/44516)  
 [IOS](https://cloud.tencent.com/document/product/269/44517)
-
-## 关于作者
-
-### 介绍
-
-个人以及公司承接外包(**定制开发或二次开发**)，坐标：四川成都，包括但不限于：
-* 网站
-* 移动APP
-* PC客户端应用
-* 微信小程序
-* 插件开发
-* 等
-
-### 联系方式
-
-邮箱：690717394@qq.com  
-扣扣：690717394
 
 ## 赞助
 
