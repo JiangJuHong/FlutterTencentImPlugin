@@ -32,6 +32,7 @@ class GroupSystemMessageNode extends MessageNode {
       : super(MessageNodeType.GroupSystem) {
     this.platform = json["platform"];
     this.groupId = json["groupId"];
+    this.userData = json["userData"];
     this.subtype = GroupSystemTypeTool.intToGroupSystemType(json["subtype"]);
     if (json["opUserInfo"] != null) {
       opUserInfo = UserInfoEntity.fromJson(json["opUserInfo"]);
