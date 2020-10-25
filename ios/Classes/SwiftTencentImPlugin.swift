@@ -33,9 +33,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         case "getLoginUser":
             self.getLoginUser(call: call, result: result)
             break
-        case "initStorage":
-            self.initStorage(call: call, result: result)
-            break
         case "getConversationList":
             getConversationList(call: call, result: result)
             break
@@ -272,18 +269,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      */
     public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult) {
         result(TIMManager.sharedInstance()?.getLoginUser());
-    }
-
-    /**
-     * 初始化本地存储
-     */
-    public func initStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String {
-            TIMManager.sharedInstance()?.initStorage(identifier, succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result));
-        }
-
     }
 
     /**

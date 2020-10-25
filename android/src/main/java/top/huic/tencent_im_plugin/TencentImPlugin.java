@@ -141,9 +141,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             case "getLoginUser":
                 this.getLoginUser(call, result);
                 break;
-            case "initStorage":
-                this.initStorage(call, result);
-                break;
             case "getConversationList":
                 getConversationList(call, result);
                 break;
@@ -399,19 +396,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getLoginUser(MethodCall methodCall, final Result result) {
         result.success(TIMManager.getInstance().getLoginUser());
-    }
-
-    /**
-     * 腾讯云 初始化本地存储
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void initStorage(MethodCall methodCall, final Result result) {
-        // 用户ID
-        String identifier = this.getParam(methodCall, result, "identifier");
-        //初始化本地存储
-        TIMManager.getInstance().initStorage(identifier, new VoidCallBack(result));
     }
 
     /**
