@@ -34,16 +34,13 @@ class TencentImPlugin {
 
   /// 初始化SDK
   /// [appid] 应用ID
-  /// [enabledLogPrint] 是否启用日志打印
   /// [logPrintLevel] 日志打印级别
   static initSDK({
     @required String appid,
-    bool enabledLogPrint,
     LogPrintLevel logPrintLevel,
   }) {
     return _channel.invokeMethod('initSDK', {
       "appid": appid,
-      "enabledLogPrint": enabledLogPrint,
       "logPrintLevel": LogPrintLevelTool.toInt(logPrintLevel),
     });
   }

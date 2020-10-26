@@ -9,7 +9,7 @@ import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
 import com.tencent.imsdk.TIMFriendshipManager;
 import com.tencent.imsdk.TIMGroupManager;
-import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.V2TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMValueCallBack;
@@ -90,7 +90,7 @@ public class TencentImUtils {
         }
 
         // 如果未登录，直接返回信息，不包含群信息和用户信息
-        if (TIMManager.getInstance().getLoginUser() == null) {
+        if (V2TIMManager.getInstance().getLoginUser() == null) {
             callback.onSuccess(resultData);
             return;
         }
@@ -124,7 +124,7 @@ public class TencentImUtils {
                             // 如果出现错误操作，则直接移除，且删除无效会话
                             if (timGroupDetailInfoResult.getResultCode() != 0) {
                                 resultData.remove(sessionEntity);
-                                TIMManager.getInstance().deleteConversation(TIMConversationType.Group, timGroupDetailInfoResult.getGroupId());
+                                V2TIMManager.getInstance().deleteConversation(TIMConversationType.Group, timGroupDetailInfoResult.getGroupId());
                             }
 
                             sessionEntity.setGroup(timGroupDetailInfoResult);
@@ -203,7 +203,7 @@ public class TencentImUtils {
      */
     public static TIMConversation getSession(String sessionId, TIMConversationType sessionType) {
         // 获得会话信息
-        TIMConversation conversation = TIMManager.getInstance().getConversation(sessionType, sessionId);
+        TIMConversation conversation = V2TIMManager.getInstance().getConversation(sessionType, sessionId);
         if (conversation == null) {
             throw new RuntimeException("Cannot find Conversation" + sessionId + "-" + sessionType.toString());
         }
@@ -300,7 +300,7 @@ public class TencentImUtils {
         });
 
         // 如果未登录，则直接返回
-        if (TIMManager.getInstance().getLoginUser() == null) {
+        if (V2TIMManager.getInstance().getLoginUser() == null) {
             callBack.onSuccess(resultData);
             return;
         }

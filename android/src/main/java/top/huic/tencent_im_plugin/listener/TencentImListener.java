@@ -2,7 +2,6 @@ package top.huic.tencent_im_plugin.listener;
 
 import android.util.Log;
 
-import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMGroupEventListener;
 import com.tencent.imsdk.TIMGroupTipsElem;
@@ -10,11 +9,12 @@ import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMMessageListener;
 import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMUploadProgressListener;
-import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.ext.message.TIMMessageLocator;
 import com.tencent.imsdk.ext.message.TIMMessageReceipt;
 import com.tencent.imsdk.ext.message.TIMMessageReceiptListener;
 import com.tencent.imsdk.ext.message.TIMMessageRevokedListener;
+import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,16 +37,11 @@ import top.huic.tencent_im_plugin.util.TencentImUtils;
  *
  * @author 蒋具宏
  */
-public class TencentImListener implements TIMUserStatusListener,
-        TIMConnListener, TIMGroupEventListener,
+public class TencentImListener extends V2TIMSDKListener implements
+        TIMGroupEventListener,
         TIMRefreshListener, TIMMessageRevokedListener,
         TIMMessageListener, TIMMessageReceiptListener,
         TIMUploadProgressListener {
-
-    /**
-     * 日志签名
-     */
-    public static String TAG = TencentImListener.class.getName();
 
     /**
      * 监听器回调的方法名
@@ -76,11 +71,43 @@ public class TencentImListener implements TIMUserStatusListener,
     }
 
     /**
+     * 正在连接到腾讯云服务器
+     */
+    @Override
+    public void onConnecting() {
+        super.onConnecting();
+    }
+
+    /**
+     * 网络连接成功
+     */
+    @Override
+    public void onConnectSuccess() {
+        super.onConnectSuccess();
+    }
+
+    /**
+     * 网络连接失败
+     */
+    @Override
+    public void onConnectFailed(int code, String error) {
+        super.onConnectFailed(code, error);
+    }
+
+    /**
      * 踢下线通知
      */
     @Override
-    public void onForceOffline() {
-        invokeListener(ListenerTypeEnum.ForceOffline, null);
+    public void onKickedOffline() {
+        super.onKickedOffline();
+    }
+
+    /**
+     * 当前用户的资料发生了更新
+     */
+    @Override
+    public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
+        super.onSelfInfoUpdated(info);
     }
 
     /**
@@ -88,35 +115,11 @@ public class TencentImListener implements TIMUserStatusListener,
      */
     @Override
     public void onUserSigExpired() {
-        invokeListener(ListenerTypeEnum.UserSigExpired, null);
+        super.onUserSigExpired();
     }
 
-    /**
-     * 网络连接成功
-     */
-    @Override
-    public void onConnected() {
-        invokeListener(ListenerTypeEnum.Connected, null);
-    }
 
-    /**
-     * 网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
-     */
-    @Override
-    public void onDisconnected(int i, String s) {
-        Map<String, Object> params = new HashMap<>(2, 1);
-        params.put("code", i);
-        params.put("msg", s);
-        invokeListener(ListenerTypeEnum.Disconnected, params);
-    }
 
-    /**
-     * wifi需要身份认证
-     */
-    @Override
-    public void onWifiNeedAuth(String s) {
-        invokeListener(ListenerTypeEnum.WifiNeedAuth, s);
-    }
 
     /**
      * 群消息事件

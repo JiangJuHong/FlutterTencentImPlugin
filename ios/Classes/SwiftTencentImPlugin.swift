@@ -3,7 +3,7 @@ import UIKit
 import ImSDK
 import HandyJSON
 
-public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListener, TIMConnListener, TIMGroupEventListener, TIMRefreshListener, TIMMessageRevokeListener, TIMMessageReceiptListener, TIMMessageListener, TIMUploadProgressListener {
+public class SwiftTencentImPlugin: NSObject, FlutterPlugin, V2TIMSDKListener, TIMGroupEventListener, TIMRefreshListener, TIMMessageRevokeListener, TIMMessageReceiptListener, TIMMessageListener, TIMUploadProgressListener {
     public static var channel: FlutterMethodChannel?;
 
     /**
@@ -21,14 +21,20 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "init":
-            self.`init`(call: call, result: result)
+        case "initSDK":
+            self.`initSDK`(call: call, result: result)
+            break
+        case "unInitSDK":
+            self.unInitSDK(call: call, result: result)
             break
         case "login":
             self.login(call: call, result: result)
             break
         case "logout":
             self.logout(call: call, result: result)
+            break
+        case "getLoginStatus":
+            self.getLoginStatus(call: call, result: result)
             break
         case "getLoginUser":
             self.getLoginUser(call: call, result: result)
@@ -209,73 +215,59 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     /**
      * 初始化腾讯云IM
      */
-    public func `init`(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String,
-           let enabledLogPrint = CommonUtils.getParam(call: call, result: result, param: "enabledLogPrint") as? Bool,
-           let logPrintLevel = CommonUtils.getParam(call: call, result: result, param: "logPrintLevel") as? Int {
+    public func `initSDK`(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let logPrintLevel = ((call.arguments as! [String: Any])["logPrintLevel"]) as? Int;
+        if let appid = CommonUtils.getParam(call: call, result: result, param: "appid") as? String {
 
             // 初始化SDK配置
-            let sdkConfig = TIMSdkConfig();
-            sdkConfig.disableLogPrint = enabledLogPrint;
-            sdkConfig.sdkAppId = (appid as NSString).intValue;
-            sdkConfig.logLevel = TIMLogLevel.init(rawValue: logPrintLevel)!;
-            sdkConfig.connListener = self;
-            TIMManager.sharedInstance()?.initSdk(sdkConfig);
-
-            // 初始化用户配置
-            let userConfig = TIMUserConfig();
-            userConfig.enableReadReceipt = true;
-            userConfig.userStatusListener = self;
-            userConfig.groupEventListener = self;
-            userConfig.refreshListener = self;
-            userConfig.messageRevokeListener = self;
-            userConfig.messageReceiptListener = self;
-            userConfig.uploadProgressListener = self;
-            TIMManager.sharedInstance()?.setUserConfig(userConfig);
-
-            // 添加新消息监听器
-            TIMManager.sharedInstance()?.add(self);
+            let sdkConfig = V2TIMSDKConfig();
+            if logPrintLevel != nil {
+                sdkConfig.logLevel = V2TIMLogLevel.init(rawValue: logPrintLevel!)!;
+            }
+            V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: self)
             result(nil);
         }
     }
 
-    /**
-     * 登录
-     */
-    public func login(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let identifier = CommonUtils.getParam(call: call, result: result, param: "identifier") as? String,
+
+    /// 反初始化
+    public func unInitSDK(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().unInitSDK();
+        result(nil);
+    }
+
+    /// 登录
+    func login(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
            let userSig = CommonUtils.getParam(call: call, result: result, param: "userSig") as? String {
-           // 登录操作
-           let loginParam = TIMLoginParam();
-           loginParam.identifier = identifier;
-           loginParam.userSig = userSig;
-           TIMManager.sharedInstance()?.login(loginParam, succ: {
-               result(nil);
-           }, fail: TencentImUtils.returnErrorClosures(result: result))
+            V2TIMManager.sharedInstance().login(userID, userSig: userSig, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
 
-    /**
-     * 登出
-     */
+    /// 登出
     public func logout(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        TIMManager.sharedInstance()?.logout({
+        V2TIMManager.sharedInstance()?.logout({
             result(nil);
         }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
 
-    /**
-     * 获得当前登录用户
-     */
+    /// 获得登录状态
+    public func getLoginStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(V2TIMManager.sharedInstance().getLoginStatus().rawValue);
+    }
+
+    /// 获得当前登录用户
     public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        result(TIMManager.sharedInstance()?.getLoginUser());
+        result(V2TIMManager.sharedInstance()?.getLoginUser());
     }
 
     /**
      * 获得当前登录用户会话列表
      */
     public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        TencentImUtils.getConversationInfo(conversations: (TIMManager.sharedInstance()?.getConversationList())!, onSuccess: {
+        TencentImUtils.getConversationInfo(conversations: (V2TIMManager.sharedInstance()?.getConversationList())!, onSuccess: {
             (array) -> Void in
             result(JsonUtil.toJson(array));
         }, onFail: TencentImUtils.returnErrorClosures(result: result));
@@ -693,11 +685,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
            let removeCache = CommonUtils.getParam(call: call, result: result, param: "removeCache") as? Bool {
 
-            if removeCache {
-                result(TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
-            } else {
-                result(TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
-            }
+//            if removeCache {
+//                result(V2TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
+//            } else {
+//                result(V2TIMManager.sharedInstance()?.delete(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
+//            }
         }
     }
 
@@ -710,7 +702,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
     private func deleteLocalMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
            let sessionTypeStr = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String {
-            result(TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
+//            result(V2TIMManager.sharedInstance()?.deleteConversationAndMessages(TIMConversationType(rawValue: SessionType.getEnumByName(name: sessionTypeStr)!.rawValue)!, receiver: sessionId));
         }
     }
 
@@ -1066,7 +1058,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             var resultData: [GroupPendencyEntity] = [];
             for item in array! {
                 if item.selfIdentifier.isEmpty {
-                    item.selfIdentifier = TIMManager.sharedInstance()?.getLoginUser();
+                    item.selfIdentifier = V2TIMManager.sharedInstance()?.getLoginUser();
                 }
                 resultData.append(GroupPendencyEntity(item: item));
                 groupIds.insert(item.groupId);
@@ -1712,7 +1704,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             config.videoSound = videoSound!;
         }
 
-        TIMManager.sharedInstance().setAPNS(config, succ: {
+        V2TIMManager.sharedInstance().setAPNS(config, succ: {
             result(nil);
         }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
@@ -1727,7 +1719,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             let config = TIMTokenParam();
             config.token = CommonUtils.dataWithHexString(hex: token);
             config.busiId = bussid;
-            TIMManager.sharedInstance().setToken(config, succ: {
+            V2TIMManager.sharedInstance().setToken(config, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
@@ -1749,55 +1741,36 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
         SwiftTencentImPlugin.channel!.invokeMethod(SwiftTencentImPlugin.LISTENER_FUNC_NAME, arguments: JsonUtil.toJson(resultParams));
     }
 
-    /**
-     * 踢下线通知
-     */
-    public func onForceOffline() {
-        self.invokeListener(type: ListenerType.ForceOffline, params: nil);
-    }
-
-    /**
-     * 断线重连失败【IOS独享】
-     */
-    public func onReConnFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err as Any]);
-    }
-
-    /**
-     * 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
-     */
-    public func onUserSigExpired() {
-        self.invokeListener(type: ListenerType.UserSigExpired, params: nil);
-    }
-
-    /**
-     * 网络连接成功
-     */
-    public func onConnSucc() {
-        self.invokeListener(type: ListenerType.Connected, params: nil);
-    }
-
-
-    /**
-     * 网络连接失败【IOS独享】
-     */
-    public func onConnFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err as Any]);
-    }
-
-    /**
-     * 网络连接断开（断线只是通知用户，不需要重新登录，重连以后会自动上线）
-     */
-    public func onDisconnect(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.Disconnected, params: ["code": code, "msg": err as Any]);
-    }
-
-    /**
-     * 连接中【IOS独享】
-     */
+    /// 连接中
     public func onConnecting() {
         self.invokeListener(type: ListenerType.Connecting, params: nil);
     }
+
+    /// 网络连接成功
+    public func onConnectSuccess() {
+        self.invokeListener(type: ListenerType.Connected, params: nil);
+    }
+
+    /// 网络连接失败
+    public func onConnectFailed(_ code: Int32, err: String!) {
+        self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err as Any]);
+    }
+
+    /// 踢下线通知
+    public func onKickedOffline() {
+
+    }
+
+    /// 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
+    public func onUserSigExpired() {
+
+    }
+
+    /// 当前用户的资料发生了更新
+    public func onSelfInfoUpdated(_ Info: V2TIMUserFullInfo!) {
+
+    }
+
 
     /**
      * 群Tips回调

@@ -2,7 +2,6 @@ package top.huic.tencent_im_plugin;
 
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -16,7 +15,7 @@ import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
-import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.V2TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMOfflinePushSettings;
 import com.tencent.imsdk.TIMOfflinePushToken;
@@ -44,8 +43,13 @@ import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.session.SessionWrapper;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2V2TIMManager;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -128,190 +132,13 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-        switch (call.method) {
-            case "init":
-                this.init(call, result);
-                break;
-            case "login":
-                this.login(call, result);
-                break;
-            case "logout":
-                this.logout(call, result);
-                break;
-            case "getLoginUser":
-                this.getLoginUser(call, result);
-                break;
-            case "getConversationList":
-                getConversationList(call, result);
-                break;
-            case "getConversation":
-                getConversation(call, result);
-                break;
-            case "getGroupInfo":
-                this.getGroupInfo(call, result);
-                break;
-            case "getUserInfo":
-                this.getUserInfo(call, result);
-                break;
-            case "getMessages":
-                this.getMessages(call, result);
-                break;
-            case "getLocalMessages":
-                this.getLocalMessages(call, result);
-                break;
-            case "setRead":
-                this.setRead(call, result);
-                break;
-            case "sendMessage":
-                this.sendMessage(call, result);
-                break;
-            case "saveMessage":
-                this.saveMessage(call, result);
-                break;
-            case "getFriendList":
-                this.getFriendList(call, result);
-                break;
-            case "getGroupList":
-                this.getGroupList(call, result);
-                break;
-            case "addFriend":
-                this.addFriend(call, result);
-                break;
-            case "checkSingleFriends":
-                this.checkSingleFriends(call, result);
-                break;
-            case "getPendencyList":
-                this.getPendencyList(call, result);
-                break;
-            case "pendencyReport":
-                this.pendencyReport(call, result);
-                break;
-            case "deletePendency":
-                this.deletePendency(call, result);
-                break;
-            case "examinePendency":
-                this.examinePendency(call, result);
-                break;
-            case "deleteConversation":
-                this.deleteConversation(call, result);
-                break;
-            case "deleteLocalMessage":
-                this.deleteLocalMessage(call, result);
-                break;
-            case "createGroup":
-                this.createGroup(call, result);
-                break;
-            case "inviteGroupMember":
-                this.inviteGroupMember(call, result);
-                break;
-            case "applyJoinGroup":
-                this.applyJoinGroup(call, result);
-                break;
-            case "quitGroup":
-                this.quitGroup(call, result);
-                break;
-            case "deleteGroupMember":
-                this.deleteGroupMember(call, result);
-                break;
-            case "getGroupMembers":
-                this.getGroupMembers(call, result);
-                break;
-            case "deleteGroup":
-                this.deleteGroup(call, result);
-                break;
-            case "modifyGroupOwner":
-                this.modifyGroupOwner(call, result);
-                break;
-            case "modifyGroupInfo":
-                this.modifyGroupInfo(call, result);
-                break;
-            case "modifyMemberInfo":
-                this.modifyMemberInfo(call, result);
-                break;
-            case "getGroupPendencyList":
-                this.getGroupPendencyList(call, result);
-                break;
-            case "reportGroupPendency":
-                this.reportGroupPendency(call, result);
-                break;
-            case "groupPendencyAccept":
-                this.groupPendencyAccept(call, result);
-                break;
-            case "groupPendencyRefuse":
-                this.groupPendencyRefuse(call, result);
-                break;
-            case "getSelfProfile":
-                this.getSelfProfile(call, result);
-                break;
-            case "modifySelfProfile":
-                this.modifySelfProfile(call, result);
-                break;
-            case "modifyFriend":
-                this.modifyFriend(call, result);
-                break;
-            case "deleteFriends":
-                this.deleteFriends(call, result);
-                break;
-            case "addBlackList":
-                this.addBlackList(call, result);
-                break;
-            case "deleteBlackList":
-                this.deleteBlackList(call, result);
-                break;
-            case "getBlackList":
-                this.getBlackList(call, result);
-                break;
-            case "createFriendGroup":
-                this.createFriendGroup(call, result);
-                break;
-            case "deleteFriendGroup":
-                this.deleteFriendGroup(call, result);
-                break;
-            case "addFriendsToFriendGroup":
-                this.addFriendsToFriendGroup(call, result);
-                break;
-            case "deleteFriendsFromFriendGroup":
-                this.deleteFriendsFromFriendGroup(call, result);
-                break;
-            case "renameFriendGroup":
-                this.renameFriendGroup(call, result);
-                break;
-            case "getFriendGroups":
-                this.getFriendGroups(call, result);
-                break;
-            case "revokeMessage":
-                this.revokeMessage(call, result);
-                break;
-            case "removeMessage":
-                this.removeMessage(call, result);
-                break;
-            case "setMessageCustomInt":
-                this.setMessageCustomInt(call, result);
-                break;
-            case "setMessageCustomStr":
-                this.setMessageCustomStr(call, result);
-                break;
-            case "downloadVideoImage":
-                this.downloadVideoImage(call, result);
-                break;
-            case "downloadVideo":
-                this.downloadVideo(call, result);
-                break;
-            case "downloadSound":
-                this.downloadSound(call, result);
-                break;
-            case "findMessage":
-                this.findMessage(call, result);
-                break;
-            case "setOfflinePushSettings":
-                this.setOfflinePushSettings(call, result);
-                break;
-            case "setOfflinePushToken":
-                this.setOfflinePushToken(call, result);
-                break;
-            default:
-                result.notImplemented();
-                break;
+        try {
+            Method method = this.getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
+            method.setAccessible(true);
+            method.invoke(this, call, result);
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            result.notImplemented();
+        } catch (InvocationTargetException ignored) {
         }
     }
 
@@ -326,40 +153,31 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
      */
-    private void init(MethodCall methodCall, Result result) {
-        // 应用appid
+    private void initSDK(MethodCall methodCall, Result result) {
         String appid = this.getParam(methodCall, result, "appid");
-        Boolean enabledLogPrint = this.getParam(methodCall, result, "enabledLogPrint");
-        Integer logPrintLevel = this.getParam(methodCall, result, "logPrintLevel");
+        Integer logPrintLevel = methodCall.argument("logPrintLevel");
 
-        // 主线程才初始化SDK
-        if (SessionWrapper.isMainProcess(context)) {
-            TencentImListener listener = new TencentImListener(TencentImPlugin.channel);
+        // 创建监听器对象
+        TencentImListener listener = new TencentImListener(TencentImPlugin.channel);
 
-            // 初始化 SDK
-            TIMManager.getInstance().init(context, new TIMSdkConfig(Integer.parseInt(appid))
-                    .enableLogPrint(enabledLogPrint)
-                    .setLogLevel(logPrintLevel)
-            );
-
-            // 基本用户配置
-            TIMUserConfig userConfig = new TIMUserConfig()
-                    .setUserStatusListener(listener)
-                    .setConnectionListener(listener)
-                    .setGroupEventListener(listener)
-                    .setRefreshListener(listener)
-                    .setMessageRevokedListener(listener)
-                    .setMessageReceiptListener(listener)
-                    .enableReadReceipt(true)
-                    .setUploadProgressListener(listener);
-
-
-            TIMManager.getInstance().setUserConfig(userConfig);
-
-            // 添加消息监听器
-            TIMManager.getInstance().addMessageListener(listener);
+        // 初始化 SDK
+        V2TIMSDKConfig sdkConfig = new V2TIMSDKConfig();
+        if (logPrintLevel != null) {
+            sdkConfig.setLogLevel(logPrintLevel);
         }
+        V2TIMManager.getInstance().initSDK(context, Integer.parseInt(appid), sdkConfig, listener);
+        result.success(null);
+    }
 
+
+    /**
+     * 反初始化
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void unInitSDK(MethodCall methodCall, Result result) {
+        V2TIMManager.getInstance().unInitSDK();
         result.success(null);
     }
 
@@ -370,12 +188,11 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void login(MethodCall methodCall, final Result result) {
-        // 用户ID和签名
-        String identifier = this.getParam(methodCall, result, "identifier");
+        String userID = this.getParam(methodCall, result, "userID");
         String userSig = this.getParam(methodCall, result, "userSig");
 
         // 登录操作
-        TIMManager.getInstance().login(identifier, userSig, new VoidCallBack(result));
+        V2TIMManager.getInstance().login(userID, userSig, new VoidCallBack(result));
     }
 
     /**
@@ -385,7 +202,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void logout(MethodCall methodCall, final Result result) {
-        TIMManager.getInstance().logout(new VoidCallBack(result));
+        V2TIMManager.getInstance().logout(new VoidCallBack(result));
+    }
+
+    /**
+     * 获得登录状态
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getLoginStatus(MethodCall methodCall, final Result result) {
+        result.success(V2TIMManager.getInstance().getLoginStatus());
     }
 
     /**
@@ -395,7 +222,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getLoginUser(MethodCall methodCall, final Result result) {
-        result.success(TIMManager.getInstance().getLoginUser());
+        result.success(V2TIMManager.getInstance().getLoginUser());
     }
 
     /**
@@ -405,7 +232,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
-        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result), TIMManager.getInstance().getConversationList());
+        TencentImUtils.getConversationInfo(new ValueCallBack<List<SessionEntity>>(result), V2TIMManager.getInstance().getConversationList());
     }
 
     /**
@@ -860,9 +687,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
         boolean res;
         if (removeCache) {
-            res = TIMManager.getInstance().deleteConversationAndLocalMsgs(sessionType, sessionId);
+            res = V2TIMManager.getInstance().deleteConversationAndLocalMsgs(sessionType, sessionId);
         } else {
-            res = TIMManager.getInstance().deleteConversation(sessionType, sessionId);
+            res = V2TIMManager.getInstance().deleteConversation(sessionType, sessionId);
         }
         result.success(res);
     }
@@ -1837,7 +1664,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         if (videoSound != null) {
             settings.setVideoSound(Uri.fromFile(new File(videoSound)));
         }
-        TIMManager.getInstance().setOfflinePushSettings(settings);
+        V2TIMManager.getInstance().setOfflinePushSettings(settings);
         result.success(null);
     }
 
@@ -1850,7 +1677,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void setOfflinePushToken(MethodCall methodCall, final Result result) {
         String token = this.getParam(methodCall, result, "token");
         Long bussid = Long.parseLong(this.getParam(methodCall, result, "bussid").toString());
-        TIMManager.getInstance().setOfflinePushToken(new TIMOfflinePushToken(bussid, token), new VoidCallBack(result));
+        V2TIMManager.getInstance().setOfflinePushToken(new TIMOfflinePushToken(bussid, token), new VoidCallBack(result));
     }
 
     /**
