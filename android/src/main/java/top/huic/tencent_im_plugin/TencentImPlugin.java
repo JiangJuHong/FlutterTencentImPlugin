@@ -15,13 +15,10 @@ import com.tencent.imsdk.TIMGroupAddOpt;
 import com.tencent.imsdk.TIMGroupManager;
 import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
-import com.tencent.imsdk.V2TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMOfflinePushSettings;
 import com.tencent.imsdk.TIMOfflinePushToken;
-import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMSoundElem;
-import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMVideoElem;
 import com.tencent.imsdk.conversation.ProgressInfo;
@@ -42,10 +39,8 @@ import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
-import com.tencent.imsdk.session.SessionWrapper;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
-import com.tencent.imsdk.v2.V2V2TIMManager;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -75,6 +70,12 @@ import top.huic.tencent_im_plugin.entity.PendencyPageEntiity;
 import top.huic.tencent_im_plugin.entity.SessionEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
+import top.huic.tencent_im_plugin.listener.CustomAdvancedMsgListener;
+import top.huic.tencent_im_plugin.listener.CustomConversationListener;
+import top.huic.tencent_im_plugin.listener.CustomFriendshipListener;
+import top.huic.tencent_im_plugin.listener.CustomGroupListener;
+import top.huic.tencent_im_plugin.listener.CustomSDKListener;
+import top.huic.tencent_im_plugin.listener.CustomSignalingListener;
 import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
@@ -136,7 +137,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             Method method = this.getClass().getDeclaredMethod(call.method, MethodCall.class, Result.class);
             method.setAccessible(true);
             method.invoke(this, call, result);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
+        } catch (NoSuchMethodException e) {
+            result.notImplemented();
+        } catch (IllegalAccessException e) {
             result.notImplemented();
         } catch (InvocationTargetException ignored) {
         }
@@ -157,15 +160,28 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String appid = this.getParam(methodCall, result, "appid");
         Integer logPrintLevel = methodCall.argument("logPrintLevel");
 
-        // 创建监听器对象
-        TencentImListener listener = new TencentImListener(TencentImPlugin.channel);
-
         // 初始化 SDK
         V2TIMSDKConfig sdkConfig = new V2TIMSDKConfig();
         if (logPrintLevel != null) {
             sdkConfig.setLogLevel(logPrintLevel);
         }
-        V2TIMManager.getInstance().initSDK(context, Integer.parseInt(appid), sdkConfig, listener);
+        V2TIMManager.getInstance().initSDK(context, Integer.parseInt(appid), sdkConfig, new CustomSDKListener());
+
+        // 绑定消息监听
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(new CustomAdvancedMsgListener());
+
+        // 绑定会话监听器
+        V2TIMManager.getConversationManager().setConversationListener(new CustomConversationListener());
+
+        // 绑定群监听器
+        V2TIMManager.getInstance().setGroupListener(new CustomGroupListener());
+
+        // 绑定关系链监听器
+        V2TIMManager.getFriendshipManager().setFriendListener(new CustomFriendshipListener());
+
+        // 绑定信令监听器
+        V2TIMManager.getSignalingManager().addSignalingListener(new CustomSignalingListener());
+
         result.success(null);
     }
 

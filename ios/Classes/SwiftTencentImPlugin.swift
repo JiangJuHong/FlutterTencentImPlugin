@@ -3,7 +3,7 @@ import UIKit
 import ImSDK
 import HandyJSON
 
-public class SwiftTencentImPlugin: NSObject, FlutterPlugin, V2TIMSDKListener, TIMGroupEventListener, TIMRefreshListener, TIMMessageRevokeListener, TIMMessageReceiptListener, TIMMessageListener, TIMUploadProgressListener {
+public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public static var channel: FlutterMethodChannel?;
 
     /**
@@ -224,7 +224,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, V2TIMSDKListener, TI
             if logPrintLevel != nil {
                 sdkConfig.logLevel = V2TIMLogLevel.init(rawValue: logPrintLevel!)!;
             }
-            V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: self)
+            V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: CustomSDKListener())
+
+            // 绑定消息监听
+            V2TIMManager.sharedInstance().add(CustomAdvancedMsgListener())
+
+            // 绑定会话监听
+            V2TIMManager.sharedInstance().setConversationListener(CustomConversationListener())
+
+            // 绑定群监听
+            V2TIMManager.sharedInstance().setGroupListener(CustomGroupListener())
+
+            // 绑定关系链监听
+            V2TIMManager.sharedInstance().setFriendListener(CustomFriendshipListener())
+
+            // 绑定信令监听
+            V2TIMManager.sharedInstance().addSignalingListener(listener: CustomSignalingListener())
+
             result(nil);
         }
     }
@@ -1739,108 +1755,5 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, V2TIMSDKListener, TI
             resultParams["params"] = JsonUtil.toJson(p);
         }
         SwiftTencentImPlugin.channel!.invokeMethod(SwiftTencentImPlugin.LISTENER_FUNC_NAME, arguments: JsonUtil.toJson(resultParams));
-    }
-
-    /// 连接中
-    public func onConnecting() {
-        self.invokeListener(type: ListenerType.Connecting, params: nil);
-    }
-
-    /// 网络连接成功
-    public func onConnectSuccess() {
-        self.invokeListener(type: ListenerType.Connected, params: nil);
-    }
-
-    /// 网络连接失败
-    public func onConnectFailed(_ code: Int32, err: String!) {
-        self.invokeListener(type: ListenerType.ConnFailed, params: ["code": code, "msg": err as Any]);
-    }
-
-    /// 踢下线通知
-    public func onKickedOffline() {
-
-    }
-
-    /// 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
-    public func onUserSigExpired() {
-
-    }
-
-    /// 当前用户的资料发生了更新
-    public func onSelfInfoUpdated(_ Info: V2TIMUserFullInfo!) {
-
-    }
-
-
-    /**
-     * 群Tips回调
-     */
-    public func onGroupTipsEvent(_ elem: TIMGroupTipsElem!) {
-        self.invokeListener(type: ListenerType.GroupTips, params: GroupTipsMessageEntity(elem: elem));
-    }
-
-    /**
-     * 刷新会话
-     */
-    public func onRefresh() {
-        self.invokeListener(type: ListenerType.Refresh, params: nil);
-    }
-
-    /**
-     * 刷新部分会话
-     */
-    public func onRefreshConversations(_ conversations: [TIMConversation]!) {
-        // 获取资料后调用回调
-        TencentImUtils.getConversationInfo(conversations: conversations, onSuccess: {
-            (array) -> Void in
-            self.invokeListener(type: ListenerType.RefreshConversation, params: array);
-        }, onFail: { _, _ in
-
-        });
-    }
-
-    /**
-     * 消息撤回通知
-     */
-    public func onRevokeMessage(_ locator: TIMMessageLocator!) {
-        self.invokeListener(type: ListenerType.MessageRevoked, params: MessageLocatorEntity(locator: locator));
-    }
-
-    /**
-     * 收到了已读回执
-     */
-    public func onRecvMessageReceipts(_ receipts: [Any]!) {
-        var rs: [String] = [];
-
-        for item in receipts {
-            rs.append((item as! TIMMessageReceipt).conversation.getReceiver());
-        }
-
-        self.invokeListener(type: ListenerType.RecvReceipt, params: rs);
-    }
-
-    /**
-     * 新消息回调通知
-     */
-    public func onNewMessage(_ msgs: [Any]!) {
-        TencentImUtils.getMessageInfo(timMessages: msgs as! [TIMMessage], onSuccess: {
-            (array) -> Void in
-            self.invokeListener(type: ListenerType.NewMessages, params: array);
-        }, onFail: { _, _ in })
-    }
-
-    /**
-     *  上传进度改变回调
-     */
-    public func onUploadProgressCallback(_ msg: TIMMessage!, elemidx: UInt32, taskid: UInt32, progress: UInt32) {
-        TencentImUtils.getMessageInfo(timMessages: [msg] as! [TIMMessage], onSuccess: {
-            (array) -> Void in
-            self.invokeListener(type: ListenerType.UploadProgress, params: [
-                "message": array[0],
-                "elemId": elemidx,
-                "taskId": taskid,
-                "progress": progress
-            ]);
-        }, onFail: { _, _ in })
     }
 }
