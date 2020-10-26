@@ -9,6 +9,7 @@
 # Warning
 
 ⚠️ 该插件正在进行SDK升级操作，如果您需要查看以前内容，请切换分支到:sdk-v-4.6  
+⚠️ 由于腾讯云 5.x api改动较大，请不要混用 5.x 和 4.x 接口
 
 # What is FlutterTencentIm ？
 

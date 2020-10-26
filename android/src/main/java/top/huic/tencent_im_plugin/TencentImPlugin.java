@@ -345,6 +345,35 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 发送消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void sendMessage(MethodCall methodCall, final Result result) {
+        String nodeStr = this.getParam(methodCall, result, "node");
+        Map node = JSON.parseObject(nodeStr, Map.class);
+        String sessionType = this.getParam(methodCall, result, "sessionType");
+        String sessionId = this.getParam(methodCall, result, "sessionId");
+        boolean ol = this.getParam(methodCall, result, "ol");
+
+        // 发送消息
+        AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
+        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
+        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), messageEntity, ol, new ValueCallBack<TIMMessage>(result) {
+            @Override
+            public void onSuccess(TIMMessage message) {
+                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
+                    @Override
+                    public void onSuccess(List<MessageEntity> messageEntities) {
+                        result.success(JsonUtil.toJSONString(messageEntities.get(0)));
+                    }
+                });
+            }
+        });
+    }
+
+    /**
      * 腾讯云 获得当前登录用户会话列表
      *
      * @param methodCall 方法调用对象
@@ -509,35 +538,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                         }
                     });
                 }
-            }
-        });
-    }
-
-    /**
-     * 发送消息
-     *
-     * @param methodCall 方法调用对象
-     * @param result     返回结果对象
-     */
-    private void sendMessage(MethodCall methodCall, final Result result) {
-        String nodeStr = this.getParam(methodCall, result, "node");
-        Map node = JSON.parseObject(nodeStr, Map.class);
-        String sessionType = this.getParam(methodCall, result, "sessionType");
-        String sessionId = this.getParam(methodCall, result, "sessionId");
-        boolean ol = this.getParam(methodCall, result, "ol");
-
-        // 发送消息
-        AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
-        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
-        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), messageEntity, ol, new ValueCallBack<TIMMessage>(result) {
-            @Override
-            public void onSuccess(TIMMessage message) {
-                TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
-                    @Override
-                    public void onSuccess(List<MessageEntity> messageEntities) {
-                        result.success(JsonUtil.toJSONString(messageEntities.get(0)));
-                    }
-                });
             }
         });
     }
