@@ -39,6 +39,27 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getLoginUser":
             self.getLoginUser(call: call, result: result)
             break
+        case "invite":
+            self.invite(call: call, result: result)
+            break
+        case "inviteInGroup":
+            self.inviteInGroup(call: call, result: result)
+            break
+        case "cancel":
+            self.cancel(call: call, result: result)
+            break
+        case "accept":
+            self.accept(call: call, result: result)
+            break
+        case "reject":
+            self.reject(call: call, result: result)
+            break
+        case "getSignalingInfo":
+            self.getSignalingInfo(call: call, result: result)
+            break
+        case "addInvitedSignaling":
+            self.addInvitedSignaling(call: call, result: result)
+            break
         case "getConversationList":
             getConversationList(call: call, result: result)
             break
@@ -277,6 +298,137 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得当前登录用户
     public func getLoginUser(call: FlutterMethodCall, result: @escaping FlutterResult) {
         result(V2TIMManager.sharedInstance()?.getLoginUser());
+    }
+
+    /// 邀请某个人
+    public func invite(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let invitee = CommonUtils.getParam(call: call, result: result, param: "invitee") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
+           let onlineUserOnly = CommonUtils.getParam(call: call, result: result, param: "onlineUserOnly") as? Bool,
+           let offlinePushInfoStr = CommonUtils.getParam(call: call, result: result, param: "offlinePushInfo") as? String,
+           let timeout = CommonUtils.getParam(call: call, result: result, param: "timeout") as? Int32 {
+            // 将离线推送策略转换为对象
+            let dict = JsonUtil.getDictionaryFromJSONString(jsonString: offlinePushInfoStr);
+            let offlinePushInfo = V2TIMOfflinePushInfo();
+            if dict["title"] != nil {
+                offlinePushInfo.title = (dict["title"] as! String);
+            }
+            if dict["desc"] != nil {
+                offlinePushInfo.desc = (dict["desc"] as! String);
+            }
+            if dict["ext"] != nil {
+                offlinePushInfo.ext = (dict["ext"] as! String);
+            }
+            if dict["iOSSound"] != nil {
+                offlinePushInfo.iOSSound = (dict["iOSSound"] as! String);
+            }
+            if dict["ignoreIOSBadge"] != nil {
+                offlinePushInfo.ignoreIOSBadge = (dict["ignoreIOSBadge"] as! Bool);
+            }
+            if dict["androidOPPOChannelID"] != nil {
+                offlinePushInfo.androidOPPOChannelID = (dict["androidOPPOChannelID"] as! String);
+            }
+            if dict["disablePush"] != nil {
+                offlinePushInfo.disablePush = (dict["disablePush"] as! Bool);
+            }
+
+            // 邀请
+            result(V2TIMManager.sharedInstance().invite(invitee, data: data, onlineUserOnly: onlineUserOnly, offlinePushInfo: offlinePushInfo, timeout: timeout, succ: {
+                () -> Void in
+            }, fail: {
+                (code: Int32, desc: Optional<String>) -> Void in
+            }))
+        }
+    }
+
+    /// 邀请群内的某些人
+    public func inviteInGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String,
+           let inviteeList = CommonUtils.getParam(call: call, result: result, param: "inviteeList") as? String,
+           let onlineUserOnly = CommonUtils.getParam(call: call, result: result, param: "onlineUserOnly") as? Bool,
+           let timeout = CommonUtils.getParam(call: call, result: result, param: "timeout") as? Int32 {
+
+            // 邀请
+            result(V2TIMManager.sharedInstance().invite(inGroup: groupID, inviteeList: inviteeList.split(separator: ","), data: data, onlineUserOnly: onlineUserOnly, timeout: timeout, succ: {
+                () -> Void in
+            }, fail: {
+                (code: Int32, desc: Optional<String>) -> Void in
+            }))
+        }
+    }
+
+    /// 邀请方取消邀请
+    public func cancel(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let inviteID = CommonUtils.getParam(call: call, result: result, param: "inviteID") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String {
+            V2TIMManager.sharedInstance().cancel(inviteID, data: data, succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+
+    /// 接收方接收邀请
+    public func accept(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let inviteID = CommonUtils.getParam(call: call, result: result, param: "inviteID") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String {
+            V2TIMManager.sharedInstance().accept(inviteID, data: data, succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+
+    /// 接收方拒绝邀请
+    public func reject(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let inviteID = CommonUtils.getParam(call: call, result: result, param: "inviteID") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String {
+            V2TIMManager.sharedInstance().reject(inviteID, data: data, succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+
+    /// 获得信令信息
+    public func getSignalingInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(FindMessageEntity.init(json: messageStr).getMessage())));
+        }
+    }
+
+    /// 添加邀请信令（可以用于群离线推送消息触发的邀请信令）
+    public func addInvitedSignaling(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
+            let dict = JsonUtil.getDictionaryFromJSONString(jsonString: info);
+            let signalingInfo = V2TIMSignalingInfo();
+            if dict["inviteID"] != nil {
+                signalingInfo.inviteID = (dict["inviteID"] as! String);
+            }
+            if dict["groupID"] != nil {
+                signalingInfo.groupID = (dict["groupID"] as! String);
+            }
+            if dict["inviter"] != nil {
+                signalingInfo.groupID = (dict["inviter"] as! String);
+            }
+            if dict["inviteeList"] != nil {
+                signalingInfo.inviteeList = (dict["inviteeList"] as! NSMutableArray);
+            }
+            if dict["data"] != nil {
+                signalingInfo.data = (dict["data"] as! String);
+            }
+            if dict["timeout"] != nil {
+                signalingInfo.timeout = (dict["timeout"] as! UInt32);
+            }
+            if dict["actionType"] != nil {
+                signalingInfo.actionType = SignalingActionType.init(rawValue: (dict["actionType"] as! Int))!;
+            }
+            V2TIMManager.sharedInstance().addInvitedSignaling(signalingInfo, succ: {
+                () -> Void in
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
 
     /**

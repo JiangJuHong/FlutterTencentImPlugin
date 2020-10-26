@@ -1,163 +1,115 @@
-import 'package:tencent_im_plugin/entity/session_entity.dart';
-import 'package:tencent_im_plugin/entity/user_info_entity.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
+import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
-import 'package:tencent_im_plugin/message_node/message_node.dart';
-import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 消息实体
 class MessageEntity {
-  // 自定义整数
-  int customInt;
+  /// 消息 ID
+  String msgID;
 
-  // 消息随机码
-  int rand;
-
-  // 消息序列号
-  int seq;
-
-  // 自定义值
-  String customStr;
-
-  // 是否已读
-  bool read;
-
-  // 节点列表
-  List<MessageNode> elemList;
-
-  // 当前登录用户是否是发送方
-  bool self;
-
-  // 消息id
-  String id;
-
-  // 消息唯一id
-  int uniqueId;
-
-  // 时间戳
+  /// 消息时间戳
   int timestamp;
 
-  // 对方是否已读
-  bool peerReaded;
-
-  // 消息发送方
+  /// 消息发送者 userID
   String sender;
 
-  // 会话ID
-  String sessionId;
+  /// 消息发送者昵称
+  String nickName;
 
-  // 用户信息
-  UserInfoEntity userInfo;
+  /// 好友备注。如果没有拉取过好友信息或者不是好友，返回 null
+  String friendRemark;
 
-  // 状态(只读字段)
+  /// 发送者头像 url
+  String faceUrl;
+
+  /// 群组消息，nameCard 为发送者的群名片
+  String nameCard;
+
+  /// 群组消息，groupID 为接收消息的群组 ID，否则为 null
+  String groupID;
+
+  /// 单聊消息，userID 为会话用户 ID，否则为 null。 假设自己和 userA 聊天，无论是自己发给 userA 的消息还是 userA 发给自己的消息，这里的 userID 均为 userA
+  String userID;
+
+  /// 消息发送状态
   MessageStatusEnum status;
 
-  // 会话类型
-  SessionType sessionType;
+  /// 消息类型
+  MessageElemTypeEnum elemType;
 
-  // 描述
-  String note;
+  /// 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+  String localCustomData;
 
-  MessageEntity({
-    this.customInt,
-    this.read,
-    this.elemList,
-    this.self,
-    this.id,
-    this.uniqueId,
-    this.customStr,
-    this.timestamp,
-    this.peerReaded,
-    this.sender,
-    this.sessionId,
-    this.userInfo,
-    this.sessionType,
-    this.rand,
-    this.seq,
-    this.note,
-  });
+  /// 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+  int localCustomInt;
+
+  /// 消息发送者是否是自己
+  bool self;
+
+  /// 消息自己是否已读
+  bool read;
+
+  /// 消息对方是否已读（只有 C2C 消息有效）
+  bool peerRead;
+
+  /// 消息优先级
+  MessagePriorityEnum priority;
+
+  /// 消息的离线推送信息
+  OfflinePushInfoEntity offlinePushInfo;
+
+  List<String> groupAtUserList;
+
+  /// 消息的序列号
+  /// 群聊中的消息序列号云端生成，在群里是严格递增且唯一的。 单聊中的序列号是本地生成，不能保证严格递增且唯一。
+  int seq;
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
-    customInt = json['customInt'];
-    read = json['read'];
-    if (json['elemList'] != null) {
-      elemList = [];
-      for (var item in json['elemList']) {
-        elemList.add(
-          MessageNodeTypeUtil.getMessageNodeByMessageNodeType(
-            EnumUtil.nameOf(MessageNodeType.values, item["nodeType"]),
-            item,
-          ),
-        );
-      }
-    }
-    self = json['self'];
-    id = json['id'];
-    uniqueId = json['uniqueId'];
-    customStr = json['customStr'];
-    timestamp = json['timestamp'];
-    peerReaded = json['peerReaded'];
-    sender = json['sender'];
-    sessionId = json['sessionId'];
-    userInfo = json['userInfo'] == null
-        ? null
-        : UserInfoEntity.fromJson(json['userInfo']);
-    if (json['status'] != null) {
-      for (var item in MessageStatusEnum.values) {
-        if (EnumUtil.getEnumName(item) == json['status']) {
-          status = item;
-          break;
-        }
-      }
-    }
-    for (var item in SessionType.values) {
-      if (EnumUtil.getEnumName(item) == json['sessionType']) {
-        sessionType = item;
-      }
-    }
-    rand = json['rand'];
-    seq = json['seq'];
-    note = json['note'];
+    msgID = json["msgID"];
+    timestamp = json["timestamp"];
+    sender = json["sender"];
+    nickName = json["nickName"];
+    friendRemark = json["friendRemark"];
+    faceUrl = json["faceUrl"];
+    nameCard = json["nameCard"];
+    groupID = json["groupID"];
+    userID = json["userID"];
+    if (json["status"] != null) status = MessageStatusTool.getByInt(json["status"]);
+    if (json["elemType"] != null) elemType = MessageElemTypeTool.getByInt(json["elemType"]);
+    localCustomData = json["localCustomData"];
+    localCustomInt = json["localCustomInt"];
+    self = json["self"];
+    read = json["read"];
+    peerRead = json["peerRead"];
+    if (json["priority"] != null) priority = MessagePriorityTool.getByInt(json["priority"]);
+    if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
+    groupAtUserList = json["groupAtUserList"];
+    seq = json["seq"];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['customInt'] = this.customInt;
-    data['read'] = this.read;
-    // elemList 节点不需要反序列化到后台
-//    if (this.elemList != null) {
-//      data['elemList'] = elemList == null ? null : jsonEncode(elemList);
-//    }
-    data['self'] = this.self;
-    data['id'] = this.id;
-    data['uniqueId'] = this.uniqueId;
-    data['customStr'] = this.customStr;
-    data['timestamp'] = this.timestamp;
-    data['peerReaded'] = this.peerReaded;
-    data['sender'] = this.sender;
-    data['sessionId'] = this.sessionId;
-    data['sessionType'] = EnumUtil.getEnumName(this.sessionType);
-    data['userInfo'] = this.userInfo == null ? null : this.userInfo.toJson();
-
-    data['status'] =
-        this.status == null ? null : EnumUtil.getEnumName(this.status);
-    data['rand'] = this.rand;
-    data['seq'] = this.seq;
-    data['note'] = this.note;
+    if (this.msgID != null) data['msgID'] = this.msgID;
+    if (this.timestamp != null) data['timestamp'] = this.timestamp;
+    if (this.sender != null) data['sender'] = this.sender;
+    if (this.nickName != null) data['nickName'] = this.nickName;
+    if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
+    if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
+    if (this.nameCard != null) data['nameCard'] = this.nameCard;
+    if (this.groupID != null) data['groupID'] = this.groupID;
+    if (this.userID != null) data['userID'] = this.userID;
+    if (this.status != null) data['status'] = MessageStatusTool.toInt(this.status);
+    if (this.elemType != null) data['elemType'] = MessageElemTypeTool.toInt(this.elemType);
+    if (this.localCustomData != null) data['localCustomData'] = this.localCustomData;
+    if (this.localCustomInt != null) data['localCustomInt'] = this.localCustomInt;
+    if (this.self != null) data['self'] = this.self;
+    if (this.read != null) data['read'] = this.read;
+    if (this.peerRead != null) data['peerRead'] = this.peerRead;
+    if (this.priority != null) data['priority'] = MessagePriorityTool.toInt(this.priority);
+    if (this.offlinePushInfo != null) data['offlinePushInfo'] = this.offlinePushInfo.toJson();
+    if (this.groupAtUserList != null) data['groupAtUserList'] = this.groupAtUserList;
+    if (this.seq != null) data['seq'] = this.seq;
     return data;
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MessageEntity &&
-          runtimeType == other.runtimeType &&
-          rand == other.rand &&
-          seq == other.seq &&
-          self == other.self &&
-          sessionId == other.sessionId;
-
-  @override
-  int get hashCode =>
-      rand.hashCode ^ seq.hashCode ^ self.hashCode ^ sessionId.hashCode;
 }

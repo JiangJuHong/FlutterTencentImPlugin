@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
@@ -40,7 +41,9 @@ import com.tencent.imsdk.friendship.TIMFriendRequest;
 import com.tencent.imsdk.friendship.TIMFriendResponse;
 import com.tencent.imsdk.friendship.TIMFriendResult;
 import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
+import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -60,6 +63,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import top.huic.tencent_im_plugin.entity.FindMessageEntity;
 import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
 import top.huic.tencent_im_plugin.entity.GroupMemberInfo;
 import top.huic.tencent_im_plugin.entity.GroupPendencyEntity;
@@ -239,6 +243,105 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getLoginUser(MethodCall methodCall, final Result result) {
         result.success(V2TIMManager.getInstance().getLoginUser());
+    }
+
+    /**
+     * 邀请某个人
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void invite(MethodCall methodCall, final Result result) {
+        String invitee = this.getParam(methodCall, result, "invitee");
+        String data = this.getParam(methodCall, result, "data");
+        Boolean onlineUserOnly = this.getParam(methodCall, result, "onlineUserOnly");
+        String offlinePushInfoStr = this.getParam(methodCall, result, "offlinePushInfo");
+        int timeout = this.getParam(methodCall, result, "timeout");
+
+        // 将离线推送配置转换为JSON对象以及离线推送对象
+        JSONObject jsonObject = JSON.parseObject(offlinePushInfoStr);
+        V2TIMOfflinePushInfo offlinePushInfo = JSON.parseObject(offlinePushInfoStr, V2TIMOfflinePushInfo.class);
+        if (jsonObject.get("disablePush") != null) {
+            offlinePushInfo.disablePush(jsonObject.getBoolean("disablePush"));
+        }
+
+        // 发送邀请，并同步返回结果
+        result.success(V2TIMManager.getSignalingManager().invite(invitee, data, onlineUserOnly, offlinePushInfo, timeout, new VoidCallBack(null)));
+    }
+
+    /**
+     * 邀请群内的某些人
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void inviteInGroup(MethodCall methodCall, final Result result) {
+        String groupID = this.getParam(methodCall, result, "groupID");
+        List<String> inviteeList = Arrays.asList(this.getParam(methodCall, result, "inviteeList").toString().split(","));
+        String data = this.getParam(methodCall, result, "data");
+        Boolean onlineUserOnly = this.getParam(methodCall, result, "onlineUserOnly");
+        int timeout = this.getParam(methodCall, result, "timeout");
+
+        // 发送邀请，并同步返回结果
+        result.success(V2TIMManager.getSignalingManager().inviteInGroup(groupID, inviteeList, data, onlineUserOnly, timeout, new VoidCallBack(null)));
+    }
+
+    /**
+     * 邀请方取消邀请
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void cancel(MethodCall methodCall, final Result result) {
+        String inviteID = this.getParam(methodCall, result, "inviteID");
+        String data = this.getParam(methodCall, result, "data");
+        V2TIMManager.getSignalingManager().cancel(inviteID, data, new VoidCallBack(result));
+    }
+
+    /**
+     * 接收方接收邀请
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void accept(MethodCall methodCall, final Result result) {
+        String inviteID = this.getParam(methodCall, result, "inviteID");
+        String data = this.getParam(methodCall, result, "data");
+        V2TIMManager.getSignalingManager().accept(inviteID, data, new VoidCallBack(result));
+    }
+
+    /**
+     * 接收方拒绝邀请
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void reject(MethodCall methodCall, final Result result) {
+        String inviteID = this.getParam(methodCall, result, "inviteID");
+        String data = this.getParam(methodCall, result, "data");
+        V2TIMManager.getSignalingManager().reject(inviteID, data, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得信令信息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getSignalingInfo(MethodCall methodCall, final Result result) {
+        String message = this.getParam(methodCall, result, "message");
+        result.success(JSON.toJSONString(V2TIMManager.getSignalingManager().getSignalingInfo(JSON.parseObject(message, FindMessageEntity.class).getMessage())));
+    }
+
+    /**
+     * 添加邀请信令（可以用于群离线推送消息触发的邀请信令）
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void addInvitedSignaling(MethodCall methodCall, final Result result) {
+        String info = this.getParam(methodCall, result, "info");
+        V2TIMManager.getSignalingManager().addInvitedSignaling(JSON.parseObject(info, V2TIMSignalingInfo.class), new VoidCallBack(result));
     }
 
     /**
