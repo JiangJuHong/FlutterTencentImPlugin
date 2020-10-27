@@ -183,8 +183,8 @@ class TencentImPlugin {
   /// [receiver] 消息接收者的 userID, 如果是发送 C2C 单聊消息，只需要指定 receiver 即可。
   /// [groupID] 目标群组 ID，如果是发送群聊消息，只需要指定 groupID 即可。
   /// [ol] 是否为在线消息(无痕)，如果为true，将使用 sendOnlineMessage 通道进行消息发送
-  /// [customInt] 自定义Int
-  /// [customStr] 自定义Str
+  /// [localCustomInt] 自定义Int
+  /// [localCustomStr] 自定义Str
   /// [node] 消息节点
   /// [atUserList] 需要 @ 的用户列表，暂不支持直接@ALL
   /// [priority] 消息优先级，仅针对群聊消息有效。请把重要消息设置为高优先级（比如红包、礼物消息），高频且不重要的消息设置为低优先级（比如点赞消息）。
