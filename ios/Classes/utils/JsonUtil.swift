@@ -40,6 +40,16 @@ public class JsonUtil {
         return NSDictionary() as! [String: Any]
     }
 
+    /// 将json字符串转换为数组
+    public static func getArrayFromJSONString(jsonString: String) -> NSArray {
+        let jsonData: Data = jsonString.data(using: .utf8)!
+        let array = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+        if array != nil {
+            return array as! NSArray
+        }
+        return array as! NSArray
+    }
+
     /**
      * 将对象转换为JSON字符串(数组/对象)
      */
