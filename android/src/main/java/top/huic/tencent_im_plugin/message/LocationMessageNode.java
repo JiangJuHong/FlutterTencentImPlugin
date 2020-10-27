@@ -22,11 +22,7 @@ public class LocationMessageNode extends AbstractMessageNode<V2TIMLocationElem, 
 
     @Override
     public LocationMessageEntity analysis(V2TIMLocationElem elem) {
-        LocationMessageEntity entity = new LocationMessageEntity();
-        entity.setDesc(elem.getDesc());
-        entity.setLongitude(elem.getLongitude());
-        entity.setLatitude(elem.getLatitude());
-        return entity;
+        return new LocationMessageEntity(elem);
     }
 
     @Override

@@ -17,12 +17,6 @@ class FileMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let soundElem = elem as! V2TIMFileElem;
-        let entity = FileMessageEntity();
-        entity.uuid = soundElem.uuid;
-        entity.fileName = soundElem.filename;
-        entity.filePath = soundElem.path;
-        entity.size = soundElem.fileSize;
-        return entity;
+        FileMessageEntity(elem: elem as! V2TIMFileElem)
     }
 }

@@ -27,17 +27,7 @@ public class VideoMessageNode extends AbstractMessageNode<V2TIMVideoElem, VideoM
 
     @Override
     public VideoMessageEntity analysis(V2TIMVideoElem elem) {
-        VideoMessageEntity entity = new VideoMessageEntity();
-        entity.setVideoUuid(elem.getVideoUUID());
-        entity.setVideoPath(elem.getVideoPath());
-        entity.setVideoSize(elem.getVideoSize());
-        entity.setDuration(elem.getDuration());
-        entity.setSnapshotUuid(elem.getSnapshotUUID());
-        entity.setSnapshotWidth(elem.getSnapshotWidth());
-        entity.setSnapshotHeight(elem.getSnapshotHeight());
-        entity.setSnapshotPath(elem.getSnapshotPath());
-        entity.setSnapshotSize(elem.getSnapshotSize());
-        return entity;
+        return new VideoMessageEntity(elem);
     }
 
     @Override

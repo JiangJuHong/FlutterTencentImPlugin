@@ -23,9 +23,7 @@ public class CustomMessageNode extends AbstractMessageNode<V2TIMCustomElem, Cust
 
     @Override
     public CustomMessageEntity analysis(V2TIMCustomElem elem) {
-        CustomMessageEntity entity = new CustomMessageEntity();
-        entity.setData(new String((elem.getData())));
-        return entity;
+        return new CustomMessageEntity(elem);
     }
 
     @Override

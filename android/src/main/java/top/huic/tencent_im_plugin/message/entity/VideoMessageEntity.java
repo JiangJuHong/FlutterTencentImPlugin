@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMVideoElem;
+
 import java.io.Serializable;
 
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
@@ -49,6 +51,19 @@ public class VideoMessageEntity extends AbstractMessageEntity implements Seriali
 
     public VideoMessageEntity() {
         super(MessageNodeType.Video);
+    }
+
+    public VideoMessageEntity(V2TIMVideoElem elem) {
+        super(MessageNodeType.Video);
+        this.setVideoUuid(elem.getVideoUUID());
+        this.setVideoPath(elem.getVideoPath());
+        this.setVideoSize(elem.getVideoSize());
+        this.setDuration(elem.getDuration());
+        this.setSnapshotUuid(elem.getSnapshotUUID());
+        this.setSnapshotWidth(elem.getSnapshotWidth());
+        this.setSnapshotHeight(elem.getSnapshotHeight());
+        this.setSnapshotPath(elem.getSnapshotPath());
+        this.setSnapshotSize(elem.getSnapshotSize());
     }
 
     public String getVideoPath() {

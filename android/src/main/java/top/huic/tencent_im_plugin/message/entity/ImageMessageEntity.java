@@ -26,6 +26,12 @@ public class ImageMessageEntity extends AbstractMessageEntity {
         super(MessageNodeType.Image);
     }
 
+    public ImageMessageEntity(V2TIMImageElem elem) {
+        super(MessageNodeType.Image);
+        this.setPath(elem.getPath());
+        this.setImageData(elem.getImageList());
+    }
+
     public String getPath() {
         return path;
     }

@@ -23,10 +23,7 @@ public class FaceMessageNode extends AbstractMessageNode<V2TIMFaceElem, FaceMess
 
     @Override
     public FaceMessageEntity analysis(V2TIMFaceElem elem) {
-        FaceMessageEntity data = new FaceMessageEntity();
-        data.setIndex(elem.getIndex());
-        data.setData(new String(elem.getData()));
-        return data;
+        return new FaceMessageEntity(elem);
     }
 
     @Override

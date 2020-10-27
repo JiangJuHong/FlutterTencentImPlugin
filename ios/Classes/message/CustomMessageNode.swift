@@ -18,8 +18,6 @@ public class CustomMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let entity = CustomMessageEntity();
-        entity.data = String(data: (elem as! V2TIMCustomElem).data, encoding: String.Encoding.utf8)!;
-        return entity;
+        CustomMessageEntity(elem: elem as! V2TIMCustomElem)
     }
 }

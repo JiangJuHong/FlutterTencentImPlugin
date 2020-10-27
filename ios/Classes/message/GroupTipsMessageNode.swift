@@ -6,13 +6,13 @@ import ImSDK
 //
 //  Created by 蒋具宏 on 2020/3/21.
 //  群提示消息节点
-public class GroupTipsMessageNode : AbstractMessageNode{
-    override func getNote(elem: TIMElem) -> String {
-        return "[群提示消息]";
+public class GroupTipsMessageNode: AbstractMessageNode {
+    override func getNote(elem: V2TIMElem) -> String {
+        "[群提示]";
     }
-    
-    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
-        let groupTipsElem = elem as! TIMGroupTipsElem;
+
+    override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
+        let groupTipsElem = elem as! V2TIMGroupTipsElem;
         return GroupTipsMessageEntity(elem: groupTipsElem);
     }
 }

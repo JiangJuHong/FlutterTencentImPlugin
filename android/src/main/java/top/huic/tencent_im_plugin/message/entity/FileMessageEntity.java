@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMFileElem;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -28,6 +30,14 @@ public class FileMessageEntity extends AbstractMessageEntity {
 
     public FileMessageEntity() {
         super(MessageNodeType.File);
+    }
+
+    public FileMessageEntity(V2TIMFileElem elem) {
+        super(MessageNodeType.File);
+        this.setFileName(elem.getFileName());
+        this.setFilePath(elem.getPath());
+        this.setSize(elem.getFileSize());
+        this.setUuid(elem.getUUID());
     }
 
     public String getFilePath() {

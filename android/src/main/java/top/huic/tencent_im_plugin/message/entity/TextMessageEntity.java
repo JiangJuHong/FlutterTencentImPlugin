@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMTextElem;
+
 import java.util.List;
 
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
@@ -22,6 +24,11 @@ public class TextMessageEntity extends AbstractMessageEntity {
 
     public TextMessageEntity() {
         super(MessageNodeType.Text);
+    }
+
+    public TextMessageEntity(V2TIMTextElem elem) {
+        super(MessageNodeType.Text);
+        this.content = elem.getText();
     }
 
     public String getContent() {

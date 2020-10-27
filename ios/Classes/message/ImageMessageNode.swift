@@ -18,13 +18,6 @@ public class ImageMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let imageElem = elem as! V2TIMImageElem;
-        let entity = ImageMessageEntity();
-        entity.path = imageElem.path;
-        entity.imageData = [];
-        for item in imageElem.imageList {
-            entity.imageData!.append(ImageEntity(image: item));
-        }
-        return entity;
+        ImageMessageEntity(elem: elem as! V2TIMImageElem)
     }
 }

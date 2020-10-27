@@ -26,17 +26,6 @@ public class VideoMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let videoElem = elem as! V2TIMVideoElem;
-        let entity = VideoMessageEntity();
-        entity.videoUuid = videoElem.videoUUID;
-        entity.videoPath = videoElem.videoPath;
-        entity.videoSize = videoElem.videoSize;
-        entity.duration = videoElem.duration;
-        entity.snapshotUuid = videoElem.snapshotUUID;
-        entity.snapshotWidth = videoElem.snapshotWidth;
-        entity.snapshotHeight = videoElem.snapshotHeight;
-        entity.snapshotPath = videoElem.snapshotPath;
-        entity.snapshotSize = videoElem.snapshotSize;
-        return entity;
+        VideoMessageEntity(elem: elem as! V2TIMVideoElem);
     }
 }

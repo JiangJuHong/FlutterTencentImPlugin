@@ -1,3 +1,5 @@
+import ImSDK
+
 //  Created by 蒋具宏 on 2020/3/15.
 //  视频消息实体
 public class VideoMessageEntity: AbstractMessageEntity {
@@ -41,5 +43,18 @@ public class VideoMessageEntity: AbstractMessageEntity {
 
     override init() {
         super.init(MessageNodeType.Video);
+    }
+
+    init(elem: V2TIMVideoElem) {
+        super.init(MessageNodeType.Video);
+        self.videoUuid = elem.videoUUID;
+        self.videoPath = elem.videoPath;
+        self.videoSize = elem.videoSize;
+        self.duration = elem.duration;
+        self.snapshotUuid = elem.snapshotUUID;
+        self.snapshotWidth = elem.snapshotWidth;
+        self.snapshotHeight = elem.snapshotHeight;
+        self.snapshotPath = elem.snapshotPath;
+        self.snapshotSize = elem.snapshotSize;
     }
 }

@@ -23,12 +23,7 @@ public class SoundMessageNode extends AbstractMessageNode<V2TIMSoundElem, SoundM
 
     @Override
     public SoundMessageEntity analysis(V2TIMSoundElem elem) {
-        SoundMessageEntity entity = new SoundMessageEntity();
-        entity.setPath(elem.getPath());
-        entity.setDuration(elem.getDuration());
-        entity.setDataSize(elem.getDataSize());
-        entity.setUuid(elem.getUUID());
-        return entity;
+        return new SoundMessageEntity(elem);
     }
 
     @Override

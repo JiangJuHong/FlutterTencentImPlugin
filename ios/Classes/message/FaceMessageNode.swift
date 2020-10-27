@@ -18,10 +18,6 @@ class FaceMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let v2Elem = elem as! V2TIMFaceElem;
-        let entity = FaceMessageEntity();
-        entity.index = v2Elem.index;
-        entity.data = v2Elem.data;
-        return entity;
+        FaceMessageEntity(elem: elem as! V2TIMFaceElem)
     }
 }

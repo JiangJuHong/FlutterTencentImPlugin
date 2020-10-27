@@ -23,8 +23,7 @@ public class ImageMessageNode extends AbstractMessageNode<V2TIMImageElem, ImageM
     @Override
     public ImageMessageEntity analysis(V2TIMImageElem elem) {
         ImageMessageEntity entity = new ImageMessageEntity();
-        entity.setPath(elem.getPath());
-        entity.setImageData(elem.getImageList());
+
         return entity;
     }
 

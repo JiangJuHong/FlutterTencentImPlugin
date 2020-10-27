@@ -11,7 +11,7 @@ public class TextMessageNode: AbstractMessageNode {
         let text: String = getParam(params: params, paramKey: "content")!;
         let atUserList: Any? = getParam(params: params, paramKey: "atUserList");
 
-        if atUserList == nil {
+        if atUserList == nil || atUserList is NSNull {
             return V2TIMManager.sharedInstance().createTextMessage(text);
         }
         return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atUserList as! NSMutableArray))
@@ -22,8 +22,6 @@ public class TextMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let entity = TextMessageEntity();
-        entity.content = (elem as! V2TIMTextElem).text;
-        return entity;
+        TextMessageEntity(elem: elem as! V2TIMTextElem)
     }
 }

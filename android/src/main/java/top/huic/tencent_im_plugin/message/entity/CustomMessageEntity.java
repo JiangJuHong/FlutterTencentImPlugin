@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMCustomElem;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -15,6 +17,11 @@ public class CustomMessageEntity extends AbstractMessageEntity {
 
     public CustomMessageEntity() {
         super(MessageNodeType.Custom);
+    }
+
+    public CustomMessageEntity(V2TIMCustomElem elem) {
+        super(MessageNodeType.Custom);
+        this.data = new String(elem.getData());
     }
 
     public String getData() {

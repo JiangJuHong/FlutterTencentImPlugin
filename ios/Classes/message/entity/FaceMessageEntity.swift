@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import ImSDK
 
 /// 表情消息实体
 class FaceMessageEntity: AbstractMessageEntity {
@@ -18,5 +19,11 @@ class FaceMessageEntity: AbstractMessageEntity {
 
     override init() {
         super.init(MessageNodeType.Face);
+    }
+
+    init(elem: V2TIMFaceElem) {
+        super.init(MessageNodeType.Face);
+        self.index = elem.index;
+        self.data = elem.data;
     }
 }

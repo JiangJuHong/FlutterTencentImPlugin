@@ -22,12 +22,7 @@ public class FileMessageNode extends AbstractMessageNode<V2TIMFileElem, FileMess
 
     @Override
     public FileMessageEntity analysis(V2TIMFileElem elem) {
-        FileMessageEntity data = new FileMessageEntity();
-        data.setFileName(elem.getFileName());
-        data.setFilePath(elem.getPath());
-        data.setSize(elem.getFileSize());
-        data.setUuid(elem.getUUID());
-        return data;
+        return new FileMessageEntity(elem);
     }
 
     @Override

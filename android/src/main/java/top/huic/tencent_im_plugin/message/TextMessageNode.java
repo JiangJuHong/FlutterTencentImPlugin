@@ -25,9 +25,7 @@ public class TextMessageNode extends AbstractMessageNode<V2TIMTextElem, TextMess
 
     @Override
     public TextMessageEntity analysis(V2TIMTextElem elem) {
-        TextMessageEntity entity = new TextMessageEntity();
-        entity.setContent(elem.getText());
-        return entity;
+        return new TextMessageEntity(elem);
     }
 
     @Override

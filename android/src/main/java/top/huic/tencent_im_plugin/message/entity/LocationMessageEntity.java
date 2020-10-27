@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMLocationElem;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -25,6 +27,13 @@ public class LocationMessageEntity extends AbstractMessageEntity {
 
     public LocationMessageEntity() {
         super(MessageNodeType.Location);
+    }
+
+    public LocationMessageEntity(V2TIMLocationElem elem) {
+        super(MessageNodeType.Location);
+        this.setDesc(elem.getDesc());
+        this.setLongitude(elem.getLongitude());
+        this.setLatitude(elem.getLatitude());
     }
 
     public String getDesc() {

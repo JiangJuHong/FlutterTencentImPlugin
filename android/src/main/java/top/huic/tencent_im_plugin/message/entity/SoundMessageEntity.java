@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import com.tencent.imsdk.v2.V2TIMSoundElem;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -31,6 +33,14 @@ public class SoundMessageEntity extends AbstractMessageEntity {
 
     public SoundMessageEntity() {
         super(MessageNodeType.Sound);
+    }
+
+    public SoundMessageEntity(V2TIMSoundElem elem) {
+        super(MessageNodeType.Sound);
+        this.setPath(elem.getPath());
+        this.setDuration(elem.getDuration());
+        this.setDataSize(elem.getDataSize());
+        this.setUuid(elem.getUUID());
     }
 
     public String getPath() {
