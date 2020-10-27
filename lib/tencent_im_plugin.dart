@@ -82,9 +82,9 @@ class TencentImPlugin {
   static Future<String> invite({
     @required String invitee,
     @required String data,
-    @required bool onlineUserOnly,
     @required OfflinePushInfoEntity offlinePushInfo,
-    @required int timeout,
+    bool onlineUserOnly: false,
+    int timeout: 0,
   }) {
     return _channel.invokeMethod('invite', {
       "invitee": invitee,
@@ -106,8 +106,8 @@ class TencentImPlugin {
     @required String groupID,
     @required List<String> inviteeList,
     @required String data,
-    @required bool onlineUserOnly,
-    @required int timeout,
+    bool onlineUserOnly: false,
+    int timeout: 0,
   }) {
     return _channel.invokeMethod('inviteInGroup', {
       "groupID": groupID,
