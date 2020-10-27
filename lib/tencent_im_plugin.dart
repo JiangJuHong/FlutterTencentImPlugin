@@ -189,7 +189,7 @@ class TencentImPlugin {
   /// [atUserList] 需要 @ 的用户列表，暂不支持直接@ALL
   /// [priority] 消息优先级，仅针对群聊消息有效。请把重要消息设置为高优先级（比如红包、礼物消息），高频且不重要的消息设置为低优先级（比如点赞消息）。
   /// [offlinePushInfo] 离线推送时携带的标题和内容。
-  static Future<MessageEntity> sendMessage({
+  static sendMessage({
     String receiver,
     String groupID,
     @required MessageNode node,
@@ -198,23 +198,19 @@ class TencentImPlugin {
     String localCustomStr,
     MessagePriorityEnum priority: MessagePriorityEnum.Default,
     OfflinePushInfoEntity offlinePushInfo,
-  }) async {
-    return MessageEntity.fromJson(
-      jsonDecode(
-        await _channel.invokeMethod(
-          'sendMessage',
-          {
-            "receiver": receiver,
-            "groupID": groupID,
-            "node": jsonEncode(node),
-            "ol": ol,
-            "localCustomInt": localCustomInt,
-            "localCustomStr": localCustomStr,
-            "priority": MessagePriorityTool.toInt(priority),
-            "offlinePushInfo": offlinePushInfo == null ? null : offlinePushInfo.toJson(),
-          },
-        ),
-      ),
+  }) {
+    return _channel.invokeMethod(
+      'sendMessage',
+      {
+        "receiver": receiver,
+        "groupID": groupID,
+        "node": jsonEncode(node),
+        "ol": ol,
+        "localCustomInt": localCustomInt,
+        "localCustomStr": localCustomStr,
+        "priority": MessagePriorityTool.toInt(priority),
+        "offlinePushInfo": offlinePushInfo == null ? null : offlinePushInfo.toJson(),
+      },
     );
   }
 

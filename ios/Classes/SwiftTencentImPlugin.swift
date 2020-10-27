@@ -425,12 +425,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 message.localCustomData = localCustomStr!.data(using: .utf8);
             }
 
+
             // 发送消息
             V2TIMManager.sharedInstance().send(message, receiver: receiver, groupID: groupID, priority: V2TIMMessagePriority.init(rawValue: priority)!, onlineUserOnly: ol, offlinePushInfo: CustomOfflinePushInfoEntity.init(jsonStr: offlinePushInfo), progress:
             { int32 in
 
             }, succ: {
-
+                result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

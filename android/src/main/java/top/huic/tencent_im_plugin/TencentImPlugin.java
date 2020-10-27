@@ -323,7 +323,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         }
 
         // 发送消息
-        String msgId = V2TIMManager.getMessageManager().sendMessage(message, receiver, groupID, priority, ol, offlinePushInfo == null ? null : JSON.parseObject(offlinePushInfo, V2TIMOfflinePushInfo.class), new V2TIMSendCallback<V2TIMMessage>() {
+        V2TIMManager.getMessageManager().sendMessage(message, receiver, groupID, priority, ol, offlinePushInfo == null ? null : JSON.parseObject(offlinePushInfo, V2TIMOfflinePushInfo.class), new V2TIMSendCallback<V2TIMMessage>() {
             @Override
             public void onError(int i, String s) {
                 result.error(String.valueOf(i), s, s);
@@ -331,7 +331,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 
             @Override
             public void onSuccess(V2TIMMessage o) {
-                System.out.println("1");
+                result.success(null);
             }
 
             @Override
