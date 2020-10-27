@@ -1,7 +1,7 @@
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/enums/group_system_type.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 
 import 'message_node.dart';
 
@@ -16,7 +16,7 @@ class ProfileSystemMessageNode extends MessageNode {
   /// 资料变更的昵称
   String nickName;
 
-  ProfileSystemMessageNode.fromJson(Map<String, dynamic> json) : super(MessageNodeType.GroupSystem) {
+  ProfileSystemMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.GroupSystem) {
     this.subType = json["subType"];
     this.fromUser = json["fromUser"];
     this.nickName = json["nickName"];

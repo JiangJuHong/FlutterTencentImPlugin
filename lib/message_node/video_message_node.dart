@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/entity/video_info_entity.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
@@ -16,10 +16,10 @@ class VideoMessageNode extends MessageNode {
   VideoMessageNode({
     @required this.videoSnapshotInfo,
     @required this.videoInfo,
-  }) : super(MessageNodeType.Video);
+  }) : super(MessageElemTypeEnum.Video);
 
   VideoMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Video) {
+      : super(MessageElemTypeEnum.Video) {
     videoSnapshotInfo = VideoSnapshotInfo.fromJson(json["videoSnapshotInfo"]);
     videoInfo = VideoInfo.fromJson(json["videoInfo"]);
   }

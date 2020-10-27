@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/enums/image_type.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'entity/image_entity.dart';
 
@@ -21,10 +21,10 @@ class ImageMessageNode extends MessageNode {
   ImageMessageNode({
     @required this.path,
     this.level: 1,
-  }) : super(MessageNodeType.Image);
+  }) : super(MessageElemTypeEnum.Image);
 
   ImageMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Image) {
+      : super(MessageElemTypeEnum.Image) {
     imageFormat = json['imageFormat'];
     path = json['path'];
     level = json['level'];

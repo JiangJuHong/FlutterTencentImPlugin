@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 文本消息节点
@@ -9,10 +9,9 @@ class TextMessageNode extends MessageNode {
 
   TextMessageNode({
     @required this.content,
-  }) : super(MessageNodeType.Text);
+  }) : super(MessageElemTypeEnum.Text);
 
-  TextMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Text) {
+  TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
     content = json['content'];
   }
 

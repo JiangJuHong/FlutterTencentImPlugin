@@ -1,7 +1,7 @@
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/enums/group_system_type.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 
 import 'message_node.dart';
 
@@ -26,10 +26,10 @@ class GroupSystemMessageNode extends MessageNode {
   /// 操作者群内资料
   GroupMemberEntity opGroupMemberInfo;
 
-  GroupSystemMessageNode() : super(MessageNodeType.GroupSystem);
+  GroupSystemMessageNode() : super(MessageElemTypeEnum.GroupSystem);
 
   GroupSystemMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.GroupSystem) {
+      : super(MessageElemTypeEnum.GroupSystem) {
     this.platform = json["platform"];
     this.groupId = json["groupId"];
     this.userData = json["userData"];

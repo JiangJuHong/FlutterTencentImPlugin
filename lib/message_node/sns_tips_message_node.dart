@@ -1,4 +1,4 @@
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/sns_tips_type.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
@@ -11,10 +11,10 @@ class SnsTipsMessageNode extends MessageNode {
   /// 子类型
   SnsTipsType subType;
 
-  SnsTipsMessageNode() : super(MessageNodeType.SnsTips);
+  SnsTipsMessageNode() : super(MessageElemTypeEnum.SnsTips);
 
   SnsTipsMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.SnsTips) {
+      : super(MessageElemTypeEnum.SnsTips) {
     pendencyReportTimestamp = json["pendencyReportTimestamp"];
     subType = EnumUtil.nameOf(SnsTipsType.values, json["subType"]);
   }

@@ -3,7 +3,7 @@ import 'package:tencent_im_plugin/entity/group_tips_elem_group_info_entity.dart'
 import 'package:tencent_im_plugin/entity/group_tips_elem_member_info_entity.dart';
 import 'package:tencent_im_plugin/entity/user_info_entity.dart';
 import 'package:tencent_im_plugin/enums/group_tips_type.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
@@ -49,10 +49,10 @@ class GroupTipsMessageNode extends MessageNode {
   /// 被操作的帐号列表
   List<String> userList;
 
-  GroupTipsMessageNode() : super(MessageNodeType.GroupTips);
+  GroupTipsMessageNode() : super(MessageElemTypeEnum.GroupTips);
 
   GroupTipsMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.GroupTips) {
+      : super(MessageElemTypeEnum.GroupTips) {
     groupId = json["groupId"];
     groupName = json["groupName"];
 

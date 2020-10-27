@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 语音消息节点
@@ -19,10 +19,10 @@ class SoundMessageNode extends MessageNode {
   SoundMessageNode({
     @required this.path,
     @required this.duration,
-  }) : super(MessageNodeType.Sound);
+  }) : super(MessageElemTypeEnum.Sound);
 
   SoundMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Sound) {
+      : super(MessageElemTypeEnum.Sound) {
     uuid = json['uuid'];
     path = json['path'];
     duration = json['duration'];
