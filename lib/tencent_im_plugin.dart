@@ -12,6 +12,7 @@ import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
 import 'package:tencent_im_plugin/entity_factory.dart';
 import 'package:tencent_im_plugin/enums/add_group_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/login_status_enum.dart';
+import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
@@ -179,21 +180,38 @@ class TencentImPlugin {
   }
 
   /// 发送消息
+  /// [receiver] 消息接收者的 userID, 如果是发送 C2C 单聊消息，只需要指定 receiver 即可。
+  /// [groupID] 目标群组 ID，如果是发送群聊消息，只需要指定 groupID 即可。
+  /// [ol] 是否为在线消息(无痕)，如果为true，将使用 sendOnlineMessage 通道进行消息发送
+  /// [customInt] 自定义Int
+  /// [customStr] 自定义Str
+  /// [node] 消息节点
+  /// [atUserList] 需要 @ 的用户列表，暂不支持直接@ALL
+  /// [priority] 消息优先级，仅针对群聊消息有效。请把重要消息设置为高优先级（比如红包、礼物消息），高频且不重要的消息设置为低优先级（比如点赞消息）。
+  /// [offlinePushInfo] 离线推送时携带的标题和内容。
   static Future<MessageEntity> sendMessage({
-    @required String sessionId, // 会话ID
-    @required SessionType sessionType, // 会话类型
-    bool ol: false, // 是否为在线消息(无痕)，如果为true，将使用 sendOnlineMessage 通道进行消息发送
-    @required MessageNode node, // 消息节点
+    String receiver,
+    String groupID,
+    @required MessageNode node,
+    bool ol: false,
+    int localCustomInt,
+    String localCustomStr,
+    MessagePriorityEnum priority: MessagePriorityEnum.Default,
+    OfflinePushInfoEntity offlinePushInfo,
   }) async {
     return MessageEntity.fromJson(
       jsonDecode(
         await _channel.invokeMethod(
           'sendMessage',
           {
-            "sessionId": sessionId,
-            "sessionType": EnumUtil.getEnumName(sessionType),
+            "receiver": receiver,
+            "groupID": groupID,
             "node": jsonEncode(node),
             "ol": ol,
+            "localCustomInt": localCustomInt,
+            "localCustomStr": localCustomStr,
+            "priority": MessagePriorityTool.toInt(priority),
+            "offlinePushInfo": offlinePushInfo == null ? null : offlinePushInfo.toJson(),
           },
         ),
       ),

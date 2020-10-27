@@ -7,18 +7,26 @@ class TextMessageNode extends MessageNode {
   /// 文本内容
   String content;
 
+  /// @的用户列表，只在群聊中有效
+  List<String> _atUserList;
+
   TextMessageNode({
     @required this.content,
-  }) : super(MessageElemTypeEnum.Text);
+    List<String> atUserList,
+  })  : this._atUserList = atUserList,
+        super(MessageElemTypeEnum.Text);
 
   TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
     content = json['content'];
   }
 
+  set atUserList(List<String> value) => _atUserList = value;
+
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data["content"] = this.content;
+    data["atUserList"] = this._atUserList;
     return data;
   }
 }

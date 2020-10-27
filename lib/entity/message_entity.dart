@@ -2,6 +2,7 @@ import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
+import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 消息实体
 class MessageEntity {
@@ -59,11 +60,18 @@ class MessageEntity {
   /// 消息的离线推送信息
   OfflinePushInfoEntity offlinePushInfo;
 
+  /// 群@用户列表
   List<String> groupAtUserList;
 
   /// 消息的序列号
   /// 群聊中的消息序列号云端生成，在群里是严格递增且唯一的。 单聊中的序列号是本地生成，不能保证严格递增且唯一。
   int seq;
+
+  /// 描述信息，描述当前消息，可直接用于显示
+  String note;
+
+  /// 消息节点信息
+  MessageNode node;
 
   MessageEntity.fromJson(Map<String, dynamic> json) {
     msgID = json["msgID"];
@@ -86,6 +94,8 @@ class MessageEntity {
     if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
     groupAtUserList = json["groupAtUserList"];
     seq = json["seq"];
+    note = json["note"];
+    node = json["node"] == null ? null : MessageElemTypeTool.getMessageNodeByMessageNodeType(elemType, json["node"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -110,6 +120,7 @@ class MessageEntity {
     if (this.offlinePushInfo != null) data['offlinePushInfo'] = this.offlinePushInfo.toJson();
     if (this.groupAtUserList != null) data['groupAtUserList'] = this.groupAtUserList;
     if (this.seq != null) data['seq'] = this.seq;
+    if (this.note != null) data['note'] = this.note;
     return data;
   }
 }

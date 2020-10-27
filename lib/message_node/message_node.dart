@@ -12,7 +12,7 @@ class MessageNode {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["nodeType"] = EnumUtil.getEnumName(this.nodeType);
+    data["nodeType"] = MessageElemTypeTool.toInt(this.nodeType);
     return data;
   }
 }

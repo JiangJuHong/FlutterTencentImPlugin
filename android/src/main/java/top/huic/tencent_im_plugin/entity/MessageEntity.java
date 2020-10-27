@@ -1,17 +1,14 @@
 package top.huic.tencent_im_plugin.entity;
 
-import com.tencent.imsdk.TIMConversationType;
-import com.tencent.imsdk.TIMElem;
-import com.tencent.imsdk.TIMGroupMemberInfo;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMMessageStatus;
-import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.v2.V2TIMElem;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
+import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 
 /**
@@ -19,51 +16,12 @@ import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
  *
  * @author 蒋具宏
  */
-public class MessageEntity  implements Serializable {
-    /**
-     * 消息ID
-     */
-    private String id;
+public class MessageEntity implements Serializable {
 
     /**
-     * 消息随机码
+     * 消息 ID
      */
-    private Long rand;
-
-    /**
-     * 消息序列号
-     */
-    private Long seq;
-
-    /**
-     * 唯一ID
-     */
-    private Long uniqueId;
-
-    /**
-     * 对方是否已读
-     */
-    private Boolean peerReaded;
-
-    /**
-     * 自己是否已读
-     */
-    private Boolean read;
-
-    /**
-     * 当前登录用户是否是发送方
-     */
-    private Boolean self;
-
-    /**
-     * 自定义整数
-     */
-    private Integer customInt;
-
-    /**
-     * 自定义值
-     */
-    private String customStr;
+    private String msgID;
 
     /**
      * 消息时间戳
@@ -71,131 +29,148 @@ public class MessageEntity  implements Serializable {
     private Long timestamp;
 
     /**
-     * 消息发送方
+     * 消息发送者 userID
      */
     private String sender;
 
     /**
-     * 会话ID
+     * 消息发送者昵称
      */
-    private String sessionId;
+    private String nickName;
 
     /**
-     * 发送人->用户信息
+     * 好友备注。如果没有拉取过好友信息或者不是好友，返回 null
      */
-    private TIMUserProfile userInfo;
+    private String friendRemark;
 
     /**
-     * 发送人->群成员信息
+     * 发送者头像 url
      */
-    private TIMGroupMemberInfo groupMemberInfo;
+    private String faceUrl;
 
     /**
-     * 节点内容
+     * 群组消息，nameCard 为发送者的群名片
      */
-    private List<AbstractMessageEntity> elemList;
+    private String nameCard;
 
     /**
-     * 消息状态
+     * 群组消息，groupID 为接收消息的群组 ID，否则为 null
      */
-    private TIMMessageStatus status;
+    private String groupID;
 
     /**
-     * 会话类型
+     * 单聊消息，userID 为会话用户 ID，否则为 null。 假设自己和 userA 聊天，无论是自己发给 userA 的消息还是 userA 发给自己的消息，这里的 userID 均为 userA
      */
-    private TIMConversationType sessionType;
+    private String userID;
 
     /**
-     * 描述，根据节点内容自定义描述信息，例如文本会直接包含，图片则为: [图片]
-     * 注意：如果有多个 elem，将只返回第一个节点的内容
+     * 消息发送状态
+     */
+    private Integer status;
+
+    /**
+     * 消息类型
+     */
+    private Integer elemType;
+
+    /**
+     * 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+     */
+    private String localCustomData;
+
+    /**
+     * 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+     */
+    private Integer localCustomInt;
+
+    /**
+     * 消息发送者是否是自己
+     */
+    private Boolean self;
+
+    /**
+     * 消息自己是否已读
+     */
+    private Boolean read;
+
+    /**
+     * 消息对方是否已读（只有 C2C 消息有效）
+     */
+    private Boolean peerRead;
+
+    /**
+     * 消息优先级
+     */
+    private Integer priority;
+
+    /**
+     * 消息的离线推送信息
+     */
+    private V2TIMOfflinePushInfo offlinePushInfo;
+
+    /**
+     * 群@用户列表
+     */
+    private List<String> groupAtUserList;
+
+    /**
+     * 消息的序列号
+     * 群聊中的消息序列号云端生成，在群里是严格递增且唯一的。 单聊中的序列号是本地生成，不能保证严格递增且唯一。
+     */
+    private Long seq;
+
+    /**
+     * 描述信息
      */
     private String note;
+
+    /**
+     * 节点信息
+     */
+    private AbstractMessageEntity node;
 
     public MessageEntity() {
     }
 
-    public MessageEntity(TIMMessage message) {
-        this.rand = message.getRand();
-        this.seq = message.getSeq();
-        this.id = message.getMsgId();
-        this.uniqueId = message.getMsgUniqueId();
-        this.peerReaded = message.isPeerReaded();
-        this.read = message.isRead();
-        this.self = message.isSelf();
-        this.customInt = message.getCustomInt();
-        this.customStr = message.getCustomStr();
-        this.timestamp = message.timestamp();
-
-        this.elemList = new ArrayList<>(message.getElementCount());
-        for (int i = 0; i < message.getElementCount(); i++) {
-            TIMElem elem = message.getElement(i);
-            elemList.add(MessageNodeType.getTypeByTIMElemType(message.getElement(0).getType()).getMessageNodeInterface().analysis(elem));
-        }
-
-        this.groupMemberInfo = message.getSenderGroupMemberProfile();
+    public MessageEntity(V2TIMMessage message) {
+        // 赋值基本属性
+        this.msgID = message.getMsgID();
+        this.timestamp = message.getTimestamp();
         this.sender = message.getSender();
-        this.sessionId = message.getConversation().getPeer();
-        this.status = message.status();
-        this.sessionType = message.getConversation().getType();
-        if (message.getElementCount() >= 1) {
-            this.note = MessageNodeType.getTypeByTIMElemType(message.getElement(0).getType()).getMessageNodeInterface().getNote(message.getElement(0));
-        }
+        this.nickName = message.getNickName();
+        this.friendRemark = message.getFriendRemark();
+        this.faceUrl = message.getFaceUrl();
+        this.nameCard = message.getNameCard();
+        this.groupID = message.getGroupID();
+        this.userID = message.getUserID();
+        this.status = message.getStatus();
+        this.elemType = message.getElemType();
+        this.localCustomData = message.getLocalCustomData();
+        this.localCustomInt = message.getLocalCustomInt();
+        this.self = message.isSelf();
+        this.read = message.isRead();
+        this.peerRead = message.isPeerRead();
+        this.priority = message.getPriority();
+        this.offlinePushInfo = message.getOfflinePushInfo();
+        this.groupAtUserList = message.getGroupAtUserList();
+        this.seq = message.getSeq();
+
+
+        // 解析接口
+        AbstractMessageNode _node = MessageNodeType.getMessageNodeTypeByV2TIMConstant(this.elemType).getMessageNodeInterface();
+        V2TIMElem elem = MessageNodeType.getMessageNodeTypeByV2TIMConstant(this.elemType).getElemByMessage(message);
+
+        // 赋值节点信息
+        this.note = _node.getNote(elem);
+        this.node = _node.analysis(elem);
     }
 
-    public String getId() {
-        return id;
+    public String getMsgID() {
+        return msgID;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Long getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(Long uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
-    public Boolean getPeerReaded() {
-        return peerReaded;
-    }
-
-    public void setPeerReaded(Boolean peerReaded) {
-        this.peerReaded = peerReaded;
-    }
-
-    public Boolean getRead() {
-        return read;
-    }
-
-    public void setRead(Boolean read) {
-        this.read = read;
-    }
-
-    public Boolean getSelf() {
-        return self;
-    }
-
-    public void setSelf(Boolean self) {
-        this.self = self;
-    }
-
-    public Integer getCustomInt() {
-        return customInt;
-    }
-
-    public void setCustomInt(Integer customInt) {
-        this.customInt = customInt;
-    }
-
-    public String getCustomStr() {
-        return customStr;
-    }
-
-    public void setCustomStr(String customStr) {
-        this.customStr = customStr;
+    public void setMsgID(String msgID) {
+        this.msgID = msgID;
     }
 
     public Long getTimestamp() {
@@ -206,22 +181,6 @@ public class MessageEntity  implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public TIMUserProfile getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(TIMUserProfile userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public TIMGroupMemberInfo getGroupMemberInfo() {
-        return groupMemberInfo;
-    }
-
-    public void setGroupMemberInfo(TIMGroupMemberInfo groupMemberInfo) {
-        this.groupMemberInfo = groupMemberInfo;
-    }
-
     public String getSender() {
         return sender;
     }
@@ -230,36 +189,132 @@ public class MessageEntity  implements Serializable {
         this.sender = sender;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public TIMMessageStatus getStatus() {
+    public String getFriendRemark() {
+        return friendRemark;
+    }
+
+    public void setFriendRemark(String friendRemark) {
+        this.friendRemark = friendRemark;
+    }
+
+    public String getFaceUrl() {
+        return faceUrl;
+    }
+
+    public void setFaceUrl(String faceUrl) {
+        this.faceUrl = faceUrl;
+    }
+
+    public String getNameCard() {
+        return nameCard;
+    }
+
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
+    }
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(TIMMessageStatus status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public TIMConversationType getSessionType() {
-        return sessionType;
+    public Integer getElemType() {
+        return elemType;
     }
 
-    public void setSessionType(TIMConversationType sessionType) {
-        this.sessionType = sessionType;
+    public void setElemType(Integer elemType) {
+        this.elemType = elemType;
     }
 
-    public Long getRand() {
-        return rand;
+    public String getLocalCustomData() {
+        return localCustomData;
     }
 
-    public void setRand(Long rand) {
-        this.rand = rand;
+    public void setLocalCustomData(String localCustomData) {
+        this.localCustomData = localCustomData;
+    }
+
+    public Integer getLocalCustomInt() {
+        return localCustomInt;
+    }
+
+    public void setLocalCustomInt(Integer localCustomInt) {
+        this.localCustomInt = localCustomInt;
+    }
+
+    public Boolean getSelf() {
+        return self;
+    }
+
+    public void setSelf(Boolean self) {
+        this.self = self;
+    }
+
+    public Boolean getRead() {
+        return read;
+    }
+
+    public void setRead(Boolean read) {
+        this.read = read;
+    }
+
+    public Boolean getPeerRead() {
+        return peerRead;
+    }
+
+    public void setPeerRead(Boolean peerRead) {
+        this.peerRead = peerRead;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public V2TIMOfflinePushInfo getOfflinePushInfo() {
+        return offlinePushInfo;
+    }
+
+    public void setOfflinePushInfo(V2TIMOfflinePushInfo offlinePushInfo) {
+        this.offlinePushInfo = offlinePushInfo;
+    }
+
+    public List<String> getGroupAtUserList() {
+        return groupAtUserList;
+    }
+
+    public void setGroupAtUserList(List<String> groupAtUserList) {
+        this.groupAtUserList = groupAtUserList;
     }
 
     public Long getSeq() {
@@ -278,11 +333,11 @@ public class MessageEntity  implements Serializable {
         this.note = note;
     }
 
-    public List<AbstractMessageEntity> getElemList() {
-        return elemList;
+    public AbstractMessageEntity getNode() {
+        return node;
     }
 
-    public void setElemList(List<AbstractMessageEntity> elemList) {
-        this.elemList = elemList;
+    public void setNode(AbstractMessageEntity node) {
+        this.node = node;
     }
 }

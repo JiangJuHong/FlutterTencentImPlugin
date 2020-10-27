@@ -1,16 +1,3 @@
-import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
-import 'package:tencent_im_plugin/message_node/group_system_message_node.dart';
-import 'package:tencent_im_plugin/message_node/group_tips_message_node.dart';
-import 'package:tencent_im_plugin/message_node/image_message_node.dart';
-import 'package:tencent_im_plugin/message_node/location_message_node.dart';
-import 'package:tencent_im_plugin/message_node/message_node.dart';
-import 'package:tencent_im_plugin/message_node/other_message_node.dart';
-import 'package:tencent_im_plugin/message_node/profile_system_message_node.dart';
-import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
-import 'package:tencent_im_plugin/message_node/text_message_node.dart';
-import 'package:tencent_im_plugin/message_node/video_message_node.dart';
-import 'package:tencent_im_plugin/message_node/sns_tips_message_node.dart';
-
 /// 消息优先级枚举
 enum MessagePriorityEnum {
   // 默认为普通优先级

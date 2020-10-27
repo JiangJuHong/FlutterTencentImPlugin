@@ -1,3 +1,14 @@
+import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
+import 'package:tencent_im_plugin/message_node/face_message_node.dart';
+import 'package:tencent_im_plugin/message_node/file_message_node.dart';
+import 'package:tencent_im_plugin/message_node/group_tips_message_node.dart';
+import 'package:tencent_im_plugin/message_node/image_message_node.dart';
+import 'package:tencent_im_plugin/message_node/location_message_node.dart';
+import 'package:tencent_im_plugin/message_node/message_node.dart';
+import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
+import 'package:tencent_im_plugin/message_node/text_message_node.dart';
+import 'package:tencent_im_plugin/message_node/video_message_node.dart';
+
 /// 消息节点类型
 enum MessageElemTypeEnum {
   // 没有元素
@@ -39,4 +50,40 @@ class MessageElemTypeTool {
 
   /// 将枚举转换为整型
   static int toInt(MessageElemTypeEnum level) => level.index;
+
+  /// 根据消息节点类型获得消息节点
+  /// [nodeType] 节点类型
+  /// [json] json值
+  static MessageNode getMessageNodeByMessageNodeType(MessageElemTypeEnum nodeType, Map<String, dynamic> json) {
+    switch (nodeType) {
+      case MessageElemTypeEnum.None:
+        break;
+      case MessageElemTypeEnum.Text:
+        return TextMessageNode.fromJson(json);
+      case MessageElemTypeEnum.Custom:
+        return CustomMessageNode.fromJson(json);
+      case MessageElemTypeEnum.Image:
+        return ImageMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.Sound:
+        return SoundMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.Video:
+        return VideoMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.File:
+        return FileMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.Location:
+        return LocationMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.Face:
+        return FaceMessageNode.fromJson(json);
+        break;
+      case MessageElemTypeEnum.GroupTips:
+        return GroupTipsMessageNode.fromJson(json);
+        break;
+    }
+    return null;
+  }
 }

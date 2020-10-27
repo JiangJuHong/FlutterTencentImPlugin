@@ -6,126 +6,150 @@ import ImSDK
 //
 //  Created by 蒋具宏 on 2020/2/10.
 //
-public class MessageEntity : NSObject{
+public class MessageEntity: NSObject {
+
     /**
-     * 消息ID
+     * 消息 ID
      */
-    var id : String?;
-    
-    /**
-     * 消息随机码
-     */
-    var rand : UInt64?;
-    
-    /**
-     * 消息序列号
-     */
-    var seq : UInt64?;
-    
-    /**
-     * 唯一ID
-     */
-    var uniqueId : UInt64?;
-    
-    /**
-     * 对方是否已读
-     */
-    var peerReaded : Bool?;
-    
-    /**
-     * 自己是否已读
-     */
-    var read : Bool?;
-    
-    /**
-     * 当前登录用户是否是发送方
-     */
-    var `self` : Bool?;
-    
-    /**
-     * 自定义整数
-     */
-    var customInt : Int32?;
-    
-    /**
-     * 自定义值
-     */
-    var customStr : String?;
-    
+    var msgID: String?;
+
     /**
      * 消息时间戳
      */
-    var timestamp : Date?;
-    
+    var timestamp: Date?;
+
     /**
-     * 消息发送方
+     * 消息发送者 userID
      */
-    var sender : String?;
-    
+    var sender: String?;
+
     /**
-     * 会话ID
+     * 消息发送者昵称
      */
-    var sessionId : String?
-    
+    var nickName: String?;
+
     /**
-     * 会话类型
+     * 好友备注。如果没有拉取过好友信息或者不是好友，返回 null
      */
-    var sessionType : SessionType?;
-    
+    var friendRemark: String?;
+
     /**
-     * 发送人->用户信息
+     * 发送者头像 url
      */
-    var userInfo : UserInfoEntity?;
-    
+    var faceUrl: String?;
+
     /**
-     * 发送人->群成员信息
+     * 群组消息，nameCard 为发送者的群名片
      */
-    var groupMemberInfo : TIMGroupMemberInfo?;
-    
+    var nameCard: String?;
+
     /**
-     * 节点内容
+     * 群组消息，groupID 为接收消息的群组 ID，否则为 null
      */
-    var elemList : [AbstractMessageEntity]?;
-    
+    var groupID: String?;
+
     /**
-     * 消息状态
+     * 单聊消息，userID 为会话用户 ID，否则为 null。 假设自己和 userA 聊天，无论是自己发给 userA 的消息还是 userA 发给自己的消息，这里的 userID 均为 userA
      */
-    var status : MessageStatus?;
-    
+    var userID: String?;
+
     /**
-     *  消息描述
+     * 消息发送状态
      */
-    var note : String?;
-    
+    var status: Int?;
+
+    /**
+     * 消息类型
+     */
+    var elemType: Int?;
+
+    /**
+     * 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+     */
+    var localCustomData: Data?;
+
+    /**
+     * 消息自定义数据（本地保存，不会发送到对端，程序卸载重装后失效）
+     */
+    var localCustomInt: Int32?;
+
+    /**
+     * 消息发送者是否是自己
+     */
+    var `self`: Bool?;
+
+    /**
+     * 消息自己是否已读
+     */
+    var read: Bool?;
+
+    /**
+     * 消息对方是否已读（只有 C2C 消息有效）
+     */
+    var peerRead: Bool?;
+
+    /**
+     * 消息优先级
+     */
+    var priority: Int?;
+
+    /**
+     * 消息的离线推送信息
+     */
+    var offlinePushInfo: V2TIMOfflinePushInfo?;
+
+    /**
+     * 群@用户列表
+     */
+    var groupAtUserList: [String]?;
+
+    /**
+     * 消息的序列号
+     * 群聊中的消息序列号云端生成，在群里是严格递增且唯一的。 单聊中的序列号是本地生成，不能保证严格递增且唯一。
+     */
+    var seq: UInt64?;
+
+    /**
+     * 描述信息
+     */
+    var note: String?;
+
+    /**
+     * 节点信息
+     */
+    var node: AbstractMessageEntity?;
+
     override init() {
     }
-    
-    init(message : TIMMessage) {
+
+    init(message: V2TIMMessage) {
         super.init();
-        self.id = message.msgId();
-        self.seq = message.locator()?.seq;
-        self.rand = message.locator()?.rand;
-        self.uniqueId = message.uniqueId();
-        self.peerReaded = message.isPeerReaded();
-        self.read = message.isReaded();
-        self.`self` = message.isSelf();
-        self.customInt = message.customInt();
-        self.customStr = String(data: message.customData()!, encoding: String.Encoding.utf8);
-        self.timestamp = message.timestamp();
-        self.groupMemberInfo = message.getSenderGroupMemberProfile();
-        self.sender = message.sender();
-        self.sessionId = message.getConversation().getReceiver();
-        self.sessionType = SessionType.getByTIMConversationType(type: (message.getConversation()?.getType())!);
-        self.status = MessageStatus.getByTIMMessageStatus(status:message.status());
-        if message.elemCount() > 0{
-            let messageNodeInterface = MessageNodeType.getTypeByTIMElem(type: message.getElem(0)!)!.messageNodeInterface();
-            self.elemList = [];
-            for index in 0..<message.elemCount(){
-                self.elemList!.append(messageNodeInterface.analysis(elem: message.getElem(index))!);
-            }
-            if message.elemCount() > 0{
-                self.note = messageNodeInterface.getNote(elem: message.getElem(0)!);
-            }
-        }
+        // 设置基本信息
+        self.msgID = message.msgID;
+        self.timestamp = message.timestamp;
+        self.sender = message.sender;
+        self.nickName = message.nickName;
+        self.friendRemark = message.friendRemark;
+        self.faceUrl = message.faceURL;
+        self.nameCard = message.nameCard;
+        self.groupID = message.groupID;
+        self.userID = message.userID;
+        self.status = message.status.rawValue;
+        self.elemType = message.elemType.rawValue;
+        self.localCustomData = message.localCustomData;
+        self.localCustomInt = message.localCustomInt;
+        self.`self` = message.isSelf;
+        self.read = message.isRead;
+        self.peerRead = message.isPeerRead;
+//        self.priority
+//        self.offlinePushInfo
+        self.groupAtUserList = (message.groupAtUserList as! [String]);
+        self.seq = message.seq;
+
+        // 解析接口
+        let messageNodeInterface = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: self.elemType!).messageNodeInterface();
+        let elem = MessageNodeType.getElemByMessage(message: message)!;
+        self.note = messageNodeInterface.getNote(elem: elem);
+        self.node = messageNodeInterface.analysis(elem: elem);
     }
 }

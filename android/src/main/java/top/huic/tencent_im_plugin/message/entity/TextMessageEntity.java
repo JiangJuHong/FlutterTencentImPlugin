@@ -1,5 +1,7 @@
 package top.huic.tencent_im_plugin.message.entity;
 
+import java.util.List;
+
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -13,6 +15,11 @@ public class TextMessageEntity extends AbstractMessageEntity {
      */
     private String content;
 
+    /**
+     * \@的用户列表
+     */
+    private List<String> atUserList;
+
     public TextMessageEntity() {
         super(MessageNodeType.Text);
     }
@@ -23,5 +30,13 @@ public class TextMessageEntity extends AbstractMessageEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<String> getAtUserList() {
+        return atUserList;
+    }
+
+    public void setAtUserList(List<String> atUserList) {
+        this.atUserList = atUserList;
     }
 }

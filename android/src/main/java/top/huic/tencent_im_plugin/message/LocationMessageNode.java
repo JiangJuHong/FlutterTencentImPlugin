@@ -1,32 +1,27 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMLocationElem;
-import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.v2.V2TIMLocationElem;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
 
 import top.huic.tencent_im_plugin.message.entity.LocationMessageEntity;
 
 /**
  * 位置消息节点
  */
-public class LocationMessageNode extends AbstractMessageNode<TIMLocationElem, LocationMessageEntity> {
+public class LocationMessageNode extends AbstractMessageNode<V2TIMLocationElem, LocationMessageEntity> {
     @Override
-    protected TIMMessage getSendMessage(LocationMessageEntity entity) {
-        TIMMessage message = new TIMMessage();
-        TIMLocationElem locationElem = new TIMLocationElem();
-        locationElem.setDesc(entity.getDesc());
-        locationElem.setLatitude(entity.getLatitude());
-        locationElem.setLongitude(entity.getLongitude());
-        message.addElement(locationElem);
-        return message;
+    public V2TIMMessage getV2TIMMessage(LocationMessageEntity entity) {
+        return V2TIMManager.getMessageManager().createLocationMessage(entity.getDesc(), entity.getLongitude(), entity.getLatitude());
     }
 
     @Override
-    public String getNote(TIMLocationElem elem) {
+    public String getNote(V2TIMLocationElem elem) {
         return "[位置消息]";
     }
 
     @Override
-    public LocationMessageEntity analysis(TIMLocationElem elem) {
+    public LocationMessageEntity analysis(V2TIMLocationElem elem) {
         LocationMessageEntity entity = new LocationMessageEntity();
         entity.setDesc(elem.getDesc());
         entity.setLongitude(elem.getLongitude());

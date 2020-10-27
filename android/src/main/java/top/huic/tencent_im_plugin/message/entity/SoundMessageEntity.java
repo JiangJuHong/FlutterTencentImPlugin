@@ -22,12 +22,12 @@ public class SoundMessageEntity extends AbstractMessageEntity {
     /**
      * 时长
      */
-    private Long duration;
+    private Integer duration;
 
     /**
      * 数据大小
      */
-    private Long dataSize;
+    private Integer dataSize;
 
     public SoundMessageEntity() {
         super(MessageNodeType.Sound);
@@ -41,19 +41,19 @@ public class SoundMessageEntity extends AbstractMessageEntity {
         this.path = path;
     }
 
-    public Long getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(Long duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
-    public Long getDataSize() {
+    public Integer getDataSize() {
         return dataSize;
     }
 
-    public void setDataSize(Long dataSize) {
+    public void setDataSize(Integer dataSize) {
         this.dataSize = dataSize;
     }
 
