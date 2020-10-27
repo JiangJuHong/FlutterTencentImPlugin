@@ -64,6 +64,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "revokeMessage":
             self.revokeMessage(call: call, result: result);
             break;
+        case "getC2CHistoryMessageList":
+            self.getC2CHistoryMessageList(call: call, result: result);
+            break;
+        case "getGroupHistoryMessageList":
+            self.getGroupHistoryMessageList(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -445,6 +451,38 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
             V2TIMManager.sharedInstance().revokeMessage(FindMessageEntity.init(json: messageStr).getMessage(), succ: {
                 result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得单聊历史记录
+    public func getC2CHistoryMessageList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
+        if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
+           let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
+            V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: lastMsg == nil ? nil : FindMessageEntity.init(json: lastMsg!).getMessage(), succ: {
+                messages in
+                var resultData: [MessageEntity] = [];
+                for item in messages! {
+                    resultData.append(MessageEntity.init(message: item));
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得群聊历史记录
+    public func getGroupHistoryMessageList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
+            V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: lastMsg == nil ? nil : FindMessageEntity.init(json: lastMsg!).getMessage(), succ: {
+                messages in
+                var resultData: [MessageEntity] = [];
+                for item in messages! {
+                    resultData.append(MessageEntity.init(message: item));
+                }
+                result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

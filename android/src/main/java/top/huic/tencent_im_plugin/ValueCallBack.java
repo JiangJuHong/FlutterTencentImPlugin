@@ -1,7 +1,6 @@
 package top.huic.tencent_im_plugin;
 
-import com.alibaba.fastjson.JSON;
-import com.tencent.imsdk.TIMValueCallBack;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 import io.flutter.plugin.common.MethodChannel.Result;
 import top.huic.tencent_im_plugin.util.JsonUtil;
@@ -11,7 +10,7 @@ import top.huic.tencent_im_plugin.util.JsonUtil;
  *
  * @author 蒋具宏
  */
-public class ValueCallBack<T> implements TIMValueCallBack<T> {
+public class ValueCallBack<T> implements V2TIMValueCallback<T> {
     /**
      * 回调
      */

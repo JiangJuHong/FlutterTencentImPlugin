@@ -14,6 +14,7 @@ import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.FindMessageEntity;
+import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.CustomAdvancedMsgListener;
 import top.huic.tencent_im_plugin.listener.CustomConversationListener;
@@ -350,6 +352,52 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void revokeMessage(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
         V2TIMManager.getMessageManager().revokeMessage(JSON.parseObject(message, FindMessageEntity.class).getMessage(), new VoidCallBack(result));
+    }
+
+    /**
+     * 获得单聊历史记录
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getC2CHistoryMessageList(MethodCall methodCall, final Result result) {
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        int count = CommonUtil.getParam(methodCall, result, "count");
+        String lastMsgStr = methodCall.argument("lastMsg");
+
+        V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, lastMsgStr == null ? null : JSON.parseObject(lastMsgStr, FindMessageEntity.class).getMessage(), new ValueCallBack<List<V2TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
+                for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
+                    resultData.add(new MessageEntity(v2TIMMessage));
+                }
+                result.success(JSON.toJSONString(resultData));
+            }
+        });
+    }
+
+    /**
+     * 获得群聊历史记录
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupHistoryMessageList(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        int count = CommonUtil.getParam(methodCall, result, "count");
+        String lastMsgStr = methodCall.argument("lastMsg");
+
+        V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, lastMsgStr == null ? null : JSON.parseObject(lastMsgStr, FindMessageEntity.class).getMessage(), new ValueCallBack<List<V2TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
+                for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
+                    resultData.add(new MessageEntity(v2TIMMessage));
+                }
+                result.success(JSON.toJSONString(resultData));
+            }
+        });
     }
 
 //    /**
