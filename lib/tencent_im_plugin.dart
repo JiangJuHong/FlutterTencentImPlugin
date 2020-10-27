@@ -214,6 +214,16 @@ class TencentImPlugin {
     );
   }
 
+  /// 撤回消息
+  /// [message] 消息查找对象
+  static revokeMessage({
+    @required FindMessageEntity message,
+  }) {
+    return _channel.invokeMethod('revokeMessage', {
+      "message": message.toJson(),
+    });
+  }
+
   /// 向本地消息列表中添加一条消息，但并不将其发送出去。
   static Future<MessageEntity> saveMessage({
     @required String sessionId, // 会话ID

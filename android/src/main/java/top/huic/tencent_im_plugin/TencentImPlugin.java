@@ -341,6 +341,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         });
     }
 
+    /**
+     * 撤回消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void revokeMessage(MethodCall methodCall, final Result result) {
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        V2TIMManager.getMessageManager().revokeMessage(JSON.parseObject(message, FindMessageEntity.class).getMessage(), new VoidCallBack(result));
+    }
+
 //    /**
 //     * 腾讯云 获得当前登录用户会话列表
 //     *
@@ -1446,27 +1457,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 //            groupNames = Arrays.asList(groupNamesStr.split(","));
 //        }
 //        TIMFriendshipManager.getInstance().getFriendGroups(groupNames, new ValueCallBack<List<TIMFriendGroup>>(result));
-//    }
-//
-//    /**
-//     * 腾讯云 撤回消息
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void revokeMessage(MethodCall methodCall, final Result result) {
-//        // 获得消息后撤回
-//        TencentImUtils.getTimMessage(methodCall, result, new ValueCallBack<TIMMessage>(result) {
-//            @Override
-//            public void onSuccess(TIMMessage message) {
-//                message.getConversation().revokeMessage(message, new VoidCallBack(result));
-//
-//                // 一对一才发送撤回通知(群聊会自动进入撤回监听器)
-//                if (message.getConversation().getType() == TIMConversationType.C2C) {
-//                    TencentImListener.invokeListener(ListenerTypeEnum.MessageRevoked, message.getMessageLocator());
-//                }
-//            }
-//        });
 //    }
 //
 //    /**

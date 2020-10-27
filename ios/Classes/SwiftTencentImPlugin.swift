@@ -61,6 +61,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "sendMessage":
             self.sendMessage(call: call, result: result);
             break;
+        case "revokeMessage":
+            self.revokeMessage(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -435,6 +438,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
+
+
+    /// 撤回消息
+    public func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            V2TIMManager.sharedInstance().revokeMessage(FindMessageEntity.init(json: messageStr).getMessage(), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
 
 //    /**
 //     * 获得当前登录用户会话列表
@@ -1600,26 +1614,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
 //            // 返回结果
 //            result(JsonUtil.toJson(resultData));
 //        }, fail: TencentImUtils.returnErrorClosures(result: result));
-//    }
-//
-//    /**
-//     * 消息撤回
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-//        TencentImUtils.getTimMessage(call: call, result: result, onCallback: {
-//            (message) -> Void in
-//            message!.getConversation()!.revokeMessage(message, succ: {
-//                result(nil);
-//
-//                // 一对一才发送撤回通知(群聊会自动进入撤回监听器)
-//                if message?.getConversation()!.getType() == TIMConversationType.C2C {
-//                    self.invokeListener(type: ListenerType.MessageRevoked, params: MessageLocatorEntity(locator: message!.locator()));
-//                }
-//            }, fail: TencentImUtils.returnErrorClosures(result: result));
-//        });
 //    }
 //
 //    /**
