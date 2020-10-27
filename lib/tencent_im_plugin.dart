@@ -256,29 +256,67 @@ class TencentImPlugin {
     });
   }
 
-  // /// 向本地消息列表中添加一条消息，但并不将其发送出去。
-  // static Future<MessageEntity> saveMessage({
-  //   @required String sessionId, // 会话ID
-  //   @required SessionType sessionType, // 会话类型
-  //   @required MessageNode node, // 消息节点
-  //   @required String sender, // 发送人
-  //   @required bool isReaded, // 是否已读
-  // }) async {
-  //   return MessageEntity.fromJson(
-  //     jsonDecode(
-  //       await _channel.invokeMethod(
-  //         'saveMessage',
-  //         {
-  //           "sessionId": sessionId,
-  //           "sessionType": EnumUtil.getEnumName(sessionType),
-  //           "node": jsonEncode(node),
-  //           "sender": sender,
-  //           "isReaded": isReaded,
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
+  /// 设置单聊已读
+  /// [groupID] 群ID
+  static markC2CMessageAsRead({
+    @required String userID,
+  }) {
+    return _channel.invokeMethod('markC2CMessageAsRead', {
+      "userID": userID,
+    });
+  }
+
+  /// 设置群聊已读
+  /// [groupID] 群ID
+  static markGroupMessageAsRead({
+    @required String groupID,
+  }) {
+    return _channel.invokeMethod('markGroupMessageAsRead', {
+      "groupID": groupID,
+    });
+  }
+
+  /// 删除本地消息
+  /// [message] 消息对象
+  static deleteMessageFromLocalStorage({
+    @required FindMessageEntity message,
+  }) {
+    return _channel.invokeMethod('deleteMessageFromLocalStorage', {
+      "message": jsonEncode(message),
+    });
+  }
+
+  /// 删除本地及漫游消息
+  /// 该接口会删除本地历史的同时也会把漫游消息即保存在服务器上的消息也删除，卸载重装后无法再拉取到。需要注意的是：
+  ///   1. 一次最多只能删除 30 条消息
+  ///   2. 要删除的消息必须属于同一会话
+  ///   3. 一秒钟最多只能调用一次该接口
+  ///   4. 如果该账号在其他设备上拉取过这些消息，那么调用该接口删除后，这些消息仍然会保存在那些设备上，即删除消息不支持多端同步。
+  /// [message] 消息对象
+  static deleteMessages({
+    @required List<FindMessageEntity> message,
+  }) {
+    return _channel.invokeMethod('deleteMessages', {
+      "message": jsonEncode(message),
+    });
+  }
+
+  /// 向群组消息列表中添加一条消息
+  /// [groupID] 群ID
+  /// [sender] 发送人
+  /// [message] 消息对象
+  static insertGroupMessageToLocalStorage({
+    @required String groupID,
+    @required String sender,
+    @required MessageNode node,
+  }) {
+    return _channel.invokeMethod('insertGroupMessageToLocalStorage', {
+      "groupID": groupID,
+      "sender": sender,
+      "node": jsonEncode(node),
+    });
+  }
+
   //
   // /// 获得当前登录用户会话列表
   // /// @return 会话列表集合

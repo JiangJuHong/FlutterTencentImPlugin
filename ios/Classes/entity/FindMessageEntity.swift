@@ -11,9 +11,12 @@ class FindMessageEntity: NSObject {
     required public override init() {
     }
 
-    init(json: String) {
+    convenience init(json: String) {
+        self.init(dict: JsonUtil.getDictionaryFromJSONString(jsonString: json))
+    }
+
+    init(dict: [String: Any]) {
         super.init();
-        let dict = JsonUtil.getDictionaryFromJSONString(jsonString: json);
     }
 
     /// 获得消息对象

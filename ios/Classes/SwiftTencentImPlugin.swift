@@ -70,6 +70,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getGroupHistoryMessageList":
             self.getGroupHistoryMessageList(call: call, result: result);
             break;
+        case "markC2CMessageAsRead":
+            self.markC2CMessageAsRead(call: call, result: result);
+            break;
+        case "markGroupMessageAsRead":
+            self.markGroupMessageAsRead(call: call, result: result);
+            break;
+        case "deleteMessageFromLocalStorage":
+            self.deleteMessageFromLocalStorage(call: call, result: result);
+            break;
+        case "deleteMessages":
+            self.deleteMessages(call: call, result: result);
+            break;
+        case "insertGroupMessageToLocalStorage":
+            self.insertGroupMessageToLocalStorage(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -483,6 +498,48 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                     resultData.append(MessageEntity.init(message: item));
                 }
                 result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置单聊已读
+    public func markC2CMessageAsRead(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String {
+            V2TIMManager.sharedInstance().markC2CMessage(asRead: userID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置群聊已读
+    public func markGroupMessageAsRead(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().markGroupMessage(asRead: groupID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 删除本地消息
+    public func deleteMessageFromLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            V2TIMManager.sharedInstance().deleteMessage(fromLocalStorage: FindMessageEntity.init(json: message).getMessage(), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 删除本地及漫游消息
+    public func deleteMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            let arr = JsonUtil.getArrayFromJSONString(jsonString: message);
+            var ms: [V2TIMMessage] = [];
+            for index in 0..<arr.count {
+                ms.append(FindMessageEntity.init(dict: arr[index] as! [String: Any]).getMessage());
+            }
+
+            V2TIMManager.sharedInstance().delete(ms, succ: {
+                result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

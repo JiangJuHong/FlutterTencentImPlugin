@@ -400,6 +400,83 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         });
     }
 
+    /**
+     * 设置单聊已读
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void markC2CMessageAsRead(MethodCall methodCall, final Result result) {
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        V2TIMManager.getMessageManager().markC2CMessageAsRead(userID, new VoidCallBack(result));
+    }
+
+    /**
+     * 设置群聊已读
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void markGroupMessageAsRead(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        V2TIMManager.getMessageManager().markGroupMessageAsRead(groupID, new VoidCallBack(result));
+    }
+
+    /**
+     * 删除本地消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteMessageFromLocalStorage(MethodCall methodCall, final Result result) {
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(JSON.parseObject(message, FindMessageEntity.class).getMessage(), new VoidCallBack(result));
+    }
+
+    /**
+     * 删除本地及漫游消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteMessages(MethodCall methodCall, final Result result) {
+        String message = CommonUtil.getParam(methodCall, result, "message");
+
+        List<FindMessageEntity> queryMessage = JSON.parseArray(message, FindMessageEntity.class);
+        List<V2TIMMessage> messages = new ArrayList<>(queryMessage.size());
+        for (FindMessageEntity findMessageEntity : queryMessage) {
+            messages.add(findMessageEntity.getMessage());
+        }
+        V2TIMManager.getMessageManager().deleteMessages(messages, new VoidCallBack(result));
+    }
+
+    /**
+     * 删除本地及漫游消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void insertGroupMessageToLocalStorage(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String sender = CommonUtil.getParam(methodCall, result, "sender");
+        String nodeStr = CommonUtil.getParam(methodCall, result, "node");
+        Map node = JSON.parseObject(nodeStr, Map.class);
+
+        // 获得消息对象
+        AbstractMessageNode messageNode = MessageNodeType.getMessageNodeTypeByV2TIMConstant(Integer.valueOf(node.get("nodeType").toString())).getMessageNodeInterface();
+        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
+
+
+        // 添加消息
+        V2TIMManager.getMessageManager().insertGroupMessageToLocalStorage(messageNode.getV2TIMMessage(messageEntity), groupID, sender, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                result.success(null);
+            }
+        });
+    }
+
+
 //    /**
 //     * 腾讯云 获得当前登录用户会话列表
 //     *
@@ -481,46 +558,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 //            }
 //        });
 //    }
-//
-//    /**
-//     * 腾讯云 设置会话消息为已读
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void setRead(MethodCall methodCall, final Result result) {
-//        // 会话ID
-//        String sessionId = CommonUtil.getParam(methodCall, result, "sessionId");
-//        // 会话类型
-//        String sessionTypeStr = CommonUtil.getParam(methodCall, result, "sessionType");
-//        // 获得会话信息
-//        TIMConversation conversation = TencentImUtils.getSession(sessionId, sessionTypeStr);
-//        // 设置已读
-//        conversation.setReadMessage(null, new VoidCallBack(result));
-//
-//    }
-//
-//
-//    /**
-//     * 腾讯云 获得消息列表
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void getMessages(MethodCall methodCall, final Result result) {
-//        this.getMessages(methodCall, result, false);
-//    }
-//
-//    /**
-//     * 腾讯云 获得本地消息列表
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void getLocalMessages(MethodCall methodCall, final Result result) {
-//        this.getMessages(methodCall, result, true);
-//    }
-//
 //    /**
 //     * 获得消息列表
 //     *
@@ -568,33 +605,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 //            }
 //        });
 //    }
-//
-//    /**
-//     * 发送消息
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void saveMessage(MethodCall methodCall, final Result result) {
-//        String nodeStr = CommonUtil.getParam(methodCall, result, "node");
-//        Map node = JSON.parseObject(nodeStr, Map.class);
-//        String sessionType = CommonUtil.getParam(methodCall, result, "sessionType");
-//        String sessionId = CommonUtil.getParam(methodCall, result, "sessionId");
-//        String sender = CommonUtil.getParam(methodCall, result, "sender");
-//        Boolean isReaded = CommonUtil.getParam(methodCall, result, "isReaded");
-//
-//        // 发送消息
-//        AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
-//        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
-//        TIMMessage message = messageNode.save(TencentImUtils.getSession(sessionId, sessionType), messageEntity, sender, isReaded);
-//        TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
-//            @Override
-//            public void onSuccess(List<MessageEntity> messageEntities) {
-//                result.success(JsonUtil.toJSONString(messageEntities.get(0)));
-//            }
-//        });
-//    }
-//
 //    /**
 //     * 腾讯云 获得好友列表
 //     *
