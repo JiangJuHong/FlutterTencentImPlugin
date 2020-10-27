@@ -1,96 +1,101 @@
+import 'package:tencent_im_plugin/enums/group_add_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
+import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/group_type_enum.dart';
+
+/// 群实体
 class GroupInfoEntity {
-  String groupType;
-  int maxMemberNum;
-  String groupOwner;
-  Map custom;
-  String groupId;
-  int resultCode;
-  String groupNotification;
-  int memberNum;
-  String resultInfo;
-  String faceUrl;
+  /// 群ID
+  String groupID;
+
+  /// 群类型
+  GroupTypeEnum groupType;
+
+  /// 群名称
   String groupName;
-  String addOption;
+
+  /// 群公告
+  String notification;
+
+  /// 群简介
+  String introduction;
+
+  /// 群头像
+  String faceUrl;
+
+  /// 是否设置了全员禁言
+  bool allMuted;
+
+  /// 群主ID
+  String owner;
+
+  /// 创建时间
   int createTime;
-  String groupIntroduction;
-  bool silenceAll;
-  int lastMsgTime;
-  int onlineMemberNum;
+
+  /// 加群审批类型。
+  GroupAddOptEnum groupAddOpt;
+
+  /// 群最近一次群资料修改时间
   int lastInfoTime;
 
-  GroupInfoEntity(
-      {this.groupType,
-      this.maxMemberNum,
-      this.groupOwner,
-      this.custom,
-      this.groupId,
-      this.resultCode,
-      this.groupNotification,
-      this.memberNum,
-      this.resultInfo,
-      this.faceUrl,
-      this.groupName,
-      this.addOption,
-      this.createTime,
-      this.groupIntroduction,
-      this.silenceAll,
-      this.lastMsgTime,
-      this.onlineMemberNum,
-      this.lastInfoTime});
+  /// 群最近一次发消息时间
+  int lastMessageTime;
+
+  /// 群成员总数量
+  int memberCount;
+
+  /// 在线成员数量
+  int onlineCount;
+
+  /// 群成员角色
+  GroupMemberRoleEnum role;
+
+  /// 当前用户在此群组中的消息接收选项
+  GroupReceiveMessageOptEnum recvOpt;
+
+  /// 当前用户在此群中的加入时间
+  int joinTime;
+
+  GroupInfoEntity({
+    this.groupID,
+    this.groupType,
+    this.groupName,
+    this.notification,
+    this.introduction,
+    this.faceUrl,
+    this.allMuted,
+    this.groupAddOpt,
+  });
 
   GroupInfoEntity.fromJson(Map<String, dynamic> json) {
     groupType = json['groupType'];
-    maxMemberNum = json['maxMemberNum'];
-    groupOwner = json['groupOwner'];
-    custom = json['custom'];
-    groupId = json['groupId'];
-    resultCode = json['resultCode'];
-    groupNotification = json['groupNotification'];
-    memberNum = json['memberNum'];
-    resultInfo = json['resultInfo'];
-    faceUrl = json['faceUrl'];
+    groupType = GroupTypeTool.getByString(json["groupType"]);
     groupName = json['groupName'];
-    addOption = json['addOption'];
+    notification = json['notification'];
+    introduction = json['introduction'];
+    faceUrl = json['faceUrl'];
+    allMuted = json['allMuted'];
+    owner = json['owner'];
     createTime = json['createTime'];
-    groupIntroduction = json['groupIntroduction'];
-    silenceAll = json['silenceAll'];
-    lastMsgTime = json['lastMsgTime'];
-    onlineMemberNum = json['onlineMemberNum'];
+    groupAddOpt = GroupAddOptTool.getByInt(json["groupAddOpt"]);
     lastInfoTime = json['lastInfoTime'];
+    lastMessageTime = json['lastMessageTime'];
+    memberCount = json['memberCount'];
+    onlineCount = json['onlineCount'];
+    role = GroupMemberRoleTool.getByInt(json["role"]);
+    recvOpt = GroupReceiveMessageOptTool.getByInt(json["recvOpt"]);
+    joinTime = json['joinTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['groupType'] = this.groupType;
-    data['maxMemberNum'] = this.maxMemberNum;
-    data['groupOwner'] = this.groupOwner;
-    if (this.custom != null) {
-      data['custom'] = this.custom;
-    }
-    data['groupId'] = this.groupId;
-    data['resultCode'] = this.resultCode;
-    data['groupNotification'] = this.groupNotification;
-    data['memberNum'] = this.memberNum;
-    data['resultInfo'] = this.resultInfo;
-    data['faceUrl'] = this.faceUrl;
-    data['groupName'] = this.groupName;
-    data['addOption'] = this.addOption;
-    data['createTime'] = this.createTime;
-    data['groupIntroduction'] = this.groupIntroduction;
-    data['silenceAll'] = this.silenceAll;
-    data['lastMsgTime'] = this.lastMsgTime;
-    data['onlineMemberNum'] = this.onlineMemberNum;
-    data['lastInfoTime'] = this.lastInfoTime;
+    if (this.groupID != null) data['groupID'] = this.groupID;
+    if (this.groupType != null) data['groupType'] = GroupTypeTool.toTypeString(this.groupType);
+    if (this.notification != null) data['notification'] = this.notification;
+    if (this.introduction != null) data['introduction'] = this.introduction;
+    if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
+    if (this.allMuted != null) data['allMuted'] = this.allMuted;
+    if (this.groupAddOpt != null) data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
     return data;
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GroupInfoEntity &&
-          runtimeType == other.runtimeType &&
-          groupId == other.groupId;
-
-  @override
-  int get hashCode => groupId.hashCode;
 }

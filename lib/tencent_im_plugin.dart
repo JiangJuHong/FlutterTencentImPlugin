@@ -3,32 +3,19 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
-import 'package:tencent_im_plugin/entity/check_friend_result_entity.dart';
 import 'package:tencent_im_plugin/entity/find_message_entity.dart';
-import 'package:tencent_im_plugin/entity/group_pendency_page_entity.dart';
+import 'package:tencent_im_plugin/entity/group_create_member_entity.dart';
+import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
-import 'package:tencent_im_plugin/entity_factory.dart';
-import 'package:tencent_im_plugin/enums/add_group_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/login_status_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
-import 'entity/friend_entity.dart';
-import 'entity/group_info_entity.dart';
-import 'entity/group_member_entity.dart';
-import 'entity/message_entity.dart';
-import 'entity/pendency_page_entity.dart';
-import 'entity/session_entity.dart';
-import 'entity/user_info_entity.dart';
-import 'enums/friend_add_type_enum.dart';
-import 'enums/friend_check_type_enum.dart';
-import 'enums/log_print_level.dart';
-import 'enums/pendency_examine_type_enum.dart';
-import 'enums/pendency_type_enum.dart';
-import 'enums/receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/entity/message_entity.dart';
+import 'package:tencent_im_plugin/entity/session_entity.dart';
+import 'package:tencent_im_plugin/enums/log_print_level.dart';
 
 class TencentImPlugin {
   static const MethodChannel _channel = const MethodChannel('tencent_im_plugin');
@@ -232,12 +219,12 @@ class TencentImPlugin {
     @required String userID,
     @required int count,
     FindMessageEntity lastMsg,
-  }) {
-    return _channel.invokeMethod('getC2CHistoryMessageList', {
+  }) async {
+    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod('getC2CHistoryMessageList', {
       "userID": userID,
       "count": count,
       "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
-    });
+    }));
   }
 
   /// 获得群聊历史记录
@@ -248,12 +235,12 @@ class TencentImPlugin {
     @required String groupID,
     @required int count,
     FindMessageEntity lastMsg,
-  }) {
-    return _channel.invokeMethod('getGroupHistoryMessageList', {
+  }) async {
+    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod('getGroupHistoryMessageList', {
       "groupID": groupID,
       "count": count,
       "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
-    });
+    }));
   }
 
   /// 设置单聊已读
@@ -315,6 +302,58 @@ class TencentImPlugin {
       "sender": sender,
       "node": jsonEncode(node),
     });
+  }
+
+  /// 创建群
+  /// [info] 群信息对象
+  /// [memberList] 指定初始的群成员（直播群 AVChatRoom 不支持指定初始群成员，memberList 请传 null）
+  static createGroup({
+    @required GroupInfoEntity info,
+    List<GroupCreateMemberEntity> memberList,
+  }) {
+    return _channel.invokeMethod('createGroup', {
+      "info": jsonEncode(info),
+      "memberList": jsonEncode(memberList),
+    });
+  }
+
+  /// 加入群
+  /// [groupID] 群ID
+  /// [message] 描述
+  static joinGroup({
+    @required String groupID,
+    @required String message,
+  }) {
+    return _channel.invokeMethod('joinGroup', {
+      "groupID": groupID,
+      "message": message,
+    });
+  }
+
+  /// 退出群
+  /// [groupID] 群ID
+  static quitGroup({
+    @required String groupID,
+  }) {
+    return _channel.invokeMethod('quitGroup', {
+      "groupID": groupID,
+    });
+  }
+
+  /// 解散群
+  /// [groupID] 群ID
+  static dismissGroup({
+    @required String groupID,
+  }) {
+    return _channel.invokeMethod('dismissGroup', {
+      "groupID": groupID,
+    });
+  }
+
+  /// 获取已经加入的群列表（不包括已加入的直播群）
+  /// [groupID] 群ID
+  static Future<List<GroupInfoEntity>> getJoinedGroupList() async {
+    return ListUtil.generateOBJList<GroupInfoEntity>(await _channel.invokeMethod('getJoinedGroupList'));
   }
 
   //
