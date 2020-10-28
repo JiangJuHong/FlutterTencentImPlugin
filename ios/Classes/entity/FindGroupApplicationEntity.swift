@@ -1,12 +1,11 @@
 //
-// Created by 蒋具宏 on 2020/10/27.
+// Created by 蒋具宏 on 2020/10/28.
 //
 
 import Foundation
-import ImSDK
 
-/// 查找消息实体
-class FindMessageEntity: NSObject {
+/// 查找群申请信息实体
+class FindGroupApplicationEntity: NSObject {
 
     required public override init() {
     }

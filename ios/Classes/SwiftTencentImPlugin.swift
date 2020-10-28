@@ -85,6 +85,78 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "insertGroupMessageToLocalStorage":
             self.insertGroupMessageToLocalStorage(call: call, result: result);
             break;
+        case "createGroup":
+            self.createGroup(call: call, result: result);
+            break;
+        case "joinGroup":
+            self.joinGroup(call: call, result: result);
+            break;
+        case "quitGroup":
+            self.quitGroup(call: call, result: result);
+            break;
+        case "dismissGroup":
+            self.dismissGroup(call: call, result: result);
+            break;
+        case "getJoinedGroupList":
+            self.getJoinedGroupList(call: call, result: result);
+            break;
+        case "getGroupsInfo":
+            self.getGroupsInfo(call: call, result: result);
+            break;
+        case "setGroupInfo":
+            self.setGroupInfo(call: call, result: result);
+            break;
+        case "setReceiveMessageOpt":
+            self.setReceiveMessageOpt(call: call, result: result);
+            break;
+        case "initGroupAttributes":
+            self.initGroupAttributes(call: call, result: result);
+            break;
+        case "setGroupAttributes":
+            self.setGroupAttributes(call: call, result: result);
+            break;
+        case "deleteGroupAttributes":
+            self.deleteGroupAttributes(call: call, result: result);
+            break;
+        case "getGroupAttributes":
+            self.getGroupAttributes(call: call, result: result);
+            break;
+        case "getGroupMemberList":
+            self.getGroupMemberList(call: call, result: result);
+            break;
+        case "getGroupMembersInfo":
+            self.getGroupMembersInfo(call: call, result: result);
+            break;
+        case "setGroupMemberInfo":
+            self.setGroupMemberInfo(call: call, result: result);
+            break;
+        case "muteGroupMember":
+            self.muteGroupMember(call: call, result: result);
+            break;
+        case "inviteUserToGroup":
+            self.inviteUserToGroup(call: call, result: result);
+            break;
+        case "kickGroupMember":
+            self.kickGroupMember(call: call, result: result);
+            break;
+        case "setGroupMemberRole":
+            self.setGroupMemberRole(call: call, result: result);
+            break;
+        case "transferGroupOwner":
+            self.transferGroupOwner(call: call, result: result);
+            break;
+        case "getGroupApplicationList":
+            self.getGroupApplicationList(call: call, result: result);
+            break;
+        case "acceptGroupApplication":
+            self.acceptGroupApplication(call: call, result: result);
+            break;
+        case "refuseGroupApplication":
+            self.refuseGroupApplication(call: call, result: result);
+            break;
+        case "setGroupApplicationRead":
+            self.setGroupApplicationRead(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -390,7 +462,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得信令信息
     public func getSignalingInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(FindMessageEntity.init(json: messageStr).getMessage())));
+            result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(TencentImUtils.getMessageByFindMessageEntity(json: messageStr))));
         }
     }
 
@@ -464,7 +536,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 撤回消息
     public func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            V2TIMManager.sharedInstance().revokeMessage(FindMessageEntity.init(json: messageStr).getMessage(), succ: {
+            V2TIMManager.sharedInstance().revokeMessage(TencentImUtils.getMessageByFindMessageEntity(json: messageStr), succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
@@ -475,7 +547,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
         if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
            let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-            V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: lastMsg == nil ? nil : FindMessageEntity.init(json: lastMsg!).getMessage(), succ: {
+            V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: lastMsg == nil ? nil : TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!), succ: {
                 messages in
                 var resultData: [MessageEntity] = [];
                 for item in messages! {
@@ -491,7 +563,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-            V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: lastMsg == nil ? nil : FindMessageEntity.init(json: lastMsg!).getMessage(), succ: {
+            V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: lastMsg == nil ? nil : TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!), succ: {
                 messages in
                 var resultData: [MessageEntity] = [];
                 for item in messages! {
@@ -523,7 +595,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 删除本地消息
     public func deleteMessageFromLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            V2TIMManager.sharedInstance().deleteMessage(fromLocalStorage: FindMessageEntity.init(json: message).getMessage(), succ: {
+            V2TIMManager.sharedInstance().deleteMessage(fromLocalStorage: TencentImUtils.getMessageByFindMessageEntity(json: message), succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
@@ -535,13 +607,306 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             let arr = JsonUtil.getArrayFromJSONString(jsonString: message);
             var ms: [V2TIMMessage] = [];
             for index in 0..<arr.count {
-                ms.append(FindMessageEntity.init(dict: arr[index] as! [String: Any]).getMessage());
+                ms.append(TencentImUtils.getMessageByFindMessageEntity(dict: arr[index] as! [String: Any]));
             }
 
             V2TIMManager.sharedInstance().delete(ms, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
+    }
+
+    /// 向群组消息列表中添加一条消息
+    public func insertGroupMessageToLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let sender = CommonUtils.getParam(call: call, result: result, param: "sender") as? String,
+           let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String {
+
+            // 将节点信息解析
+            let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+
+            // 获得消息体
+            let message: V2TIMMessage = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: node["nodeType"] as! Int).messageNodeInterface().getV2TIMMessage(params: node);
+
+            // 添加到列表
+            V2TIMManager.sharedInstance().insertGroupMessage(toLocalStorage: message, to: groupID, sender: sender, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 创建群
+    public func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let memberList = ((call.arguments as! [String: Any])["memberList"]) as? String;
+        if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
+
+            // 初始化群创建群成员列表
+            var ms: [CustomCreateGroupMemberEntity]? = nil;
+            if memberList != nil {
+                ms = [];
+                let array = JsonUtil.getArrayFromJSONString(jsonString: memberList!);
+                for index in 0..<array.count {
+                    ms?.append(CustomCreateGroupMemberEntity(dict: array[index] as! [String: Any]));
+                }
+            }
+
+            // 创建群
+            V2TIMManager.sharedInstance().createGroup(CustomGroupInfoEntity(json: info), memberList: ms, succ: {
+                s in
+                result(s);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 加入群
+    public func joinGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            V2TIMManager.sharedInstance().joinGroup(groupID, msg: message, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 退出群
+    public func quitGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().quitGroup(groupID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+
+    /// 解散群
+    public func dismissGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().dismissGroup(groupID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得已加入的群列表
+    public func getJoinedGroupList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getJoinedGroupList({
+            infos in
+            var resultData: [[String: Any]] = [];
+            for item in infos! {
+                resultData.append(CustomGroupInfoEntity.getDict(info: item))
+            }
+            result(JsonUtil.toJson(resultData));
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
+    }
+
+
+    /// 拉取群资料
+    public func getGroupsInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupIDList = CommonUtils.getParam(call: call, result: result, param: "groupIDList") as? String {
+            V2TIMManager.sharedInstance().getGroupsInfo((groupIDList.split(separator: ",") as [String]), succ: {
+                infos in
+                var resultData: [[String: Any]] = [];
+                for item in infos! {
+                    resultData.append(CustomGroupInfoResultEntity.getDict(info: item))
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 修改群资料
+    public func setGroupInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
+            V2TIMManager.sharedInstance().setGroupInfo(CustomGroupInfoEntity.init(json: info), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 修改群消息接收选项
+    public func setReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let opt = CommonUtils.getParam(call: call, result: result, param: "opt") as? Int {
+            V2TIMManager.sharedInstance().setReceiveMessageOpt(groupID, opt: V2TIMGroupReceiveMessageOpt.init(rawValue: opt)!, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 初始化群属性，会清空原有的群属性列表
+    public func initGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let attributes = CommonUtils.getParam(call: call, result: result, param: "attributes") as? String {
+            V2TIMManager.sharedInstance().initGroupAttributes(groupID, attributes: (JsonUtil.getDictionaryFromJSONString(jsonString: attributes) as! [String: String]), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置群属性
+    public func setGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let attributes = CommonUtils.getParam(call: call, result: result, param: "attributes") as? String {
+            V2TIMManager.sharedInstance().setGroupAttributes(groupID, attributes: (JsonUtil.getDictionaryFromJSONString(jsonString: attributes) as! [String: String]), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 删除群属性
+    public func deleteGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let keys = ((call.arguments as! [String: Any])["keys"]) as? String;
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().deleteGroupAttributes(groupID, keys: keys?.split(separator: ",") as! [String], succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得群属性
+    public func getGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let keys = ((call.arguments as! [String: Any])["keys"]) as? String;
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().getGroupAttributes(groupID, keys: keys?.split(separator: ",") as! [String], succ: {
+                dictionary in
+                result(JsonUtil.toJson(dictionary!));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得群成员列表
+    public func getGroupMemberList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? Int,
+           let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64 {
+            V2TIMManager.sharedInstance().getGroupMemberList(groupID, filter: V2TIMGroupMemberFilter.init(rawValue: filter)!, nextSeq: nextSeq, succ: {
+                nextSeq, infos in
+                result(JsonUtil.toJson(CustomGroupMemberInfoResultEntity.init(nextSeq: nextSeq, infos: infos!)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获取指定的群成员资料
+    public func getGroupMembersInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let memberList = CommonUtils.getParam(call: call, result: result, param: "memberList") as? String {
+            V2TIMManager.sharedInstance().getGroupMembersInfo(groupID, memberList: memberList.split(separator: ",") as [String], succ: {
+                infos in
+                var resultData: [[String: Any]] = [];
+                for item in infos! {
+                    resultData.append(CustomGroupMemberFullInfoEntity.getDict(info: item))
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获取指定的群成员资料
+    public func setGroupMemberInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
+            V2TIMManager.sharedInstance().setGroupMemberInfo(groupID, info: CustomGroupMemberFullInfoEntity.init(json: info), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 禁言
+    public func muteGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
+           let seconds = CommonUtils.getParam(call: call, result: result, param: "seconds") as? UInt32 {
+            V2TIMManager.sharedInstance().muteGroupMember(groupID, member: userID, muteTime: seconds, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 邀请他人进群
+    public func inviteUserToGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let userList = CommonUtils.getParam(call: call, result: result, param: "userList") as? String {
+            V2TIMManager.sharedInstance().inviteUser(toGroup: groupID, userList: userList.split(separator: ",") as [String], succ: {
+                infos in
+                var resultData: [[String: Any]] = [];
+                for item in infos! {
+                    resultData.append(CustomGroupMemberOperationResultEntity.getDict(info: item))
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 踢人
+    public func kickGroupMember(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let memberList = CommonUtils.getParam(call: call, result: result, param: "memberList") as? String,
+           let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
+            V2TIMManager.sharedInstance().kickGroupMember(groupID, memberList: memberList.split(separator: ",") as [String], reason: reason, succ: {
+                infos in
+                var resultData: [[String: Any]] = [];
+                for item in infos! {
+                    resultData.append(CustomGroupMemberOperationResultEntity.getDict(info: item))
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 切换群成员角色
+    public func setGroupMemberRole(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
+           let role = CommonUtils.getParam(call: call, result: result, param: "role") as? Int {
+            V2TIMManager.sharedInstance().setGroupMemberRole(groupID, member: userID, newRole: V2TIMGroupMemberRole.init(rawValue: role)!, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 转让群主
+    public func transferGroupOwner(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
+           let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String {
+            V2TIMManager.sharedInstance().transferGroupOwner(groupID, member: userID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获取加群的申请列表
+    public func getGroupApplicationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getGroupApplicationList({
+            info in
+            result(JsonUtil.toJson(CustomGroupApplicationResultEntity.getDict(info: info!)));
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
+    }
+
+    /// 同意某一条加群申请
+    public func acceptGroupApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String,
+           let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
+            V2TIMManager.sharedInstance().accept(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application), reason: reason, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 拒绝某一条加群申请
+    public func refuseGroupApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String,
+           let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
+            V2TIMManager.sharedInstance().refuse(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application), reason: reason, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 标记申请列表为已读
+    public func setGroupApplicationRead(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().setGroupApplicationRead({
+            result(nil);
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
 
 

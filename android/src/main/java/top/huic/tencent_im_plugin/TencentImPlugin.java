@@ -5,6 +5,13 @@ import android.content.Context;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
+import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
@@ -16,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +45,8 @@ import top.huic.tencent_im_plugin.listener.CustomSignalingListener;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 import top.huic.tencent_im_plugin.util.CommonUtil;
+import top.huic.tencent_im_plugin.util.JsonUtil;
+import top.huic.tencent_im_plugin.util.TencentImUtils;
 
 /**
  * TencentImPlugin
@@ -282,7 +292,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getSignalingInfo(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        result.success(JSON.toJSONString(V2TIMManager.getSignalingManager().getSignalingInfo(JSON.parseObject(message, FindMessageEntity.class).getMessage())));
+        result.success(JsonUtil.toJSONString(V2TIMManager.getSignalingManager().getSignalingInfo(TencentImUtils.getMessageByFindMessageEntity(message))));
     }
 
     /**
@@ -351,7 +361,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void revokeMessage(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        V2TIMManager.getMessageManager().revokeMessage(JSON.parseObject(message, FindMessageEntity.class).getMessage(), new VoidCallBack(result));
+        V2TIMManager.getMessageManager().revokeMessage(TencentImUtils.getMessageByFindMessageEntity(message), new VoidCallBack(result));
     }
 
     /**
@@ -365,14 +375,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         int count = CommonUtil.getParam(methodCall, result, "count");
         String lastMsgStr = methodCall.argument("lastMsg");
 
-        V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, lastMsgStr == null ? null : JSON.parseObject(lastMsgStr, FindMessageEntity.class).getMessage(), new ValueCallBack<List<V2TIMMessage>>(result) {
+        V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, lastMsgStr == null ? null : TencentImUtils.getMessageByFindMessageEntity(lastMsgStr), new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
                 for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
                     resultData.add(new MessageEntity(v2TIMMessage));
                 }
-                result.success(JSON.toJSONString(resultData));
+                result.success(JsonUtil.toJSONString(resultData));
             }
         });
     }
@@ -388,14 +398,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         int count = CommonUtil.getParam(methodCall, result, "count");
         String lastMsgStr = methodCall.argument("lastMsg");
 
-        V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, lastMsgStr == null ? null : JSON.parseObject(lastMsgStr, FindMessageEntity.class).getMessage(), new ValueCallBack<List<V2TIMMessage>>(result) {
+        V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, lastMsgStr == null ? null : TencentImUtils.getMessageByFindMessageEntity(lastMsgStr), new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
                 for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
                     resultData.add(new MessageEntity(v2TIMMessage));
                 }
-                result.success(JSON.toJSONString(resultData));
+                result.success(JsonUtil.toJSONString(resultData));
             }
         });
     }
@@ -430,7 +440,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteMessageFromLocalStorage(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(JSON.parseObject(message, FindMessageEntity.class).getMessage(), new VoidCallBack(result));
+        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(TencentImUtils.getMessageByFindMessageEntity(message), new VoidCallBack(result));
     }
 
     /**
@@ -445,13 +455,13 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         List<FindMessageEntity> queryMessage = JSON.parseArray(message, FindMessageEntity.class);
         List<V2TIMMessage> messages = new ArrayList<>(queryMessage.size());
         for (FindMessageEntity findMessageEntity : queryMessage) {
-            messages.add(findMessageEntity.getMessage());
+            messages.add(TencentImUtils.getMessageByFindMessageEntity(findMessageEntity));
         }
         V2TIMManager.getMessageManager().deleteMessages(messages, new VoidCallBack(result));
     }
 
     /**
-     * 删除本地及漫游消息
+     * 向群组消息列表中添加一条消息
      *
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
@@ -466,7 +476,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         AbstractMessageNode messageNode = MessageNodeType.getMessageNodeTypeByV2TIMConstant(Integer.valueOf(node.get("nodeType").toString())).getMessageNodeInterface();
         AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
 
-
         // 添加消息
         V2TIMManager.getMessageManager().insertGroupMessageToLocalStorage(messageNode.getV2TIMMessage(messageEntity), groupID, sender, new ValueCallBack<V2TIMMessage>(result) {
             @Override
@@ -474,6 +483,291 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 result.success(null);
             }
         });
+    }
+
+    /**
+     * 创建群
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void createGroup(MethodCall methodCall, final Result result) {
+        String info = CommonUtil.getParam(methodCall, result, "info");
+        String memberListStr = methodCall.argument("memberList");
+        V2TIMManager.getGroupManager().createGroup(JSON.parseObject(info, V2TIMGroupInfo.class), memberListStr == null ? null : JSON.parseArray(memberListStr, V2TIMCreateGroupMemberInfo.class), new ValueCallBack<String>(result));
+    }
+
+    /**
+     * 加入群
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void joinGroup(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        V2TIMManager.getInstance().joinGroup(groupID, message, new VoidCallBack(result));
+    }
+
+    /**
+     * 退出群
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void quitGroup(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        V2TIMManager.getInstance().quitGroup(groupID, new VoidCallBack(result));
+    }
+
+    /**
+     * 解散群
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void dismissGroup(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        V2TIMManager.getInstance().dismissGroup(groupID, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得已加入的群列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getJoinedGroupList(MethodCall methodCall, final Result result) {
+        V2TIMManager.getGroupManager().getJoinedGroupList(new ValueCallBack<List<V2TIMGroupInfo>>(result));
+    }
+
+    /**
+     * 拉取群资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupsInfo(MethodCall methodCall, final Result result) {
+        String groupIDList = CommonUtil.getParam(methodCall, result, "groupID");
+        V2TIMManager.getGroupManager().getGroupsInfo(Arrays.asList(groupIDList.split(",")), new ValueCallBack<List<V2TIMGroupInfoResult>>(result));
+    }
+
+    /**
+     * 修改群资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setGroupInfo(MethodCall methodCall, final Result result) {
+        String info = CommonUtil.getParam(methodCall, result, "info");
+        V2TIMManager.getGroupManager().setGroupInfo(JSON.parseObject(info, V2TIMGroupInfo.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 修改群消息接收选项
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setReceiveMessageOpt(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        int opt = CommonUtil.getParam(methodCall, result, "opt");
+        V2TIMManager.getGroupManager().setReceiveMessageOpt(groupID, opt, new VoidCallBack(result));
+    }
+
+    /**
+     * 初始化群属性，会清空原有的群属性列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void initGroupAttributes(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String attributes = CommonUtil.getParam(methodCall, result, "attributes");
+        V2TIMManager.getGroupManager().initGroupAttributes(groupID, JSON.parseObject(attributes, HashMap.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 设置群属性。已有该群属性则更新其 value 值，没有该群属性则添加该属性。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setGroupAttributes(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String attributes = CommonUtil.getParam(methodCall, result, "attributes");
+        V2TIMManager.getGroupManager().setGroupAttributes(groupID, JSON.parseObject(attributes, HashMap.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 删除指定群属性，keys 传 null 则清空所有群属性。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteGroupAttributes(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String keys = methodCall.argument("keys");
+        V2TIMManager.getGroupManager().deleteGroupAttributes(groupID, keys == null ? null : Arrays.asList(keys.split(",")), new VoidCallBack(result));
+    }
+
+    /**
+     * 获取指定群属性，keys 传 null 则获取所有群属性。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupAttributes(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String keys = methodCall.argument("keys");
+        V2TIMManager.getGroupManager().getGroupAttributes(groupID, keys == null ? null : Arrays.asList(keys.split(",")), new ValueCallBack<Map<String, String>>(result));
+    }
+
+    /**
+     * 获取群成员列表。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupOnlineMemberCount(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        int filter = CommonUtil.getParam(methodCall, result, "filter");
+        int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");
+        V2TIMManager.getGroupManager().getGroupMemberList(groupID, filter, nextSeq, new ValueCallBack<V2TIMGroupMemberInfoResult>(result));
+    }
+
+    /**
+     * 获取指定的群成员资料。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupMembersInfo(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String memberList = CommonUtil.getParam(methodCall, result, "memberList");
+        V2TIMManager.getGroupManager().getGroupMembersInfo(groupID, Arrays.asList(memberList.split(",")), new ValueCallBack<List<V2TIMGroupMemberFullInfo>>(result));
+    }
+
+    /**
+     * 修改指定的群成员资料。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setGroupMemberInfo(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String info = CommonUtil.getParam(methodCall, result, "info");
+        V2TIMManager.getGroupManager().setGroupMemberInfo(groupID, JSON.parseObject(info, V2TIMGroupMemberFullInfo.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 禁言。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void muteGroupMember(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        int seconds = CommonUtil.getParam(methodCall, result, "seconds");
+        V2TIMManager.getGroupManager().muteGroupMember(groupID, userID, seconds, new VoidCallBack(result));
+    }
+
+
+    /**
+     * 邀请他人入群。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void inviteUserToGroup(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String userList = CommonUtil.getParam(methodCall, result, "userList");
+        V2TIMManager.getGroupManager().inviteUserToGroup(groupID, Arrays.asList(userList.split(",")), new ValueCallBack<List<V2TIMGroupMemberOperationResult>>(result));
+    }
+
+    /**
+     * 踢人。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void kickGroupMember(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String memberList = CommonUtil.getParam(methodCall, result, "memberList");
+        String reason = CommonUtil.getParam(methodCall, result, "reason");
+        V2TIMManager.getGroupManager().kickGroupMember(groupID, Arrays.asList(memberList.split(",")), reason, new ValueCallBack<List<V2TIMGroupMemberOperationResult>>(result));
+    }
+
+    /**
+     * 切换群成员角色。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setGroupMemberRole(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        int role = CommonUtil.getParam(methodCall, result, "role");
+        V2TIMManager.getGroupManager().setGroupMemberRole(groupID, userID, role, new VoidCallBack(result));
+    }
+
+    /**
+     * 转让群主。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void transferGroupOwner(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        V2TIMManager.getGroupManager().transferGroupOwner(groupID, userID, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得群申请列表。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupApplicationList(MethodCall methodCall, final Result result) {
+        V2TIMManager.getGroupManager().getGroupApplicationList(new ValueCallBack<V2TIMGroupApplicationResult>(result));
+    }
+
+
+    /**
+     * 同意某一条加群申请。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void acceptGroupApplication(MethodCall methodCall, final Result result) {
+        String application = CommonUtil.getParam(methodCall, result, "application");
+        String reason = CommonUtil.getParam(methodCall, result, "reason");
+        V2TIMManager.getGroupManager().acceptGroupApplication(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application), reason, new VoidCallBack(result));
+    }
+
+
+    /**
+     * 拒绝某一条加群申请。
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void refuseGroupApplication(MethodCall methodCall, final Result result) {
+        String application = CommonUtil.getParam(methodCall, result, "application");
+        String reason = CommonUtil.getParam(methodCall, result, "reason");
+        V2TIMManager.getGroupManager().refuseGroupApplication(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application), reason, new VoidCallBack(result));
+    }
+
+    /**
+     * 标记申请列表为已读
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setGroupApplicationRead(MethodCall methodCall, final Result result) {
+        V2TIMManager.getGroupManager().setGroupApplicationRead(new VoidCallBack(result));
     }
 
 
@@ -591,7 +885,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 //                        }
 //                    });
 //                } else {
-//                    conversation.getMessage(number, message, new ValueCallBack<List<TIMMessage>>(result) {
+//                    conversation.getMessageByFindMessageEntity(number, message, new ValueCallBack<List<TIMMessage>>(result) {
 //                        @Override
 //                        public void onSuccess(List<TIMMessage> timMessages) {
 //                            if (timMessages == null || timMessages.size() == 0) {

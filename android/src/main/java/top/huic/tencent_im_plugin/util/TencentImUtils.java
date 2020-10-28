@@ -1,9 +1,57 @@
 package top.huic.tencent_im_plugin.util;
 
+import com.alibaba.fastjson.JSON;
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
+import com.tencent.imsdk.v2.V2TIMMessage;
+
+import top.huic.tencent_im_plugin.entity.FindGroupApplicationEntity;
+import top.huic.tencent_im_plugin.entity.FindMessageEntity;
+
 /**
  * 腾讯云IM工具类
  */
 public class TencentImUtils {
+
+    /**
+     * 获得群申请对象
+     *
+     * @param json json 字符串
+     * @return 获得结果
+     */
+    public static V2TIMGroupApplication getGroupApplicationByFindGroupApplicationEntity(String json) {
+        return getGroupApplicationByFindGroupApplicationEntity(JSON.parseObject(json, FindGroupApplicationEntity.class));
+    }
+
+    /**
+     * 获得群申请对象
+     *
+     * @param json json 字符串
+     * @return 获得结果
+     */
+    public static V2TIMGroupApplication getGroupApplicationByFindGroupApplicationEntity(FindGroupApplicationEntity json) {
+        return null;
+    }
+
+    /**
+     * 获得消息对象
+     *
+     * @param json json字符串
+     * @return 获得结果
+     */
+    public static V2TIMMessage getMessageByFindMessageEntity(String json) {
+        return getMessageByFindMessageEntity(JSON.parseObject(json, FindMessageEntity.class));
+    }
+
+    /**
+     * 获得消息对象
+     *
+     * @param findMessageEntity 查找消息对象实体
+     * @return 获得结果
+     */
+    public static V2TIMMessage getMessageByFindMessageEntity(FindMessageEntity findMessageEntity) {
+        return null;
+    }
+
 //
 //    /**
 //     * 获得会话信息
@@ -135,8 +183,8 @@ public class TencentImUtils {
 //                                }
 //
 //                                // 最后一条消息用户ID
-//                                if (sessionEntity != null && sessionEntity.getMessage() != null && timUserProfile.getIdentifier().equals(sessionEntity.getMessage().getSender())) {
-//                                    sessionEntity.getMessage().setUserInfo(timUserProfile);
+//                                if (sessionEntity != null && sessionEntity.getMessageByFindMessageEntity() != null && timUserProfile.getIdentifier().equals(sessionEntity.getMessageByFindMessageEntity().getSender())) {
+//                                    sessionEntity.getMessageByFindMessageEntity().setUserInfo(timUserProfile);
 //                                }
 //                            }
 //                        }

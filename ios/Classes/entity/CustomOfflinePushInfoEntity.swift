@@ -18,24 +18,14 @@ class CustomOfflinePushInfoEntity: V2TIMOfflinePushInfo {
         }
 
         let dict = JsonUtil.getDictionaryFromJSONString(jsonString: jsonStr!);
-        if dict["title"] != nil {
-            self.title = (dict["title"] as! String);
-        }
-        if dict["desc"] != nil {
-            self.desc = (dict["desc"] as! String);
-        }
-        if dict["ext"] != nil {
-            self.ext = (dict["ext"] as! String);
-        }
-        if dict["iOSSound"] != nil {
-            self.iOSSound = (dict["iOSSound"] as! String);
-        }
+        self.title = (dict["title"] as? String);
+        self.desc = (dict["desc"] as? String);
+        self.ext = (dict["ext"] as? String);
+        self.iOSSound = (dict["iOSSound"] as? String);
         if dict["ignoreIOSBadge"] != nil {
             self.ignoreIOSBadge = (dict["ignoreIOSBadge"] as! Bool);
         }
-        if dict["androidOPPOChannelID"] != nil {
-            self.androidOPPOChannelID = (dict["androidOPPOChannelID"] as! String);
-        }
+        self.androidOPPOChannelID = (dict["androidOPPOChannelID"] as? String);
         if dict["disablePush"] != nil {
             self.disablePush = (dict["disablePush"] as! Bool);
         }

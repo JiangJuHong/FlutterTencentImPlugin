@@ -3,11 +3,21 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:tencent_im_plugin/entity/find_group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/find_message_entity.dart';
+import 'package:tencent_im_plugin/entity/group_application_entity.dart';
+import 'package:tencent_im_plugin/entity/group_application_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_create_member_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
+import 'package:tencent_im_plugin/entity/group_info_result_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_info_result_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
+import 'package:tencent_im_plugin/enums/group_member_filter_enum.dart';
+import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
+import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/login_status_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
@@ -197,7 +207,7 @@ class TencentImPlugin {
         "localCustomStr": localCustomStr,
         "priority": MessagePriorityTool.toInt(priority),
         "offlinePushInfo": offlinePushInfo == null ? null : jsonEncode(offlinePushInfo),
-      },
+      }..removeWhere((key, value) => value == null),
     );
   }
 
@@ -220,11 +230,14 @@ class TencentImPlugin {
     @required int count,
     FindMessageEntity lastMsg,
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod('getC2CHistoryMessageList', {
-      "userID": userID,
-      "count": count,
-      "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
-    }));
+    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod(
+      'getC2CHistoryMessageList',
+      {
+        "userID": userID,
+        "count": count,
+        "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
+      }..removeWhere((key, value) => value == null),
+    ));
   }
 
   /// 获得群聊历史记录
@@ -236,11 +249,14 @@ class TencentImPlugin {
     @required int count,
     FindMessageEntity lastMsg,
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod('getGroupHistoryMessageList', {
-      "groupID": groupID,
-      "count": count,
-      "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
-    }));
+    return ListUtil.generateOBJList<MessageEntity>(await _channel.invokeMethod(
+      'getGroupHistoryMessageList',
+      {
+        "groupID": groupID,
+        "count": count,
+        "lastMsg": lastMsg == null ? null : jsonEncode(jsonEncode),
+      }..removeWhere((key, value) => value == null),
+    ));
   }
 
   /// 设置单聊已读
@@ -307,14 +323,18 @@ class TencentImPlugin {
   /// 创建群
   /// [info] 群信息对象
   /// [memberList] 指定初始的群成员（直播群 AVChatRoom 不支持指定初始群成员，memberList 请传 null）
-  static createGroup({
+  /// [Return] 群ID
+  static Future<String> createGroup({
     @required GroupInfoEntity info,
     List<GroupCreateMemberEntity> memberList,
   }) {
-    return _channel.invokeMethod('createGroup', {
-      "info": jsonEncode(info),
-      "memberList": jsonEncode(memberList),
-    });
+    return _channel.invokeMethod(
+      'createGroup',
+      {
+        "info": jsonEncode(info),
+        "memberList": memberList == null ? null : jsonEncode(memberList),
+      }..removeWhere((key, value) => value == null),
+    );
   }
 
   /// 加入群
@@ -351,12 +371,261 @@ class TencentImPlugin {
   }
 
   /// 获取已经加入的群列表（不包括已加入的直播群）
-  /// [groupID] 群ID
   static Future<List<GroupInfoEntity>> getJoinedGroupList() async {
     return ListUtil.generateOBJList<GroupInfoEntity>(await _channel.invokeMethod('getJoinedGroupList'));
   }
 
-  //
+  /// 拉取群资料
+  /// [groupID] 群ID
+  static Future<List<GroupInfoResultEntity>> getGroupsInfo({
+    @required List<String> groupIDList,
+  }) async {
+    return ListUtil.generateOBJList<GroupInfoResultEntity>(await _channel.invokeMethod('getGroupsInfo', {
+      "groupIDList": groupIDList.join(","),
+    }));
+  }
+
+  /// 修改群资料
+  /// [info] 群信息
+  static setGroupInfo({
+    @required GroupInfoEntity info,
+  }) async {
+    return _channel.invokeMethod('setGroupInfo', {
+      "info": jsonEncode(info),
+    });
+  }
+
+  /// 修改群消息接收选项
+  /// [groupID] 群ID
+  /// [opt] 消息接收选项
+  static setReceiveMessageOpt({
+    @required String groupID,
+    @required GroupReceiveMessageOptEnum opt,
+  }) async {
+    return _channel.invokeMethod('setReceiveMessageOpt', {
+      "groupID": groupID,
+      "opt": GroupReceiveMessageOptTool.toInt(opt),
+    });
+  }
+
+  /// 初始化群属性，会清空原有的群属性列表
+  /// [groupID] 群ID
+  /// [attributes] 群属性
+  ///   1. attributes 的使用限制如下：
+  ///   2. 目前只支持 AVChatRoom
+  ///   3. key 最多支持16个，长度限制为32字节
+  ///   4. value 长度限制为4k
+  ///   5. 总的 attributes（包括 key 和 value）限制为16k
+  ///   6. initGroupAttributes、setGroupAttributes、deleteGroupAttributes 接口合并计算， SDK 限制为5秒10次，超过后回调8511错误码；后台限制1秒5次，超过后返回10049错误码
+  ///   7. getGroupAttributes 接口 SDK 限制5秒20次
+  static initGroupAttributes({
+    @required String groupID,
+    @required Map<String, String> attributes,
+  }) async {
+    return _channel.invokeMethod('initGroupAttributes', {
+      "groupID": groupID,
+      "attributes": jsonEncode(attributes),
+    });
+  }
+
+  /// 设置群属性。已有该群属性则更新其 value 值，没有该群属性则添加该属性。
+  /// [groupID] 群ID
+  /// [attributes] 群属性
+  static setGroupAttributes({
+    @required String groupID,
+    @required Map<String, String> attributes,
+  }) async {
+    return _channel.invokeMethod('setGroupAttributes', {
+      "groupID": groupID,
+      "attributes": jsonEncode(attributes),
+    });
+  }
+
+  /// 删除指定群属性，keys 传 null 则清空所有群属性。
+  /// [groupID] 群ID
+  /// [keys] 群属性Key,keys 传 null 则清空所有群属性。
+  static deleteGroupAttributes({
+    @required String groupID,
+    List<String> keys,
+  }) async {
+    return _channel.invokeMethod(
+      'deleteGroupAttributes',
+      {
+        "groupID": groupID,
+        "keys": keys == null ? null : keys.join(","),
+      }..removeWhere((key, value) => value == null),
+    );
+  }
+
+  /// 获取指定群属性，keys 传 null 则获取所有群属性。
+  /// [groupID] 群ID
+  /// [keys] 群属性Key,keys 传 null 则清空所有群属性。
+  static Future<Map<String, String>> getGroupAttributes({
+    @required String groupID,
+    List<String> keys,
+  }) async {
+    return (jsonDecode(await _channel.invokeMethod(
+      'getGroupAttributes',
+      {
+        "groupID": groupID,
+        "keys": keys == null ? null : keys.join(","),
+      }..removeWhere((key, value) => value == null),
+    )) as Map)
+        .cast<String, String>();
+  }
+
+  /// 获取群成员列表。
+  /// [groupID] 群ID
+  /// [filter] 指定群成员类型
+  /// [nextSeq] 分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入再次拉取，直至为0。
+  static Future<GroupMemberInfoResultEntity> getGroupMemberList({
+    @required String groupID,
+    GroupMemberFilterEnum filter: GroupMemberFilterEnum.All,
+    int nextSeq: 0,
+  }) async {
+    return GroupMemberInfoResultEntity.fromJson(await _channel.invokeMethod('getGroupMemberList', {
+      "groupID": groupID,
+      "filter": GroupMemberFilterTool.toInt(filter),
+      "nextSeq": nextSeq,
+    }));
+  }
+
+  /// 获取指定的群成员资料。
+  /// [groupID] 群ID
+  /// [memberList] 群成员列表
+  static Future<List<GroupMemberEntity>> getGroupMembersInfo({
+    @required String groupID,
+    @required List<String> memberList,
+  }) async {
+    return ListUtil.generateOBJList<GroupMemberEntity>(await _channel.invokeMethod('getGroupMembersInfo', {
+      "groupID": groupID,
+      "memberList": memberList.join(","),
+    }));
+  }
+
+  /// 修改指定的群成员资料。
+  /// [groupID] 群ID
+  /// [info] 群成员对象
+  static setGroupMemberInfo({
+    @required String groupID,
+    @required GroupMemberEntity info,
+  }) {
+    return _channel.invokeMethod('setGroupMemberInfo', {
+      "groupID": groupID,
+      "info": jsonEncode(info),
+    });
+  }
+
+  /// 禁言（只有管理员或群主能够调用）。
+  /// [groupID] 群ID
+  /// [userID] 用户ID
+  /// [seconds] 禁言时长
+  static muteGroupMember({
+    @required String groupID,
+    @required String userID,
+    @required int seconds,
+  }) {
+    return _channel.invokeMethod('muteGroupMember', {
+      "groupID": groupID,
+      "userID": userID,
+      "seconds": seconds,
+    });
+  }
+
+  /// 邀请他人入群
+  /// [groupID] 群ID
+  /// [userList] 用户ID列表
+  static Future<List<GroupMemberOperationResultEntity>> inviteUserToGroup({
+    @required String groupID,
+    @required List<String> userList,
+  }) async {
+    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(await _channel.invokeMethod('inviteUserToGroup', {
+      "groupID": groupID,
+      "userList": userList.join(","),
+    }));
+  }
+
+  /// 踢人
+  /// [groupID] 群ID
+  /// [memberList] 群成员ID列表
+  /// [reason] 理由
+  static Future<List<GroupMemberOperationResultEntity>> kickGroupMember({
+    @required String groupID,
+    @required List<String> memberList,
+    String reason: "",
+  }) async {
+    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(await _channel.invokeMethod('kickGroupMember', {
+      "groupID": groupID,
+      "memberList": memberList.join(","),
+      "reason": reason,
+    }));
+  }
+
+  /// 切换群成员的角色。
+  /// [groupID] 群ID
+  /// [userID] 用户ID
+  /// [role] 角色
+  static setGroupMemberRole({
+    @required String groupID,
+    @required String userID,
+    @required GroupMemberRoleEnum role,
+  }) {
+    return _channel.invokeMethod('setGroupMemberRole', {
+      "groupID": groupID,
+      "userID": userID,
+      "role": GroupMemberRoleTool.toInt(role),
+    });
+  }
+
+  /// 转让群主
+  /// [groupID] 群ID
+  /// [userID] 用户ID
+  static transferGroupOwner({
+    @required String groupID,
+    @required String userID,
+  }) {
+    return _channel.invokeMethod('transferGroupOwner', {
+      "groupID": groupID,
+      "userID": userID,
+    });
+  }
+
+  /// 获取加群的申请列表
+  static Future<GroupApplicationResultEntity> getGroupApplicationList() async {
+    return GroupApplicationResultEntity.fromJson(await _channel.invokeMethod('getGroupApplicationList'));
+  }
+
+  /// 同意某一条加群申请
+  /// [application] 申请对象
+  /// [reason] 理由
+  static acceptGroupApplication({
+    @required FindGroupApplicationEntity application,
+    String reason: "",
+  }) {
+    return _channel.invokeMethod('acceptGroupApplication', {
+      "application": jsonEncode(application),
+      "reason": reason,
+    });
+  }
+
+  /// 拒绝某一条加群申请
+  /// [application] 申请对象
+  /// [reason] 理由
+  static refuseGroupApplication({
+    @required FindGroupApplicationEntity application,
+    String reason: "",
+  }) {
+    return _channel.invokeMethod('refuseGroupApplication', {
+      "application": jsonEncode(application),
+      "reason": reason,
+    });
+  }
+
+  /// 标记申请列表为已读
+  static setGroupApplicationRead() {
+    return _channel.invokeMethod('setGroupApplicationRead');
+  }
+
   // /// 获得当前登录用户会话列表
   // /// @return 会话列表集合
   // static Future<List<SessionEntity>> getConversationList() async {

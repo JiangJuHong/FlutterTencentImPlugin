@@ -15,6 +15,29 @@ public class TencentImUtils {
         };
     }
 
+    /// 获得消息对象
+    public static func getMessageByFindMessageEntity(json: String) -> V2TIMMessage {
+        return getMessageByFindMessageEntity(dict: JsonUtil.getDictionaryFromJSONString(jsonString: json));
+    }
+
+    /// 获得消息对象
+    public static func getMessageByFindMessageEntity(dict: [String: Any]) -> V2TIMMessage {
+        let findMessage = FindMessageEntity.init(dict: dict);
+        return V2TIMMessage();
+    }
+
+    /// 获得群申请对象
+    public static func getGroupApplicationByFindGroupApplicationEntity(json: String) -> V2TIMGroupApplication {
+        return getGroupApplicationByFindGroupApplicationEntity(dict: JsonUtil.getDictionaryFromJSONString(jsonString: json));
+    }
+
+    /// 获得群申请对象
+    public static func getGroupApplicationByFindGroupApplicationEntity(dict: [String: Any]) -> V2TIMGroupApplication {
+        let findGroupApplication = FindGroupApplicationEntity.init(dict: dict);
+        return V2TIMGroupApplication();
+    }
+
+
 //    /**
 //     * 获得会话信息
 //     *

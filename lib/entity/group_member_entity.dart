@@ -22,7 +22,6 @@ class GroupMemberEntity {
 
   GroupMemberEntity({
     this.userID,
-    this.role,
     this.customInfo,
     this.nameCard,
   });
@@ -39,7 +38,6 @@ class GroupMemberEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.userID != null) data['userID'] = this.userID;
-    if (this.role != null) data['role'] = GroupMemberRoleTool.toInt(this.role);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     if (this.nameCard != null) data['nameCard'] = this.nameCard;
     return data;
