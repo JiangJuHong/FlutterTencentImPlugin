@@ -14,7 +14,7 @@ class CustomGroupApplicationResultEntity: V2TIMGroupApplicationResult {
         result["unreadCount"] = info.unreadCount;
         var groupApplicationList: [[String: Any]] = [];
         for item in info.applicationList! {
-            groupApplicationList.append(CustomGroupApplicationEntity.getDict(info: item))
+            groupApplicationList.append(CustomGroupApplicationEntity.getDict(info: item as! V2TIMGroupApplication))
         }
         result["groupApplicationList"] = groupApplicationList;
         return result;

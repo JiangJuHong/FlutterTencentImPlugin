@@ -62,6 +62,10 @@
 | [acceptGroupApplication](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                 | 同意某一条加群申请                                              |
 | [refuseGroupApplication](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                 | 拒绝某一条加群申请                                              |
 | [setGroupApplicationRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                | 标记申请列表为已读                                              |
+| [getConversationList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                    | 获得会话列表                                                    |
+| [getConversation](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                        | 获得指定会话                                                    |
+| [deleteConversation](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                     | 删除会话                                                       |
+| [setConversationDraft](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                   | 设置会话草稿                                                    |
 
 
 > 发送消息

@@ -5,6 +5,8 @@ import android.content.Context;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
@@ -768,6 +770,52 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void setGroupApplicationRead(MethodCall methodCall, final Result result) {
         V2TIMManager.getGroupManager().setGroupApplicationRead(new VoidCallBack(result));
+    }
+
+    /**
+     * 获得会话列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getConversationList(MethodCall methodCall, final Result result) {
+        int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");
+        int count = CommonUtil.getParam(methodCall, result, "count");
+        V2TIMManager.getConversationManager().getConversationList(nextSeq, count, new ValueCallBack<V2TIMConversationResult>(result));
+    }
+
+    /**
+     * 获得指定会话
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getConversation(MethodCall methodCall, final Result result) {
+        String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
+        V2TIMManager.getConversationManager().getConversation(conversationID, new ValueCallBack<V2TIMConversation>(result));
+    }
+
+    /**
+     * 删除会话
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteConversation(MethodCall methodCall, final Result result) {
+        String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
+        V2TIMManager.getConversationManager().deleteConversation(conversationID, new VoidCallBack(result));
+    }
+
+    /**
+     * 设置会话草稿
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setConversationDraft(MethodCall methodCall, final Result result) {
+        String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
+        String draftText = methodCall.argument("draftText");
+        V2TIMManager.getConversationManager().setConversationDraft(conversationID, draftText, new VoidCallBack(result));
     }
 
 

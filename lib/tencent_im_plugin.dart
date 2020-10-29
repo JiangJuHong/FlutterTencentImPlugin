@@ -3,9 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:tencent_im_plugin/entity/conversation_entity.dart';
+import 'package:tencent_im_plugin/entity/conversation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/find_group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/find_message_entity.dart';
-import 'package:tencent_im_plugin/entity/group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/group_application_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_create_member_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
@@ -24,7 +25,6 @@ import 'package:tencent_im_plugin/list_util.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
-import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
 
 class TencentImPlugin {
@@ -624,6 +624,49 @@ class TencentImPlugin {
   /// 标记申请列表为已读
   static setGroupApplicationRead() {
     return _channel.invokeMethod('setGroupApplicationRead');
+  }
+
+  /// 获取会话列表
+  /// [nextSeq] 分页拉取的游标，第一次默认取传 0，后续分页拉传上一次分页拉取成功回调里的 nextSeq
+  /// [count] 分页拉取的个数，一次分页拉取不宜太多，会影响拉取的速度，建议每次拉取 100 个会话
+  static Future<ConversationResultEntity> getConversationList({
+    int nextSeq: 0,
+    int count: 100,
+  }) async {
+    return ConversationResultEntity.fromJson(await _channel.invokeMethod('getConversationList', {
+      "nextSeq": nextSeq,
+      "count": count,
+    }));
+  }
+
+  /// 获得指定会话
+  /// [conversationID] 会话ID
+  static Future<ConversationEntity> getConversation({
+    @required String conversationID,
+  }) async {
+    return ConversationEntity.fromJson(await _channel.invokeMethod('getConversation', {
+      "conversationID": conversationID,
+    }));
+  }
+
+  /// 删除会话
+  static deleteConversation() {
+    return _channel.invokeMethod('deleteConversation');
+  }
+
+  /// 设置会话草稿
+  /// [conversationID] 会话ID
+  /// [draftText] 草稿内容，null代表取消设置
+  static setConversationDraft({
+    @required String conversationID,
+    String draftText,
+  }) {
+    return _channel.invokeMethod(
+        'setConversationDraft',
+        {
+          "conversationID": conversationID,
+          "draftText": draftText,
+        }..removeWhere((key, value) => value == null));
   }
 
   // /// 获得当前登录用户会话列表
@@ -1315,17 +1358,6 @@ class TencentImPluginListener {
           // 没有找到类型就返回
           if (type == null) {
             throw MissingPluginException();
-          }
-
-          // 根据类型初始化参数
-          if (type == ListenerTypeEnum.NewMessages) {
-            params = ListUtil.generateOBJList<MessageEntity>(jsonDecode(paramsStr));
-          } else if (type == ListenerTypeEnum.RefreshConversation) {
-            params = ListUtil.generateOBJList<SessionEntity>(jsonDecode(paramsStr));
-          } else if (type == ListenerTypeEnum.RecvReceipt) {
-            params = jsonDecode(paramsStr);
-          } else {
-            params = paramsStr;
           }
 
           // 回调触发

@@ -10,11 +10,27 @@ public class TextMessageNode: AbstractMessageNode {
     override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {
         let text: String = getParam(params: params, paramKey: "content")!;
         let atUserList: Any? = getParam(params: params, paramKey: "atUserList");
+        let atAll: Any? = getParam(params: params, paramKey: "atAll");
 
-        if atUserList == nil || atUserList is NSNull {
-            return V2TIMManager.sharedInstance().createTextMessage(text);
+        // 有@用户或者@所有人则进入分支
+        if (atUserList != nil && !(atUserList is NSNull)) || (atAll != nil && atAll is NSNull && atAll as! Bool) {
+            var atList: [String] = [];
+
+            // 追加@的目标
+            if atUserList != nil && !(atUserList is NSNull) {
+                for item in atUserList as! [String] {
+                    atList.append(item);
+                }
+            }
+
+            // @所有人
+            if atAll != nil && atAll is NSNull && atAll as! Bool {
+                atList.append(kImSDK_MesssageAtALL);
+            }
+
+            return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atList as AnyObject as! NSArray).mutableCopy() as! NSMutableArray)
         }
-        return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atUserList as! NSMutableArray))
+        return V2TIMManager.sharedInstance().createTextMessage(text);
     }
 
     override func getNote(elem: V2TIMElem) -> String {

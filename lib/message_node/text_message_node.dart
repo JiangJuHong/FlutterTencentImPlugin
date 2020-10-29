@@ -10,23 +10,33 @@ class TextMessageNode extends MessageNode {
   /// @的用户列表，只在群聊中有效
   List<String> _atUserList;
 
+  /// 是否需要@所有人
+  bool _atAll;
+
   TextMessageNode({
     @required this.content,
     List<String> atUserList,
+    bool atAll: false,
   })  : this._atUserList = atUserList,
+        this._atAll = atAll,
         super(MessageElemTypeEnum.Text);
 
   TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
     content = json['content'];
   }
 
+  /// 设置@列表
   set atUserList(List<String> value) => _atUserList = value;
+
+  /// 设置@所有人
+  set atAll(bool value) => _atAll = value;
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data["content"] = this.content;
     data["atUserList"] = this._atUserList;
+    data["atAll"] = this._atAll;
     return data;
   }
 }

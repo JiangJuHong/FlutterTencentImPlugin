@@ -22,6 +22,11 @@ public class TextMessageEntity extends AbstractMessageEntity {
      */
     private List<String> atUserList;
 
+    /**
+     * 是否@所有人
+     */
+    private Boolean atAll;
+
     public TextMessageEntity() {
         super(MessageNodeType.Text);
     }
@@ -45,5 +50,13 @@ public class TextMessageEntity extends AbstractMessageEntity {
 
     public void setAtUserList(List<String> atUserList) {
         this.atUserList = atUserList;
+    }
+
+    public Boolean getAtAll() {
+        return atAll;
+    }
+
+    public void setAtAll(Boolean atAll) {
+        this.atAll = atAll;
     }
 }

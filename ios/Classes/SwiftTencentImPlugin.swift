@@ -157,6 +157,18 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "setGroupApplicationRead":
             self.setGroupApplicationRead(call: call, result: result);
             break;
+        case "getConversationList":
+            self.getConversationList(call: call, result: result);
+            break;
+        case "getConversation":
+            self.getConversation(call: call, result: result);
+            break;
+        case "deleteConversation":
+            self.deleteConversation(call: call, result: result);
+            break;
+        case "setConversationDraft":
+            self.setConversationDraft(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -907,6 +919,47 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         V2TIMManager.sharedInstance().setGroupApplicationRead({
             result(nil);
         }, fail: TencentImUtils.returnErrorClosures(result: result))
+    }
+
+    /// 获得会话列表
+    public func getConversationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64,
+           let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
+            V2TIMManager.sharedInstance().getConversationList(nextSeq, count: count, succ: {
+                conversations, nextSeq, finished in
+                result(JsonUtil.toJson(CustomConversationResultEntity.init(conversations: conversations!, nextSeq: nextSeq!, finished: finished)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得会话
+    public func getConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String {
+            V2TIMManager.sharedInstance().getConversation(conversationID, succ: {
+                conversation in
+                result(JsonUtil.toJson(CustomConversationEntity.getDict(info: conversation!)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 删除会话
+    public func deleteConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String {
+            V2TIMManager.sharedInstance().deleteConversation(conversationID, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+
+    /// 设置会话草稿
+    public func setConversationDraft(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let draftText = ((call.arguments as! [String: Any])["draftText"]) as? String;
+        if let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String {
+            V2TIMManager.sharedInstance().setConversationDraft(conversationID, draftText: draftText, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
     }
 
 
