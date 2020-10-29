@@ -73,6 +73,22 @@
 | [getBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                           | 获得黑名单列表                                                  |
 | [setOfflinePushConfig](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                   | 设置离线推送配置                                                |
 | [setUnreadBadge](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                         | 设置未读桌标                                                    |
+| [getFriendList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 获取好友列表                                                    |
+| [getFriendsInfo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                         | 获取指定好友信息                                                |
+| [setFriendInfo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 设置好友资料                                                    |
+| [addFriend](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                              | 添加好友                                                       |
+| [deleteFromFriendList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                   | 删除好友                                                       |
+| [checkFriend](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                            | 检查指定用户的好友关系                                           |
+| [getFriendApplicationList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)               | 获取好友申请列表                                                |
+| [acceptFriendApplication](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                | 同意好友申请                                                    |
+| [refuseFriendApplication](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                | 拒绝好友申请                                                    |
+| [deleteFriendApplication](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                | 删除好友申请                                                    |
+| [setFriendApplicationRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)               | 设置好友申请为已读                                              |
+| [createFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                      | 新建好友分组                                                    |
+| [getFriendGroups](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                        | 获得分组信息                                                    |
+| [deleteFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                      | 删除好友分组                                                    |
+| [renameFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                      | 修改好友分组名称                                                |
+| [deleteFriendsFromFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)           | 从分组中删除好友                                                |
 
 
 > 发送消息

@@ -1,5 +1,9 @@
 import 'package:tencent_im_plugin/entity/add_friend_result_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_application_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_application_result_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_group_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_info_result_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/group_at_info_entity.dart';
@@ -48,6 +52,14 @@ class EntityFactory {
       return FriendOperationResultEntity.fromJson(json) as T;
     } else if (T.toString() == "FriendInfoEntity") {
       return FriendInfoEntity.fromJson(json) as T;
+    } else if (T.toString() == "FriendInfoResultEntity") {
+      return FriendInfoResultEntity.fromJson(json) as T;
+    } else if (T.toString() == "FriendApplicationResultEntity") {
+      return FriendApplicationResultEntity.fromJson(json) as T;
+    } else if (T.toString() == "FriendApplicationEntity") {
+      return FriendApplicationEntity.fromJson(json) as T;
+    } else if (T.toString() == "FriendGroupEntity") {
+      return FriendGroupEntity.fromJson(json) as T;
     } else {
       return null;
     }

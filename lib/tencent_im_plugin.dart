@@ -6,9 +6,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:tencent_im_plugin/entity/conversation_entity.dart';
 import 'package:tencent_im_plugin/entity/conversation_result_entity.dart';
+import 'package:tencent_im_plugin/entity/find_friend_application_entity.dart';
 import 'package:tencent_im_plugin/entity/find_group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/find_message_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_add_application_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_application_result_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_check_result_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_group_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_info_result_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_application_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_create_member_entity.dart';
@@ -20,6 +26,8 @@ import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.da
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
+import 'package:tencent_im_plugin/enums/friend_application_agree_type_enum.dart';
+import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_filter_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
@@ -740,6 +748,185 @@ class TencentImPlugin {
     return _channel.invokeMethod('setUnreadBadge', {
       "number": number,
     });
+  }
+
+  /// 获得好友列表
+  static Future<List<FriendInfoEntity>> getFriendList() async {
+    return ListUtil.generateOBJList<FriendInfoEntity>(await _channel.invokeMethod('getFriendList'));
+  }
+
+  /// 获得指定好友信息
+  /// [userIDList] 好友ID列表
+  static Future<List<FriendInfoResultEntity>> getFriendsInfo({
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<FriendInfoResultEntity>(await _channel.invokeMethod('getFriendsInfo', {
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 设置好友资料
+  /// [info] 好友资料
+  static setFriendInfo({
+    @required FriendInfoEntity info,
+  }) {
+    return _channel.invokeMethod('setFriendInfo', {
+      "info": jsonEncode(info),
+    });
+  }
+
+  /// 添加好友
+  /// [info] 申请对象
+  static Future<FriendOperationResultEntity> addFriend({
+    @required FriendAddApplicationEntity info,
+  }) async {
+    return FriendOperationResultEntity.fromJson(await _channel.invokeMethod('addFriend', {
+      "info": jsonEncode(info),
+    }));
+  }
+
+  /// 删除好友
+  /// [userIDList] 好友ID列表，ID 建议一次最大 100 个，因为数量过多可能会导致数据包太大被后台拒绝，后台限制数据包最大为 1M
+  /// [deleteType] 删除类型
+  static Future<List<FriendOperationResultEntity>> deleteFromFriendList({
+    @required List<String> userIDList,
+    @required FriendTypeEnum deleteType,
+  }) async {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(await _channel.invokeMethod('deleteFromFriendList', {
+      "userIDList": userIDList.join(","),
+      "deleteType": FriendTypeTool.toInt(deleteType),
+    }));
+  }
+
+  /// 删除好友
+  /// [userID] 用户ID
+  /// [checkType] 检测类型类型
+  static Future<FriendCheckResultEntity> checkFriend({
+    @required String userID,
+    @required FriendTypeEnum checkType,
+  }) async {
+    return FriendCheckResultEntity.fromJson(await _channel.invokeMethod('checkFriend', {
+      "userID": userID,
+      "checkType": FriendTypeTool.toInt(checkType),
+    }));
+  }
+
+  /// 获取好友申请列表
+  static Future<FriendApplicationResultEntity> getFriendApplicationList() async {
+    return FriendApplicationResultEntity.fromJson(await _channel.invokeMethod('getFriendApplicationList'));
+  }
+
+  /// 同意好友申请
+  /// [application] 查找好友申请对象实体
+  /// [responseType] 建立关系类型
+  static Future<FriendOperationResultEntity> acceptFriendApplication({
+    @required FindFriendApplicationEntity application,
+    @required FriendApplicationAgreeTypeEnum responseType,
+  }) async {
+    return FriendOperationResultEntity.fromJson(await _channel.invokeMethod('acceptFriendApplication', {
+      "application": jsonEncode(application),
+      "responseType": FriendApplicationAgreeTypeTool.toInt(responseType),
+    }));
+  }
+
+  /// 拒绝好友申请
+  /// [application] 查找好友申请对象实体
+  static Future<FriendOperationResultEntity> refuseFriendApplication({
+    @required FindFriendApplicationEntity application,
+  }) async {
+    return FriendOperationResultEntity.fromJson(await _channel.invokeMethod('refuseFriendApplication', {
+      "application": jsonEncode(application),
+    }));
+  }
+
+  /// 删除好友申请
+  /// [application] 查找好友申请对象实体
+  static deleteFriendApplication({
+    @required FindFriendApplicationEntity application,
+  }) {
+    return _channel.invokeMethod('deleteFriendApplication', {
+      "application": jsonEncode(application),
+    });
+  }
+
+  /// 设置好友申请为已读
+  static setFriendApplicationRead() {
+    return _channel.invokeMethod('setFriendApplicationRead');
+  }
+
+  /// 新建好友分组
+  /// [groupName] 组名
+  /// [userIDList] 用户列表
+  static Future<FriendOperationResultEntity> createFriendGroup({
+    @required String groupName,
+    @required List<String> userIDList,
+  }) async {
+    return FriendOperationResultEntity.fromJson(await _channel.invokeMethod('createFriendGroup', {
+      "groupName": groupName,
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 获取分组信息
+  /// [groupNameList] 分组名称
+  static Future<List<FriendGroupEntity>> getFriendGroups({
+    List<String> groupNameList,
+  }) async {
+    return ListUtil.generateOBJList<FriendGroupEntity>(await _channel.invokeMethod(
+      'getFriendGroups',
+      {
+        "groupNameList": groupNameList?.join(","),
+      }..removeWhere((key, value) => value == null),
+    ));
+  }
+
+  /// 删除好友分组
+  /// [groupNameList] 分组名称
+  static deleteFriendGroup({
+    @required List<String> groupNameList,
+  }) {
+    return _channel.invokeMethod('deleteFriendGroup', {
+      "groupNameList": groupNameList.join(","),
+    });
+  }
+
+  /// 修改分组名称
+  /// [oldName] 旧名称
+  /// [newName] 新名称
+  static renameFriendGroup({
+    @required String oldName,
+    @required String newName,
+  }) {
+    return _channel.invokeMethod('renameFriendGroup', {
+      "oldName": oldName,
+      "newName": newName,
+    });
+  }
+
+  /// 添加好友到分组
+  /// [groupName] 组名
+  /// [userIDList] 好友ID
+  static Future<List<FriendOperationResultEntity>> addFriendsToFriendGroup({
+    @required String groupName,
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(await _channel.invokeMethod('addFriendsToFriendGroup', {
+      "groupName": groupName,
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 从分组中删除好友
+  /// [groupName] 组名
+  /// [userIDList] 好友ID
+  static Future<List<FriendOperationResultEntity>> deleteFriendsFromFriendGroup({
+    @required String groupName,
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
+      "groupName": groupName,
+      "userIDList": userIDList.join(","),
+    }));
   }
 
   // /// 获得当前登录用户会话列表
