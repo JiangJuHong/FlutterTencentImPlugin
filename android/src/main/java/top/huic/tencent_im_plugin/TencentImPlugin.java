@@ -18,6 +18,7 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
@@ -873,6 +874,30 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getBlackList(MethodCall methodCall, final Result result) {
         V2TIMManager.getFriendshipManager().getBlackList(new ValueCallBack<List<V2TIMFriendInfo>>(result));
+    }
+
+    /**
+     * 腾讯云 设置离线推送Token
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setOfflinePushConfig(MethodCall methodCall, final Result result) {
+        String token = CommonUtil.getParam(methodCall, result, "token");
+        Long bussid = Long.parseLong(CommonUtil.getParam(methodCall, result, "bussid").toString());
+        V2TIMManager.getOfflinePushManager().setOfflinePushConfig(new V2TIMOfflinePushConfig(bussid, token), new VoidCallBack(result));
+    }
+
+
+    /**
+     * 腾讯云 设置未读桌标
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setUnreadBadge(MethodCall methodCall, final Result result) {
+        int number = CommonUtil.getParam(methodCall, result, "number");
+        V2TIMManager.getOfflinePushManager().doBackground(number, new VoidCallBack(result));
     }
 
 
@@ -2200,18 +2225,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
 //        }
 //        V2TIMManager.getInstance().setOfflinePushSettings(settings);
 //        result.success(null);
-//    }
-//
-//    /**
-//     * 腾讯云 设置离线推送Token
-//     *
-//     * @param methodCall 方法调用对象
-//     * @param result     返回结果对象
-//     */
-//    private void setOfflinePushToken(MethodCall methodCall, final Result result) {
-//        String token = CommonUtil.getParam(methodCall, result, "token");
-//        Long bussid = Long.parseLong(CommonUtil.getParam(methodCall, result, "bussid").toString());
-//        V2TIMManager.getInstance().setOfflinePushToken(new TIMOfflinePushToken(bussid, token), new VoidCallBack(result));
 //    }
 //
 }

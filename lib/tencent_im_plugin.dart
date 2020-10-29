@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -718,6 +719,29 @@ class TencentImPlugin {
     return ListUtil.generateOBJList<FriendInfoEntity>(await _channel.invokeMethod('getBlackList'));
   }
 
+  /// 设置离线推送Token,Android使用setOfflinePushConfig，IOS使用setAPNS
+  /// [token] Token
+  /// [bussid] 推送证书 ID，是在 IM 控制台上生成的
+  static setOfflinePushConfig({
+    String token,
+    int bussid,
+  }) {
+    return _channel.invokeMethod('setOfflinePushToken', {
+      "token": token,
+      "bussid": bussid,
+    });
+  }
+
+  /// 设置未读桌标，Android使用doBackground，IOS更改setAPNSListener值
+  /// [number] 桌标数量
+  static setUnreadBadge({
+    @required int number,
+  }) {
+    return _channel.invokeMethod('setUnreadBadge', {
+      "number": number,
+    });
+  }
+
   // /// 获得当前登录用户会话列表
   // /// @return 会话列表集合
   // static Future<List<SessionEntity>> getConversationList() async {
@@ -1356,16 +1380,6 @@ class TencentImPlugin {
   //   });
   // }
   //
-  // /// 设置离线推送Token
-  // static Future<void> setOfflinePushToken({
-  //   String token, // Token
-  //   int bussid, // 推送证书 ID，是在 IM 控制台上生成的
-  // }) async {
-  //   return await _channel.invokeMethod('setOfflinePushToken', {
-  //     "token": token,
-  //     "bussid": bussid,
-  //   });
-  // }
 
   /// 添加消息监听
   static void addListener(ListenerValue func) {

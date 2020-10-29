@@ -71,6 +71,8 @@
 | [addToBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                         | 添加用户到黑名单                                                |
 | [deleteFromBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                    | 从黑名单中删除                                                  |
 | [getBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                           | 获得黑名单列表                                                  |
+| [setOfflinePushConfig](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                   | 设置离线推送配置                                                |
+| [setUnreadBadge](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                         | 设置未读桌标                                                    |
 
 
 > 发送消息

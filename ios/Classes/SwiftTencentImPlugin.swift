@@ -184,6 +184,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getBlackList":
             self.getBlackList(call: call, result: result);
             break;
+        case "setOfflinePushConfig":
+            self.setOfflinePushConfig(call: call, result: result);
+            break;
+        case "setUnreadBadge":
+            self.setUnreadBadge(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -382,6 +388,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
 
             // 绑定信令监听
             V2TIMManager.sharedInstance().addSignalingListener(listener: CustomSignalingListener())
+
+            // 绑定APNS监听
+            V2TIMManager.sharedInstance().setAPNSListener(CustomAPNSListener())
 
             result(nil);
         }
@@ -942,7 +951,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
            let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
             V2TIMManager.sharedInstance().getConversationList(nextSeq, count: count, succ: {
                 conversations, nextSeq, finished in
-                result(JsonUtil.toJson(CustomConversationResultEntity.init(conversations: conversations!, nextSeq: nextSeq!, finished: finished)));
+                result(JsonUtil.toJson(CustomConversationResultEntity.init(conversations: conversations!, nextSeq: nextSeq, finished: finished)));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
@@ -1038,6 +1047,29 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }
             result(JsonUtil.toJson(data));
         }, fail: TencentImUtils.returnErrorClosures(result: result))
+    }
+
+    /// 设置离线推送
+    public func setOfflinePushConfig(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
+           let bussid = CommonUtils.getParam(call: call, result: result, param: "bussid") as? Int32 {
+
+            let config = V2TIMAPNSConfig();
+            config.token = CommonUtils.dataWithHexString(hex: token);
+            config.businessID = bussid;
+
+            V2TIMManager.sharedInstance().setAPNS(config, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置未读桌标
+    public func setUnreadBadge(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let number = CommonUtils.getParam(call: call, result: result, param: "number") as? UInt32 {
+            CustomAPNSListener.number = number;
+            result(nil);
+        }
     }
 
 
