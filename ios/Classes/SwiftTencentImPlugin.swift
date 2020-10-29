@@ -169,6 +169,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "setConversationDraft":
             self.setConversationDraft(call: call, result: result);
             break;
+        case "getUsersInfo":
+            self.getUsersInfo(call: call, result: result);
+            break;
+        case "setSelfInfo":
+            self.setSelfInfo(call: call, result: result);
+            break;
+        case "addToBlackList":
+            self.addToBlackList(call: call, result: result);
+            break;
+        case "deleteFromBlackList":
+            self.deleteFromBlackList(call: call, result: result);
+            break;
+        case "getBlackList":
+            self.getBlackList(call: call, result: result);
+            break;
 //        case "getConversationList":
 //            getConversationList(call: call, result: result)
 //            break
@@ -960,6 +975,69 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
+    }
+
+    /// 获得用户资料
+    public func getUsersInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
+            V2TIMManager.sharedInstance().getUsersInfo(userIDList.split(separator: ",") as [String], succ: {
+                infos in
+                var data: [[String: Any]] = [];
+                for item in infos! {
+                    data.append(CustomUserEntity.getDict(info: item));
+                }
+                result(JsonUtil.toJson(data));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 修改自己的资料
+    public func setSelfInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
+            V2TIMManager.sharedInstance().setSelfInfo(CustomUserEntity.init(json: info), succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 添加用户到黑名单
+    public func addToBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
+            V2TIMManager.sharedInstance().add(toBlackList: userIDList.split(separator: ",") as [String], succ: {
+                infos in
+                var data: [[String: Any]] = [];
+                for item in infos! {
+                    data.append(CustomFriendOperationResultEntity.getDict(info: item));
+                }
+                result(JsonUtil.toJson(data));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 从黑名单中删除
+    public func deleteFromBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
+            V2TIMManager.sharedInstance().delete(fromBlackList: userIDList.split(separator: ",") as [String], succ: {
+                infos in
+                var data: [[String: Any]] = [];
+                for item in infos! {
+                    data.append(CustomFriendOperationResultEntity.getDict(info: item));
+                }
+                result(JsonUtil.toJson(data));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得黑名单列表
+    public func getBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getBlackList({
+            infos in
+            var data: [[String: Any]] = [];
+            for item in infos! {
+                data.append(CustomFriendInfoEntity.getDict(info: item));
+            }
+            result(JsonUtil.toJson(data));
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
 
 

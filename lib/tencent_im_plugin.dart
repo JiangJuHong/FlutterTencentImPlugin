@@ -7,6 +7,8 @@ import 'package:tencent_im_plugin/entity/conversation_entity.dart';
 import 'package:tencent_im_plugin/entity/conversation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/find_group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/find_message_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_application_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_create_member_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
@@ -16,6 +18,7 @@ import 'package:tencent_im_plugin/entity/group_member_info_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
+import 'package:tencent_im_plugin/entity/user_entity.dart';
 import 'package:tencent_im_plugin/enums/group_member_filter_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
@@ -662,11 +665,57 @@ class TencentImPlugin {
     String draftText,
   }) {
     return _channel.invokeMethod(
-        'setConversationDraft',
-        {
-          "conversationID": conversationID,
-          "draftText": draftText,
-        }..removeWhere((key, value) => value == null));
+      'setConversationDraft',
+      {
+        "conversationID": conversationID,
+        "draftText": draftText,
+      }..removeWhere((key, value) => value == null),
+    );
+  }
+
+  /// 获取用户资料
+  /// [userList] 用户ID列表
+  static Future<List<UserEntity>> getUsersInfo({
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<UserEntity>(await _channel.invokeMethod('getUsersInfo', {
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 修改个人资料
+  /// [info] 资料对象
+  static setSelfInfo({
+    @required UserEntity info,
+  }) {
+    return _channel.invokeMethod('setSelfInfo', {
+      "info": jsonEncode(info),
+    });
+  }
+
+  /// 添加用户到黑名单
+  /// [userIDList] 用户ID列表
+  static Future<List<FriendOperationResultEntity>> addToBlackList({
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(await _channel.invokeMethod('addToBlackList', {
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 从黑名单中删除
+  /// [userIDList] 用户ID列表
+  static Future<List<FriendOperationResultEntity>> deleteFromBlackList({
+    @required List<String> userIDList,
+  }) async {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(await _channel.invokeMethod('deleteFromBlackList', {
+      "userIDList": userIDList.join(","),
+    }));
+  }
+
+  /// 获得黑名单列表
+  static Future<List<FriendInfoEntity>> getBlackList() async {
+    return ListUtil.generateOBJList<FriendInfoEntity>(await _channel.invokeMethod('getBlackList'));
   }
 
   // /// 获得当前登录用户会话列表

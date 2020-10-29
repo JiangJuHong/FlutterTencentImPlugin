@@ -66,6 +66,11 @@
 | [getConversation](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                        | 获得指定会话                                                    |
 | [deleteConversation](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                     | 删除会话                                                       |
 | [setConversationDraft](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                   | 设置会话草稿                                                    |
+| [getUsersInfo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                           | 获取用户资料                                                    |
+| [setSelfInfo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                            | 修改个人资料                                                    |
+| [addToBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                         | 添加用户到黑名单                                                |
+| [deleteFromBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                    | 从黑名单中删除                                                  |
+| [getBlackList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                           | 获得黑名单列表                                                  |
 
 
 > 发送消息

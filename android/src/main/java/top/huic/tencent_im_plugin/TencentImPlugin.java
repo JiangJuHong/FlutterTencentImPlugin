@@ -8,6 +8,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
@@ -20,6 +22,7 @@ import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -816,6 +819,60 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
         String draftText = methodCall.argument("draftText");
         V2TIMManager.getConversationManager().setConversationDraft(conversationID, draftText, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得用户信息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getUsersInfo(MethodCall methodCall, final Result result) {
+        String userIDList = CommonUtil.getParam(methodCall, result, "userIDList");
+        V2TIMManager.getInstance().getUsersInfo(Arrays.asList(userIDList.split(",")), new ValueCallBack<List<V2TIMUserFullInfo>>(result));
+    }
+
+    /**
+     * 修改个人资料
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setSelfInfo(MethodCall methodCall, final Result result) {
+        String info = CommonUtil.getParam(methodCall, result, "info");
+        V2TIMManager.getInstance().setSelfInfo(JSON.parseObject(info, V2TIMUserFullInfo.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 添加到黑名单
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void addToBlackList(MethodCall methodCall, final Result result) {
+        String userIDList = CommonUtil.getParam(methodCall, result, "userIDList");
+        V2TIMManager.getFriendshipManager().addToBlackList(Arrays.asList(userIDList.split(",")), new ValueCallBack<List<V2TIMFriendOperationResult>>(result));
+    }
+
+    /**
+     * 从黑名单中删除
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void deleteFromBlackList(MethodCall methodCall, final Result result) {
+        String userIDList = CommonUtil.getParam(methodCall, result, "userIDList");
+        V2TIMManager.getFriendshipManager().deleteFromBlackList(Arrays.asList(userIDList.split(",")), new ValueCallBack<List<V2TIMFriendOperationResult>>(result));
+    }
+
+    /**
+     * 获得黑名单列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getBlackList(MethodCall methodCall, final Result result) {
+        V2TIMManager.getFriendshipManager().getBlackList(new ValueCallBack<List<V2TIMFriendInfo>>(result));
     }
 
 
