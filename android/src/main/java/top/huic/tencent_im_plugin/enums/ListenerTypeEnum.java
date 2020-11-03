@@ -6,39 +6,14 @@ package top.huic.tencent_im_plugin.enums;
 public enum ListenerTypeEnum {
 
     /**
-     * 被踢下线
+     * 新消息通知
      */
-    ForceOffline,
+    NewMessage,
 
     /**
-     * 用户签名过期，需要重新登录
+     * C2C已读回执
      */
-    UserSigExpired,
-
-    /**
-     * 连接
-     */
-    Connected,
-
-    /**
-     * 断开连接
-     */
-    Disconnected,
-
-    /**
-     * Wifi需要认证【Android独享】
-     */
-    WifiNeedAuth,
-
-    /**
-     * 会话刷新
-     */
-    Refresh,
-
-    /**
-     * 会话刷新
-     */
-    RefreshConversation,
+    C2CReadReceipt,
 
     /**
      * 消息撤回
@@ -46,27 +21,197 @@ public enum ListenerTypeEnum {
     MessageRevoked,
 
     /**
-     * 新消息通知
+     * 同步服务开始
      */
-    NewMessages,
+    SyncServerStart,
 
     /**
-     * 群消息
+     * 同步服务完成
      */
-    GroupTips,
+    SyncServerFinish,
 
     /**
-     * 已读
+     * 同步服务失败
      */
-    RecvReceipt,
+    SyncServerFailed,
 
     /**
-     * 上传进度
+     * 新会话
      */
-    UploadProgress,
+    NewConversation,
 
     /**
-     * 下载进度
+     * 会话刷新
      */
-    DownloadProgress,
+    ConversationChanged,
+
+    /**
+     * 好友申请新增通知
+     */
+    FriendApplicationListAdded,
+
+    /**
+     * 好友申请删除通知
+     */
+    FriendApplicationListDeleted,
+
+    /**
+     * 好友申请已读通知
+     */
+    FriendApplicationListRead,
+
+    /**
+     * 好友新增通知
+     */
+    FriendListAdded,
+
+    /**
+     * 好友删除通知
+     */
+    FriendListDeleted,
+
+    /**
+     * 黑名单新增通知
+     */
+    BlackListAdd,
+
+    /**
+     * 黑名单删除通知
+     */
+    BlackListDeleted,
+
+    /**
+     * 好友资料更新通知
+     */
+    FriendInfoChanged,
+
+    /**
+     * 有用户加入群
+     */
+    MemberEnter,
+
+    /**
+     * 有用户离开群
+     */
+    MemberLeave,
+
+    /**
+     * 有用户被拉入群
+     */
+    MemberInvited,
+
+    /**
+     * 有用户被踢出群
+     */
+    MemberKicked,
+
+    /**
+     * 群成员信息被修改
+     */
+    MemberInfoChanged,
+
+    /**
+     * 创建群
+     */
+    GroupCreated,
+
+    /**
+     * 群被解散
+     */
+    GroupDismissed,
+
+    /**
+     * 群被回收
+     */
+    GroupRecycled,
+
+    /**
+     * 群信息被修改
+     */
+    GroupInfoChanged,
+
+    /**
+     * 有新的加群申请
+     */
+    ReceiveJoinApplication,
+
+    /**
+     * 加群信息已被管理员处理
+     */
+    ApplicationProcessed,
+
+    /**
+     * 指定管理员身份
+     */
+    GrantAdministrator,
+
+    /**
+     * 取消管理员身份
+     */
+    RevokeAdministrator,
+
+    /**
+     * 主动退出群组
+     */
+    QuitFromGroup,
+
+    /**
+     * 收到 RESTAPI 下发的自定义系统消息
+     */
+    ReceiveRESTCustomData,
+
+    /**
+     * 收到群属性更新的回调
+     */
+    GroupAttributeChanged,
+
+    /**
+     * 正在连接到腾讯云服务器
+     */
+    Connecting,
+
+    /**
+     * 网络连接失败
+     */
+    ConnectFailed,
+
+    /**
+     * 踢下线
+     */
+    KickedOffline,
+
+    /**
+     * 当前用户的资料发生了更新
+     */
+    SelfInfoUpdated,
+
+    /**
+     * 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
+     */
+    UserSigExpired,
+
+    /**
+     * 收到信令邀请
+     */
+    ReceiveNewInvitation,
+
+    /**
+     * 信令被邀请者接受邀请
+     */
+    InviteeAccepted,
+
+    /**
+     * 信令被邀请者拒绝邀请
+     */
+    InviteeRejected,
+
+    /**
+     * 信令邀请被取消
+     */
+    InvitationCancelled,
+
+    /**
+     * 信令邀请超时
+     */
+    InvitationTimeout,
 }
