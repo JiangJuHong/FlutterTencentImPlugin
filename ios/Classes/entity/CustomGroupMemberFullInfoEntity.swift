@@ -23,11 +23,25 @@ class CustomGroupMemberFullInfoEntity: V2TIMGroupMemberFullInfo {
     public static func getDict(info: V2TIMGroupMemberFullInfo) -> [String: Any] {
         var result: [String: Any] = [:];
         result["userID"] = info.userID;
+        result["nickName"] = info.nickName;
+        result["friendRemark"] = info.friendRemark;
+        result["faceUrl"] = info.faceURL;
         result["role"] = info.role.rawValue;
         result["muteUntil"] = info.muteUntil;
         result["joinTime"] = info.joinTime;
         result["customInfo"] = info.customInfo;
         result["nameCard"] = info.nameCard;
+        return result;
+    }
+
+    /// 根据对象获得字典对象
+    public static func getDict(simpleInfo: V2TIMGroupMemberInfo) -> [String: Any] {
+        var result: [String: Any] = [:];
+        result["userID"] = simpleInfo.userID;
+        result["nickName"] = simpleInfo.nickName;
+        result["friendRemark"] = simpleInfo.friendRemark;
+        result["faceUrl"] = simpleInfo.faceURL;
+        result["nameCard"] = simpleInfo.nameCard;
         return result;
     }
 }

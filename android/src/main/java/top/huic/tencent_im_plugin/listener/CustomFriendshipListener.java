@@ -6,6 +6,9 @@ import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 
 import java.util.List;
 
+import top.huic.tencent_im_plugin.TencentImPlugin;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+
 /**
  * 自定义关系链监听器
  */
@@ -19,6 +22,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
         super.onFriendApplicationListAdded(applicationList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendApplicationListAdded, applicationList);
     }
 
     /**
@@ -32,6 +36,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendApplicationListDeleted(List<String> userIDList) {
         super.onFriendApplicationListDeleted(userIDList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendApplicationListDeleted, userIDList);
     }
 
     /**
@@ -40,6 +45,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendApplicationListRead() {
         super.onFriendApplicationListRead();
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendApplicationListRead, null);
     }
 
     /**
@@ -48,6 +54,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendListAdded(List<V2TIMFriendInfo> users) {
         super.onFriendListAdded(users);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendListAdded, users);
     }
 
     /**
@@ -59,6 +66,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendListDeleted(List<String> userList) {
         super.onFriendListDeleted(userList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendListDeleted, userList);
     }
 
     /**
@@ -67,6 +75,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onBlackListAdd(List<V2TIMFriendInfo> infoList) {
         super.onBlackListAdd(infoList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.BlackListAdd, infoList);
     }
 
     /**
@@ -75,6 +84,7 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onBlackListDeleted(List<String> userList) {
         super.onBlackListDeleted(userList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.BlackListDeleted, userList);
     }
 
     /**
@@ -83,5 +93,6 @@ public class CustomFriendshipListener extends V2TIMFriendshipListener {
     @Override
     public void onFriendInfoChanged(List<V2TIMFriendInfo> infoList) {
         super.onFriendInfoChanged(infoList);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.FriendInfoChanged, infoList);
     }
 }

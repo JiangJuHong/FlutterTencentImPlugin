@@ -5,6 +5,15 @@ class GroupMemberEntity {
   /// 用户ID
   String userID;
 
+  /// 用户昵称
+  String nickName;
+
+  /// 好友备注
+  String friendRemark;
+
+  /// 头像URL
+  String faceUrl;
+
   /// 角色
   GroupMemberRoleEnum role;
 
@@ -28,6 +37,9 @@ class GroupMemberEntity {
 
   GroupMemberEntity.fromJson(Map<String, dynamic> json) {
     userID = json['userID'];
+    nickName = json['nickName'];
+    friendRemark = json['friendRemark'];
+    faceUrl = json['faceUrl'];
     role = GroupMemberRoleTool.getByInt(json['role']);
     muteUntil = json['muteUntil'];
     joinTime = json['joinTime'];
