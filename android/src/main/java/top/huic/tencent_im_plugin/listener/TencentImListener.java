@@ -24,7 +24,12 @@ public class TencentImListener {
      */
     private static MethodChannel channel;
 
-    public TencentImListener(MethodChannel channel) {
+    /**
+     * 初始化监听器管道
+     *
+     * @param channel 通信管道
+     */
+    public static void init(MethodChannel channel) {
         TencentImListener.channel = channel;
     }
 
