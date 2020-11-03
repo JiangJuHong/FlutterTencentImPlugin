@@ -46,6 +46,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.FindMessageEntity;
 import top.huic.tencent_im_plugin.entity.MessageEntity;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.CustomAdvancedMsgListener;
 import top.huic.tencent_im_plugin.listener.CustomConversationListener;
@@ -53,7 +54,6 @@ import top.huic.tencent_im_plugin.listener.CustomFriendshipListener;
 import top.huic.tencent_im_plugin.listener.CustomGroupListener;
 import top.huic.tencent_im_plugin.listener.CustomSDKListener;
 import top.huic.tencent_im_plugin.listener.CustomSignalingListener;
-import top.huic.tencent_im_plugin.listener.TencentImListener;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
 import top.huic.tencent_im_plugin.util.CommonUtil;
@@ -64,12 +64,6 @@ import top.huic.tencent_im_plugin.util.TencentImUtils;
  * TencentImPlugin
  */
 public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
-
-    /**
-     * 日志签名
-     */
-    public static String TAG = "TencentImPlugin";
-
     /**
      * 全局上下文
      */
@@ -93,7 +87,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     public void onAttachedToEngine(FlutterPluginBinding flutterPluginBinding) {
         final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "tencent_im_plugin");
         channel.setMethodCallHandler(new TencentImPlugin(flutterPluginBinding.getApplicationContext(), channel));
-        TencentImListener.init(channel);
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -108,7 +101,6 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "tencent_im_plugin");
         channel.setMethodCallHandler(new TencentImPlugin(registrar.context(), channel));
-        TencentImListener.init(channel);
     }
 
     @Override
@@ -1097,5 +1089,18 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String groupName = CommonUtil.getParam(methodCall, result, "groupName");
         String userIDList = CommonUtil.getParam(methodCall, result, "userIDList");
         V2TIMManager.getFriendshipManager().deleteFriendsFromFriendGroup(groupName, Arrays.asList(userIDList.split(",")), new ValueCallBack<List<V2TIMFriendOperationResult>>(result));
+    }
+
+    /**
+     * 调用监听器
+     *
+     * @param type   类型
+     * @param params 参数
+     */
+    public static void invokeListener(ListenerTypeEnum type, Object params) {
+        Map<String, Object> resultParams = new HashMap<>(2, 1);
+        resultParams.put("type", type);
+        resultParams.put("params", params == null ? null : JsonUtil.toJSONString(params));
+        channel.invokeMethod("onListener", JsonUtil.toJSONString(resultParams));
     }
 }

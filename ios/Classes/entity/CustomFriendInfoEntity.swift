@@ -8,6 +8,17 @@ import ImSDK
 /// 自定义好友信息实体
 class CustomFriendInfoEntity: V2TIMFriendInfo {
 
+    convenience init(json: String) {
+        self.init(dict: JsonUtil.getDictionaryFromJSONString(jsonString: json))
+    }
+
+    init(dict: [String: Any]) {
+        super.init();
+        self.userID = (dict["userID"] as? String);
+        self.friendRemark = (dict["friendRemark"] as? String);
+        self.friendCustomInfo = (dict["friendCustomInfo"] as? [String: Data]);
+    }
+
     /// 根据对象获得字典对象
     public static func getDict(info: V2TIMFriendInfo) -> [String: Any] {
         var result: [String: Any] = [:];

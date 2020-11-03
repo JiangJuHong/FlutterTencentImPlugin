@@ -8,9 +8,6 @@ class FriendAddApplicationEntity {
   /// 好友备注
   String friendRemark;
 
-  /// 好友分组
-  String friendGroup;
-
   /// 申请描述
   String addWording;
 
@@ -23,7 +20,6 @@ class FriendAddApplicationEntity {
   FriendAddApplicationEntity({
     this.userID,
     this.friendRemark,
-    this.friendGroup,
     this.addWording,
     this.addSource,
     this.addType,
@@ -33,7 +29,6 @@ class FriendAddApplicationEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.userID != null) data['userID'] = this.userID;
     if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
-    if (this.friendGroup != null) data['friendGroup'] = this.friendGroup;
     if (this.addWording != null) data['addWording'] = this.addWording;
     if (this.addSource != null) data['addSource'] = this.addSource;
     if (this.addType != null) data['addType'] = FriendTypeTool.toInt(this.addType);

@@ -7,11 +7,9 @@ import com.tencent.imsdk.TIMGroupTipsType;
 import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**

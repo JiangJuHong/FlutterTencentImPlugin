@@ -37,6 +37,17 @@ public class TencentImUtils {
         return V2TIMGroupApplication();
     }
 
+    /// 获得好友申请对象
+    public static func getFriendApplicationByFindGroupApplicationEntity(json: String) -> V2TIMFriendApplication {
+        return getFriendApplicationByFindGroupApplicationEntity(dict: JsonUtil.getDictionaryFromJSONString(jsonString: json));
+    }
+
+    /// 获得好友申请对象
+    public static func getFriendApplicationByFindGroupApplicationEntity(dict: [String: Any]) -> V2TIMFriendApplication {
+        let findFriendApplication = FindFriendApplicationEntity.init(dict: dict);
+        return V2TIMFriendApplication();
+    }
+
 
 //    /**
 //     * 获得会话信息
