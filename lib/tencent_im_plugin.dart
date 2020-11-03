@@ -31,9 +31,10 @@ import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/login_status_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
+import 'package:tencent_im_plugin/enums/tencent_im_listener_type_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
+import 'package:tencent_im_plugin/listener/tencent_im_plugin_listener.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
-import 'package:tencent_im_plugin/utils/enum_util.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
 
@@ -41,7 +42,7 @@ class TencentImPlugin {
   static const MethodChannel _channel = const MethodChannel('tencent_im_plugin');
 
   /// 监听器对象
-  static TencentImPluginListener listener;
+  static TencentImPluginListener listener = TencentImPluginListener(_channel);
 
   /// 初始化SDK
   /// [appid] 应用ID
@@ -928,201 +929,8 @@ class TencentImPlugin {
   }
 
   /// 添加消息监听
-  static void addListener(ListenerValue func) {
-    if (listener == null) {
-      listener = TencentImPluginListener(_channel);
-    }
-    listener.addListener(func);
-  }
+  static addListener(TencentImListenerValue func) => listener.addListener(func);
 
   /// 移除消息监听
-  static void removeListener(ListenerValue func) {
-    if (listener == null) {
-      listener = TencentImPluginListener(_channel);
-    }
-    listener.removeListener(func);
-  }
-}
-
-/// 监听器对象
-class TencentImPluginListener {
-  /// 监听器列表
-  static Set<ListenerValue> listeners = Set();
-
-  TencentImPluginListener(MethodChannel channel) {
-    // 绑定监听器
-    channel.setMethodCallHandler((methodCall) async {
-      // 解析参数
-      Map<String, dynamic> arguments = jsonDecode(methodCall.arguments);
-
-      switch (methodCall.method) {
-        case 'onListener':
-          // 获得原始类型和参数
-          ListenerTypeEnum type = EnumUtil.nameOf(ListenerTypeEnum.values, arguments['type']);
-          var paramsStr = arguments['params'];
-
-          // 封装回调类型和参数
-          var params;
-
-          // 没有找到类型就返回
-          if (type == null) {
-            throw MissingPluginException();
-          }
-
-          // 回调触发
-          for (var item in listeners) {
-            item(type, params);
-          }
-
-          break;
-        default:
-          throw MissingPluginException();
-      }
-    });
-  }
-
-  /// 添加消息监听
-  void addListener(ListenerValue func) {
-    listeners.add(func);
-  }
-
-  /// 移除消息监听
-  void removeListener(ListenerValue func) {
-    listeners.remove(func);
-  }
-}
-
-/// 监听器值模型
-typedef ListenerValue<P> = void Function(ListenerTypeEnum type, P params);
-
-/// 监听器类型枚举
-enum ListenerTypeEnum {
-  /// 新消息通知
-  NewMessage,
-
-  /// C2C已读回执
-  C2CReadReceipt,
-
-  /// 消息撤回
-  MessageRevoked,
-
-  /// 同步服务开始
-  SyncServerStart,
-
-  /// 同步服务完成
-  SyncServerFinish,
-
-  /// 同步服务失败
-  SyncServerFailed,
-
-  /// 新会话
-  NewConversation,
-
-  /// 会话刷新
-  ConversationChanged,
-
-  /// 好友申请新增通知
-  FriendApplicationListAdded,
-
-  /// 好友申请删除通知
-  FriendApplicationListDeleted,
-
-  /// 好友申请已读通知
-  FriendApplicationListRead,
-
-  /// 好友新增通知
-  FriendListAdded,
-
-  /// 好友删除通知
-  FriendListDeleted,
-
-  /// 黑名单新增通知
-  BlackListAdd,
-
-  /// 黑名单删除通知
-  BlackListDeleted,
-
-  /// 好友资料更新通知
-  FriendInfoChanged,
-
-  /// 有用户加入群
-  MemberEnter,
-
-  /// 有用户离开群
-  MemberLeave,
-
-  /// 有用户被拉入群
-  MemberInvited,
-
-  /// 有用户被踢出群
-  MemberKicked,
-
-  /// 群成员信息被修改
-  MemberInfoChanged,
-
-  /// 创建群
-  GroupCreated,
-
-  /// 群被解散
-  GroupDismissed,
-
-  /// 群被回收
-  GroupRecycled,
-
-  /// 群信息被修改
-  GroupInfoChanged,
-
-  /// 有新的加群申请
-  ReceiveJoinApplication,
-
-  /// 加群信息已被管理员处理
-  ApplicationProcessed,
-
-  /// 指定管理员身份
-  GrantAdministrator,
-
-  /// 取消管理员身份
-  RevokeAdministrator,
-
-  /// 主动退出群组
-  QuitFromGroup,
-
-  /// 收到 RESTAPI 下发的自定义系统消息
-  ReceiveRESTCustomData,
-
-  /// 收到群属性更新的回调
-  GroupAttributeChanged,
-
-  /// 正在连接到腾讯云服务器
-  Connecting,
-
-  /// 网络连接成功
-  ConnectSuccess,
-
-  /// 网络连接失败
-  ConnectFailed,
-
-  /// 踢下线
-  KickedOffline,
-
-  /// 当前用户的资料发生了更新
-  SelfInfoUpdated,
-
-  /// 用户登录的 userSig 过期（用户需要重新获取 userSig 后登录）
-  UserSigExpired,
-
-  /// 收到信令邀请
-  ReceiveNewInvitation,
-
-  /// 信令被邀请者接受邀请
-  InviteeAccepted,
-
-  /// 信令被邀请者拒绝邀请
-  InviteeRejected,
-
-  /// 信令邀请被取消
-  InvitationCancelled,
-
-  /// 信令邀请超时
-  InvitationTimeout,
+  static removeListener(TencentImListenerValue func) => listener.removeListener(func);
 }
