@@ -1150,7 +1150,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
      * @param type   类型
      * @param params 参数
      */
-    private func invokeListener(type: ListenerType, params: Any?) {
+    public static func invokeListener(type: ListenerType, params: Any?) {
         var resultParams: [String: Any] = [:];
         resultParams["type"] = type;
         if let p = params {

@@ -1096,6 +1096,9 @@ enum ListenerTypeEnum {
   /// 正在连接到腾讯云服务器
   Connecting,
 
+  /// 网络连接成功
+  ConnectSuccess,
+
   /// 网络连接失败
   ConnectFailed,
 

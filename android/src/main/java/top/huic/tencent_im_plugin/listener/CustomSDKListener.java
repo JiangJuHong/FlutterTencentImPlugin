@@ -3,6 +3,11 @@ package top.huic.tencent_im_plugin.listener;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 
+import java.util.HashMap;
+
+import top.huic.tencent_im_plugin.TencentImPlugin;
+import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
+
 /**
  * SDK基本监听器
  */
@@ -13,6 +18,7 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onConnecting() {
         super.onConnecting();
+        TencentImPlugin.invokeListener(ListenerTypeEnum.Connecting, null);
     }
 
     /**
@@ -21,14 +27,21 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onConnectSuccess() {
         super.onConnectSuccess();
+        TencentImPlugin.invokeListener(ListenerTypeEnum.ConnectSuccess, null);
     }
 
     /**
      * 网络连接失败
      */
     @Override
-    public void onConnectFailed(int code, String error) {
+    public void onConnectFailed(final int code, final String error) {
         super.onConnectFailed(code, error);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.ConnectSuccess, new HashMap<String, Object>() {
+            {
+                put("code", code);
+                put("error", error);
+            }
+        });
     }
 
     /**
@@ -37,6 +50,7 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onKickedOffline() {
         super.onKickedOffline();
+        TencentImPlugin.invokeListener(ListenerTypeEnum.KickedOffline, null);
     }
 
     /**
@@ -45,6 +59,7 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
         super.onSelfInfoUpdated(info);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.UserSigExpired, info);
     }
 
     /**
@@ -53,5 +68,6 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onUserSigExpired() {
         super.onUserSigExpired();
+        TencentImPlugin.invokeListener(ListenerTypeEnum.UserSigExpired, null);
     }
 }

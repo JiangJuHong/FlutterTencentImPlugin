@@ -171,6 +171,11 @@ public enum ListenerTypeEnum {
     Connecting,
 
     /**
+     * 网络连接成功
+     */
+    ConnectSuccess,
+
+    /**
      * 网络连接失败
      */
     ConnectFailed,
