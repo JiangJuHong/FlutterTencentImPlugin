@@ -3,9 +3,6 @@ package top.huic.tencent_im_plugin_example;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
-
-import com.xiaomi.mipush.sdk.MiPushClient;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;

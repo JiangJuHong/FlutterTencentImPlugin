@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
