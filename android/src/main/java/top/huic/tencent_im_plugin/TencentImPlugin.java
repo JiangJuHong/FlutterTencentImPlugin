@@ -9,12 +9,14 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMFriendAddApplication;
+import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendCheckResult;
 import com.tencent.imsdk.v2.V2TIMFriendGroup;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
+import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
@@ -298,7 +300,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getSignalingInfo(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        result.success(JsonUtil.toJSONString(V2TIMManager.getSignalingManager().getSignalingInfo(TencentImUtils.getMessageByFindMessageEntity(message))));
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                result.success(JsonUtil.toJSONString(V2TIMManager.getSignalingManager().getSignalingInfo(message)));
+            }
+        });
     }
 
     /**
@@ -367,7 +374,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void revokeMessage(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        V2TIMManager.getMessageManager().revokeMessage(TencentImUtils.getMessageByFindMessageEntity(message), new VoidCallBack(result));
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                V2TIMManager.getMessageManager().revokeMessage(message, new VoidCallBack(result));
+            }
+        });
     }
 
     /**
@@ -377,11 +389,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getC2CHistoryMessageList(MethodCall methodCall, final Result result) {
-        String userID = CommonUtil.getParam(methodCall, result, "userID");
-        int count = CommonUtil.getParam(methodCall, result, "count");
-        String lastMsgStr = methodCall.argument("lastMsg");
+        final String userID = CommonUtil.getParam(methodCall, result, "userID");
+        final int count = CommonUtil.getParam(methodCall, result, "count");
+        final String lastMsgStr = methodCall.argument("lastMsg");
 
-        V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, lastMsgStr == null ? null : TencentImUtils.getMessageByFindMessageEntity(lastMsgStr), new ValueCallBack<List<V2TIMMessage>>(result) {
+        // 返回回调对象
+        final ValueCallBack<List<V2TIMMessage>> resultCallBack = new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
@@ -390,7 +403,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
                 result.success(JsonUtil.toJSONString(resultData));
             }
-        });
+        };
+
+
+        // 根据是否传递最后一条消息进行特殊处理
+        if (lastMsgStr == null) {
+            V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, null, resultCallBack);
+        } else {
+            TencentImUtils.getMessageByFindMessageEntity(lastMsgStr, new ValueCallBack<V2TIMMessage>(result) {
+                @Override
+                public void onSuccess(V2TIMMessage message) {
+                    V2TIMManager.getMessageManager().getC2CHistoryMessageList(userID, count, message, resultCallBack);
+                }
+            });
+        }
     }
 
     /**
@@ -400,11 +426,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getGroupHistoryMessageList(MethodCall methodCall, final Result result) {
-        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
-        int count = CommonUtil.getParam(methodCall, result, "count");
+        final String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        final int count = CommonUtil.getParam(methodCall, result, "count");
         String lastMsgStr = methodCall.argument("lastMsg");
 
-        V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, lastMsgStr == null ? null : TencentImUtils.getMessageByFindMessageEntity(lastMsgStr), new ValueCallBack<List<V2TIMMessage>>(result) {
+        // 返回回调对象
+        final ValueCallBack<List<V2TIMMessage>> resultCallBack = new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
@@ -413,7 +440,20 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 }
                 result.success(JsonUtil.toJSONString(resultData));
             }
-        });
+        };
+
+
+        // 根据是否传递最后一条消息进行特殊处理
+        if (lastMsgStr == null) {
+            V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, null, resultCallBack);
+        } else {
+            TencentImUtils.getMessageByFindMessageEntity(lastMsgStr, new ValueCallBack<V2TIMMessage>(result) {
+                @Override
+                public void onSuccess(V2TIMMessage message) {
+                    V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, message, resultCallBack);
+                }
+            });
+        }
     }
 
     /**
@@ -446,7 +486,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteMessageFromLocalStorage(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
-        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(TencentImUtils.getMessageByFindMessageEntity(message), new VoidCallBack(result));
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(message, new VoidCallBack(result));
+            }
+        });
     }
 
     /**
@@ -457,13 +502,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteMessages(MethodCall methodCall, final Result result) {
         String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(JSON.parseArray(message, FindMessageEntity.class), new ValueCallBack<List<V2TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMMessage> ms) {
+                V2TIMManager.getMessageManager().deleteMessages(ms, new VoidCallBack(result));
+            }
+        });
 
-        List<FindMessageEntity> queryMessage = JSON.parseArray(message, FindMessageEntity.class);
-        List<V2TIMMessage> messages = new ArrayList<>(queryMessage.size());
-        for (FindMessageEntity findMessageEntity : queryMessage) {
-            messages.add(TencentImUtils.getMessageByFindMessageEntity(findMessageEntity));
-        }
-        V2TIMManager.getMessageManager().deleteMessages(messages, new VoidCallBack(result));
+
     }
 
     /**
@@ -749,8 +795,13 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void acceptGroupApplication(MethodCall methodCall, final Result result) {
         String application = CommonUtil.getParam(methodCall, result, "application");
-        String reason = CommonUtil.getParam(methodCall, result, "reason");
-        V2TIMManager.getGroupManager().acceptGroupApplication(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application), reason, new VoidCallBack(result));
+        final String reason = CommonUtil.getParam(methodCall, result, "reason");
+        TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application, new ValueCallBack<V2TIMGroupApplication>(result) {
+            @Override
+            public void onSuccess(V2TIMGroupApplication v2TIMGroupApplication) {
+                V2TIMManager.getGroupManager().acceptGroupApplication(v2TIMGroupApplication, reason, new VoidCallBack(result));
+            }
+        });
     }
 
 
@@ -761,9 +812,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void refuseGroupApplication(MethodCall methodCall, final Result result) {
-        String application = CommonUtil.getParam(methodCall, result, "application");
-        String reason = CommonUtil.getParam(methodCall, result, "reason");
-        V2TIMManager.getGroupManager().refuseGroupApplication(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application), reason, new VoidCallBack(result));
+        final String application = CommonUtil.getParam(methodCall, result, "application");
+        final String reason = CommonUtil.getParam(methodCall, result, "reason");
+        TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(application, new ValueCallBack<V2TIMGroupApplication>(result) {
+            @Override
+            public void onSuccess(V2TIMGroupApplication v2TIMGroupApplication) {
+                V2TIMManager.getGroupManager().refuseGroupApplication(v2TIMGroupApplication, reason, new VoidCallBack(result));
+            }
+        });
     }
 
     /**
@@ -984,9 +1040,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void acceptFriendApplication(MethodCall methodCall, final Result result) {
-        String application = CommonUtil.getParam(methodCall, result, "application");
-        int responseType = CommonUtil.getParam(methodCall, result, "responseType");
-        V2TIMManager.getFriendshipManager().acceptFriendApplication(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application), responseType, new ValueCallBack<V2TIMFriendOperationResult>(result));
+        final String application = CommonUtil.getParam(methodCall, result, "application");
+        final int responseType = CommonUtil.getParam(methodCall, result, "responseType");
+        TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application, new ValueCallBack<V2TIMFriendApplication>(result) {
+            @Override
+            public void onSuccess(V2TIMFriendApplication v2TIMFriendApplication) {
+                V2TIMManager.getFriendshipManager().acceptFriendApplication(v2TIMFriendApplication, responseType, new ValueCallBack<V2TIMFriendOperationResult>(result));
+            }
+        });
     }
 
     /**
@@ -997,7 +1058,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void refuseFriendApplication(MethodCall methodCall, final Result result) {
         String application = CommonUtil.getParam(methodCall, result, "application");
-        V2TIMManager.getFriendshipManager().refuseFriendApplication(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application), new ValueCallBack<V2TIMFriendOperationResult>(result));
+        TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application, new ValueCallBack<V2TIMFriendApplication>(result) {
+            @Override
+            public void onSuccess(V2TIMFriendApplication v2TIMFriendApplication) {
+                V2TIMManager.getFriendshipManager().refuseFriendApplication(v2TIMFriendApplication, new ValueCallBack<V2TIMFriendOperationResult>(result));
+            }
+        });
     }
 
     /**
@@ -1008,7 +1074,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void deleteFriendApplication(MethodCall methodCall, final Result result) {
         String application = CommonUtil.getParam(methodCall, result, "application");
-        V2TIMManager.getFriendshipManager().deleteFriendApplication(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application), new VoidCallBack(result));
+        TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(application, new ValueCallBack<V2TIMFriendApplication>(result) {
+            @Override
+            public void onSuccess(V2TIMFriendApplication v2TIMFriendApplication) {
+                V2TIMManager.getFriendshipManager().deleteFriendApplication(v2TIMFriendApplication, new VoidCallBack(result));
+            }
+        });
     }
 
     /**

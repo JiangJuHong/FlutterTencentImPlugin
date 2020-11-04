@@ -380,7 +380,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得信令信息
     public func getSignalingInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(TencentImUtils.getMessageByFindMessageEntity(json: messageStr))));
+            TencentImUtils.getMessageByFindMessageEntity(json: messageStr, succ: {
+                (messages: V2TIMMessage?) in
+                result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(messages!)));
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 
@@ -454,9 +457,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 撤回消息
     public func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            V2TIMManager.sharedInstance().revokeMessage(TencentImUtils.getMessageByFindMessageEntity(json: messageStr), succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            TencentImUtils.getMessageByFindMessageEntity(json: messageStr, succ: {
+                (messages: V2TIMMessage?) in
+                V2TIMManager.sharedInstance().revokeMessage(messages!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 
@@ -465,14 +471,26 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
         if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
            let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-            V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: lastMsg == nil ? nil : TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!), succ: {
-                messages in
+
+            // 返回结果对象
+            let resultCallBack = {
+                (messages: [V2TIMMessage]?) in
                 var resultData: [MessageEntity] = [];
                 for item in messages! {
                     resultData.append(MessageEntity.init(message: item));
                 }
                 result(JsonUtil.toJson(resultData));
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            };
+
+            // 根据消息对象是否为null进行不同的操作
+            if lastMsg == nil {
+                V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: nil, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+            } else {
+                TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
+                    (messages: V2TIMMessage?) in
+                    V2TIMManager.sharedInstance().getC2CHistoryMessageList(userID, count: count, lastMsg: messages!, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
         }
     }
 
@@ -481,14 +499,25 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
-            V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: lastMsg == nil ? nil : TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!), succ: {
-                messages in
+            // 返回结果对象
+            let resultCallBack = {
+                (messages: [V2TIMMessage]?) in
                 var resultData: [MessageEntity] = [];
                 for item in messages! {
                     resultData.append(MessageEntity.init(message: item));
                 }
                 result(JsonUtil.toJson(resultData));
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            };
+
+            // 根据消息对象是否为null进行不同的操作
+            if lastMsg == nil {
+                V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: nil, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+            } else {
+                TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
+                    (messages: V2TIMMessage?) in
+                    V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: messages!, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
         }
     }
 
@@ -513,9 +542,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 删除本地消息
     public func deleteMessageFromLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
-            V2TIMManager.sharedInstance().deleteMessage(fromLocalStorage: TencentImUtils.getMessageByFindMessageEntity(json: message), succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (messages: V2TIMMessage?) in
+                V2TIMManager.sharedInstance().deleteMessage(fromLocalStorage: messages!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 
@@ -523,13 +555,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func deleteMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
             let arr = JsonUtil.getArrayFromJSONString(jsonString: message);
-            var ms: [V2TIMMessage] = [];
-            for index in 0..<arr.count {
-                ms.append(TencentImUtils.getMessageByFindMessageEntity(dict: arr[index] as! [String: Any]));
-            }
-
-            V2TIMManager.sharedInstance().delete(ms, succ: {
-                result(nil);
+            TencentImUtils.getMessageByFindMessageEntity(dict: arr as! [[String: Any]], succ: {
+                (messages: [V2TIMMessage]?) in
+                V2TIMManager.sharedInstance().delete(messages!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
@@ -804,9 +834,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func acceptGroupApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String,
            let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
-            V2TIMManager.sharedInstance().accept(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application), reason: reason, succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application, succ: {
+                (application: V2TIMGroupApplication?) -> () in
+                V2TIMManager.sharedInstance().accept(application!, reason: reason, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 
@@ -814,9 +847,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func refuseGroupApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String,
            let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
-            V2TIMManager.sharedInstance().refuse(TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application), reason: reason, succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            TencentImUtils.getGroupApplicationByFindGroupApplicationEntity(json: application, succ: {
+                (application: V2TIMGroupApplication?) -> () in
+                V2TIMManager.sharedInstance().refuse(application!, reason: reason, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result))
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
 
@@ -1037,9 +1073,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func acceptFriendApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String,
            let responseType = CommonUtils.getParam(call: call, result: result, param: "responseType") as? Int {
-            V2TIMManager.sharedInstance().accept(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(json: application), type: V2TIMFriendAcceptType.init(rawValue: responseType)!, succ: {
-                info in
-                result(CustomFriendOperationResultEntity.getDict(info: info!));
+            TencentImUtils.getFriendApplicationByFindFriendApplicationEntity(json: application, succ: {
+                (v2TIMFriendApplication: V2TIMFriendApplication?) -> () in
+                V2TIMManager.sharedInstance().accept(v2TIMFriendApplication!, type: V2TIMFriendAcceptType.init(rawValue: responseType)!, succ: {
+                    info in
+                    result(CustomFriendOperationResultEntity.getDict(info: info!));
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
@@ -1047,9 +1086,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 拒绝建立好友申请关系
     public func refuseFriendApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String {
-            V2TIMManager.sharedInstance().refuse(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(json: application), succ: {
-                info in
-                result(CustomFriendOperationResultEntity.getDict(info: info!));
+            TencentImUtils.getFriendApplicationByFindFriendApplicationEntity(json: application, succ: {
+                (v2TIMFriendApplication: V2TIMFriendApplication?) -> () in
+                V2TIMManager.sharedInstance().refuse(v2TIMFriendApplication!, succ: {
+                    info in
+                    result(CustomFriendOperationResultEntity.getDict(info: info!));
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
@@ -1057,8 +1099,11 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 删除好友申请
     public func deleteFriendApplication(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let application = CommonUtils.getParam(call: call, result: result, param: "application") as? String {
-            V2TIMManager.sharedInstance().delete(TencentImUtils.getFriendApplicationByFindGroupApplicationEntity(json: application), succ: {
-                result(nil);
+            TencentImUtils.getFriendApplicationByFindFriendApplicationEntity(json: application, succ: {
+                (v2TIMFriendApplication: V2TIMFriendApplication?) -> () in
+                V2TIMManager.sharedInstance().delete(v2TIMFriendApplication!, succ: {
+                    result(nil);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
