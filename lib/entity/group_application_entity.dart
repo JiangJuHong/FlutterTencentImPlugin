@@ -47,7 +47,9 @@ class GroupApplicationEntity {
     requestMsg = json['requestMsg'];
     handledMsg = json['handledMsg'];
     type = GroupApplicationTypeTool.getByInt(json['type']);
-    handleStatus = GroupApplicationHandlerStatusTool.getByInt(json['handleStatus']);
-    handleResult = GroupApplicationHandlerResultTool.getByInt(json['handleResult']);
+    handleStatus =
+        GroupApplicationHandlerStatusTool.getByInt(json['handleStatus']);
+    handleResult =
+        GroupApplicationHandlerResultTool.getByInt(json['handleResult']);
   }
 }

@@ -38,7 +38,8 @@ class TencentImPluginListener {
       switch (methodCall.method) {
         case 'onListener':
           // 获得原始类型和参数
-          TencentImListenerTypeEnum type = EnumUtil.nameOf(TencentImListenerTypeEnum.values, arguments['type']);
+          TencentImListenerTypeEnum type = EnumUtil.nameOf(
+              TencentImListenerTypeEnum.values, arguments['type']);
           var paramsStr = arguments['params'];
 
           // 封装回调类型和参数
@@ -66,7 +67,8 @@ class TencentImPluginListener {
               params = ListUtil.generateOBJList<ConversationEntity>(paramsStr);
               break;
             case TencentImListenerTypeEnum.FriendApplicationListAdded:
-              params = ListUtil.generateOBJList<FriendApplicationEntity>(paramsStr);
+              params =
+                  ListUtil.generateOBJList<FriendApplicationEntity>(paramsStr);
               break;
             case TencentImListenerTypeEnum.FriendApplicationListDeleted:
               break;
@@ -191,4 +193,5 @@ class TencentImPluginListener {
 }
 
 /// 监听器值模型
-typedef TencentImListenerValue<P> = void Function(TencentImListenerTypeEnum type, P params);
+typedef TencentImListenerValue<P> = void Function(
+    TencentImListenerTypeEnum type, P params);

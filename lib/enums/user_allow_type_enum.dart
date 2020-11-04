@@ -12,7 +12,8 @@ class UserAllowTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static UserAllowTypeEnum getByInt(int index) => UserAllowTypeEnum.values[index];
+  static UserAllowTypeEnum getByInt(int index) =>
+      UserAllowTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(UserAllowTypeEnum level) => level.index;

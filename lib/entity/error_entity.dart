@@ -1,6 +1,5 @@
 /// 错误实体
-class ErrorEntity{
-
+class ErrorEntity {
   /// 错误码
   int code;
 

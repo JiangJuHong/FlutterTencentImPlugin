@@ -38,10 +38,12 @@ class LoginPageState extends State<LoginPage> {
     super.initState();
     TencentImPlugin.login(
       userID: "dev",
-      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+      userSig:
+          "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     ).then((_) {
       print("登录成功!");
-      TencentImPlugin.sendMessage(groupID: "@TGS#16XLZ2SG6", node: TextMessageNode(content: "1433223"));
+      TencentImPlugin.sendMessage(
+          groupID: "@TGS#16XLZ2SG6", node: TextMessageNode(content: "1433223"));
     });
   }
 

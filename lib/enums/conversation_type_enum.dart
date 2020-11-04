@@ -14,7 +14,8 @@ class ConversationTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static ConversationTypeEnum getByInt(int index) => ConversationTypeEnum.values[index];
+  static ConversationTypeEnum getByInt(int index) =>
+      ConversationTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(ConversationTypeEnum level) => level.index;

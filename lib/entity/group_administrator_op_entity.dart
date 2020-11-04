@@ -14,7 +14,10 @@ class GroupAdministratorOpEntity {
 
   GroupAdministratorOpEntity.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupMemberEntity>(json['changInfo']);
-    if (json["opUser"] != null) opUser = GroupMemberEntity.fromJson(json["opUser"]);
+    if (json["changInfo"] != null)
+      changInfo =
+          ListUtil.generateOBJList<GroupMemberEntity>(json['changInfo']);
+    if (json["opUser"] != null)
+      opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }
 }

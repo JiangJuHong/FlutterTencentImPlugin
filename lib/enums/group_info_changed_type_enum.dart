@@ -26,7 +26,8 @@ class GroupInfoChangedTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static GroupInfoChangedTypeEnum getByInt(int index) => GroupInfoChangedTypeEnum.values[index];
+  static GroupInfoChangedTypeEnum getByInt(int index) =>
+      GroupInfoChangedTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(GroupInfoChangedTypeEnum level) => level.index;

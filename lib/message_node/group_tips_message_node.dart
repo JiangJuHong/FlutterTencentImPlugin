@@ -11,7 +11,8 @@ class GroupTipsMessageNode extends MessageNode {
 
   GroupTipsMessageNode() : super(MessageElemTypeEnum.GroupTips);
 
-  GroupTipsMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.GroupTips) {}
+  GroupTipsMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.GroupTips) {}
 
   @override
   Map<String, dynamic> toJson() {

@@ -37,7 +37,8 @@ class VideoMessageNode extends MessageNode {
     @required this.snapshotPath,
   }) : super(MessageElemTypeEnum.Video);
 
-  VideoMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Video) {
+  VideoMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Video) {
     videoPath = json["videoPath"];
     _videoUuid = json["videoUuid"];
     _videoSize = json["videoSize"];

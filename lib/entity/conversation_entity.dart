@@ -56,9 +56,13 @@ class ConversationEntity {
     recvOpt = GroupReceiveMessageOptTool.getByInt(json['recvOpt']);
     groupType = GroupTypeTool.getByString(json['groupType']);
     unreadCount = json['unreadCount'];
-    lastMessage = json['lastMessage'] == null ? null : MessageEntity.fromJson(json["lastMessage"]);
+    lastMessage = json['lastMessage'] == null
+        ? null
+        : MessageEntity.fromJson(json["lastMessage"]);
     draftText = json['draftText'];
     draftTimestamp = json['draftTimestamp'];
-    groupAtInfoList = json["groupAtInfoList"] == null ? null : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
+    groupAtInfoList = json["groupAtInfoList"] == null
+        ? null
+        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
   }
 }

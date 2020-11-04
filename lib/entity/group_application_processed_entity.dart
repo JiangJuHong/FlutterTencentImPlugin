@@ -20,6 +20,7 @@ class GroupApplicationProcessedEntity {
     groupID = json['groupID'];
     opReason = json['opReason'];
     isAgreeJoin = json['isAgreeJoin'];
-    if (json["opUser"] != null) opUser = GroupMemberEntity.fromJson(json['opUser']);
+    if (json["opUser"] != null)
+      opUser = GroupMemberEntity.fromJson(json['opUser']);
   }
 }

@@ -14,7 +14,8 @@ class GroupReceiveMessageOptTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static GroupReceiveMessageOptEnum getByInt(int index) => GroupReceiveMessageOptEnum.values[index];
+  static GroupReceiveMessageOptEnum getByInt(int index) =>
+      GroupReceiveMessageOptEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(GroupReceiveMessageOptEnum level) => level.index;

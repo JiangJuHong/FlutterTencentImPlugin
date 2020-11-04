@@ -37,8 +37,10 @@ class OfflinePushInfoEntity {
     if (this.desc != null) data['desc'] = this.desc;
     if (this.ext != null) data['ext'] = this.ext;
     if (this.iOSSound != null) data['iOSSound'] = this.iOSSound;
-    if (this.ignoreIOSBadge != null) data['ignoreIOSBadge'] = this.ignoreIOSBadge;
-    if (this.androidOPPOChannelID != null) data['androidOPPOChannelID'] = this.androidOPPOChannelID;
+    if (this.ignoreIOSBadge != null)
+      data['ignoreIOSBadge'] = this.ignoreIOSBadge;
+    if (this.androidOPPOChannelID != null)
+      data['androidOPPOChannelID'] = this.androidOPPOChannelID;
     return data;
   }
 }

@@ -14,7 +14,8 @@ class MessagePriorityTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static MessagePriorityEnum getByInt(int index) => MessagePriorityEnum.values[index];
+  static MessagePriorityEnum getByInt(int index) =>
+      MessagePriorityEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(MessagePriorityEnum level) => level.index;

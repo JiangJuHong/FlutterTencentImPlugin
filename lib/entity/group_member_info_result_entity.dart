@@ -11,6 +11,7 @@ class GroupMemberInfoResultEntity {
 
   GroupMemberInfoResultEntity.fromJson(Map<String, dynamic> json) {
     nextSeq = json['nextSeq'];
-    memberInfoList = ListUtil.generateOBJList<GroupMemberEntity>(json['memberInfoList']);
+    memberInfoList =
+        ListUtil.generateOBJList<GroupMemberEntity>(json['memberInfoList']);
   }
 }

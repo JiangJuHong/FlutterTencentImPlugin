@@ -11,6 +11,7 @@ class GroupApplicationResultEntity {
 
   GroupApplicationResultEntity.fromJson(Map<String, dynamic> json) {
     unreadCount = json['unreadCount'];
-    groupApplicationList = ListUtil.generateOBJList<GroupApplicationEntity>(json['groupApplicationList']);
+    groupApplicationList = ListUtil.generateOBJList<GroupApplicationEntity>(
+        json['groupApplicationList']);
   }
 }

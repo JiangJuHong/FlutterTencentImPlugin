@@ -15,6 +15,7 @@ class ConversationResultEntity {
   ConversationResultEntity.fromJson(Map<String, dynamic> json) {
     nextSeq = json['nextSeq'];
     finished = json['finished'];
-    conversationList = ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]);
+    conversationList =
+        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]);
   }
 }

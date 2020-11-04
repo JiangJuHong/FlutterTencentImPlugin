@@ -31,7 +31,8 @@ class FriendAddApplicationEntity {
     if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
     if (this.addWording != null) data['addWording'] = this.addWording;
     if (this.addSource != null) data['addSource'] = this.addSource;
-    if (this.addType != null) data['addType'] = FriendTypeTool.toInt(this.addType);
+    if (this.addType != null)
+      data['addType'] = FriendTypeTool.toInt(this.addType);
     return data;
   }
 }

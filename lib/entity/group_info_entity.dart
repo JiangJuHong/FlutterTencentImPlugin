@@ -90,12 +90,14 @@ class GroupInfoEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.groupID != null) data['groupID'] = this.groupID;
-    if (this.groupType != null) data['groupType'] = GroupTypeTool.toTypeString(this.groupType);
+    if (this.groupType != null)
+      data['groupType'] = GroupTypeTool.toTypeString(this.groupType);
     if (this.notification != null) data['notification'] = this.notification;
     if (this.introduction != null) data['introduction'] = this.introduction;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.allMuted != null) data['allMuted'] = this.allMuted;
-    if (this.groupAddOpt != null) data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
+    if (this.groupAddOpt != null)
+      data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
     return data;
   }
 }

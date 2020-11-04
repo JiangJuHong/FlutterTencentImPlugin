@@ -46,7 +46,8 @@ class MessageElemTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static MessageElemTypeEnum getByInt(int index) => MessageElemTypeEnum.values[index];
+  static MessageElemTypeEnum getByInt(int index) =>
+      MessageElemTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(MessageElemTypeEnum level) => level.index;
@@ -54,7 +55,8 @@ class MessageElemTypeTool {
   /// 根据消息节点类型获得消息节点
   /// [nodeType] 节点类型
   /// [json] json值
-  static MessageNode getMessageNodeByMessageNodeType(MessageElemTypeEnum nodeType, Map<String, dynamic> json) {
+  static MessageNode getMessageNodeByMessageNodeType(
+      MessageElemTypeEnum nodeType, Map<String, dynamic> json) {
     switch (nodeType) {
       case MessageElemTypeEnum.None:
         break;

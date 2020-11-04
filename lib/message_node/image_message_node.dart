@@ -15,7 +15,8 @@ class ImageMessageNode extends MessageNode {
     @required this.path,
   }) : super(MessageElemTypeEnum.Image);
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Image) {
+  ImageMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Image) {
     path = json['path'];
     if (json['imageData'] != null) {
       _imageData = Map();

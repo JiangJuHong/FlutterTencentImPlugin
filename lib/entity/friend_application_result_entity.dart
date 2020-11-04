@@ -11,6 +11,7 @@ class FriendApplicationResultEntity {
 
   FriendApplicationResultEntity.fromJson(Map<String, dynamic> json) {
     unreadCount = json['unreadCount'];
-    friendApplicationList = ListUtil.generateOBJList<FriendApplicationEntity>(json['friendApplicationList']);
+    friendApplicationList = ListUtil.generateOBJList<FriendApplicationEntity>(
+        json['friendApplicationList']);
   }
 }

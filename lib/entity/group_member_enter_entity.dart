@@ -11,6 +11,8 @@ class GroupMemberEnterEntity {
 
   GroupMemberEnterEntity.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    if (json["memberList"] != null) memberList = ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
+    if (json["memberList"] != null)
+      memberList =
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
   }
 }

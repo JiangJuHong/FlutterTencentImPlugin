@@ -11,6 +11,7 @@ class GroupDismissedOrRecycledEntity {
 
   GroupDismissedOrRecycledEntity.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    if (json["opUser"] != null) opUser = GroupMemberEntity.fromJson(json["opUser"]);
+    if (json["opUser"] != null)
+      opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }
 }

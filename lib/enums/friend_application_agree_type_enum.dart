@@ -11,7 +11,8 @@ class FriendApplicationAgreeTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static FriendApplicationAgreeTypeEnum getByInt(int index) => FriendApplicationAgreeTypeEnum.values[index];
+  static FriendApplicationAgreeTypeEnum getByInt(int index) =>
+      FriendApplicationAgreeTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(FriendApplicationAgreeTypeEnum level) => level.index;

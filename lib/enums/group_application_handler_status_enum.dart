@@ -1,5 +1,5 @@
 /// 群申请处理状态枚举
-enum GroupApplicationHandlerStatusEnum{
+enum GroupApplicationHandlerStatusEnum {
   /// 未处理
   Unhandled,
 
@@ -14,7 +14,8 @@ class GroupApplicationHandlerStatusTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static GroupApplicationHandlerStatusEnum getByInt(int index) => GroupApplicationHandlerStatusEnum.values[index];
+  static GroupApplicationHandlerStatusEnum getByInt(int index) =>
+      GroupApplicationHandlerStatusEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(GroupApplicationHandlerStatusEnum level) => level.index;
