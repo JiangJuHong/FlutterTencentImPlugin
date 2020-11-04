@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:tencent_im_plugin/entity/friend_application_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_application_result_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_group_entity.dart';
@@ -17,6 +19,10 @@ import 'entity/conversation_entity.dart';
 
 class EntityFactory {
   static T generateOBJ<T>(json) {
+    if (json is String) {
+      json = jsonDecode(json);
+    }
+
     if (1 == 0) {
       return null;
     } else if (T.toString() == "GroupInfoEntity") {

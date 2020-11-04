@@ -90,7 +90,7 @@ class TencentImPlugin {
   static Future<String> invite({
     @required String invitee,
     @required String data,
-    @required OfflinePushInfoEntity offlinePushInfo,
+    OfflinePushInfoEntity offlinePushInfo,
     bool onlineUserOnly: false,
     int timeout: 0,
   }) {
@@ -98,7 +98,7 @@ class TencentImPlugin {
       "invitee": invitee,
       "data": data,
       "onlineUserOnly": onlineUserOnly,
-      "offlinePushInfo": jsonEncode(offlinePushInfo),
+      "offlinePushInfo": jsonEncode(offlinePushInfo ?? OfflinePushInfoEntity()),
       "timeout": timeout,
     });
   }

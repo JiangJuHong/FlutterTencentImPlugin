@@ -21,6 +21,16 @@ class OfflinePushInfoEntity {
   /// 获取是否关闭离线推送状态。
   bool disablePush;
 
+  OfflinePushInfoEntity({
+    this.title,
+    this.desc,
+    this.ext,
+    this.iOSSound,
+    this.ignoreIOSBadge,
+    this.androidOPPOChannelID,
+    this.disablePush,
+  });
+
   OfflinePushInfoEntity.fromJson(Map<String, dynamic> json) {
     title = json["title"];
     desc = json["desc"];
@@ -37,10 +47,8 @@ class OfflinePushInfoEntity {
     if (this.desc != null) data['desc'] = this.desc;
     if (this.ext != null) data['ext'] = this.ext;
     if (this.iOSSound != null) data['iOSSound'] = this.iOSSound;
-    if (this.ignoreIOSBadge != null)
-      data['ignoreIOSBadge'] = this.ignoreIOSBadge;
-    if (this.androidOPPOChannelID != null)
-      data['androidOPPOChannelID'] = this.androidOPPOChannelID;
+    if (this.ignoreIOSBadge != null) data['ignoreIOSBadge'] = this.ignoreIOSBadge;
+    if (this.androidOPPOChannelID != null) data['androidOPPOChannelID'] = this.androidOPPOChannelID;
     return data;
   }
 }

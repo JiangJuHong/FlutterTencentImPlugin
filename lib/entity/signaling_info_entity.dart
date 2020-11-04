@@ -29,6 +29,18 @@ class SignalingInfoEntity {
   /// 是否仅在线用户
   bool onlineUserOnly;
 
+  SignalingInfoEntity({
+    this.inviteID,
+    this.groupID,
+    this.inviter,
+    this.inviteeList,
+    this.data,
+    this.timeout,
+    this.actionType,
+    this.businessID,
+    this.onlineUserOnly,
+  });
+
   SignalingInfoEntity.fromJson(Map<String, dynamic> json) {
     inviteID = json["inviteID"];
     groupID = json["groupID"];
@@ -36,8 +48,7 @@ class SignalingInfoEntity {
     inviteeList = json["inviteeList"];
     data = json["data"];
     timeout = json["timeout"];
-    if (json["actionType"] != null)
-      actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
+    if (json["actionType"] != null) actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
     businessID = json["businessID"];
     onlineUserOnly = json["onlineUserOnly"];
   }
@@ -50,11 +61,9 @@ class SignalingInfoEntity {
     if (this.inviteeList != null) data['inviteeList'] = this.inviteeList;
     if (this.data != null) data['data'] = this.data;
     if (this.timeout != null) data['timeout'] = this.timeout;
-    if (this.actionType != null)
-      data['actionType'] = SignalingActionTypeTool.toInt(this.actionType);
+    if (this.actionType != null) data['actionType'] = SignalingActionTypeTool.toInt(this.actionType);
     if (this.businessID != null) data['businessID'] = this.businessID;
-    if (this.onlineUserOnly != null)
-      data['onlineUserOnly'] = this.onlineUserOnly;
+    if (this.onlineUserOnly != null) data['onlineUserOnly'] = this.onlineUserOnly;
     return data;
   }
 }
