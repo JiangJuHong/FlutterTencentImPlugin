@@ -2,14 +2,31 @@ import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 
 /// 信令信息实体
 class SignalingInfoEntity {
+  /// 邀请ID
   String inviteID;
+
+  /// 群ID
   String groupID;
+
+  /// 邀请人
   String inviter;
+
+  /// 被邀请人
   List<String> inviteeList;
+
+  /// 数据
   String data;
+
+  /// 超时
   int timeout;
+
+  /// 类型
   SignalingActionTypeEnum actionType;
+
+  /// ID
   int businessID;
+
+  /// 是否仅在线用户
   bool onlineUserOnly;
 
   SignalingInfoEntity.fromJson(Map<String, dynamic> json) {

@@ -23,7 +23,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
     func onInviteeAccepted(_ inviteID: String!, invitee: String!, data: String!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.InviteeAccepted, params: [
             "inviteID": inviteID!,
-            "inviter": invitee!,
+            "invitee": invitee!,
             "data": data!,
         ])
     }
@@ -32,7 +32,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
     func onInviteeRejected(_ inviteID: String!, invitee: String!, data: String!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.InviteeRejected, params: [
             "inviteID": inviteID!,
-            "inviter": invitee!,
+            "invitee": invitee!,
             "data": data!,
         ])
     }

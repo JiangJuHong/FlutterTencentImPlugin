@@ -38,7 +38,7 @@ public class CustomSignalingListener extends V2TIMSignalingListener {
         TencentImPlugin.invokeListener(ListenerTypeEnum.InviteeAccepted, new HashMap<String, Object>() {
             {
                 put("inviteID", inviteID);
-                put("inviter", invitee);
+                put("invitee", invitee);
                 put("data", data);
             }
         });
@@ -53,7 +53,7 @@ public class CustomSignalingListener extends V2TIMSignalingListener {
         TencentImPlugin.invokeListener(ListenerTypeEnum.InviteeRejected, new HashMap<String, Object>() {
             {
                 put("inviteID", inviteID);
-                put("inviter", invitee);
+                put("invitee", invitee);
                 put("data", data);
             }
         });
