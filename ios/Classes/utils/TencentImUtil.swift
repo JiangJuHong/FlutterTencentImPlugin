@@ -30,7 +30,16 @@ public class TencentImUtils {
 
     /// 获得消息对象
     public static func getMessageByFindMessageEntity(dict: [[String: Any]], succ: @escaping GetInfoSuc<[V2TIMMessage]?>, fail: @escaping V2TIMFail) {
-        fail(-1, "暂不支持消息查找！");
+        var ids: [String] = [];
+        for item in dict {
+            let obj = FindMessageEntity.init(dict: item);
+            ids.append(obj.msgId!);
+        }
+
+        V2TIMManager.sharedInstance()?.findMessages(ids, succ: {
+            (messages: [V2TIMMessage]?) in
+            succ(messages);
+        }, fail: fail)
     }
 
     /// 获得群申请对象

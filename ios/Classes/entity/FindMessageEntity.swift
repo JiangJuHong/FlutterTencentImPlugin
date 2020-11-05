@@ -8,6 +8,9 @@ import ImSDK
 /// 查找消息实体
 class FindMessageEntity: NSObject {
 
+    /// 消息ID
+    var msgId: String?;
+
     required public override init() {
     }
 
@@ -17,5 +20,6 @@ class FindMessageEntity: NSObject {
 
     init(dict: [String: Any]) {
         super.init();
+        self.msgId = dict["msgId"] as! String;
     }
 }

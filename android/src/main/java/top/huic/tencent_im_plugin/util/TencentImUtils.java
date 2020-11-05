@@ -9,6 +9,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -134,8 +135,22 @@ public class TencentImUtils {
      * @param data 查找消息对象实体
      * @param call 回调对象
      */
-    public static void getMessageByFindMessageEntity(List<FindMessageEntity> data, ValueCallBack<List<V2TIMMessage>> call) {
-        call.onError(-1, "暂不支持消息查找！");
+    public static void getMessageByFindMessageEntity(List<FindMessageEntity> data, final ValueCallBack<List<V2TIMMessage>> call) {
+        List<String> ids = new ArrayList<>();
+        for (FindMessageEntity datum : data) {
+            ids.add(datum.getMsgId());
+        }
+        V2TIMManager.getMessageManager().findMessages(ids, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int i, String s) {
+                call.onError(i, s);
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                call.onSuccess(v2TIMMessages);
+            }
+        });
     }
 
 //    /**
