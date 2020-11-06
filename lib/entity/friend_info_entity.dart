@@ -27,8 +27,8 @@ class FriendInfoEntity {
   FriendInfoEntity.fromJson(Map<String, dynamic> json) {
     userID = json['userID'];
     friendRemark = json['friendRemark'];
-    friendGroups = json['friendGroups'];
-    friendCustomInfo = json['friendCustomInfo'];
+    friendGroups = json['friendGroups']?.cast<String>();
+    friendCustomInfo = json['friendCustomInfo']?.cast<String, String>();
     userProfile = UserEntity.fromJson(json['userProfile']);
   }
 
@@ -36,8 +36,7 @@ class FriendInfoEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.userID != null) data['userID'] = this.userID;
     if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
-    if (this.friendCustomInfo != null)
-      data['friendCustomInfo'] = this.friendCustomInfo;
+    if (this.friendCustomInfo != null) data['friendCustomInfo'] = this.friendCustomInfo;
     return data;
   }
 }

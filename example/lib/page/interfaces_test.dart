@@ -7,11 +7,16 @@ import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
+import 'package:tencent_im_plugin/entity/user_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_add_application_entity.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_type_enum.dart';
+import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 
 typedef TestCallback = Future<dynamic> Function();
 
@@ -23,7 +28,7 @@ class InterfacesTest extends StatefulWidget {
 
 class _InterfacesTestState extends State<InterfacesTest> {
   /// 群ID
-  static String _groupId = "@TGS#2GMSP7YGO";
+  static String _groupId = "@TGS#2HAKW7YGC";
 
   /// 直播群ID
   static String _avGroupId = "@TGS#aRXCQ7YGG";
@@ -71,7 +76,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
         ),
     // "createGroup": () async => TencentImPlugin.createGroup(
     //       info: GroupInfoEntity(
-    //         groupType: GroupTypeEnum.AVChatRoom,
+    //         groupType: GroupTypeEnum.Public,
     //         groupName: "测试群聊",
     //         notification: "这是群公告",
     //         introduction: "这是群简介",
@@ -122,6 +127,71 @@ class _InterfacesTestState extends State<InterfacesTest> {
           seconds: 60,
           userID: _friendId,
         ),
+    // "inviteUserToGroup": () async => TencentImPlugin.inviteUserToGroup(
+    //       groupID: _groupId,
+    //       userList: [_friendId],
+    //     ),
+    // "kickGroupMember": () async => TencentImPlugin.kickGroupMember(
+    //       groupID: _groupId,
+    //       memberList: [_friendId],
+    //     ),
+    "setGroupMemberRole": () async => TencentImPlugin.setGroupMemberRole(
+          groupID: _groupId,
+          userID: _friendId,
+          role: GroupMemberRoleEnum.Admin,
+        ),
+    // "transferGroupOwner": () async => TencentImPlugin.transferGroupOwner(
+    //       groupID: _groupId,
+    //       userID: _friendId,
+    //     ),
+    // "getGroupApplicationList": () async => TencentImPlugin.getGroupApplicationList(),
+    // "acceptGroupApplication": () async => TencentImPlugin.acceptGroupApplication(),
+    // "refuseGroupApplication": () async => TencentImPlugin.refuseGroupApplication(),
+    "setGroupApplicationRead": () async => TencentImPlugin.setGroupApplicationRead(),
+    "getConversationList": () async => TencentImPlugin.getConversationList(),
+    "getConversation": () async => TencentImPlugin.getConversation(conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID),
+    "deleteConversation": () async => TencentImPlugin.deleteConversation(conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID),
+    "setConversationDraft": () async => TencentImPlugin.setConversationDraft(
+          conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID,
+          draftText: "测试会话草稿",
+        ),
+    "getUsersInfo": () async => TencentImPlugin.getUsersInfo(userIDList: [_friendId]),
+    "setSelfInfo": () async => TencentImPlugin.setSelfInfo(info: UserEntity(nickName: "${DateTime.now()}")),
+    "addToBlackList": () async => TencentImPlugin.addToBlackList(userIDList: [_friendId]),
+    "getBlackList": () async => TencentImPlugin.getBlackList(),
+    "deleteFromBlackList": () async => TencentImPlugin.deleteFromBlackList(userIDList: [_friendId]),
+    "setOfflinePushConfig": () async => TencentImPlugin.setOfflinePushConfig(bussid: 10301, token: "请输入您的Token"),
+    "setUnreadBadge": () async => TencentImPlugin.setUnreadBadge(number: 10),
+    "getFriendList": () async => TencentImPlugin.getFriendList(),
+    "getFriendsInfo": () async => TencentImPlugin.getFriendsInfo(userIDList: [_friendId]),
+    "setFriendInfo": () async => TencentImPlugin.setFriendInfo(
+          info: FriendInfoEntity(
+            userID: _friendId,
+            friendRemark: "这是测试备注",
+          ),
+        ),
+    "addFriend": () async => TencentImPlugin.addFriend(
+          info: FriendAddApplicationEntity(
+            userID: _friendId,
+            friendRemark: "这是测试备注",
+            addWording: "申请加为好友",
+            addSource: "手动查找",
+            addType: FriendTypeEnum.Both,
+          ),
+        ),
+    "deleteFromFriendList": () async => TencentImPlugin.deleteFromFriendList(deleteType: FriendTypeEnum.Both, userIDList: [_friendId]),
+    "checkFriend": () async => TencentImPlugin.checkFriend(userID: _friendId, checkType: FriendTypeEnum.Both),
+    "getFriendApplicationList": () async => TencentImPlugin.getFriendApplicationList(),
+    // "acceptFriendApplication": () async => TencentImPlugin.acceptFriendApplication(),
+    // "refuseFriendApplication": () async => TencentImPlugin.refuseFriendApplication(),
+    // "deleteFriendApplication": () async => TencentImPlugin.deleteFriendApplication(),
+    "setFriendApplicationRead": () async => TencentImPlugin.setFriendApplicationRead(),
+    "createFriendGroup": () async => TencentImPlugin.createFriendGroup(userIDList: [_friendId], groupName: "测试分组"),
+    "getFriendGroups": () async => TencentImPlugin.getFriendGroups(groupNameList: ["测试分组"]),
+    "renameFriendGroup": () async => TencentImPlugin.renameFriendGroup(oldName: "测试分组", newName: "test"),
+    "addFriendsToFriendGroup": () async => TencentImPlugin.addFriendsToFriendGroup(groupName: "test", userIDList: [_friendId]),
+    "deleteFriendsFromFriendGroup": () async => TencentImPlugin.deleteFriendsFromFriendGroup(groupName: "test", userIDList: [_friendId]),
+    "deleteFriendGroup": () async => TencentImPlugin.deleteFriendGroup(groupNameList: ["test"]),
   };
 
   /// 当前正在测试的Key

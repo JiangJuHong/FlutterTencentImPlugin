@@ -1,4 +1,5 @@
 import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
+import 'package:tencent_im_plugin/enums/friend_relation_type_enum.dart';
 import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 
 /// 好友信息结果实体
@@ -10,7 +11,7 @@ class FriendInfoResultEntity {
   String resultInfo;
 
   /// 好友类型
-  FriendTypeEnum relation;
+  FriendRelationTypeEnum relation;
 
   /// 好友信息
   FriendInfoEntity friendInfo;
@@ -18,7 +19,7 @@ class FriendInfoResultEntity {
   FriendInfoResultEntity.fromJson(Map<String, dynamic> json) {
     resultCode = json['resultCode'];
     resultInfo = json['resultInfo'];
-    relation = FriendTypeTool.getByInt(json['relation']);
+    relation = FriendRelationTypeTool.getByInt(json['relation']);
     friendInfo = FriendInfoEntity.fromJson(json['friendInfo']);
   }
 }

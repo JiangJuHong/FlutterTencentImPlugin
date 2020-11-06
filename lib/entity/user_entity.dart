@@ -40,7 +40,7 @@ class UserEntity {
     selfSignature = json['selfSignature'];
     gender = UserGenderTool.getByInt(json['gender']);
     allowType = UserAllowTypeTool.getByInt(json['allowType']);
-    customInfo = json['customInfo'];
+    customInfo = json['customInfo']?.cast<String, String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -49,8 +49,7 @@ class UserEntity {
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
     if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender);
-    if (this.allowType != null)
-      data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
+    if (this.allowType != null) data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }

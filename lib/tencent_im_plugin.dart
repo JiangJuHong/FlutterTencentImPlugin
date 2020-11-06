@@ -660,8 +660,13 @@ class TencentImPlugin {
   }
 
   /// 删除会话
-  static deleteConversation() {
-    return _channel.invokeMethod('deleteConversation');
+  /// [conversationID] 会话ID
+  static deleteConversation({
+    @required String conversationID,
+  }) {
+    return _channel.invokeMethod('deleteConversation', {
+      "conversationID": conversationID,
+    });
   }
 
   /// 设置会话草稿
@@ -729,10 +734,10 @@ class TencentImPlugin {
   /// [token] Token
   /// [bussid] 推送证书 ID，是在 IM 控制台上生成的
   static setOfflinePushConfig({
-    String token,
-    int bussid,
+    @required String token,
+    @required int bussid,
   }) {
-    return _channel.invokeMethod('setOfflinePushToken', {
+    return _channel.invokeMethod('setOfflinePushConfig', {
       "token": token,
       "bussid": bussid,
     });
