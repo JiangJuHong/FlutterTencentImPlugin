@@ -6,7 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
+import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
+import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 
 typedef TestCallback = Future<dynamic> Function();
 
@@ -34,7 +36,15 @@ class _InterfacesTestState extends State<InterfacesTest> {
     "accept": () async => TencentImPlugin.accept(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话4", invitee: "dev"), data: "123"),
     "reject": () async => TencentImPlugin.reject(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话5", invitee: "dev"), data: "123"),
     // "getSignalingInfo": () async => TencentImPlugin.getSignalingInfo(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话", invitee: "dev"), data: "123"),
-    "addInvitedSignaling": () async => TencentImPlugin.addInvitedSignaling(info: SignalingInfoEntity(inviteID: "dev")),
+    "addInvitedSignaling": () async => TencentImPlugin.addInvitedSignaling(
+          info: SignalingInfoEntity(
+            inviteID: "dev",
+            inviter: "123",
+            data: "test",
+            actionType: SignalingActionTypeEnum.Invite,
+            inviteeList: ["dev"],
+          ),
+        ),
     "sendMessage": () async => TencentImPlugin.sendMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
     // "revokeMessage": () async => TencentImPlugin.revokeMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
     "getC2CHistoryMessageList": () async => TencentImPlugin.getC2CHistoryMessageList(userID: "dev", count: 100),
@@ -86,6 +96,10 @@ class _InterfacesTestState extends State<InterfacesTest> {
       } catch (err) {
         _failInterfaces.add("$key : $err");
         _result.add("${_getDateTime()}-[$key]:$err");
+        print("=================================");
+        print("[测试结果出错] $key :");
+        print(err);
+        print("=================================");
       }
       this.setState(() => _finishTestCount += 1);
     }

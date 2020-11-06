@@ -382,7 +382,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
             TencentImUtils.getMessageByFindMessageEntity(json: messageStr, succ: {
                 (messages: V2TIMMessage?) in
-                result(JsonUtil.toJson(V2TIMManager.sharedInstance().getSignallingInfo(messages!)));
+                result(JsonUtil.toJson(CustomSignalingInfoEntity.getDict(info: V2TIMManager.sharedInstance().getSignallingInfo(messages!))));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
@@ -390,30 +390,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 添加邀请信令（可以用于群离线推送消息触发的邀请信令）
     public func addInvitedSignaling(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
-            let dict = JsonUtil.getDictionaryFromJSONString(jsonString: info);
-            let signalingInfo = V2TIMSignalingInfo();
-            if dict["inviteID"] != nil {
-                signalingInfo.inviteID = (dict["inviteID"] as! String);
-            }
-            if dict["groupID"] != nil {
-                signalingInfo.groupID = (dict["groupID"] as! String);
-            }
-            if dict["inviter"] != nil {
-                signalingInfo.groupID = (dict["inviter"] as! String);
-            }
-            if dict["inviteeList"] != nil {
-                signalingInfo.inviteeList = (dict["inviteeList"] as! NSMutableArray);
-            }
-            if dict["data"] != nil {
-                signalingInfo.data = (dict["data"] as! String);
-            }
-            if dict["timeout"] != nil {
-                signalingInfo.timeout = (dict["timeout"] as! UInt32);
-            }
-            if dict["actionType"] != nil {
-                signalingInfo.actionType = SignalingActionType.init(rawValue: (dict["actionType"] as! Int))!;
-            }
-            V2TIMManager.sharedInstance().addInvitedSignaling(signalingInfo, succ: {
+            V2TIMManager.sharedInstance().addInvitedSignaling(CustomSignalingInfoEntity.init(jsonStr: info), succ: {
                 () -> Void in
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))

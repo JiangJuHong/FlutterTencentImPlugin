@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 
 /// 信令信息实体
@@ -29,16 +33,19 @@ class SignalingInfoEntity {
   /// 是否仅在线用户
   bool onlineUserOnly;
 
+  /// 离线推送信息
+  OfflinePushInfoEntity offlinePushInfo;
+
   SignalingInfoEntity({
-    this.inviteID,
+    @required this.inviteID,
     this.groupID,
-    this.inviter,
-    this.inviteeList,
-    this.data,
-    this.timeout,
-    this.actionType,
-    this.businessID,
-    this.onlineUserOnly,
+    @required this.inviter,
+    @required this.inviteeList,
+    @required this.data,
+    this.timeout: 0,
+    @required this.actionType,
+    this.businessID: 0,
+    this.onlineUserOnly: false,
   });
 
   SignalingInfoEntity.fromJson(Map<String, dynamic> json) {
@@ -51,6 +58,7 @@ class SignalingInfoEntity {
     if (json["actionType"] != null) actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
     businessID = json["businessID"];
     onlineUserOnly = json["onlineUserOnly"];
+    if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
   }
 
   Map<String, dynamic> toJson() {
