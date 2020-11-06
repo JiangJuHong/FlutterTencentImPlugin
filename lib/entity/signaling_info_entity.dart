@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
+import 'package:uuid/uuid.dart';
 
 /// 信令信息实体
 class SignalingInfoEntity {
@@ -37,7 +38,7 @@ class SignalingInfoEntity {
   OfflinePushInfoEntity offlinePushInfo;
 
   SignalingInfoEntity({
-    @required this.inviteID,
+    this.inviteID,
     this.groupID,
     @required this.inviter,
     @required this.inviteeList,
@@ -63,7 +64,7 @@ class SignalingInfoEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.inviteID != null) data['inviteID'] = this.inviteID;
+    data['inviteID'] = this.inviteID ?? Uuid().v4().toString();
     if (this.groupID != null) data['groupID'] = this.groupID;
     if (this.inviter != null) data['inviter'] = this.inviter;
     if (this.inviteeList != null) data['inviteeList'] = this.inviteeList;

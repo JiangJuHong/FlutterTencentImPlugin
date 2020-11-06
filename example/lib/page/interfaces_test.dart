@@ -38,7 +38,6 @@ class _InterfacesTestState extends State<InterfacesTest> {
     // "getSignalingInfo": () async => TencentImPlugin.getSignalingInfo(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话", invitee: "dev"), data: "123"),
     "addInvitedSignaling": () async => TencentImPlugin.addInvitedSignaling(
           info: SignalingInfoEntity(
-            inviteID: "dev",
             inviter: "123",
             data: "test",
             actionType: SignalingActionTypeEnum.Invite,
@@ -48,6 +47,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
     "sendMessage": () async => TencentImPlugin.sendMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
     // "revokeMessage": () async => TencentImPlugin.revokeMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
     "getC2CHistoryMessageList": () async => TencentImPlugin.getC2CHistoryMessageList(userID: "dev", count: 100),
+    "getGroupHistoryMessageList": () async => TencentImPlugin.getGroupHistoryMessageList(groupID: "123", count: 100),
   };
 
   /// 当前正在测试的Key
