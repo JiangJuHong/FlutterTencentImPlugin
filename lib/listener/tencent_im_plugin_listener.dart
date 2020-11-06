@@ -163,7 +163,7 @@ class TencentImPluginListener {
                 break;
             }
           } catch (err) {
-            print("监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
+            print("$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
           }
 
           // 没有找到类型就返回

@@ -5,10 +5,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
+import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
-import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
+import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 
 typedef TestCallback = Future<dynamic> Function();
 
@@ -19,6 +22,15 @@ class InterfacesTest extends StatefulWidget {
 }
 
 class _InterfacesTestState extends State<InterfacesTest> {
+  /// 群ID
+  static String _groupId = "@TGS#2GMSP7YGO";
+
+  /// 直播群ID
+  static String _avGroupId = "@TGS#aRXCQ7YGG";
+
+  /// 好友ID
+  static String _friendId = "test";
+
   /// 接口列表
   Map<String, TestCallback> _interfaces = {
     "initSDK": () => TencentImPlugin.initSDK(appid: '1400294314'),
@@ -30,24 +42,86 @@ class _InterfacesTestState extends State<InterfacesTest> {
     // "logout": () => TencentImPlugin.logout(),
     "getLoginStatus": () => TencentImPlugin.getLoginStatus(),
     "getLoginUser": () => TencentImPlugin.getLoginUser(),
-    "invite": () => TencentImPlugin.invite(data: "邀请你进行视频通话1", invitee: "dev"),
-    "inviteInGroup": () => TencentImPlugin.inviteInGroup(data: "邀请你进行视频通话2", groupID: "test", inviteeList: ["dev"]),
-    "cancel": () async => TencentImPlugin.cancel(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话3", invitee: "dev"), data: "123"),
-    "accept": () async => TencentImPlugin.accept(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话4", invitee: "dev"), data: "123"),
-    "reject": () async => TencentImPlugin.reject(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话5", invitee: "dev"), data: "123"),
-    // "getSignalingInfo": () async => TencentImPlugin.getSignalingInfo(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话", invitee: "dev"), data: "123"),
+    "invite": () => TencentImPlugin.invite(data: "邀请你进行视频通话1", invitee: _friendId),
+    "inviteInGroup": () => TencentImPlugin.inviteInGroup(data: "邀请你进行视频通话2", groupID: _groupId, inviteeList: [_friendId]),
+    "cancel": () async => TencentImPlugin.cancel(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话3", invitee: _friendId), data: "123"),
+    "accept": () async => TencentImPlugin.accept(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话4", invitee: _friendId), data: "123"),
+    "reject": () async => TencentImPlugin.reject(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话5", invitee: _friendId), data: "123"),
+    // "getSignalingInfo": () async => TencentImPlugin.getSignalingInfo(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话", invitee: _friendId), data: "123"),
     "addInvitedSignaling": () async => TencentImPlugin.addInvitedSignaling(
           info: SignalingInfoEntity(
-            inviter: "123",
+            inviter: _friendId,
             data: "test",
             actionType: SignalingActionTypeEnum.Invite,
             inviteeList: ["dev"],
           ),
         ),
-    "sendMessage": () async => TencentImPlugin.sendMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
+    "sendMessage": () async => TencentImPlugin.sendMessage(receiver: _friendId, node: TextMessageNode(content: "1433223")),
     // "revokeMessage": () async => TencentImPlugin.revokeMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
-    "getC2CHistoryMessageList": () async => TencentImPlugin.getC2CHistoryMessageList(userID: "dev", count: 100),
-    "getGroupHistoryMessageList": () async => TencentImPlugin.getGroupHistoryMessageList(groupID: "123", count: 100),
+    "getC2CHistoryMessageList": () async => TencentImPlugin.getC2CHistoryMessageList(userID: _friendId, count: 100),
+    "getGroupHistoryMessageList": () async => TencentImPlugin.getGroupHistoryMessageList(groupID: _groupId, count: 100),
+    "markC2CMessageAsRead": () async => TencentImPlugin.markC2CMessageAsRead(userID: _friendId),
+    "markGroupMessageAsRead": () async => TencentImPlugin.markGroupMessageAsRead(groupID: _groupId),
+    // "deleteMessageFromLocalStorage": () async => TencentImPlugin.deleteMessageFromLocalStorage(groupID: _groupId),
+    // "deleteMessages": () async => TencentImPlugin.deleteMessages(groupID: _groupId),
+    "insertGroupMessageToLocalStorage": () async => TencentImPlugin.insertGroupMessageToLocalStorage(
+          node: TextMessageNode(content: "1433223"),
+          groupID: _groupId,
+          sender: _friendId,
+        ),
+    // "createGroup": () async => TencentImPlugin.createGroup(
+    //       info: GroupInfoEntity(
+    //         groupType: GroupTypeEnum.AVChatRoom,
+    //         groupName: "测试群聊",
+    //         notification: "这是群公告",
+    //         introduction: "这是群简介",
+    //       ),
+    //     ),
+    // "joinGroup": () async => TencentImPlugin.joinGroup(message: "申请入群", groupID: _groupId),
+    // "quitGroup": () async => TencentImPlugin.quitGroup(groupID: _groupId),
+    // "dismissGroup": () async => TencentImPlugin.dismissGroup(groupID: _groupId),
+    "getJoinedGroupList": () async => TencentImPlugin.getJoinedGroupList(),
+    "getGroupsInfo": () async => TencentImPlugin.getGroupsInfo(groupIDList: [_groupId]),
+    "setGroupInfo": () async => TencentImPlugin.setGroupInfo(
+          info: GroupInfoEntity(
+            groupID: _groupId,
+            groupName: "${DateTime.now()}",
+          ),
+        ),
+    "setReceiveMessageOpt": () async => TencentImPlugin.setReceiveMessageOpt(
+          groupID: _groupId,
+          opt: GroupReceiveMessageOptEnum.ReceiveAndNotify,
+        ),
+    "initGroupAttributes": () async => TencentImPlugin.initGroupAttributes(
+          groupID: _avGroupId,
+          attributes: {
+            "a": "1",
+            "b": "2",
+          },
+        ),
+    "setGroupAttributes": () async => TencentImPlugin.setGroupAttributes(
+          groupID: _avGroupId,
+          attributes: {
+            "c": "3",
+            "d": "4",
+          },
+        ),
+    "deleteGroupAttributes": () async => TencentImPlugin.deleteGroupAttributes(groupID: _avGroupId, keys: ["b"]),
+    "getGroupAttributes": () async => TencentImPlugin.getGroupAttributes(groupID: _avGroupId),
+    "getGroupMemberList": () async => TencentImPlugin.getGroupMemberList(groupID: _groupId),
+    "getGroupMembersInfo": () async => TencentImPlugin.getGroupMembersInfo(groupID: _groupId, memberList: [_friendId]),
+    "setGroupMemberInfo": () async => TencentImPlugin.setGroupMemberInfo(
+          groupID: _groupId,
+          info: GroupMemberEntity(
+            userID: _friendId,
+            nameCard: "测试群名片",
+          ),
+        ),
+    "muteGroupMember": () async => TencentImPlugin.muteGroupMember(
+          groupID: _groupId,
+          seconds: 60,
+          userID: _friendId,
+        ),
   };
 
   /// 当前正在测试的Key

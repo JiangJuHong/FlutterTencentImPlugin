@@ -600,7 +600,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getGroupsInfo(MethodCall methodCall, final Result result) {
-        String groupIDList = CommonUtil.getParam(methodCall, result, "groupID");
+        String groupIDList = CommonUtil.getParam(methodCall, result, "groupIDList");
         V2TIMManager.getGroupManager().getGroupsInfo(Arrays.asList(groupIDList.split(",")), new ValueCallBack<List<V2TIMGroupInfoResult>>(result));
     }
 
@@ -681,7 +681,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
      */
-    private void getGroupOnlineMemberCount(MethodCall methodCall, final Result result) {
+    private void getGroupMemberList(MethodCall methodCall, final Result result) {
         String groupID = CommonUtil.getParam(methodCall, result, "groupID");
         int filter = CommonUtil.getParam(methodCall, result, "filter");
         int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");

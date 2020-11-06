@@ -10,6 +10,7 @@ import 'package:tencent_im_plugin/entity/group_application_entity.dart';
 import 'package:tencent_im_plugin/entity/group_at_info_entity.dart';
 import 'package:tencent_im_plugin/entity/group_changed_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_result_entity.dart';
+import 'package:tencent_im_plugin/entity/group_member_changed_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
@@ -57,6 +58,8 @@ class EntityFactory {
       return FriendGroupEntity.fromJson(json) as T;
     } else if (T.toString() == "GroupChangedInfoEntity") {
       return GroupChangedInfoEntity.fromJson(json) as T;
+    } else if (T.toString() == "GroupMemberChangedInfoEntity") {
+      return GroupMemberChangedInfoEntity.fromJson(json) as T;
     } else {
       return null;
     }

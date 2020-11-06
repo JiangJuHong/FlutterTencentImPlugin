@@ -40,10 +40,10 @@ class GroupMemberEntity {
     nickName = json['nickName'];
     friendRemark = json['friendRemark'];
     faceUrl = json['faceUrl'];
-    role = GroupMemberRoleTool.getByInt(json['role']);
+    if(json['role'] != null) role = GroupMemberRoleTool.getByInt(json['role']);
     muteUntil = json['muteUntil'];
     joinTime = json['joinTime'];
-    customInfo = (json['customInfo'] as Map).cast<String, String>();
+    if(json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
     nameCard = json['nameCard'];
   }
 
