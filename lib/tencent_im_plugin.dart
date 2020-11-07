@@ -860,11 +860,11 @@ class TencentImPlugin {
   /// 新建好友分组
   /// [groupName] 组名
   /// [userIDList] 用户列表
-  static Future<FriendOperationResultEntity> createFriendGroup({
+  static Future<List<FriendOperationResultEntity>> createFriendGroup({
     @required String groupName,
     @required List<String> userIDList,
   }) async {
-    return FriendOperationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('createFriendGroup', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('createFriendGroup', {
       "groupName": groupName,
       "userIDList": userIDList.join(","),
     })));

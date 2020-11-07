@@ -628,7 +628,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 拉取群资料
     public func getGroupsInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupIDList = CommonUtils.getParam(call: call, result: result, param: "groupIDList") as? String {
-            V2TIMManager.sharedInstance().getGroupsInfo((groupIDList.split(separator: ",") as [String]), succ: {
+            V2TIMManager.sharedInstance().getGroupsInfo(groupIDList.components(separatedBy: ","), succ: {
                 infos in
                 var resultData: [[String: Any]] = [];
                 for item in infos! {
@@ -682,7 +682,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func deleteGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let keys = ((call.arguments as! [String: Any])["keys"]) as? String;
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
-            V2TIMManager.sharedInstance().deleteGroupAttributes(groupID, keys: keys?.split(separator: ",") as! [String], succ: {
+            V2TIMManager.sharedInstance().deleteGroupAttributes(groupID, keys: keys?.components(separatedBy: ","), succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
@@ -692,7 +692,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func getGroupAttributes(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let keys = ((call.arguments as! [String: Any])["keys"]) as? String;
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
-            V2TIMManager.sharedInstance().getGroupAttributes(groupID, keys: keys?.split(separator: ",") as! [String], succ: {
+            V2TIMManager.sharedInstance().getGroupAttributes(groupID, keys: keys?.components(separatedBy: ","), succ: {
                 dictionary in
                 result(JsonUtil.toJson(dictionary!));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -715,7 +715,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func getGroupMembersInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let memberList = CommonUtils.getParam(call: call, result: result, param: "memberList") as? String {
-            V2TIMManager.sharedInstance().getGroupMembersInfo(groupID, memberList: memberList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().getGroupMembersInfo(groupID, memberList: memberList.components(separatedBy: ","), succ: {
                 infos in
                 var resultData: [[String: Any]] = [];
                 for item in infos! {
@@ -751,7 +751,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func inviteUserToGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let userList = CommonUtils.getParam(call: call, result: result, param: "userList") as? String {
-            V2TIMManager.sharedInstance().inviteUser(toGroup: groupID, userList: userList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().inviteUser(toGroup: groupID, userList: userList.components(separatedBy: ","), succ: {
                 infos in
                 var resultData: [[String: Any]] = [];
                 for item in infos! {
@@ -767,7 +767,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let memberList = CommonUtils.getParam(call: call, result: result, param: "memberList") as? String,
            let reason = CommonUtils.getParam(call: call, result: result, param: "reason") as? String {
-            V2TIMManager.sharedInstance().kickGroupMember(groupID, memberList: memberList.split(separator: ",") as [String], reason: reason, succ: {
+            V2TIMManager.sharedInstance().kickGroupMember(groupID, memberList: memberList.components(separatedBy: ","), reason: reason, succ: {
                 infos in
                 var resultData: [[String: Any]] = [];
                 for item in infos! {
@@ -884,7 +884,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得用户资料
     public func getUsersInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().getUsersInfo(userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().getUsersInfo(userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -907,7 +907,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 添加用户到黑名单
     public func addToBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().add(toBlackList: userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().add(toBlackList: userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -921,7 +921,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 从黑名单中删除
     public func deleteFromBlackList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().delete(fromBlackList: userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().delete(fromBlackList: userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -982,7 +982,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得指定好友信息
     public func getFriendsInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().getFriendsInfo(userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().getFriendsInfo(userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -1016,7 +1016,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func deleteFromFriendList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String,
            let deleteType = CommonUtils.getParam(call: call, result: result, param: "deleteType") as? Int {
-            V2TIMManager.sharedInstance().delete(fromFriendList: userIDList.split(separator: ",") as [String], delete: V2TIMFriendType.init(rawValue: deleteType)!, succ: {
+            V2TIMManager.sharedInstance().delete(fromFriendList: userIDList.components(separatedBy: ","), delete: V2TIMFriendType.init(rawValue: deleteType)!, succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -1096,9 +1096,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func createFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
            let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().createFriendGroup(groupName, userIDList: userIDList.split(separator: ",") as [String], succ: {
-                info in
-                result(CustomFriendOperationResultEntity.getDict(info: info!));
+            V2TIMManager.sharedInstance().createFriendGroup(groupName, userIDList: userIDList.components(separatedBy: ","), succ: {
+                infos in
+                var data: [[String: Any]] = [];
+                for item in infos! {
+                    data.append(CustomFriendOperationResultEntity.getDict(info: item));
+                }
+                result(JsonUtil.toJson(data));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
@@ -1106,7 +1110,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得分组信息
     public func getFriendGroups(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupNameList = CommonUtils.getParam(call: call, result: result, param: "groupNameList") as? String {
-            V2TIMManager.sharedInstance().getFriendGroupList(groupNameList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().getFriendGroupList(groupNameList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -1120,7 +1124,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 删除分组
     public func deleteFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupNameList = CommonUtils.getParam(call: call, result: result, param: "groupNameList") as? String {
-            V2TIMManager.sharedInstance().deleteFriendGroup(groupNameList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().deleteFriendGroup(groupNameList.components(separatedBy: ","), succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
@@ -1140,7 +1144,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func addFriendsToFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
            let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().addFriends(toFriendGroup: groupName, userIDList: userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().addFriends(toFriendGroup: groupName, userIDList: userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {
@@ -1155,7 +1159,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func deleteFriendsFromFriendGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupName = CommonUtils.getParam(call: call, result: result, param: "groupName") as? String,
            let userIDList = CommonUtils.getParam(call: call, result: result, param: "userIDList") as? String {
-            V2TIMManager.sharedInstance().deleteFriends(fromFriendGroup: groupName, userIDList: userIDList.split(separator: ",") as [String], succ: {
+            V2TIMManager.sharedInstance().deleteFriends(fromFriendGroup: groupName, userIDList: userIDList.components(separatedBy: ","), succ: {
                 infos in
                 var data: [[String: Any]] = [];
                 for item in infos! {

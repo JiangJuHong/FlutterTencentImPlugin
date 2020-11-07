@@ -143,7 +143,7 @@ public class MessageEntity: NSObject {
         self.peerRead = message.isPeerRead;
 //        self.priority
 //        self.offlinePushInfo
-        self.groupAtUserList = (message.groupAtUserList as! [String]);
+        self.groupAtUserList = (message.groupAtUserList as? [String]);
         self.seq = message.seq;
 
         // 解析接口
