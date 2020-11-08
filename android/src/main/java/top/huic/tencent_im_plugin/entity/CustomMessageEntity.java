@@ -10,13 +10,14 @@ import java.util.List;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
+import top.huic.tencent_im_plugin.util.BeanUtils;
 
 /**
- * 消息实体
+ * 自定义消息实体
  *
  * @author 蒋具宏
  */
-public class MessageEntity implements Serializable {
+public class CustomMessageEntity implements Serializable {
 
     /**
      * 消息 ID
@@ -129,40 +130,20 @@ public class MessageEntity implements Serializable {
      */
     private AbstractMessageEntity node;
 
-    public MessageEntity() {
+    public CustomMessageEntity() {
     }
 
-    public MessageEntity(V2TIMMessage message) {
-        // 赋值基本属性
-        this.msgID = message.getMsgID();
-        this.timestamp = message.getTimestamp();
-        this.sender = message.getSender();
-        this.nickName = message.getNickName();
-        this.friendRemark = message.getFriendRemark();
-        this.faceUrl = message.getFaceUrl();
-        this.nameCard = message.getNameCard();
-        this.groupID = message.getGroupID();
-        this.userID = message.getUserID();
-        this.status = message.getStatus();
-        this.elemType = message.getElemType();
-        this.localCustomData = message.getLocalCustomData();
-        this.localCustomInt = message.getLocalCustomInt();
-        this.self = message.isSelf();
-        this.read = message.isRead();
-        this.peerRead = message.isPeerRead();
-        this.priority = message.getPriority();
-        this.offlinePushInfo = message.getOfflinePushInfo();
-        this.groupAtUserList = message.getGroupAtUserList();
-        this.seq = message.getSeq();
-
+    public CustomMessageEntity(V2TIMMessage message) {
+        BeanUtils.copyProperties(message, this);
 
         // 解析接口
-        AbstractMessageNode _node = MessageNodeType.getMessageNodeTypeByV2TIMConstant(this.elemType).getMessageNodeInterface();
-        V2TIMElem elem = MessageNodeType.getMessageNodeTypeByV2TIMConstant(this.elemType).getElemByMessage(message);
-
-        // 赋值节点信息
-        this.note = _node.getNote(elem);
-        this.node = _node.analysis(elem);
+        MessageNodeType nodeType = MessageNodeType.getMessageNodeTypeByV2TIMConstant(this.elemType);
+        if (nodeType != MessageNodeType.None) {
+            AbstractMessageNode _node = nodeType.getMessageNodeInterface();
+            V2TIMElem elem = nodeType.getElemByMessage(message);
+            this.note = _node.getNote(elem);
+            this.node = _node.analysis(elem);
+        }
     }
 
     public String getMsgID() {

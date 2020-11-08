@@ -3,9 +3,11 @@ package top.huic.tencent_im_plugin.listener;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import top.huic.tencent_im_plugin.TencentImPlugin;
+import top.huic.tencent_im_plugin.entity.CustomConversationEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 
 /**
@@ -45,7 +47,11 @@ public class CustomConversationListener extends V2TIMConversationListener {
     @Override
     public void onNewConversation(List<V2TIMConversation> conversationList) {
         super.onNewConversation(conversationList);
-        TencentImPlugin.invokeListener(ListenerTypeEnum.NewConversation, conversationList);
+        List<CustomConversationEntity> data = new ArrayList<>(conversationList.size());
+        for (V2TIMConversation v2TIMConversation : conversationList) {
+            data.add(new CustomConversationEntity(v2TIMConversation));
+        }
+        TencentImPlugin.invokeListener(ListenerTypeEnum.NewConversation, data);
     }
 
     /**
@@ -54,6 +60,10 @@ public class CustomConversationListener extends V2TIMConversationListener {
     @Override
     public void onConversationChanged(List<V2TIMConversation> conversationList) {
         super.onConversationChanged(conversationList);
-        TencentImPlugin.invokeListener(ListenerTypeEnum.ConversationChanged, conversationList);
+        List<CustomConversationEntity> data = new ArrayList<>(conversationList.size());
+        for (V2TIMConversation v2TIMConversation : conversationList) {
+            data.add(new CustomConversationEntity(v2TIMConversation));
+        }
+        TencentImPlugin.invokeListener(ListenerTypeEnum.ConversationChanged, data);
     }
 }

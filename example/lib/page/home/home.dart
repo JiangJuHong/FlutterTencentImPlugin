@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
               child: Text("接口测试"),
             ),
             RaisedButton(
-              onPressed: () => Navigator.pushNamed(context, "/interfaces_test"),
+              onPressed: () => Navigator.pushNamed(context, "/login"),
               child: Text("进入Demo"),
             ),
           ],

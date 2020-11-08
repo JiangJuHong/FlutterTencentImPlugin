@@ -7,7 +7,7 @@ import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import java.util.List;
 
 import top.huic.tencent_im_plugin.TencentImPlugin;
-import top.huic.tencent_im_plugin.entity.MessageEntity;
+import top.huic.tencent_im_plugin.entity.CustomMessageEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 
 /**
@@ -20,7 +20,7 @@ public class CustomAdvancedMsgListener extends V2TIMAdvancedMsgListener {
     @Override
     public void onRecvNewMessage(V2TIMMessage msg) {
         super.onRecvNewMessage(msg);
-        TencentImPlugin.invokeListener(ListenerTypeEnum.NewMessage, new MessageEntity(msg));
+        TencentImPlugin.invokeListener(ListenerTypeEnum.NewMessage, new CustomMessageEntity(msg));
     }
 
     /**

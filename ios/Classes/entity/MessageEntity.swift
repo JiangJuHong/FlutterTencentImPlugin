@@ -147,9 +147,12 @@ public class MessageEntity: NSObject {
         self.seq = message.seq;
 
         // 解析接口
-        let messageNodeInterface = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: self.elemType!).messageNodeInterface();
-        let elem = MessageNodeType.getElemByMessage(message: message)!;
-        self.note = messageNodeInterface.getNote(elem: elem);
-        self.node = messageNodeInterface.analysis(elem: elem);
+        let nodeType = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: self.elemType!);
+        if nodeType != MessageNodeType.None {
+            let messageNodeInterface = nodeType.messageNodeInterface();
+            let elem = MessageNodeType.getElemByMessage(message: message)!;
+            self.note = messageNodeInterface.getNote(elem: elem);
+            self.node = messageNodeInterface.analysis(elem: elem);
+        }
     }
 }

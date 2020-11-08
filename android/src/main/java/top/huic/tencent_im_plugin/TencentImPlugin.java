@@ -46,8 +46,10 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import top.huic.tencent_im_plugin.entity.CustomConversationEntity;
+import top.huic.tencent_im_plugin.entity.CustomConversationResultEntity;
+import top.huic.tencent_im_plugin.entity.CustomMessageEntity;
 import top.huic.tencent_im_plugin.entity.FindMessageEntity;
-import top.huic.tencent_im_plugin.entity.MessageEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 import top.huic.tencent_im_plugin.listener.CustomAdvancedMsgListener;
@@ -397,9 +399,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         final ValueCallBack<List<V2TIMMessage>> resultCallBack = new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
-                List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
+                List<CustomMessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
                 for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
-                    resultData.add(new MessageEntity(v2TIMMessage));
+                    resultData.add(new CustomMessageEntity(v2TIMMessage));
                 }
                 result.success(JsonUtil.toJSONString(resultData));
             }
@@ -434,9 +436,9 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         final ValueCallBack<List<V2TIMMessage>> resultCallBack = new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
-                List<MessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
+                List<CustomMessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
                 for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
-                    resultData.add(new MessageEntity(v2TIMMessage));
+                    resultData.add(new CustomMessageEntity(v2TIMMessage));
                 }
                 result.success(JsonUtil.toJSONString(resultData));
             }
@@ -841,7 +843,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getConversationList(MethodCall methodCall, final Result result) {
         int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");
         int count = CommonUtil.getParam(methodCall, result, "count");
-        V2TIMManager.getConversationManager().getConversationList(nextSeq, count, new ValueCallBack<V2TIMConversationResult>(result));
+        V2TIMManager.getConversationManager().getConversationList(nextSeq, count, new ValueCallBack<V2TIMConversationResult>(result) {
+            @Override
+            public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
+                result.success(JsonUtil.toJSONString(new CustomConversationResultEntity(v2TIMConversationResult)));
+            }
+        });
     }
 
     /**
@@ -852,7 +859,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getConversation(MethodCall methodCall, final Result result) {
         String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
-        V2TIMManager.getConversationManager().getConversation(conversationID, new ValueCallBack<V2TIMConversation>(result));
+        V2TIMManager.getConversationManager().getConversation(conversationID, new ValueCallBack<V2TIMConversation>(result) {
+            @Override
+            public void onSuccess(V2TIMConversation v2TIMConversation) {
+                result.success(JsonUtil.toJSONString(new CustomConversationEntity(v2TIMConversation)));
+            }
+        });
     }
 
     /**
