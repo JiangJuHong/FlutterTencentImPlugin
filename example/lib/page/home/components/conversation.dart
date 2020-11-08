@@ -58,7 +58,7 @@ class _ConversationState extends State<Conversation> {
                       title: RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(text: "[${item.groupID == null ? "个人" : "群组"}] ", style: TextStyle(color: Colors.grey)),
+                            TextSpan(text: "[${item.groupID == null ? "私聊" : "群聊"}] ", style: TextStyle(color: Colors.grey)),
                             TextSpan(text: item.showName),
                           ],
                           style: TextStyle(color: Colors.black),
