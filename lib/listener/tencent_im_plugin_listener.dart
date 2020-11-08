@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:tencent_im_plugin/entity/conversation_entity.dart';
 import 'package:tencent_im_plugin/entity/error_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_application_entity.dart';
@@ -26,6 +27,9 @@ import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 监听器对象
 class TencentImPluginListener {
+  /// 日志对象
+  static Logger _logger = Logger();
+
   /// 监听器列表
   static Set<TencentImListenerValue> listeners = Set();
 
@@ -163,7 +167,7 @@ class TencentImPluginListener {
                 break;
             }
           } catch (err) {
-            print("$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
+            _logger.e(err, "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
           }
 
           // 没有找到类型就返回

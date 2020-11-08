@@ -12,6 +12,6 @@ class FriendGroupEntity {
   FriendGroupEntity.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     friendCount = json['friendCount'];
-    friendIDList = json['friendIDList'];
+    friendIDList = json['friendIDList']?.cast<String>();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,6 +9,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    TencentImPlugin.initSDK(appid: '1400294314');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

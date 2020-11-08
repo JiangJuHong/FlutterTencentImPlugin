@@ -5,6 +5,7 @@
 import Foundation
 import ImSDK
 
+/// 关系链相关监听器
 class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
     /**
      * 好友申请新增通知，两种情况会收到这个回调：

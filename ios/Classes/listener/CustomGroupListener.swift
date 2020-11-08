@@ -57,13 +57,20 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 群成员信息被修改（全员能收到）
     func onMemberInfoChanged(_ groupID: String!, changeInfoList: [V2TIMGroupMemberChangeInfo]!) {
         var data: [[String: Any]] = [];
-        for item in changeInfoList! {
-            data.append(CustomGroupMemberChangeInfoEntity.getDict(info: item));
-        }
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberInfoChanged, params: [
-            "groupID": groupID!,
-            "changInfo": data,
-        ])
+        print("=======================")
+        print("=======================")
+        print("onMemberInfoChanged 回调由于 v5.1.1 存在错误，暂不支持!");
+        print("=======================")
+        print("=======================")
+
+
+//        for item in changeInfoList! {
+//            data.append(CustomGroupMemberChangeInfoEntity.getDict(info: item));
+//        }
+//        SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberInfoChanged, params: [
+//            "groupID": groupID!,
+//            "changInfo": data,
+//        ])
     }
 
     /// 创建群（主要用于多端同步）

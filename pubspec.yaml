@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   # 生成UUID(https://pub.dev/packages/uuid)
   uuid: 2.2.2
+  # 日志输出(https://pub.dev/packages/logger)
+  logger: 0.9.4
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/utils/enum_util.dart';
@@ -17,6 +14,7 @@ import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
+import 'package:logger/logger.dart';
 
 typedef TestCallback = Future<dynamic> Function();
 
@@ -27,6 +25,9 @@ class InterfacesTest extends StatefulWidget {
 }
 
 class _InterfacesTestState extends State<InterfacesTest> {
+  /// 日志输出
+  static Logger _logger = Logger();
+
   /// 群ID
   static String _groupId = "@TGS#2HAKW7YGC";
 
@@ -38,13 +39,6 @@ class _InterfacesTestState extends State<InterfacesTest> {
 
   /// 接口列表
   Map<String, TestCallback> _interfaces = {
-    "initSDK": () => TencentImPlugin.initSDK(appid: '1400294314'),
-    // "unInitSDK": () => TencentImPlugin.unInitSDK(),
-    "login": () => TencentImPlugin.login(
-          userID: "dev",
-          userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
-        ),
-    // "logout": () => TencentImPlugin.logout(),
     "getLoginStatus": () => TencentImPlugin.getLoginStatus(),
     "getLoginUser": () => TencentImPlugin.getLoginUser(),
     "invite": () => TencentImPlugin.invite(data: "邀请你进行视频通话1", invitee: _friendId),
@@ -215,11 +209,26 @@ class _InterfacesTestState extends State<InterfacesTest> {
   @override
   void initState() {
     super.initState();
-    TencentImPlugin.addListener((type, params) {
-      this.setState(() {
-        _callResult.add("${_getDateTime()}-[${EnumUtil.getEnumName(type)}]:${params}");
-      });
-    });
+    TencentImPlugin.addListener(_listener);
+    TencentImPlugin.login(
+      userID: "dev",
+      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    TencentImPlugin.removeListener(_listener);
+    TencentImPlugin.logout();
+  }
+
+  /// 监听器对象
+  _listener(type, params) {
+    _callResult.add("${_getDateTime()}-[${EnumUtil.getEnumName(type)}]:$params");
+    if (this.mounted) {
+      this.setState(() {});
+    }
   }
 
   /// 获得时间字符串
@@ -240,10 +249,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
       } catch (err) {
         _failInterfaces.add("$key : $err");
         _result.add("${_getDateTime()}-[$key]:$err");
-        print("=================================");
-        print("[测试结果出错] $key :");
-        print(err);
-        print("=================================");
+        _logger.e(err, "[测试结果出错] $key");
       }
       this.setState(() => _finishTestCount += 1);
     }

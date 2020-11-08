@@ -96,7 +96,7 @@ class MessageEntity {
       priority = MessagePriorityTool.getByInt(json["priority"]);
     if (json["offlinePushInfo"] != null)
       offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
-    groupAtUserList = json["groupAtUserList"].cast<String>();
+    groupAtUserList = json["groupAtUserList"]?.cast<String>();
     seq = json["seq"];
     note = json["note"];
     node = json["node"] == null

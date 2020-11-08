@@ -6,6 +6,28 @@ import HandyJSON
 public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public static var channel: FlutterMethodChannel?;
 
+    /* 下面是监听器列表，由于局部变量的监听器对象不会触发，所以提取为全局对象 */
+    /// SDK 监听器
+    private var customSdkListener = CustomSDKListener();
+
+    /// 消息监听器
+    private var customAdvancedMsgListener = CustomAdvancedMsgListener();
+
+    /// 会话监听器
+    private var customConversationListener = CustomConversationListener();
+
+    /// 群组监听器
+    private var customGroupListener = CustomGroupListener();
+
+    /// 关系链相关监听器
+    private var customFriendshipListener = CustomFriendshipListener();
+
+    /// 信令监听器
+    private var customSignalingListener = CustomSignalingListener();
+
+    /// Apns离线推送监听器
+    private var customAPNSListener = CustomAPNSListener();
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "tencent_im_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftTencentImPlugin()
@@ -254,25 +276,26 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             if logPrintLevel != nil {
                 sdkConfig.logLevel = V2TIMLogLevel.init(rawValue: logPrintLevel!)!;
             }
-            V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: CustomSDKListener())
+
+            V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: customSdkListener)
 
             // 绑定消息监听
-            V2TIMManager.sharedInstance().add(CustomAdvancedMsgListener())
+            V2TIMManager.sharedInstance().add(customAdvancedMsgListener)
 
             // 绑定会话监听
-            V2TIMManager.sharedInstance().setConversationListener(CustomConversationListener())
+            V2TIMManager.sharedInstance().setConversationListener(customConversationListener)
 
             // 绑定群监听
-            V2TIMManager.sharedInstance().setGroupListener(CustomGroupListener())
+            V2TIMManager.sharedInstance().setGroupListener(customGroupListener)
 
             // 绑定关系链监听
-            V2TIMManager.sharedInstance().setFriendListener(CustomFriendshipListener())
+            V2TIMManager.sharedInstance().setFriendListener(customFriendshipListener)
 
             // 绑定信令监听
-            V2TIMManager.sharedInstance().addSignalingListener(listener: CustomSignalingListener())
+            V2TIMManager.sharedInstance().addSignalingListener(listener: customSignalingListener)
 
             // 绑定APNS监听
-            V2TIMManager.sharedInstance().setAPNSListener(CustomAPNSListener())
+            V2TIMManager.sharedInstance().setAPNSListener(customAPNSListener)
 
             result(nil);
         }
@@ -1033,7 +1056,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
            let _ = CommonUtils.getParam(call: call, result: result, param: "checkType") as? Int {
             V2TIMManager.sharedInstance().checkFriend(userID, succ: {
                 info in
-                result(CustomFriendCheckResultEntity.getDict(info: info!));
+                result(JsonUtil.toJson(CustomFriendCheckResultEntity.getDict(info: info!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }
@@ -1042,7 +1065,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func getFriendApplicationList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         V2TIMManager.sharedInstance().getFriendApplicationList({
             info in
-            result(CustomFriendApplicationResultEntity.getDict(info: info!));
+            result(JsonUtil.toJson(CustomFriendApplicationResultEntity.getDict(info: info!)));
         }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
 
@@ -1054,7 +1077,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 (v2TIMFriendApplication: V2TIMFriendApplication?) -> () in
                 V2TIMManager.sharedInstance().accept(v2TIMFriendApplication!, type: V2TIMFriendAcceptType.init(rawValue: responseType)!, succ: {
                     info in
-                    result(CustomFriendOperationResultEntity.getDict(info: info!));
+                    result(JsonUtil.toJson(CustomFriendOperationResultEntity.getDict(info: info!)));
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
@@ -1067,7 +1090,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 (v2TIMFriendApplication: V2TIMFriendApplication?) -> () in
                 V2TIMManager.sharedInstance().refuse(v2TIMFriendApplication!, succ: {
                     info in
-                    result(CustomFriendOperationResultEntity.getDict(info: info!));
+                    result(JsonUtil.toJson(CustomFriendOperationResultEntity.getDict(info: info!)));
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
