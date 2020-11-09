@@ -56,10 +56,12 @@ class SignalingInfoEntity {
     inviteeList = json["inviteeList"];
     data = json["data"];
     timeout = json["timeout"];
-    if (json["actionType"] != null) actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
+    if (json["actionType"] != null)
+      actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
     businessID = json["businessID"];
     onlineUserOnly = json["onlineUserOnly"];
-    if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
+    if (json["offlinePushInfo"] != null)
+      offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -70,9 +72,11 @@ class SignalingInfoEntity {
     if (this.inviteeList != null) data['inviteeList'] = this.inviteeList;
     if (this.data != null) data['data'] = this.data;
     if (this.timeout != null) data['timeout'] = this.timeout;
-    if (this.actionType != null) data['actionType'] = SignalingActionTypeTool.toInt(this.actionType);
+    if (this.actionType != null)
+      data['actionType'] = SignalingActionTypeTool.toInt(this.actionType);
     if (this.businessID != null) data['businessID'] = this.businessID;
-    if (this.onlineUserOnly != null) data['onlineUserOnly'] = this.onlineUserOnly;
+    if (this.onlineUserOnly != null)
+      data['onlineUserOnly'] = this.onlineUserOnly;
     return data;
   }
 }

@@ -53,7 +53,9 @@ class _ChatState extends State<Chat> {
     super.dispose();
     TencentImPlugin.removeListener(_imListener);
     String text = _textEditingController.text.trim();
-    TencentImPlugin.setConversationDraft(conversationID: _conversation.conversationID, draftText: text.trim() != '' ? text : null);
+    TencentImPlugin.setConversationDraft(
+        conversationID: _conversation.conversationID,
+        draftText: text.trim() != '' ? text : null);
   }
 
   /// IM监听器
@@ -67,7 +69,8 @@ class _ChatState extends State<Chat> {
 
   /// 加载当前登录用户信息
   _loadUserInfo() async {
-    this._selfUser = (await TencentImPlugin.getUsersInfo(userIDList: [await TencentImPlugin.getLoginUser()]))[0];
+    this._selfUser = (await TencentImPlugin.getUsersInfo(
+        userIDList: [await TencentImPlugin.getLoginUser()]))[0];
     this.setState(() {});
   }
 
@@ -76,7 +79,11 @@ class _ChatState extends State<Chat> {
     if (_conversation == null) {
       return;
     }
-    List<MessageEntity> messages = await (_conversation.groupID != null ? TencentImPlugin.getGroupHistoryMessageList(groupID: _conversation.groupID, count: 100) : TencentImPlugin.getC2CHistoryMessageList(userID: _conversation.userID, count: 100));
+    List<MessageEntity> messages = await (_conversation.groupID != null
+        ? TencentImPlugin.getGroupHistoryMessageList(
+            groupID: _conversation.groupID, count: 100)
+        : TencentImPlugin.getC2CHistoryMessageList(
+            userID: _conversation.userID, count: 100));
     this.setState(() {
       this._messages = messages;
     });
@@ -94,7 +101,8 @@ class _ChatState extends State<Chat> {
 
   /// 图片选择按钮
   _onImageSelect() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile == null) {
       return;
     }
@@ -164,7 +172,9 @@ class _ChatState extends State<Chat> {
           _conversation == null
               ? null
               : IconButton(
-                  icon: Icon(_conversation.groupID != null ? Icons.supervisor_account : Icons.settings),
+                  icon: Icon(_conversation.groupID != null
+                      ? Icons.supervisor_account
+                      : Icons.settings),
                   onPressed: () => {},
                 ),
           Container(width: 8),
@@ -185,13 +195,19 @@ class _ChatState extends State<Chat> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               child: Row(
-                                mainAxisAlignment: item.self ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                mainAxisAlignment: item.self
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
                                 children: [
                                   Offstage(
                                     child: Row(
                                       children: [
                                         CircleAvatar(
-                                          backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl),
+                                          backgroundImage:
+                                              item.faceUrl == null ||
+                                                      item.faceUrl == ''
+                                                  ? null
+                                                  : NetworkImage(item.faceUrl),
                                         ),
                                         Container(width: 10),
                                       ],
@@ -204,7 +220,11 @@ class _ChatState extends State<Chat> {
                                       children: [
                                         Container(width: 10),
                                         CircleAvatar(
-                                          backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl),
+                                          backgroundImage:
+                                              item.faceUrl == null ||
+                                                      item.faceUrl == ''
+                                                  ? null
+                                                  : NetworkImage(item.faceUrl),
                                         ),
                                       ],
                                     ),

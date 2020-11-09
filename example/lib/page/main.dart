@@ -46,8 +46,10 @@ class _MainState extends State<Main> {
             currentIndex: _index,
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.message), label: "会话"),
-              BottomNavigationBarItem(icon: Icon(Icons.supervisor_account), label: "群组"),
-              BottomNavigationBarItem(icon: Icon(Icons.account_box), label: "好友"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.supervisor_account), label: "群组"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.account_box), label: "好友"),
             ],
             onTap: _onPageChange,
           ),

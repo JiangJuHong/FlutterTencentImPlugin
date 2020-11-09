@@ -16,10 +16,12 @@ class _LoginState extends State<Login> {
   _onLogin() async {
     await TencentImPlugin.login(
       userID: "dev",
-      userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+      userSig:
+          "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
 
-    Navigator.pushNamedAndRemoveUntil(context, "/main", (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, "/main", (Route<dynamic> route) => false);
   }
 
   @override

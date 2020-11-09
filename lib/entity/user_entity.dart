@@ -49,7 +49,8 @@ class UserEntity {
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
     if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender);
-    if (this.allowType != null) data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
+    if (this.allowType != null)
+      data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }

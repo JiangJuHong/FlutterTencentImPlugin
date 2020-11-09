@@ -38,7 +38,8 @@ class _GroupState extends State<Group> {
 
   /// 刷新事件
   Future<dynamic> _onRefresh() {
-    return TencentImPlugin.getJoinedGroupList().then((value) => this.setState(() => _data = value));
+    return TencentImPlugin.getJoinedGroupList()
+        .then((value) => this.setState(() => _data = value));
   }
 
   @override
@@ -52,7 +53,11 @@ class _GroupState extends State<Group> {
           tiles: _data
               .map(
                 (item) => ListTile(
-                  leading: CircleAvatar(backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl)),
+                  leading: CircleAvatar(
+                      backgroundImage:
+                          item.faceUrl == null || item.faceUrl == ''
+                              ? null
+                              : NetworkImage(item.faceUrl)),
                   title: RichText(
                     text: TextSpan(
                       children: [

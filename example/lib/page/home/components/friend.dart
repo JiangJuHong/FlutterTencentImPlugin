@@ -38,7 +38,8 @@ class _FriendState extends State<Friend> {
 
   /// 刷新事件
   Future<dynamic> _onRefresh() {
-    return TencentImPlugin.getFriendList().then((value) => this.setState(() => _data = value));
+    return TencentImPlugin.getFriendList()
+        .then((value) => this.setState(() => _data = value));
   }
 
   @override
@@ -52,7 +53,11 @@ class _FriendState extends State<Friend> {
           tiles: _data
               .map(
                 (item) => ListTile(
-                  leading: CircleAvatar(backgroundImage: item.userProfile?.faceUrl == null || item.userProfile.faceUrl == '' ? null : NetworkImage(item.userProfile.faceUrl)),
+                  leading: CircleAvatar(
+                      backgroundImage: item.userProfile?.faceUrl == null ||
+                              item.userProfile.faceUrl == ''
+                          ? null
+                          : NetworkImage(item.userProfile.faceUrl)),
                   title: RichText(
                     text: TextSpan(
                       children: [
