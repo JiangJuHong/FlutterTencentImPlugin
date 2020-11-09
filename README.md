@@ -6,9 +6,12 @@
     <a href="https://jq.qq.com/?_wv=1027&k=QxCWMlUf"><img src="https://img.shields.io/badge/qq群-850923396-1"/></a>
 </p>
 
+# Tips
+基于SDK 5.x 版本的 `1.0.0-beta+[x]` 已经发布，可参考文档进行集成。
+
 # Warning
 
-⚠️ 该插件正在进行SDK升级操作，如果您需要查看以前内容，请切换分支到:sdk-v-4.6  
+⚠️ 该插已经升级到SDK 5.x，如果你要查看以前的内容，请切换分支到:sdk-v-4.6  
 ⚠️ 由于腾讯云 5.x api改动较大，请不要混用 5.x 和 4.x 接口，对应插件版本: 5.x -> 1.x ，4.x -> 0.x
 
 # What is FlutterTencentIm ？
