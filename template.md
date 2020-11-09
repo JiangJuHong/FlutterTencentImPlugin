@@ -38,6 +38,9 @@
 | [deleteMessageFromLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)          | 删除本地消息                                                    |
 | [deleteMessages](https://www.yuque.com/jiangjuhong/tencent-im-flutter/wu3m16)                   | 删除本地及漫游消息                                              |
 | [insertGroupMessageToLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/gx2vx5) | 向群组消息列表中添加一条消息                                      |
+| [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 下载视频                                                       |
+| [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                 | 下载视频缩略图                                                  |
+| [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 下载语音                                                       |
 | [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                            | 创建群                                                         |
 | [joinGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                              | 加入群                                                         |
 | [quitGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                              | 退出群                                                         |

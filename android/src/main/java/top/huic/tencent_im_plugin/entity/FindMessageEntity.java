@@ -9,6 +9,13 @@ public class FindMessageEntity {
      */
     private String msgId;
 
+    public FindMessageEntity() {
+    }
+
+    public FindMessageEntity(String msgId) {
+        this.msgId = msgId;
+    }
+
     public String getMsgId() {
         return msgId;
     }

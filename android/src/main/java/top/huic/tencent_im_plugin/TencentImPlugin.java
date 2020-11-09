@@ -329,7 +329,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void sendMessage(MethodCall methodCall, final Result result) {
         String receiver = methodCall.argument("receiver");
-        String groupID = methodCall.argument("groupID");
+        final String groupID = methodCall.argument("groupID");
         String nodeStr = CommonUtil.getParam(methodCall, result, "node");
         Map node = JSON.parseObject(nodeStr, Map.class);
         boolean ol = CommonUtil.getParam(methodCall, result, "ol");
@@ -349,23 +349,38 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             message.setLocalCustomData(localCustomStr);
         }
 
-        // 发送消息
-        V2TIMManager.getMessageManager().sendMessage(message, receiver, groupID, priority, ol, offlinePushInfo == null ? null : JSON.parseObject(offlinePushInfo, V2TIMOfflinePushInfo.class), new V2TIMSendCallback<V2TIMMessage>() {
+        final String[] msgId = new String[1];
+        V2TIMSendCallback<V2TIMMessage> callback = new V2TIMSendCallback<V2TIMMessage>() {
             @Override
-            public void onError(int i, String s) {
-                result.error(String.valueOf(i), s, s);
+            public void onError(final int i, final String s) {
+                TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendFail, new HashMap<String, Object>() {
+                    {
+                        put("msgId", msgId);
+                        put("code", i);
+                        put("desc", s);
+                    }
+                });
             }
 
             @Override
             public void onSuccess(V2TIMMessage o) {
-                result.success(null);
+                TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendSucc, new CustomMessageEntity(o));
             }
 
             @Override
-            public void onProgress(int i) {
-                System.out.println("2");
+            public void onProgress(final int i) {
+                TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendProgress, new HashMap<String, Object>() {
+                    {
+                        put("msgId", msgId);
+                        put("progress", i);
+                    }
+                });
             }
-        });
+        };
+
+        // 发送消息
+        msgId[0] = V2TIMManager.getMessageManager().sendMessage(message, receiver, groupID, priority, ol, offlinePushInfo == null ? null : JSON.parseObject(offlinePushInfo, V2TIMOfflinePushInfo.class), callback);
+        result.success(msgId[0]);
     }
 
     /**
@@ -535,6 +550,57 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             @Override
             public void onSuccess(V2TIMMessage message) {
                 result.success(null);
+            }
+        });
+    }
+
+    /**
+     * 下载视频
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadVideo(MethodCall methodCall, final Result result) {
+        final String path = CommonUtil.getParam(methodCall, result, "path");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.getVideoElem().downloadVideo(path, new DownloadCallBack(result, path, message.getMsgID()));
+            }
+        });
+    }
+
+    /**
+     * 下载视频缩略图
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadVideoThumbnail(MethodCall methodCall, final Result result) {
+        final String path = CommonUtil.getParam(methodCall, result, "path");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.getVideoElem().downloadSnapshot(path, new DownloadCallBack(result, path, message.getMsgID()));
+            }
+        });
+    }
+
+    /**
+     * 下载语音
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadSound(MethodCall methodCall, final Result result) {
+        final String path = CommonUtil.getParam(methodCall, result, "path");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.getSoundElem().downloadSound(path, new DownloadCallBack(result, path, message.getMsgID()));
             }
         });
     }

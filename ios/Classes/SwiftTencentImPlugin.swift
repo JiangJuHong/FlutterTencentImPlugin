@@ -103,6 +103,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "insertGroupMessageToLocalStorage":
             self.insertGroupMessageToLocalStorage(call: call, result: result);
             break;
+        case "downloadVideo":
+            self.downloadVideo(call: call, result: result);
+            break;
+        case "downloadVideoThumbnail":
+            self.downloadVideoThumbnail(call: call, result: result);
+            break;
+        case "downloadSound":
+            self.downloadSound(call: call, result: result);
+            break;
         case "createGroup":
             self.createGroup(call: call, result: result);
             break;
@@ -443,13 +452,39 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }
 
 
-            // 发送消息
-            V2TIMManager.sharedInstance().send(message, receiver: receiver, groupID: groupID, priority: V2TIMMessagePriority.init(rawValue: priority)!, onlineUserOnly: ol, offlinePushInfo: CustomOfflinePushInfoEntity.init(jsonStr: offlinePushInfo), progress:
-            { int32 in
+            var msgId: [String?] = [nil];
+            // 成功回调
+            let _sendSuccess = {
+                TencentImUtils.getMessageByFindMessageEntity(dict: [
+                    "msgId": msgId[0]
+                ], succ: {
+                    (message: V2TIMMessage?) -> () in
+                    SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendSucc, params: MessageEntity.init(message: message!))
+                }, fail: { (int32: Int32, s: String?) -> () in })
+            };
 
-            }, succ: {
-                result(nil);
-            }, fail: TencentImUtils.returnErrorClosures(result: result))
+            // 进度回调
+            let _progress = {
+                (p: UInt32) in
+                SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendProgress, params: [
+                    "msgId": msgId[0],
+                    "progress": p,
+                ])
+            };
+
+            // 失败回调
+            let _fail = {
+                (code: Int32, desc: Optional<String>) -> Void in
+                SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendFail, params: [
+                    "msgId": msgId[0],
+                    "code": code,
+                    "desc": desc,
+                ])
+            };
+
+            // 发送消息
+            msgId[0] = V2TIMManager.sharedInstance().send(message, receiver: receiver, groupID: groupID, priority: V2TIMMessagePriority.init(rawValue: priority)!, onlineUserOnly: ol, offlinePushInfo: CustomOfflinePushInfoEntity.init(jsonStr: offlinePushInfo), progress: _progress, succ: _sendSuccess, fail: _fail)
+            result(msgId[0]);
         }
     }
 
@@ -579,6 +614,66 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             // 添加到列表
             V2TIMManager.sharedInstance().insertGroupMessage(toLocalStorage: message, to: groupID, sender: sender, succ: {
                 result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 下载视频
+    public func downloadVideo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg?.videoElem?.downloadVideo(path, progress: {
+                    curSize, totalSize in
+                    SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
+                        "msgId": msg!.msgID,
+                        "currentSize": curSize,
+                        "totalSize": totalSize,
+                    ])
+                }, succ: {
+                    result(path);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 下载视频缩略图
+    public func downloadVideoThumbnail(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg?.videoElem?.downloadSnapshot(path, progress: {
+                    curSize, totalSize in
+                    SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
+                        "msgId": msg!.msgID,
+                        "currentSize": curSize,
+                        "totalSize": totalSize,
+                    ])
+                }, succ: {
+                    result(path);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 下载语音
+    public func downloadSound(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg?.soundElem?.downloadSound(path, progress: {
+                    curSize, totalSize in
+                    SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
+                        "msgId": msg!.msgID,
+                        "currentSize": curSize,
+                        "totalSize": totalSize,
+                    ])
+                }, succ: {
+                    result(path);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

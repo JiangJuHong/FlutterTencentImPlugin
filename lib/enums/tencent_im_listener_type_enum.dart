@@ -128,4 +128,16 @@ enum TencentImListenerTypeEnum {
 
   /// 信令邀请超时
   InvitationTimeout,
+
+  /// 下载进度
+  DownloadProgress,
+
+  /// 消息发送成功
+  MessageSendSucc,
+
+  /// 消息发送失败
+  MessageSendFail,
+
+  /// 消息发送进度更新
+  MessageSendProgress,
 }

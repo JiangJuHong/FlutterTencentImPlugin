@@ -152,21 +152,4 @@ public class TencentImUtils {
             }
         });
     }
-
-//    /**
-//     * 获得系统目录
-//     *
-//     * @param context 全局上下文
-//     * @return 获得结果
-//     */
-//    private static String getSystemFilePath(Context context) {
-//        String cachePath;
-//        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-//                || !Environment.isExternalStorageRemovable()) {
-//            cachePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
-//        } else {
-//            cachePath = context.getFilesDir().getAbsolutePath();
-//        }
-//        return cachePath;
-//    }
 }

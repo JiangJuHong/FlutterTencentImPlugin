@@ -1,20 +1,27 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tencent_im_plugin/entity/conversation_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
+import 'package:tencent_im_plugin/entity/find_message_entity.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/enums/tencent_im_listener_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
+import 'package:tencent_im_plugin/message_node/video_message_node.dart';
+import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/image_type_enum.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 /// 聊天页面
 class Chat extends StatefulWidget {
@@ -35,10 +42,14 @@ class _ChatState extends State<Chat> {
   /// 用户信息
   UserEntity _selfUser;
 
+  /// 临时目录
+  String _tempPath;
+
   @override
   void initState() {
     super.initState();
     TencentImPlugin.addListener(_imListener);
+    _loadTempPath();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _conversation = ModalRoute.of(context).settings.arguments;
       this.setState(() {});
@@ -53,9 +64,7 @@ class _ChatState extends State<Chat> {
     super.dispose();
     TencentImPlugin.removeListener(_imListener);
     String text = _textEditingController.text.trim();
-    TencentImPlugin.setConversationDraft(
-        conversationID: _conversation.conversationID,
-        draftText: text.trim() != '' ? text : null);
+    TencentImPlugin.setConversationDraft(conversationID: _conversation.conversationID, draftText: text.trim() != '' ? text : null);
   }
 
   /// IM监听器
@@ -65,12 +74,29 @@ class _ChatState extends State<Chat> {
         this._messages.insert(0, params);
       });
     }
+
+    if (type == TencentImListenerTypeEnum.MessageSendSucc) {
+      print("===================");
+      print("消息发送成功");
+      print("===================");
+    }
+
+    if (type == TencentImListenerTypeEnum.MessageSendFail) {
+      print("===================");
+      print("消息发送失败");
+      print("===================");
+    }
+  }
+
+  /// 加载连目录
+  _loadTempPath() async {
+    _tempPath = (await getTemporaryDirectory()).path;
+    this.setState(() {});
   }
 
   /// 加载当前登录用户信息
   _loadUserInfo() async {
-    this._selfUser = (await TencentImPlugin.getUsersInfo(
-        userIDList: [await TencentImPlugin.getLoginUser()]))[0];
+    this._selfUser = (await TencentImPlugin.getUsersInfo(userIDList: [await TencentImPlugin.getLoginUser()]))[0];
     this.setState(() {});
   }
 
@@ -79,14 +105,33 @@ class _ChatState extends State<Chat> {
     if (_conversation == null) {
       return;
     }
-    List<MessageEntity> messages = await (_conversation.groupID != null
-        ? TencentImPlugin.getGroupHistoryMessageList(
-            groupID: _conversation.groupID, count: 100)
-        : TencentImPlugin.getC2CHistoryMessageList(
-            userID: _conversation.userID, count: 100));
+    List<MessageEntity> messages = await (_conversation.groupID != null ? TencentImPlugin.getGroupHistoryMessageList(groupID: _conversation.groupID, count: 100) : TencentImPlugin.getC2CHistoryMessageList(userID: _conversation.userID, count: 100));
     this.setState(() {
       this._messages = messages;
     });
+
+    // 下载语音、视频缩略图
+    for (var item in messages) {
+      if (item.elemType == MessageElemTypeEnum.Video) {
+        File file = new File(_tempPath + "/" + (item.node as VideoMessageNode).snapshotUuid);
+        if (!file.existsSync()) {
+          TencentImPlugin.downloadVideoThumbnail(message: FindMessageEntity(msgId: item.msgID), path: file.path).then((value) {
+            this.setState(() {});
+          });
+        }
+      }
+
+      if (item.elemType == MessageElemTypeEnum.Sound) {
+        File file = new File(_tempPath + "/" + (item.node as SoundMessageNode).uuid);
+        if (!file.existsSync()) {
+          TencentImPlugin.downloadSound(message: FindMessageEntity(msgId: item.msgID), path: file.path).then((value) {
+            this.setState(() {});
+          });
+        }
+      }
+    }
+
+    this.setState(() {});
   }
 
   /// 发送按钮点击事件
@@ -101,12 +146,57 @@ class _ChatState extends State<Chat> {
 
   /// 图片选择按钮
   _onImageSelect() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile == null) {
+    int value = await showCupertinoModalPopup<int>(
+      builder: (BuildContext context) => CupertinoActionSheet(
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            child: Text("图片"),
+            onPressed: () => Navigator.pop(this.context, 0),
+          ),
+          CupertinoActionSheetAction(
+            child: Text("视频"),
+            onPressed: () => Navigator.pop(this.context, 1),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          child: Text("取消"),
+          onPressed: () => Navigator.pop(this.context),
+        ), // 取消按钮
+      ),
+      context: context,
+    );
+
+    if (value == null) {
       return;
     }
-    this._sendMessage(ImageMessageNode(path: pickedFile.path));
+
+    // 图片
+    if (value == 0) {
+      final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+      if (pickedFile == null) return;
+      this._sendMessage(ImageMessageNode(path: pickedFile.path));
+    }
+
+    // 视频
+    if (value == 1) {
+      final pickedFile = await ImagePicker().getVideo(source: ImageSource.gallery);
+      if (pickedFile == null) return;
+
+      // 获得视频缩略图
+      String thumb = await VideoThumbnail.thumbnailFile(
+        video: pickedFile.path,
+        thumbnailPath: _tempPath,
+        imageFormat: ImageFormat.JPEG,
+        quality: 25,
+      );
+
+      // 获得控制器并获得视频时长
+      VideoPlayerController playerController = VideoPlayerController.file(File(pickedFile.path));
+      await playerController.initialize();
+      int duration = playerController.value.duration.inSeconds;
+
+      this._sendMessage(VideoMessageNode(duration: duration, snapshotPath: thumb, videoPath: pickedFile.path));
+    }
   }
 
   /// 根据消息获得组件
@@ -138,25 +228,40 @@ class _ChatState extends State<Chat> {
       );
     }
 
+    // 视频消息
+    if (message.elemType == MessageElemTypeEnum.Video) {
+      VideoMessageNode node = message.node;
+      String path = node.snapshotPath == null || node.snapshotPath == '' ? (_tempPath + "/" + node.snapshotUuid) : node.snapshotPath;
+
+      return Container(
+        constraints: BoxConstraints(
+          maxHeight: 100,
+          maxWidth: 100,
+        ),
+        child: Image.file(File(path)),
+      );
+    }
+
     return Text("暂不支持的数据格式");
   }
 
   /// 发送消息
-  _sendMessage(MessageNode node) {
+  _sendMessage(MessageNode node) async {
+    String msgId = await TencentImPlugin.sendMessage(
+      node: node,
+      receiver: _conversation.userID,
+      groupID: _conversation.groupID,
+    );
+
     this._messages.insert(
           0,
           MessageEntity(
+            msgID: msgId,
             node: node,
             faceUrl: _selfUser.faceUrl,
             elemType: node.nodeType,
           ),
         );
-
-    TencentImPlugin.sendMessage(
-      node: node,
-      receiver: _conversation.userID,
-      groupID: _conversation.groupID,
-    );
 
     this.setState(() {});
   }
@@ -172,9 +277,7 @@ class _ChatState extends State<Chat> {
           _conversation == null
               ? null
               : IconButton(
-                  icon: Icon(_conversation.groupID != null
-                      ? Icons.supervisor_account
-                      : Icons.settings),
+                  icon: Icon(_conversation.groupID != null ? Icons.supervisor_account : Icons.settings),
                   onPressed: () => {},
                 ),
           Container(width: 8),
@@ -195,19 +298,13 @@ class _ChatState extends State<Chat> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               child: Row(
-                                mainAxisAlignment: item.self
-                                    ? MainAxisAlignment.end
-                                    : MainAxisAlignment.start,
+                                mainAxisAlignment: item.self ? MainAxisAlignment.end : MainAxisAlignment.start,
                                 children: [
                                   Offstage(
                                     child: Row(
                                       children: [
                                         CircleAvatar(
-                                          backgroundImage:
-                                              item.faceUrl == null ||
-                                                      item.faceUrl == ''
-                                                  ? null
-                                                  : NetworkImage(item.faceUrl),
+                                          backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl),
                                         ),
                                         Container(width: 10),
                                       ],
@@ -220,11 +317,7 @@ class _ChatState extends State<Chat> {
                                       children: [
                                         Container(width: 10),
                                         CircleAvatar(
-                                          backgroundImage:
-                                              item.faceUrl == null ||
-                                                      item.faceUrl == ''
-                                                  ? null
-                                                  : NetworkImage(item.faceUrl),
+                                          backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl),
                                         ),
                                       ],
                                     ),

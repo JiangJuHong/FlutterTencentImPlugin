@@ -129,4 +129,16 @@ public enum ListenerType {
 
     /// 信令邀请超时
     case InvitationTimeout
+
+    /// 下载进度
+    case DownloadProgress
+
+    /// 消息发送成功
+    case MessageSendSucc
+
+    /// 消息发送失败
+    case MessageSendFail
+
+    /// 消息发送进度更新
+    case MessageSendProgress
 }
