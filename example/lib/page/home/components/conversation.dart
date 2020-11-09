@@ -53,7 +53,7 @@ class _ConversationState extends State<Conversation> {
 
   /// 刷新事件
   Future<dynamic> _onRefresh() {
-    return TencentImPlugin.getConversationList().then((value){
+    return TencentImPlugin.getConversationList().then((value) {
       this.setState(() => _data = value);
     });
   }

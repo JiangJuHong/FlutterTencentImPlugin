@@ -1,5 +1,5 @@
 /// 消息发送失败实体
-class MessageSendFailEntity{
+class MessageSendFailEntity {
   /// 消息ID
   String msgId;
 

@@ -38,7 +38,8 @@ import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/enums/log_print_level.dart';
 
 class TencentImPlugin {
-  static const MethodChannel _channel = const MethodChannel('tencent_im_plugin');
+  static const MethodChannel _channel =
+      const MethodChannel('tencent_im_plugin');
 
   /// 监听器对象
   static TencentImPluginListener listener = TencentImPluginListener(_channel);
@@ -66,7 +67,8 @@ class TencentImPlugin {
     @required String userID,
     @required String userSig,
   }) {
-    return _channel.invokeMethod('login', {"userID": userID, "userSig": userSig});
+    return _channel
+        .invokeMethod('login', {"userID": userID, "userSig": userSig});
   }
 
   /// 退出登录腾讯云IM
@@ -74,7 +76,8 @@ class TencentImPlugin {
 
   /// 获得用户登录状态
   /// [Return] 用户当前登录状态
-  static Future<LoginStatusEnum> getLoginStatus() async => LoginStatusTool.getByInt(await _channel.invokeMethod('getLoginStatus'));
+  static Future<LoginStatusEnum> getLoginStatus() async =>
+      LoginStatusTool.getByInt(await _channel.invokeMethod('getLoginStatus'));
 
   /// 获得当前登录用户
   /// [Return] 当前用户ID
@@ -171,7 +174,8 @@ class TencentImPlugin {
   static Future<SignalingInfoEntity> getSignalingInfo({
     @required FindMessageEntity message,
   }) async {
-    return SignalingInfoEntity.fromJson(jsonDecode(await _channel.invokeMethod('getSignalingInfo', {
+    return SignalingInfoEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getSignalingInfo', {
       "message": jsonEncode(message),
     })));
   }
@@ -217,7 +221,8 @@ class TencentImPlugin {
         "localCustomInt": localCustomInt,
         "localCustomStr": localCustomStr,
         "priority": MessagePriorityTool.toInt(priority),
-        "offlinePushInfo": offlinePushInfo == null ? null : jsonEncode(offlinePushInfo),
+        "offlinePushInfo":
+            offlinePushInfo == null ? null : jsonEncode(offlinePushInfo),
       }..removeWhere((key, value) => value == null),
     );
   }
@@ -241,7 +246,8 @@ class TencentImPlugin {
     @required int count,
     FindMessageEntity lastMsg,
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(await _channel.invokeMethod(
+    return ListUtil.generateOBJList<MessageEntity>(
+        jsonDecode(await _channel.invokeMethod(
       'getC2CHistoryMessageList',
       {
         "userID": userID,
@@ -260,7 +266,8 @@ class TencentImPlugin {
     @required int count,
     FindMessageEntity lastMsg,
   }) async {
-    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(await _channel.invokeMethod(
+    return ListUtil.generateOBJList<MessageEntity>(
+        jsonDecode(await _channel.invokeMethod(
       'getGroupHistoryMessageList',
       {
         "groupID": groupID,
@@ -422,7 +429,8 @@ class TencentImPlugin {
 
   /// 获取已经加入的群列表（不包括已加入的直播群）
   static Future<List<GroupInfoEntity>> getJoinedGroupList() async {
-    return ListUtil.generateOBJList<GroupInfoEntity>(jsonDecode(await _channel.invokeMethod('getJoinedGroupList')));
+    return ListUtil.generateOBJList<GroupInfoEntity>(
+        jsonDecode(await _channel.invokeMethod('getJoinedGroupList')));
   }
 
   /// 拉取群资料
@@ -430,7 +438,8 @@ class TencentImPlugin {
   static Future<List<GroupInfoResultEntity>> getGroupsInfo({
     @required List<String> groupIDList,
   }) async {
-    return ListUtil.generateOBJList<GroupInfoResultEntity>(jsonDecode(await _channel.invokeMethod('getGroupsInfo', {
+    return ListUtil.generateOBJList<GroupInfoResultEntity>(
+        jsonDecode(await _channel.invokeMethod('getGroupsInfo', {
       "groupIDList": groupIDList.join(","),
     })));
   }
@@ -533,7 +542,8 @@ class TencentImPlugin {
     GroupMemberFilterEnum filter: GroupMemberFilterEnum.All,
     int nextSeq: 0,
   }) async {
-    return GroupMemberInfoResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('getGroupMemberList', {
+    return GroupMemberInfoResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getGroupMemberList', {
       "groupID": groupID,
       "filter": GroupMemberFilterTool.toInt(filter),
       "nextSeq": nextSeq,
@@ -547,7 +557,8 @@ class TencentImPlugin {
     @required String groupID,
     @required List<String> memberList,
   }) async {
-    return ListUtil.generateOBJList<GroupMemberEntity>(jsonDecode(await _channel.invokeMethod('getGroupMembersInfo', {
+    return ListUtil.generateOBJList<GroupMemberEntity>(
+        jsonDecode(await _channel.invokeMethod('getGroupMembersInfo', {
       "groupID": groupID,
       "memberList": memberList.join(","),
     })));
@@ -589,7 +600,8 @@ class TencentImPlugin {
     @required String groupID,
     @required List<String> userList,
   }) async {
-    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(jsonDecode(await _channel.invokeMethod('inviteUserToGroup', {
+    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('inviteUserToGroup', {
       "groupID": groupID,
       "userList": userList.join(","),
     })));
@@ -604,7 +616,8 @@ class TencentImPlugin {
     @required List<String> memberList,
     String reason: "",
   }) async {
-    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(jsonDecode(await _channel.invokeMethod('kickGroupMember', {
+    return ListUtil.generateOBJList<GroupMemberOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('kickGroupMember', {
       "groupID": groupID,
       "memberList": memberList.join(","),
       "reason": reason,
@@ -642,7 +655,8 @@ class TencentImPlugin {
 
   /// 获取加群的申请列表
   static Future<GroupApplicationResultEntity> getGroupApplicationList() async {
-    return GroupApplicationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('getGroupApplicationList')));
+    return GroupApplicationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getGroupApplicationList')));
   }
 
   /// 同意某一条加群申请
@@ -683,7 +697,8 @@ class TencentImPlugin {
     int nextSeq: 0,
     int count: 100,
   }) async {
-    return ConversationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('getConversationList', {
+    return ConversationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getConversationList', {
       "nextSeq": nextSeq,
       "count": count,
     })));
@@ -694,7 +709,8 @@ class TencentImPlugin {
   static Future<ConversationEntity> getConversation({
     @required String conversationID,
   }) async {
-    return ConversationEntity.fromJson(jsonDecode(await _channel.invokeMethod('getConversation', {
+    return ConversationEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getConversation', {
       "conversationID": conversationID,
     })));
   }
@@ -730,7 +746,8 @@ class TencentImPlugin {
   static Future<List<UserEntity>> getUsersInfo({
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<UserEntity>(jsonDecode(await _channel.invokeMethod('getUsersInfo', {
+    return ListUtil.generateOBJList<UserEntity>(
+        jsonDecode(await _channel.invokeMethod('getUsersInfo', {
       "userIDList": userIDList.join(","),
     })));
   }
@@ -750,7 +767,8 @@ class TencentImPlugin {
   static Future<List<FriendOperationResultEntity>> addToBlackList({
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('addToBlackList', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('addToBlackList', {
       "userIDList": userIDList.join(","),
     })));
   }
@@ -760,14 +778,16 @@ class TencentImPlugin {
   static Future<List<FriendOperationResultEntity>> deleteFromBlackList({
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('deleteFromBlackList', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('deleteFromBlackList', {
       "userIDList": userIDList.join(","),
     })));
   }
 
   /// 获得黑名单列表
   static Future<List<FriendInfoEntity>> getBlackList() async {
-    return ListUtil.generateOBJList<FriendInfoEntity>(jsonDecode(await _channel.invokeMethod('getBlackList')));
+    return ListUtil.generateOBJList<FriendInfoEntity>(
+        jsonDecode(await _channel.invokeMethod('getBlackList')));
   }
 
   /// 设置离线推送Token,Android使用setOfflinePushConfig，IOS使用setAPNS
@@ -795,7 +815,8 @@ class TencentImPlugin {
 
   /// 获得好友列表
   static Future<List<FriendInfoEntity>> getFriendList() async {
-    return ListUtil.generateOBJList<FriendInfoEntity>(jsonDecode(await _channel.invokeMethod('getFriendList')));
+    return ListUtil.generateOBJList<FriendInfoEntity>(
+        jsonDecode(await _channel.invokeMethod('getFriendList')));
   }
 
   /// 获得指定好友信息
@@ -803,7 +824,8 @@ class TencentImPlugin {
   static Future<List<FriendInfoResultEntity>> getFriendsInfo({
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendInfoResultEntity>(jsonDecode(await _channel.invokeMethod('getFriendsInfo', {
+    return ListUtil.generateOBJList<FriendInfoResultEntity>(
+        jsonDecode(await _channel.invokeMethod('getFriendsInfo', {
       "userIDList": userIDList.join(","),
     })));
   }
@@ -823,7 +845,8 @@ class TencentImPlugin {
   static Future<FriendOperationResultEntity> addFriend({
     @required FriendAddApplicationEntity info,
   }) async {
-    return FriendOperationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('addFriend', {
+    return FriendOperationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('addFriend', {
       "info": jsonEncode(info),
     })));
   }
@@ -835,7 +858,8 @@ class TencentImPlugin {
     @required List<String> userIDList,
     @required FriendTypeEnum deleteType,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('deleteFromFriendList', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('deleteFromFriendList', {
       "userIDList": userIDList.join(","),
       "deleteType": FriendTypeTool.toInt(deleteType),
     })));
@@ -848,15 +872,18 @@ class TencentImPlugin {
     @required String userID,
     @required FriendTypeEnum checkType,
   }) async {
-    return FriendCheckResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('checkFriend', {
+    return FriendCheckResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('checkFriend', {
       "userID": userID,
       "checkType": FriendTypeTool.toInt(checkType),
     })));
   }
 
   /// 获取好友申请列表
-  static Future<FriendApplicationResultEntity> getFriendApplicationList() async {
-    return FriendApplicationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('getFriendApplicationList')));
+  static Future<FriendApplicationResultEntity>
+      getFriendApplicationList() async {
+    return FriendApplicationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('getFriendApplicationList')));
   }
 
   /// 同意好友申请
@@ -866,7 +893,8 @@ class TencentImPlugin {
     @required FindFriendApplicationEntity application,
     @required FriendApplicationAgreeTypeEnum responseType,
   }) async {
-    return FriendOperationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('acceptFriendApplication', {
+    return FriendOperationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('acceptFriendApplication', {
       "application": jsonEncode(application),
       "responseType": FriendApplicationAgreeTypeTool.toInt(responseType),
     })));
@@ -877,7 +905,8 @@ class TencentImPlugin {
   static Future<FriendOperationResultEntity> refuseFriendApplication({
     @required FindFriendApplicationEntity application,
   }) async {
-    return FriendOperationResultEntity.fromJson(jsonDecode(await _channel.invokeMethod('refuseFriendApplication', {
+    return FriendOperationResultEntity.fromJson(
+        jsonDecode(await _channel.invokeMethod('refuseFriendApplication', {
       "application": jsonEncode(application),
     })));
   }
@@ -904,7 +933,8 @@ class TencentImPlugin {
     @required String groupName,
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('createFriendGroup', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('createFriendGroup', {
       "groupName": groupName,
       "userIDList": userIDList.join(","),
     })));
@@ -915,7 +945,8 @@ class TencentImPlugin {
   static Future<List<FriendGroupEntity>> getFriendGroups({
     List<String> groupNameList,
   }) async {
-    return ListUtil.generateOBJList<FriendGroupEntity>(jsonDecode(await _channel.invokeMethod(
+    return ListUtil.generateOBJList<FriendGroupEntity>(
+        jsonDecode(await _channel.invokeMethod(
       'getFriendGroups',
       {
         "groupNameList": groupNameList?.join(","),
@@ -953,7 +984,8 @@ class TencentImPlugin {
     @required String groupName,
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('addFriendsToFriendGroup', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('addFriendsToFriendGroup', {
       "groupName": groupName,
       "userIDList": userIDList.join(","),
     })));
@@ -962,11 +994,13 @@ class TencentImPlugin {
   /// 从分组中删除好友
   /// [groupName] 组名
   /// [userIDList] 好友ID
-  static Future<List<FriendOperationResultEntity>> deleteFriendsFromFriendGroup({
+  static Future<List<FriendOperationResultEntity>>
+      deleteFriendsFromFriendGroup({
     @required String groupName,
     @required List<String> userIDList,
   }) async {
-    return ListUtil.generateOBJList<FriendOperationResultEntity>(jsonDecode(await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
+    return ListUtil.generateOBJList<FriendOperationResultEntity>(
+        jsonDecode(await _channel.invokeMethod('deleteFriendsFromFriendGroup', {
       "groupName": groupName,
       "userIDList": userIDList.join(","),
     })));
@@ -976,5 +1010,6 @@ class TencentImPlugin {
   static addListener(TencentImListenerValue func) => listener.addListener(func);
 
   /// 移除消息监听
-  static removeListener(TencentImListenerValue func) => listener.removeListener(func);
+  static removeListener(TencentImListenerValue func) =>
+      listener.removeListener(func);
 }
