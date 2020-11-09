@@ -19,11 +19,10 @@ class CustomSDKListener: NSObject, V2TIMSDKListener {
 
     /// 网络连接失败
     public func onConnectFailed(_ code: Int32, err: String!) {
-        var result: [String: Any] = ["code": code];
-        if let e = err {
-            result["err"] = e
-        }
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.ConnectFailed, params: result)
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.ConnectFailed, params: [
+            "code": code,
+            "err": err,
+        ])
     }
 
     /// 踢下线通知

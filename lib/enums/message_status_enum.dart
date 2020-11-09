@@ -1,5 +1,8 @@
 /// 消息状态
 enum MessageStatusEnum {
+  /// 未知
+  Unknown,
+
   /// 发送中
   Sending,
 
@@ -22,6 +25,8 @@ class MessageStatusTool {
   /// [Return] 枚举对象
   static MessageStatusEnum getByInt(int index) {
     switch (index) {
+      case 0:
+        return MessageStatusEnum.Unknown;
       case 1:
         return MessageStatusEnum.Sending;
       case 2:
@@ -39,6 +44,8 @@ class MessageStatusTool {
   /// 将枚举转换为整型
   static int toInt(MessageStatusEnum status) {
     switch (status) {
+      case MessageStatusEnum.Unknown:
+        return 0;
       case MessageStatusEnum.Sending:
         return 1;
       case MessageStatusEnum.SendSucc:

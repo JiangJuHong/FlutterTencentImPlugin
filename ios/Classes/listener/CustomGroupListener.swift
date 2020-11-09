@@ -14,7 +14,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberEnter, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "memberList": data,
         ])
     }
@@ -22,7 +22,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 有用户离开群（全员能够收到）
     func onMemberLeave(_ groupID: String!, member: V2TIMGroupMemberInfo!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberLeave, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "member": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: member!),
         ])
     }
@@ -35,7 +35,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberInvited, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "memberList": data,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser!),
         ])
@@ -48,7 +48,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.MemberKicked, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "memberList": data,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser!),
         ])
@@ -81,7 +81,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 群被解散了（全员能收到）
     func onGroupDismissed(_ groupID: String!, opUser: V2TIMGroupMemberInfo!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.GroupDismissed, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
         ])
     }
@@ -89,7 +89,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 群被回收（全员能收到）
     func onGroupRecycled(_ groupID: String!, opUser: V2TIMGroupMemberInfo!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.GroupRecycled, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
         ])
     }
@@ -101,7 +101,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupChangeInfoEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.GroupInfoChanged, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "changInfo": data,
         ])
     }
@@ -109,19 +109,19 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 有新的加群请求（只有群主或管理员会收到）
     func onReceiveJoinApplication(_ groupID: String!, member: V2TIMGroupMemberInfo!, opReason: String!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ReceiveJoinApplication, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "member": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: member),
-            "opReason": opReason!,
+            "opReason": opReason,
         ])
     }
 
     /// 加群请求已经被群主或管理员处理了（只有申请人能够收到）
     func onApplicationProcessed(_ groupID: String!, opUser: V2TIMGroupMemberInfo!, opResult isAgreeJoin: Bool, opReason: String!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ApplicationProcessed, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
             "isAgreeJoin": isAgreeJoin,
-            "opReason": opReason!,
+            "opReason": opReason,
         ])
     }
 
@@ -132,7 +132,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.GrantAdministrator, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
             "memberList": data,
         ])
@@ -145,7 +145,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             data.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.RevokeAdministrator, params: [
-            "groupID": groupID!,
+            "groupID": groupID,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser),
             "memberList": data,
         ])
@@ -159,16 +159,16 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
     /// 收到 RESTAPI 下发的自定义系统消息
     func onReceiveRESTCustomData(_ groupID: String!, data: Data!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ReceiveRESTCustomData, params: [
-            "groupID": groupID!,
-            "customData": data!,
+            "groupID": groupID,
+            "customData": data,
         ])
     }
 
     /// 收到群属性更新的回调
     func onGroupAttributeChanged(_ groupID: String!, attributes: NSMutableDictionary!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.GroupAttributeChanged, params: [
-            "groupID": groupID!,
-            "attributes": attributes!,
+            "groupID": groupID,
+            "attributes": attributes,
         ])
     }
 }
