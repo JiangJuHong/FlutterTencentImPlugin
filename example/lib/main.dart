@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tencent_im_plugin_example/page/chat.dart';
 import 'package:tencent_im_plugin_example/page/home/home.dart';
 import 'package:tencent_im_plugin_example/page/interfaces_test.dart';
 import 'package:tencent_im_plugin_example/page/login.dart';
@@ -20,6 +21,7 @@ class _MyAppState extends State<MyApp> {
         "/interfaces_test": (context) => InterfacesTest(),
         "/login": (context) => Login(),
         "/main": (context) => Main(),
+        "/chat": (context) => Chat(),
       },
     );
   }

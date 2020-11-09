@@ -78,7 +78,7 @@ class TencentImPlugin {
 
   /// 获得当前登录用户
   /// [Return] 当前用户ID
-  static getLoginUser() => _channel.invokeMethod('getLoginUser');
+  static Future<String> getLoginUser() => _channel.invokeMethod('getLoginUser');
 
   /// 邀请某个人
   /// [invitee] 被邀请人用户 ID

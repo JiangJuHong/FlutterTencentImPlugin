@@ -14,7 +14,7 @@ class _LoginState extends State<Login> {
 
   /// 登录按钮点击事件
   _onLogin() async {
-    TencentImPlugin.login(
+    await TencentImPlugin.login(
       userID: "dev",
       userSig: "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
     );
