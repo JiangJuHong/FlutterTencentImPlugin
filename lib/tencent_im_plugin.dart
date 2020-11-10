@@ -434,7 +434,7 @@ class TencentImPlugin {
   }
 
   /// 拉取群资料
-  /// [groupID] 群ID
+  /// [groupIDList] 群ID列表
   static Future<List<GroupInfoResultEntity>> getGroupsInfo({
     @required List<String> groupIDList,
   }) async {

@@ -36,7 +36,7 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onConnectFailed(final int code, final String error) {
         super.onConnectFailed(code, error);
-        TencentImPlugin.invokeListener(ListenerTypeEnum.ConnectSuccess, new HashMap<String, Object>() {
+        TencentImPlugin.invokeListener(ListenerTypeEnum.ConnectFailed, new HashMap<String, Object>() {
             {
                 put("code", code);
                 put("error", error);
@@ -59,7 +59,7 @@ public class CustomSDKListener extends V2TIMSDKListener {
     @Override
     public void onSelfInfoUpdated(V2TIMUserFullInfo info) {
         super.onSelfInfoUpdated(info);
-        TencentImPlugin.invokeListener(ListenerTypeEnum.UserSigExpired, info);
+        TencentImPlugin.invokeListener(ListenerTypeEnum.SelfInfoUpdated, info);
     }
 
     /**

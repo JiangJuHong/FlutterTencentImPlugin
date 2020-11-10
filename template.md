@@ -38,10 +38,10 @@
 | [deleteMessageFromLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)          | 删除本地消息                                                    |
 | [deleteMessages](https://www.yuque.com/jiangjuhong/tencent-im-flutter/wu3m16)                   | 删除本地及漫游消息                                              |
 | [insertGroupMessageToLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/gx2vx5) | 向群组消息列表中添加一条消息                                      |
-| [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 下载视频                                                       |
-| [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                 | 下载视频缩略图                                                  |
-| [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                          | 下载语音                                                       |
-| [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                            | 创建群                                                         |
+| [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/mqdwgy)                    | 下载视频                                                       |
+| [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zr1thy)           | 下载视频缩略图                                                  |
+| [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/exa4g6)                    | 下载语音                                                       |
+| [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/xza7ly)                      | 创建群                                                         |
 | [joinGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                              | 加入群                                                         |
 | [quitGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                              | 退出群                                                         |
 | [dismissGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                           | 解散群                                                         |
@@ -91,29 +91,84 @@
 | [getFriendGroups](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                        | 获得分组信息                                                    |
 | [deleteFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                      | 删除好友分组                                                    |
 | [renameFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                      | 修改好友分组名称                                                |
+| [addFriendsToFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)                | 添加好友到分组                                                  |
 | [deleteFriendsFromFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)           | 从分组中删除好友                                                |
 
 
-> 发送消息
+> 获得指定好友信息
 
-| 参数名称         | 参数描述                                                               | 参数类型               |
-|:----------------|:----------------------------------------------------------------------|:----------------------|
-| receiver        | 消息接收者的 userID, 如果是发送 C2C 单聊消息，只需要指定 receiver 即可。    | String                |
-| groupID         | 目标群组 ID，如果是发送群聊消息，只需要指定 groupID 即可。                 | String                |
-| node            | 消息节点                                                               | MessageNode           |
-| ol              | 是否为在线消息(无痕)，如果为true，将使用 sendOnlineMessage 通道进行消息发送 | bool                  |
-| localCustomInt  | 自定义Int                                                             | int                   |
-| localCustomStr  | 自定义Str                                                             | String                |
-| priority        | 优先级                                                                | MessagePriorityEnum   |
-| offlinePushInfo | 离线推送信息                                                           | OfflinePushInfoEntity |
+| 参数名称    | 参数描述   | 参数类型 |
+|:-----------|:----------|:--------|
+| userIDList | 用户ID列表 | List    |
 
 **使用：**
 
 ```dart
-TencentRtcPlugin.sendMessage(
-  receiver: "123",
-  node: TextMessageNode(content: "123"),
+TencentRtcPlugin.getFriendsInfo(
+  userIDList: ["123"]
 );
+```
+
+
+# 回调事件
+
+| 回调名称                      | 回调描述                        | 回调参数类型                       | 支持平台      |
+|:-----------------------------|:-------------------------------|:----------------------------------|:-------------|
+| NewMessage                   | 新消息监听                      | MessageEntity                     | Android、IOS |
+| C2CReadReceipt               | C2C已读回执                     | MessageReceiptEntity              | Android、IOS |
+| MessageRevoked               | 消息撤回                        | String（消息ID）                   | Android、IOS |
+| SyncServerStart              | 同步服务开始                    | -                                 | Android、IOS |
+| SyncServerFinish             | 同步服务完成                    | -                                 | Android、IOS |
+| SyncServerFailed             | 同步服务失败                    | -                                 | Android、IOS |
+| NewConversation              | 新会话                          | List\<ConversationEntity>         | Android、IOS |
+| ConversationChanged          | 会话刷新                        | List\<ConversationEntity>         | Android、IOS |
+| FriendApplicationListAdded   | 好友申请新增                    | List\<FriendApplicationEntity>    | Android、IOS |
+| FriendApplicationListDeleted | 好友申请删除                    | List\<String>（用户ID列表）         | Android、IOS |
+| FriendApplicationListRead    | 好友申请已读                    | -                                 | Android、IOS |
+| FriendListAdded              | 好友新增                        | List\<FriendInfoEntity>           | Android、IOS |
+| FriendListDeleted            | 好友删除                        | List\<String>（用户ID列表）        | Android、IOS |
+| BlackListAdd                 | 黑名单新增                      | List\<FriendInfoEntity>           | Android、IOS |
+| BlackListDeleted             | 黑名单删除                      | List\<String>（用户ID列表）         | Android、IOS |
+| FriendInfoChanged            | 好友资料更新                    | List\<FriendInfoEntity>           | Android、IOS |
+| MemberEnter                  | 用户加入群                      | GroupMemberEnterEntity            | Android、IOS |
+| MemberLeave                  | 用户离开群                      | GroupMemberLeaveEntity            | Android、IOS |
+| MemberInvited                | 用户被拉入群                    | GroupMemberInvitedOrKickedEntity  | Android、IOS |
+| MemberKicked                 | 用户被踢出群                    | GroupMemberInvitedOrKickedEntity  | Android、IOS |
+| MemberInfoChanged            | 群成员信息被修改                 | GroupMemberChangedEntity          | Android、IOS |
+| GroupCreated                 | 创建群                          | String（群ID）                    | Android、IOS |
+| GroupDismissed               | 群被解散                        | GroupDismissedOrRecycledEntity    | Android、IOS |
+| GroupRecycled                | 群被回收                        | GroupDismissedOrRecycledEntity    | Android、IOS |
+| GroupInfoChanged             | 群信息被修改                    | GroupChangedEntity                | Android、IOS |
+| ReceiveJoinApplication       | 有新的加群申请                   | GroupReceiveJoinApplicationEntity | Android、IOS |
+| ApplicationProcessed         | 加群信息已被管理员处理            | GroupApplicationProcessedEntity   | Android、IOS |
+| GrantAdministrator           | 指定管理员身份                   | GroupAdministratorOpEntity        | Android、IOS |
+| RevokeAdministrator          | 取消管理员身份                   | GroupAdministratorOpEntity        | Android、IOS |
+| QuitFromGroup                | 主动退出群组                    | String（群ID）                     | Android、IOS |
+| ReceiveRESTCustomData        | 收到 RESTAPI 下发的自定义系统消息 | GroupReceiveRESTEntity            | Android、IOS |
+| GroupAttributeChanged        | 群属性更新                      | GroupAttributeChangedEntity       | Android、IOS |
+| Connecting                   | 正在连接腾讯云服务器             | -                                 | Android、IOS |
+| ConnectSuccess               | 网络连接成功                    | -                                 | Android、IOS |
+| ConnectFailed                | 网络连接失败                    | ErrorEntity                       | Android、IOS |
+| KickedOffline                | 被踢下线                        | -                                 | Android、IOS |
+| SelfInfoUpdated              | 当前用户资料更新                 | UserEntity                        | Android、IOS |
+| UserSigExpired               | 用户登录签名过期                 | -                                 | Android、IOS |
+| ReceiveNewInvitation         | 收到信令邀请                    | SignalingCommonEntity             | Android、IOS |
+| InviteeAccepted              | 信令被邀请者接受邀请             | SignalingCommonEntity             | Android、IOS |
+| InviteeRejected              | 信令被邀请者拒绝邀请             | SignalingCommonEntity             | Android、IOS |
+| InvitationCancelled          | 信令邀请被取消                   | SignalingCommonEntity             | Android、IOS |
+| InvitationTimeout            | 信令邀请超时                    | SignalingCommonEntity             | Android、IOS |
+| DownloadProgress             | 下载进度                        | DownloadProgressEntity            | Android、IOS |
+| MessageSendSucc              | 消息发送成功                    | MessageEntity                     | Android、IOS |
+| MessageSendFail              | 消息发送失败                    | MessageSendFailEntity             | Android、IOS |
+| MessageSendFail              | 消息发送进度更新                 | MessageSendProgressEntity         | Android、IOS |
+
+**回调监听示例：**
+```dart
+TencentImPlugin.addListener((type, param) {
+  if (type == TencentImListenerTypeEnum.EnterRoom) {
+
+  } else if ...
+});
 ```
 
 
