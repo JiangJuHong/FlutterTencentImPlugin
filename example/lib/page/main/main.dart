@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:tencent_im_plugin_example/page/home/components/conversation.dart';
-import 'package:tencent_im_plugin_example/page/home/components/friend.dart';
-import 'package:tencent_im_plugin_example/page/home/components/group.dart';
+import 'package:tencent_im_plugin_example/page/main/components/conversation.dart';
+import 'package:tencent_im_plugin_example/page/main/components/friend.dart';
+import 'package:tencent_im_plugin_example/page/main/components/group.dart';
 
 /// 用户主页
 class Main extends StatefulWidget {
