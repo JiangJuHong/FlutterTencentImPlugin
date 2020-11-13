@@ -1227,16 +1227,15 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
 
     /// 获得分组信息
     public func getFriendGroups(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let groupNameList = CommonUtils.getParam(call: call, result: result, param: "groupNameList") as? String {
-            V2TIMManager.sharedInstance().getFriendGroupList(groupNameList.components(separatedBy: ","), succ: {
-                infos in
-                var data: [[String: Any]] = [];
-                for item in infos! {
-                    data.append(CustomFriendGroupEntity.getDict(info: item));
-                }
-                result(JsonUtil.toJson(data));
-            }, fail: TencentImUtils.returnErrorClosures(result: result));
-        }
+        let groupNameList = ((call.arguments as! [String: Any])["groupNameList"]) as? String;
+        V2TIMManager.sharedInstance().getFriendGroupList(groupNameList?.components(separatedBy: ","), succ: {
+            infos in
+            var data: [[String: Any]] = [];
+            for item in infos! {
+                data.append(CustomFriendGroupEntity.getDict(info: item));
+            }
+            result(JsonUtil.toJson(data));
+        }, fail: TencentImUtils.returnErrorClosures(result: result));
     }
 
     /// 删除分组

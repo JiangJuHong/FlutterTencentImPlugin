@@ -1189,8 +1189,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getFriendGroups(MethodCall methodCall, final Result result) {
-        String groupNameList = CommonUtil.getParam(methodCall, result, "groupNameList");
-        V2TIMManager.getFriendshipManager().getFriendGroups(Arrays.asList(groupNameList.split(",")), new ValueCallBack<List<V2TIMFriendGroup>>(result));
+        String groupNameList = methodCall.argument("groupNameList");
+        V2TIMManager.getFriendshipManager().getFriendGroups(groupNameList == null ? null : Arrays.asList(groupNameList.split(",")), new ValueCallBack<List<V2TIMFriendGroup>>(result));
     }
 
     /**
