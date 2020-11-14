@@ -239,3 +239,7 @@
 
 ## 1.0.4
 * 修复 getFriendGroups 接口参数为必传的问题
+
+## 1.0.5
+* 升级SDK到 5.1.2
+* 增加 getGroupOnlineMemberCount 接口

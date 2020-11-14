@@ -524,6 +524,16 @@ class TencentImPlugin {
         .cast<String, String>();
   }
 
+  /// 获取指定群在线人数
+  /// [groupID] 群ID
+  static Future<int> getGroupOnlineMemberCount({
+    @required String groupID,
+  }) {
+    return _channel.invokeMethod('getGroupOnlineMemberCount', {
+      "groupID": groupID,
+    });
+  }
+
   /// 获取群成员列表。
   /// [groupID] 群ID
   /// [filter] 指定群成员类型

@@ -148,6 +148,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getGroupAttributes":
             self.getGroupAttributes(call: call, result: result);
             break;
+        case "getGroupOnlineMemberCount":
+            self.getGroupOnlineMemberCount(call: call, result: result);
+            break;
         case "getGroupMemberList":
             self.getGroupMemberList(call: call, result: result);
             break;
@@ -813,6 +816,16 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             V2TIMManager.sharedInstance().getGroupAttributes(groupID, keys: keys?.components(separatedBy: ","), succ: {
                 dictionary in
                 result(JsonUtil.toJson(dictionary!));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 获得群在线人数
+    public func getGroupOnlineMemberCount(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String {
+            V2TIMManager.sharedInstance().getGroupOnlineMemberCount(groupID, succ: {
+                num in
+                result(num);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

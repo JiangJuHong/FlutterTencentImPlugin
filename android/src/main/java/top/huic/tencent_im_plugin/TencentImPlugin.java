@@ -744,6 +744,17 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 获取指定群在线人数
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getGroupOnlineMemberCount(MethodCall methodCall, final Result result) {
+        String groupID = CommonUtil.getParam(methodCall, result, "groupID");
+        V2TIMManager.getGroupManager().getGroupOnlineMemberCount(groupID, new ValueCallBack<Integer>(result));
+    }
+
+    /**
      * 获取群成员列表。
      *
      * @param methodCall 方法调用对象
