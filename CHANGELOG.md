@@ -243,3 +243,6 @@
 ## 1.0.5
 * 升级SDK到 5.1.2
 * 增加 getGroupOnlineMemberCount 接口
+
+## 1.0.6
+* 修复 C2CReadReceipt 回调异常的问题

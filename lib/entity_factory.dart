@@ -15,6 +15,7 @@ import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.da
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 import 'package:tencent_im_plugin/entity/message_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
+import 'package:tencent_im_plugin/entity/message_receipt_entity.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
 import 'entity/conversation_entity.dart';
 
@@ -60,6 +61,8 @@ class EntityFactory {
       return GroupChangedInfoEntity.fromJson(json) as T;
     } else if (T.toString() == "GroupMemberChangedInfoEntity") {
       return GroupMemberChangedInfoEntity.fromJson(json) as T;
+    } else if (T.toString() == "MessageReceiptEntity") {
+      return MessageReceiptEntity.fromJson(json) as T;
     } else {
       return null;
     }

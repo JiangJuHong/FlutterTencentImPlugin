@@ -45,8 +45,7 @@ class TencentImPluginListener {
       switch (methodCall.method) {
         case 'onListener':
           // 获得原始类型和参数
-          TencentImListenerTypeEnum type = EnumUtil.nameOf(
-              TencentImListenerTypeEnum.values, arguments['type']);
+          TencentImListenerTypeEnum type = EnumUtil.nameOf(TencentImListenerTypeEnum.values, arguments['type']);
           var paramsStr = arguments['params'];
 
           // 封装回调类型和参数
@@ -58,7 +57,7 @@ class TencentImPluginListener {
                 params = MessageEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.C2CReadReceipt:
-                params = MessageReceiptEntity.fromJson(jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<MessageReceiptEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MessageRevoked:
                 break;
@@ -69,36 +68,30 @@ class TencentImPluginListener {
               case TencentImListenerTypeEnum.SyncServerFailed:
                 break;
               case TencentImListenerTypeEnum.NewConversation:
-                params = ListUtil.generateOBJList<ConversationEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<ConversationEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.ConversationChanged:
-                params = ListUtil.generateOBJList<ConversationEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<ConversationEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListAdded:
-                params = ListUtil.generateOBJList<FriendApplicationEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<FriendApplicationEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListDeleted:
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListRead:
                 break;
               case TencentImListenerTypeEnum.FriendListAdded:
-                params = ListUtil.generateOBJList<FriendInfoEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<FriendInfoEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.FriendListDeleted:
                 break;
               case TencentImListenerTypeEnum.BlackListAdd:
-                params = ListUtil.generateOBJList<FriendInfoEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<FriendInfoEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.BlackListDeleted:
                 break;
               case TencentImListenerTypeEnum.FriendInfoChanged:
-                params = ListUtil.generateOBJList<FriendInfoEntity>(
-                    jsonDecode(paramsStr));
+                params = ListUtil.generateOBJList<FriendInfoEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MemberEnter:
                 params = GroupMemberEnterEntity.fromJson(jsonDecode(paramsStr));
@@ -107,45 +100,36 @@ class TencentImPluginListener {
                 params = GroupMemberLeaveEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MemberInvited:
-                params = GroupMemberInvitedOrKickedEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupMemberInvitedOrKickedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MemberKicked:
-                params = GroupMemberInvitedOrKickedEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupMemberInvitedOrKickedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MemberInfoChanged:
-                params =
-                    GroupMemberChangedEntity.fromJson(jsonDecode(paramsStr));
+                params = GroupMemberChangedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.GroupCreated:
                 break;
               case TencentImListenerTypeEnum.GroupDismissed:
-                params = GroupDismissedOrRecycledEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupDismissedOrRecycledEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.GroupRecycled:
-                params = GroupDismissedOrRecycledEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupDismissedOrRecycledEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.GroupInfoChanged:
                 params = GroupChangedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.ReceiveJoinApplication:
-                params = GroupReceiveJoinApplicationEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupReceiveJoinApplicationEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.ApplicationProcessed:
-                params = GroupApplicationProcessedEntity.fromJson(
-                    jsonDecode(paramsStr));
+                params = GroupApplicationProcessedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.GrantAdministrator:
-                params =
-                    GroupAdministratorOpEntity.fromJson(jsonDecode(paramsStr));
+                params = GroupAdministratorOpEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.RevokeAdministrator:
-                params =
-                    GroupAdministratorOpEntity.fromJson(jsonDecode(paramsStr));
+                params = GroupAdministratorOpEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.QuitFromGroup:
                 break;
@@ -153,8 +137,7 @@ class TencentImPluginListener {
                 params = GroupReceiveRESTEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.GroupAttributeChanged:
-                params =
-                    GroupAttributeChangedEntity.fromJson(jsonDecode(paramsStr));
+                params = GroupAttributeChangedEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.Connecting:
                 break;
@@ -195,13 +178,11 @@ class TencentImPluginListener {
                 params = MessageSendFailEntity.fromJson(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MessageSendProgress:
-                params =
-                    MessageSendProgressEntity.fromJson(jsonDecode(paramsStr));
+                params = MessageSendProgressEntity.fromJson(jsonDecode(paramsStr));
                 break;
             }
           } catch (err) {
-            _logger.e(err,
-                "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
+            _logger.e(err, "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
           }
 
           // 没有找到类型就返回
@@ -233,5 +214,4 @@ class TencentImPluginListener {
 }
 
 /// 监听器值模型
-typedef TencentImListenerValue<P> = void Function(
-    TencentImListenerTypeEnum type, P params);
+typedef TencentImListenerValue<P> = void Function(TencentImListenerTypeEnum type, P params);
