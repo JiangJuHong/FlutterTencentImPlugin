@@ -1,4 +1,4 @@
-# tencent_im_plugin
+# tencent_im_plugin  来自早期仓库 https://gitee.com/yabeenet/FlutterTencentImPlugin.git
 [![pub package](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
 
 腾讯云IM插件
