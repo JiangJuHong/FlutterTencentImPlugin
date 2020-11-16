@@ -246,3 +246,7 @@
 
 ## 1.0.6
 * 修复 C2CReadReceipt 回调异常的问题
+
+## 1.1.0
+* 优化会话相关接口，提供内部转换
+* 增加 getHistoryMessageList 和 markMessageAsRead 接口

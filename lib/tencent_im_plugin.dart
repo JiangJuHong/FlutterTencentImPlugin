@@ -43,6 +43,12 @@ class TencentImPlugin {
   /// 监听器对象
   static TencentImPluginListener listener = TencentImPluginListener(_channel);
 
+  /// C2C会话前缀
+  static const String conversationC2CPrefix = "c2c_";
+
+  /// 群聊会话前缀
+  static const String conversationGroupPrefix = "group_";
+
   /// 初始化SDK
   /// [appid] 应用ID
   /// [logPrintLevel] 日志打印级别
@@ -232,6 +238,25 @@ class TencentImPlugin {
     });
   }
 
+  /// 获得历史记录，此方法为 getC2CHistoryMessageList + getGroupHistoryMessageList 提供的统一封装方法，(userID 和 group) 不能都为空
+  /// [userId] 用户ID
+  /// [groupID] 群聊ID
+  /// [count] 拉取消息的个数，不宜太多，会影响消息拉取的速度，这里建议一次拉取 20 个
+  /// [lastMsg] 获取消息的起始消息，如果传 null，起始消息为会话的最新消息
+  static Future<List<MessageEntity>> getHistoryMessageList({
+    String userID,
+    String groupID,
+    @required int count,
+    FindMessageEntity lastMsg,
+  }) {
+    if (userID == null && groupID == null) throw ArgumentError("userID 和 groupID 不能同时为空!");
+    if (userID != null) {
+      return getC2CHistoryMessageList(userID: userID, count: count, lastMsg: lastMsg);
+    } else {
+      return getGroupHistoryMessageList(groupID: groupID, count: count, lastMsg: lastMsg);
+    }
+  }
+
   /// 获得单聊历史记录
   /// [userId] 用户ID
   /// [count] 拉取消息的个数，不宜太多，会影响消息拉取的速度，这里建议一次拉取 20 个
@@ -268,6 +293,21 @@ class TencentImPlugin {
         "lastMsg": lastMsg == null ? null : jsonEncode(lastMsg),
       }..removeWhere((key, value) => value == null),
     )));
+  }
+
+  /// 设置聊天记录为已读，此为 markC2CMessageAsRead 和 markGroupMessageAsRead 的封装
+  /// [userID] 用户ID
+  /// [groupID] 群ID
+  static markMessageAsRead({
+    String userID,
+    String groupID,
+  }) {
+    if (userID == null && groupID == null) throw ArgumentError("userID 和 groupID 不能同时为空!");
+    if (userID != null) {
+      return markC2CMessageAsRead(userID: userID);
+    } else {
+      return markGroupMessageAsRead(groupID: groupID);
+    }
   }
 
   /// 设置单聊已读
@@ -699,37 +739,67 @@ class TencentImPlugin {
     })));
   }
 
-  /// 获得指定会话
+  /// 获得指定会话（[conversationID] | [userID] | [groupID] 参数三选一）
   /// [conversationID] 会话ID
+  /// [userID] 用户ID
+  /// [groupID] 群ID
   static Future<ConversationEntity> getConversation({
-    @required String conversationID,
+    String conversationID,
+    String userID,
+    String groupID,
   }) async {
+    String cID = conversationID;
+    if (cID == null && userID != null) {
+      cID = conversationC2CPrefix + userID;
+    } else if (cID == null && groupID != null) {
+      cID = conversationGroupPrefix + groupID;
+    }
     return ConversationEntity.fromJson(jsonDecode(await _channel.invokeMethod('getConversation', {
-      "conversationID": conversationID,
+      "conversationID": cID,
     })));
   }
 
-  /// 删除会话
+  /// 删除会话（[conversationID] | [userID] | [groupID] 参数三选一）
   /// [conversationID] 会话ID
+  /// [userID] 用户ID
+  /// [groupID] 群ID
   static deleteConversation({
-    @required String conversationID,
+    String conversationID,
+    String userID,
+    String groupID,
   }) {
+    String cID = conversationID;
+    if (cID == null && userID != null) {
+      cID = conversationC2CPrefix + userID;
+    } else if (cID == null && groupID != null) {
+      cID = conversationGroupPrefix + groupID;
+    }
     return _channel.invokeMethod('deleteConversation', {
-      "conversationID": conversationID,
+      "conversationID": cID,
     });
   }
 
-  /// 设置会话草稿
+  /// 设置会话草稿（[conversationID] | [userID] | [groupID] 参数三选一）
   /// [conversationID] 会话ID
+  /// [userID] 用户ID
+  /// [groupID] 群ID
   /// [draftText] 草稿内容，null代表取消设置
   static setConversationDraft({
-    @required String conversationID,
+    String conversationID,
+    String userID,
+    String groupID,
     String draftText,
   }) {
+    String cID = conversationID;
+    if (cID == null && userID != null) {
+      cID = conversationC2CPrefix + userID;
+    } else if (cID == null && groupID != null) {
+      cID = conversationGroupPrefix + groupID;
+    }
     return _channel.invokeMethod(
       'setConversationDraft',
       {
-        "conversationID": conversationID,
+        "conversationID": cID,
         "draftText": draftText,
       }..removeWhere((key, value) => value == null),
     );
