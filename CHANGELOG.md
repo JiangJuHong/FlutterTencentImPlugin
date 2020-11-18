@@ -250,3 +250,6 @@
 ## 1.1.0
 * 优化会话相关接口，提供内部转换
 * 增加 getHistoryMessageList 和 markMessageAsRead 接口
+
+## 1.1.1
+* 修改混淆文件
