@@ -19,7 +19,7 @@ class SignalingCommonEntity {
     inviteID = json["inviteID"];
     inviter = json["inviter"];
     invitee = json["invitee"];
-    inviteeList = json["inviteeList"];
+    inviteeList = json["inviteeList"]?.cast<String>();
     data = json["data"];
   }
 }
