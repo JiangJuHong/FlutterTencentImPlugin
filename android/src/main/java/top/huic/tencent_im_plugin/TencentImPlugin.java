@@ -355,7 +355,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onError(final int i, final String s) {
                 TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendFail, new HashMap<String, Object>() {
                     {
-                        put("msgId", msgId);
+                        put("msgId", msgId[0]);
                         put("code", i);
                         put("desc", s);
                     }
@@ -371,7 +371,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onProgress(final int i) {
                 TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendProgress, new HashMap<String, Object>() {
                     {
-                        put("msgId", msgId);
+                        put("msgId", msgId[0]);
                         put("progress", i);
                     }
                 });
