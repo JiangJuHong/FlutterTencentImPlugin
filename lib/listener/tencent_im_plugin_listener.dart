@@ -60,6 +60,7 @@ class TencentImPluginListener {
                 params = ListUtil.generateOBJList<MessageReceiptEntity>(jsonDecode(paramsStr));
                 break;
               case TencentImListenerTypeEnum.MessageRevoked:
+                params = paramsStr;
                 break;
               case TencentImListenerTypeEnum.SyncServerStart:
                 break;

@@ -246,3 +246,6 @@
 
 ## 1.0.6
 * 修复 C2CReadReceipt 回调异常的问题
+
+## 1.0.7
+* 修复 MessageRevoked 监听没有参数问题
