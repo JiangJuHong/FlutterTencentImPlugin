@@ -48,6 +48,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import top.huic.tencent_im_plugin.entity.CustomConversationEntity;
 import top.huic.tencent_im_plugin.entity.CustomConversationResultEntity;
+import top.huic.tencent_im_plugin.entity.CustomFriendAddApplication;
 import top.huic.tencent_im_plugin.entity.CustomMessageEntity;
 import top.huic.tencent_im_plugin.entity.FindMessageEntity;
 import top.huic.tencent_im_plugin.enums.ListenerTypeEnum;
@@ -355,7 +356,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onError(final int i, final String s) {
                 TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendFail, new HashMap<String, Object>() {
                     {
-                        put("msgId", msgId);
+                        put("msgId", msgId[0]);
                         put("code", i);
                         put("desc", s);
                     }
@@ -371,7 +372,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onProgress(final int i) {
                 TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendProgress, new HashMap<String, Object>() {
                     {
-                        put("msgId", msgId);
+                        put("msgId", msgId[0]);
                         put("progress", i);
                     }
                 });
@@ -1085,7 +1086,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void addFriend(MethodCall methodCall, final Result result) {
         String info = CommonUtil.getParam(methodCall, result, "info");
-        V2TIMManager.getFriendshipManager().addFriend(JSON.parseObject(info, V2TIMFriendAddApplication.class), new ValueCallBack<V2TIMFriendOperationResult>(result));
+        V2TIMManager.getFriendshipManager().addFriend(JSON.parseObject(info, CustomFriendAddApplication.class), new ValueCallBack<V2TIMFriendOperationResult>(result));
     }
 
     /**

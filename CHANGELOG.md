@@ -247,5 +247,18 @@
 ## 1.0.6
 * 修复 C2CReadReceipt 回调异常的问题
 
-## 1.0.7
-* 修复 MessageRevoked 监听没有参数问题
+## 1.1.0
+* 优化会话相关接口，提供内部转换
+* 增加 getHistoryMessageList 和 markMessageAsRead 接口
+
+## 1.1.1
+* 修改混淆文件
+
+## 1.1.2
+* 修复 SignalingCommonEntity 实体转换失败的问题
+
+## 1.1.3
+* 修复消息发送进度回调数据转换异常的问题
+
+## 1.1.4
+* 修复 addFriend 添加好友异常的问题

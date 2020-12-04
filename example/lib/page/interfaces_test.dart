@@ -263,7 +263,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
     TencentImPlugin.login(
       userID: "dev",
       userSig:
-          "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwimpZVDh4pTsxIKCzBQlK0MTAwMjSxNjQxOITGpFQWZRKlDc1NTUyMDAACJakpkLFrOwNLcwtDA3hJqSmQ401aDKpDQw2NnHLSo4yTjR06XAy8XSNyLJsSgt0cjALSQpqNI-syDV2aWw0MJWqRYAm*EwVg__",
+          "eJwtzEELgjAYxvHvsnPIu7U5EzoEQRDWITWqW7KVr8MaS8Yi*u6Zenx*D-w-pMjyyGtHUsIiILNho9KPDm84sNJ*4pcyV2tRkZRyALbgc8rHRweLTvcuhGAAMGqH7d9iEAKSWMipgve*ulZS1vKoT83uXO6rkAWzaoqtgVAdNpecu9Y-38aXtE6W5PsDr9ExPw__",
     );
   }
 
