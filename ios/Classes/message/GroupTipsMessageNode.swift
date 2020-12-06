@@ -12,7 +12,6 @@ public class GroupTipsMessageNode: AbstractMessageNode {
     }
 
     override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
-        let groupTipsElem = elem as! V2TIMGroupTipsElem;
-        return GroupTipsMessageEntity(elem: groupTipsElem);
+        GroupTipsMessageEntity(elem: elem as! V2TIMGroupTipsElem);
     }
 }

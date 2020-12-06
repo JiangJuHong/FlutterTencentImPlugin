@@ -7,14 +7,12 @@ class GroupChangedEntity {
   /// 群ID
   String groupID;
 
-  /// 群成员列表
+  /// 群改变信息实体
   List<GroupChangedInfoEntity> changInfo;
 
   GroupChangedEntity.fromJson(Map<String, dynamic> json) {
     groupID = json['groupID'];
-    if (json["changInfo"] != null)
-      changInfo =
-          ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']);
+    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']);
   }
 }
 
