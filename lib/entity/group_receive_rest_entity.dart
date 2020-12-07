@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupReceiveRESTEntity {
   /// 自定义数据
   String customData;
 
-  GroupReceiveRESTEntity.fromJson(Map<String, dynamic> json) {
+  GroupReceiveRESTEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     customData = json['customData'];
   }

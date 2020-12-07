@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupMemberInfoResultEntity {
   /// 群信息
   List<GroupMemberEntity> memberInfoList;
 
-  GroupMemberInfoResultEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberInfoResultEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     nextSeq = json['nextSeq'];
     memberInfoList =
         ListUtil.generateOBJList<GroupMemberEntity>(json['memberInfoList']);

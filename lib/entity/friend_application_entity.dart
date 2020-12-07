@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/enums/friend_application_type_enum.dart';
 
 /// 好友申请实体
@@ -23,7 +24,8 @@ class FriendApplicationEntity {
   /// 类型
   FriendApplicationTypeEnum type;
 
-  FriendApplicationEntity.fromJson(Map<String, dynamic> json) {
+  FriendApplicationEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickname = json['nickname'];
     faceUrl = json['faceUrl'];

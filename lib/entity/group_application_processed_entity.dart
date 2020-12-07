@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/enums/group_info_changed_type_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
@@ -16,7 +17,8 @@ class GroupApplicationProcessedEntity {
   /// 是否同意加入
   bool isAgreeJoin;
 
-  GroupApplicationProcessedEntity.fromJson(Map<String, dynamic> json) {
+  GroupApplicationProcessedEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     opReason = json['opReason'];
     isAgreeJoin = json['isAgreeJoin'];

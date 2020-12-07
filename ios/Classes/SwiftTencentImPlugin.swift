@@ -1310,7 +1310,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         var resultParams: [String: Any] = [:];
         resultParams["type"] = type;
         if let p = params {
-            resultParams["params"] = JsonUtil.toJson(p);
+            resultParams["params"] = p;
         }
         SwiftTencentImPlugin.channel!.invokeMethod("onListener", arguments: JsonUtil.toJson(resultParams));
     }

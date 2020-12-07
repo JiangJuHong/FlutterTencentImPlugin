@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// 信令通用实体
 class SignalingCommonEntity {
   /// 邀请ID
@@ -15,7 +17,8 @@ class SignalingCommonEntity {
   /// 消息内容
   String data;
 
-  SignalingCommonEntity.fromJson(Map<String, dynamic> json) {
+  SignalingCommonEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     inviteID = json["inviteID"];
     inviter = json["inviter"];
     invitee = json["invitee"];

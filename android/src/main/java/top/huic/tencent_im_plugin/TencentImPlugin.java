@@ -8,7 +8,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
-import com.tencent.imsdk.v2.V2TIMFriendAddApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
 import com.tencent.imsdk.v2.V2TIMFriendCheckResult;
@@ -1261,7 +1260,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     public static void invokeListener(ListenerTypeEnum type, Object params) {
         Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
-        resultParams.put("params", params == null ? null : JsonUtil.toJSONString(params));
+        resultParams.put("params", params);
         channel.invokeMethod("onListener", JsonUtil.toJSONString(resultParams));
     }
 }

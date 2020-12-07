@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 
 /// 群成员实体
@@ -35,7 +36,8 @@ class GroupMemberEntity {
     this.nameCard,
   });
 
-  GroupMemberEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickName = json['nickName'];
     friendRemark = json['friendRemark'];

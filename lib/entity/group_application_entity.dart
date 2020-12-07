@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/enums/group_application_handler_result_enum.dart';
 import 'package:tencent_im_plugin/enums/group_application_handler_status_enum.dart';
 import 'package:tencent_im_plugin/enums/group_application_type_enum.dart';
@@ -37,7 +38,8 @@ class GroupApplicationEntity {
   /// 获取群未决处理操作类型，只有处理状态不为V2TIMGroupApplication#V2TIM_GROUP_APPLICATION_HANDLE_STATUS_UNHANDLED的时候有效
   GroupApplicationHandlerResultEnum handleResult;
 
-  GroupApplicationEntity.fromJson(Map<String, dynamic> json) {
+  GroupApplicationEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     fromUser = json['fromUser'];
     fromUserNickName = json['fromUserNickName'];

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
@@ -98,7 +99,8 @@ class MessageEntity {
     this.node,
   });
 
-  MessageEntity.fromJson(Map<String, dynamic> json) {
+  MessageEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
     timestamp = json["timestamp"];
     sender = json["sender"];

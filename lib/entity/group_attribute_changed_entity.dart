@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupAttributeChangedEntity {
   /// 群成员列表
   Map<String, String> attributes;
 
-  GroupAttributeChangedEntity.fromJson(Map<String, dynamic> json) {
+  GroupAttributeChangedEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     attributes = (json["attributes"] as Map).cast<String, String>();
   }

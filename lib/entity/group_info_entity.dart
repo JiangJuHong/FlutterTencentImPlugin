@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/enums/group_add_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
@@ -67,7 +68,8 @@ class GroupInfoEntity {
     this.groupAddOpt,
   });
 
-  GroupInfoEntity.fromJson(Map<String, dynamic> json) {
+  GroupInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     groupType = GroupTypeTool.getByString(json["groupType"]);
     groupName = json['groupName'];

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
 
@@ -24,7 +25,8 @@ class FriendInfoEntity {
     this.friendCustomInfo,
   });
 
-  FriendInfoEntity.fromJson(Map<String, dynamic> json) {
+  FriendInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     friendRemark = json['friendRemark'];
     friendGroups = json['friendGroups']?.cast<String>();

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -12,7 +13,8 @@ class GroupMemberInvitedOrKickedEntity {
   /// 操作用户
   GroupMemberEntity opUser;
 
-  GroupMemberInvitedOrKickedEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberInvitedOrKickedEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["memberList"] != null)
       memberList =

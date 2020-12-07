@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupMemberChangedEntity {
   /// 群成员列表
   List<GroupMemberChangedInfoEntity> changInfo;
 
-  GroupMemberChangedEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberChangedEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["changInfo"] != null)
       changInfo = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(
@@ -25,7 +27,8 @@ class GroupMemberChangedInfoEntity {
   /// 禁言时长
   int muteTime;
 
-  GroupMemberChangedInfoEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberChangedInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     muteTime = json['muteTime'];
   }

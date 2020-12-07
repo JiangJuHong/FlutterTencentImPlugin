@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
 
 /// 群信息结果实体
@@ -11,7 +12,8 @@ class GroupInfoResultEntity {
   /// 群信息
   GroupInfoEntity groupInfo;
 
-  GroupInfoResultEntity.fromJson(Map<String, dynamic> json) {
+  GroupInfoResultEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     resultCode = json['resultCode'];
     resultMessage = json['resultMessage'];
     groupInfo = GroupInfoEntity.fromJson(json['groupInfo']);

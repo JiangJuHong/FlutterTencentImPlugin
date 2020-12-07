@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/enums/image_type_enum.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
@@ -15,8 +16,7 @@ class ImageMessageNode extends MessageNode {
     @required this.path,
   }) : super(MessageElemTypeEnum.Image);
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Image) {
+  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Image) {
     path = json['path'];
     if (json['imageData'] != null) {
       _imageData = Map();
@@ -69,7 +69,8 @@ class ImageEntity {
     this.height,
   });
 
-  ImageEntity.fromJson(Map<String, dynamic> json) {
+  ImageEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     size = json['size'];
     width = json['width'];
     type = ImageTypeTool.getByInt(json["type"]);

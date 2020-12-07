@@ -15,9 +15,9 @@ class _LoginState extends State<Login> {
   /// 登录按钮点击事件
   _onLogin() async {
     await TencentImPlugin.login(
-      userID: "test",
+      userID: "dev",
       userSig:
-          "eJwtzEELgjAYxvHvsmsh7*ZWKnTooAhFBxPKbpNNe5nK0BFh9N0z9fj8Hvh-SH6*ei-dk4gwD8h23qh057DCmZ0e3OqDMtJaVCSiHICF3Kd8efTbYq8nF0IwAFjUYfu3HQgBQRjs1wrWU3bk7YaepEyPXVIXz3tjzOPWZL422ZjmhYrLi4kTaVkFB-L9Af1dMWQ_",
+          "eJwtzEELgjAYxvHvsnPIu7U5EzoEQRDWITWqW7KVr8MaS8Yi*u6Zenx*D-w-pMjyyGtHUsIiILNho9KPDm84sNJ*4pcyV2tRkZRyALbgc8rHRweLTvcuhGAAMGqH7d9iEAKSWMipgve*ulZS1vKoT83uXO6rkAWzaoqtgVAdNpecu9Y-38aXtE6W5PsDr9ExPw__",
     );
 
     Navigator.pushNamedAndRemoveUntil(

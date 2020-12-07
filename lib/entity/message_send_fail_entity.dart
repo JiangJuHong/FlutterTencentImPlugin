@@ -1,3 +1,4 @@
+import 'dart:convert';
 /// 消息发送失败实体
 class MessageSendFailEntity {
   /// 消息ID
@@ -9,7 +10,8 @@ class MessageSendFailEntity {
   /// 错误描述
   String desc;
 
-  MessageSendFailEntity.fromJson(Map<String, dynamic> json) {
+  MessageSendFailEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgId = json["msgId"];
     code = json["code"];
     desc = json["desc"];

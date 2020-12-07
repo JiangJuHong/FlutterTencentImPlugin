@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/enums/group_info_changed_type_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
@@ -10,7 +11,8 @@ class GroupChangedEntity {
   /// 群改变信息实体
   List<GroupChangedInfoEntity> changInfo;
 
-  GroupChangedEntity.fromJson(Map<String, dynamic> json) {
+  GroupChangedEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']);
   }
@@ -27,7 +29,8 @@ class GroupChangedInfoEntity {
   /// Value
   String value;
 
-  GroupChangedInfoEntity.fromJson(Map<String, dynamic> json) {
+  GroupChangedInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     type = GroupInfoChangedTypeTool.getByInt(json['type']);
     key = json['key'];
     value = json['value'];

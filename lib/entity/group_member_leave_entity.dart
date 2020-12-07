@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupMemberLeaveEntity {
   /// 群成员信息
   GroupMemberEntity member;
 
-  GroupMemberLeaveEntity.fromJson(Map<String, dynamic> json) {
+  GroupMemberLeaveEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["member"] != null)
       member = GroupMemberEntity.fromJson(json["member"]);

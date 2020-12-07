@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:tencent_im_plugin/entity/conversation_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -12,10 +14,11 @@ class ConversationResultEntity {
   /// 会话列表
   List<ConversationEntity> conversationList;
 
-  ConversationResultEntity.fromJson(Map<String, dynamic> json) {
+  ConversationResultEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    
     nextSeq = json['nextSeq'];
     finished = json['finished'];
-    conversationList =
-        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]);
+    conversationList = ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]);
   }
 }

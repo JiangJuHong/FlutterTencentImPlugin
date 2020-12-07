@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// 离线推送信息实体
 class OfflinePushInfoEntity {
   /// 通知栏标题
@@ -31,7 +33,8 @@ class OfflinePushInfoEntity {
     this.disablePush,
   });
 
-  OfflinePushInfoEntity.fromJson(Map<String, dynamic> json) {
+  OfflinePushInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     title = json["title"];
     desc = json["desc"];
     ext = json["ext"];

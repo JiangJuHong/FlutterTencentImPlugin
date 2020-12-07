@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_application_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
@@ -9,7 +10,8 @@ class GroupApplicationResultEntity {
   /// 加群的申请列表
   List<GroupApplicationEntity> groupApplicationList;
 
-  GroupApplicationResultEntity.fromJson(Map<String, dynamic> json) {
+  GroupApplicationResultEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     unreadCount = json['unreadCount'];
     groupApplicationList = ListUtil.generateOBJList<GroupApplicationEntity>(
         json['groupApplicationList']);

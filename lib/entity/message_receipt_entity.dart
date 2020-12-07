@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// 消息回执实体
 class MessageReceiptEntity {
   /// 用户ID
@@ -6,7 +8,8 @@ class MessageReceiptEntity {
   /// 时间
   int timestamp;
 
-  MessageReceiptEntity.fromJson(Map<String, dynamic> json) {
+  MessageReceiptEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json["userID"];
     timestamp = json["timestamp"];
   }

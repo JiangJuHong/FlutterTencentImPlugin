@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:tencent_im_plugin/enums/user_allow_type_enum.dart';
 import 'package:tencent_im_plugin/enums/user_gender_enum.dart';
 
@@ -33,7 +35,8 @@ class UserEntity {
     this.customInfo,
   });
 
-  UserEntity.fromJson(Map<String, dynamic> json) {
+  UserEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickName = json['nickName'];
     faceUrl = json['faceUrl'];

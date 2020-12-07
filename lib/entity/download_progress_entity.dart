@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// 下载进度实体
 class DownloadProgressEntity {
   /// 消息ID
@@ -9,7 +11,8 @@ class DownloadProgressEntity {
   /// 总大小
   int totalSize;
 
-  DownloadProgressEntity.fromJson(Map<String, dynamic> json) {
+  DownloadProgressEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgId = json["msgId"];
     currentSize = json["currentSize"];
     totalSize = json["totalSize"];

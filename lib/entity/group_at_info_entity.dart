@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:tencent_im_plugin/enums/group_at_type_enum.dart';
 
 /// 群@信息实体
@@ -8,7 +9,8 @@ class GroupAtInfoEntity {
   /// @类型
   GroupAtTypeEnum atType;
 
-  GroupAtInfoEntity.fromJson(Map<String, dynamic> json) {
+  GroupAtInfoEntity.fromJson(data) {
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     seq = json["seq"];
     atType = GroupAtTypeTool.getByInt(json["atType"]);
   }
