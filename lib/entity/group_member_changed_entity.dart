@@ -11,7 +11,8 @@ class GroupMemberChangedEntity {
   List<GroupMemberChangedInfoEntity> changInfo;
 
   GroupMemberChangedEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["changInfo"] != null)
       changInfo = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(
@@ -28,7 +29,8 @@ class GroupMemberChangedInfoEntity {
   int muteTime;
 
   GroupMemberChangedInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     muteTime = json['muteTime'];
   }

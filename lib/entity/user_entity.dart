@@ -36,7 +36,8 @@ class UserEntity {
   });
 
   UserEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickName = json['nickName'];
     faceUrl = json['faceUrl'];

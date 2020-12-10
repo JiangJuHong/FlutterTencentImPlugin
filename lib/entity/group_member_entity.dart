@@ -37,7 +37,8 @@ class GroupMemberEntity {
   });
 
   GroupMemberEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickName = json['nickName'];
     friendRemark = json['friendRemark'];

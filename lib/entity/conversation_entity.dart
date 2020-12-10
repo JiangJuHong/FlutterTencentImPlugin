@@ -6,7 +6,6 @@ import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 import 'dart:convert';
 
-
 /// 会话实体
 class ConversationEntity {
   /// 会话ID
@@ -49,7 +48,8 @@ class ConversationEntity {
   List<GroupAtInfoEntity> groupAtInfoList;
 
   ConversationEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     conversationID = json['conversationID'];
     type = ConversationTypeTool.getByInt(json['type']);
     userID = json['userID'];

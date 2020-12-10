@@ -272,3 +272,6 @@
 ## 1.2.0
 * 1. Android 和 IOS 将所有监听器的参数二次转换为 json 取消
 * 2. 适配Flutter
+
+## 1.2.1
+* 增加 setMessageLocalCustomStr 和 setMessageLocalCustomInt 接口

@@ -13,7 +13,8 @@ class GroupInfoResultEntity {
   GroupInfoEntity groupInfo;
 
   GroupInfoResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     resultCode = json['resultCode'];
     resultMessage = json['resultMessage'];
     groupInfo = GroupInfoEntity.fromJson(json['groupInfo']);

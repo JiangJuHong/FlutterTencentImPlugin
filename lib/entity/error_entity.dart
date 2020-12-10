@@ -9,7 +9,8 @@ class ErrorEntity {
   String error;
 
   ErrorEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     code = json['code'];
     error = json['error'];
   }

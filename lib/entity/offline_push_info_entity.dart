@@ -34,7 +34,8 @@ class OfflinePushInfoEntity {
   });
 
   OfflinePushInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     title = json["title"];
     desc = json["desc"];
     ext = json["ext"];

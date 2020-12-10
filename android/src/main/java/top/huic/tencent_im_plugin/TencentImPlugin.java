@@ -606,6 +606,42 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 设置消息本地Str
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setMessageLocalCustomStr(MethodCall methodCall, final Result result) {
+        final String data = CommonUtil.getParam(methodCall, result, "data");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.setLocalCustomData(data);
+                result.success(null);
+            }
+        });
+    }
+
+    /**
+     * 设置消息本地Int
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setMessageLocalCustomInt(MethodCall methodCall, final Result result) {
+        final Integer data = CommonUtil.getParam(methodCall, result, "data");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.setLocalCustomInt(data);
+                result.success(null);
+            }
+        });
+    }
+
+    /**
      * 创建群
      *
      * @param methodCall 方法调用对象

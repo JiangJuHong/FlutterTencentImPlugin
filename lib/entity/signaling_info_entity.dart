@@ -50,7 +50,8 @@ class SignalingInfoEntity {
   });
 
   SignalingInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     inviteID = json["inviteID"];
     groupID = json["groupID"];
     inviter = json["inviter"];

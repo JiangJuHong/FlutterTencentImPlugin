@@ -100,7 +100,8 @@ class MessageEntity {
   });
 
   MessageEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
     timestamp = json["timestamp"];
     sender = json["sender"];

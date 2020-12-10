@@ -12,7 +12,8 @@ class DownloadProgressEntity {
   int totalSize;
 
   DownloadProgressEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgId = json["msgId"];
     currentSize = json["currentSize"];
     totalSize = json["totalSize"];

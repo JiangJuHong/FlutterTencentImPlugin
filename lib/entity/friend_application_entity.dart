@@ -25,7 +25,8 @@ class FriendApplicationEntity {
   FriendApplicationTypeEnum type;
 
   FriendApplicationEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickname = json['nickname'];
     faceUrl = json['faceUrl'];

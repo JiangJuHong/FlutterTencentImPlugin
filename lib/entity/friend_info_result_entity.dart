@@ -18,7 +18,8 @@ class FriendInfoResultEntity {
   FriendInfoEntity friendInfo;
 
   FriendInfoResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     resultCode = json['resultCode'];
     resultInfo = json['resultInfo'];
     relation = FriendRelationTypeTool.getByInt(json['relation']);

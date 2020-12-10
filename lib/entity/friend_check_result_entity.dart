@@ -16,7 +16,8 @@ class FriendCheckResultEntity {
   FriendRelationTypeEnum resultType;
 
   FriendCheckResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     resultCode = json['resultCode'];
     resultInfo = json['resultInfo'];

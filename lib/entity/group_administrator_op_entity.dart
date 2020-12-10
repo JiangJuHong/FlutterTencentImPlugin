@@ -14,7 +14,8 @@ class GroupAdministratorOpEntity {
   GroupMemberEntity opUser;
 
   GroupAdministratorOpEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["changInfo"] != null)
       changInfo =

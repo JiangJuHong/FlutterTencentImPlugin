@@ -12,9 +12,12 @@ class GroupChangedEntity {
   List<GroupChangedInfoEntity> changInfo;
 
   GroupChangedEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
-    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']);
+    if (json["changInfo"] != null)
+      changInfo =
+          ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']);
   }
 }
 
@@ -30,7 +33,8 @@ class GroupChangedInfoEntity {
   String value;
 
   GroupChangedInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     type = GroupInfoChangedTypeTool.getByInt(json['type']);
     key = json['key'];
     value = json['value'];

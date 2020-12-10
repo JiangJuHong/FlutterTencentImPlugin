@@ -10,7 +10,8 @@ class GroupAtInfoEntity {
   GroupAtTypeEnum atType;
 
   GroupAtInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     seq = json["seq"];
     atType = GroupAtTypeTool.getByInt(json["atType"]);
   }

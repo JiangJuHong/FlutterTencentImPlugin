@@ -15,7 +15,8 @@ class GroupReceiveJoinApplicationEntity {
   String opReason;
 
   GroupReceiveJoinApplicationEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     opReason = json['opReason'];
     if (json["member"] != null)

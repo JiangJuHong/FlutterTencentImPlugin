@@ -112,6 +112,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "downloadSound":
             self.downloadSound(call: call, result: result);
             break;
+        case "setMessageLocalCustomStr":
+            self.setMessageLocalCustomStr(call: call, result: result);
+            break;
+        case "setMessageLocalCustomInt":
+            self.setMessageLocalCustomInt(call: call, result: result);
+            break;
         case "createGroup":
             self.createGroup(call: call, result: result);
             break;
@@ -677,6 +683,30 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 }, succ: {
                     result(path);
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置消息本地Str
+    public func setMessageLocalCustomStr(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg!.localCustomData = data.data(using: .utf8)!;
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 设置消息本地Int
+    public func setMessageLocalCustomInt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let data = CommonUtils.getParam(call: call, result: result, param: "data") as? Int32 {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg!.localCustomInt = data;
+                result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

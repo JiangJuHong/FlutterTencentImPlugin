@@ -11,7 +11,8 @@ class GroupAttributeChangedEntity {
   Map<String, String> attributes;
 
   GroupAttributeChangedEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     attributes = (json["attributes"] as Map).cast<String, String>();
   }

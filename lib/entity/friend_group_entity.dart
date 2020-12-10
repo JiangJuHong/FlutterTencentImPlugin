@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 /// 好友分组实体
 class FriendGroupEntity {
   /// 组名
@@ -11,7 +12,8 @@ class FriendGroupEntity {
   List<String> friendIDList;
 
   FriendGroupEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     name = json['name'];
     friendCount = json['friendCount'];
     friendIDList = json['friendIDList']?.cast<String>();

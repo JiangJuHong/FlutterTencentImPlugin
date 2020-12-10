@@ -33,7 +33,8 @@ class GroupTipsTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static GroupTipsTypeEnum getByInt(int index) => GroupTipsTypeEnum.values[index];
+  static GroupTipsTypeEnum getByInt(int index) =>
+      GroupTipsTypeEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(GroupTipsTypeEnum data) => data.index;

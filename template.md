@@ -31,18 +31,20 @@
 | [addInvitedSignaling](https://www.yuque.com/jiangjuhong/tencent-im-flutter/pbcnge)              | 添加邀请信令（可以用于群离线推送消息触发的邀请信令）                                |
 | [sendMessage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/iwzxm0)                      | 发送消息                                                                       |
 | [revokeMessage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/cmzefm)                    | 撤回消息                                                                       |
-| [getHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/pldzb9)                  | 获得历史记录，此为 getC2CHistoryMessageList 和 getGroupHistoryMessageList 的封装 |
+| [getHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/pldzb9)            | 获得历史记录，此为 getC2CHistoryMessageList 和 getGroupHistoryMessageList 的封装 |
 | [getC2CHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zsgx99)         | 获取单聊历史消息                                                                |
 | [getGroupHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/uo6i99)       | 获取群组历史消息                                                                |
-| [markMessageAsRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/potth4)                      | 设置聊天记录为已读，此为 markC2CMessageAsRead 和 markGroupMessageAsRead 的封装    |
+| [markMessageAsRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/potth4)                | 设置聊天记录为已读，此为 markC2CMessageAsRead 和 markGroupMessageAsRead 的封装    |
 | [markC2CMessageAsRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/oiic2d)             | 设置单聊已读                                                                   |
 | [markGroupMessageAsRead](https://www.yuque.com/jiangjuhong/tencent-im-flutter/twt8oh)           | 设置群聊已读                                                                   |
-| [deleteMessageFromLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/)          | 删除本地消息                                                                   |
+| [deleteMessageFromLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ir00xv)    | 删除本地消息                                                                   |
 | [deleteMessages](https://www.yuque.com/jiangjuhong/tencent-im-flutter/wu3m16)                   | 删除本地及漫游消息                                                              |
 | [insertGroupMessageToLocalStorage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/gx2vx5) | 向群组消息列表中添加一条消息                                                     |
 | [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/mqdwgy)                    | 下载视频                                                                       |
 | [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zr1thy)           | 下载视频缩略图                                                                 |
 | [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/exa4g6)                    | 下载语音                                                                       |
+| [setMessageLocalCustomStr](https://www.yuque.com/jiangjuhong/tencent-im-flutter/muz7ae)               | 设置消息本地Str                                                                |
+| [setMessageLocalCustomInt](https://www.yuque.com/jiangjuhong/tencent-im-flutter/od5caz)               | 设置消息本地Int                                                                |
 | [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/xza7ly)                      | 创建群                                                                        |
 | [joinGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ckchss)                        | 加入群                                                                        |
 | [quitGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/rd1gpv)                        | 退出群                                                                        |
@@ -98,17 +100,19 @@
 | [deleteFriendsFromFriendGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ex5kpm)     | 从分组中删除好友                                                                |
 
 
-> 获得指定好友信息
+> 设置消息本地Int
 
-| 参数名称    | 参数描述   | 参数类型 |
-|:-----------|:----------|:--------|
-| userIDList | 用户ID列表 | List    |
+| 参数名称 | 参数描述    | 参数类型           |
+|:--------|:-----------|:------------------|
+| message | 查找消息对象 | FindMessageEntity |
+| data    | 数据对象    | int               |
 
 **使用：**
 
 ```dart
-TencentRtcPlugin.getFriendsInfo(
-  userIDList: ["123"]
+TencentRtcPlugin.setMessageLocalCustomInt(
+  message: FindMessageEntity(msgID:'123'),
+  data:1,
 );
 ```
 

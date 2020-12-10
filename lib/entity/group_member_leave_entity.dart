@@ -11,7 +11,8 @@ class GroupMemberLeaveEntity {
   GroupMemberEntity member;
 
   GroupMemberLeaveEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["member"] != null)
       member = GroupMemberEntity.fromJson(json["member"]);

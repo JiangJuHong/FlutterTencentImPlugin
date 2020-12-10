@@ -26,7 +26,8 @@ class FriendInfoEntity {
   });
 
   FriendInfoEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     friendRemark = json['friendRemark'];
     friendGroups = json['friendGroups']?.cast<String>();

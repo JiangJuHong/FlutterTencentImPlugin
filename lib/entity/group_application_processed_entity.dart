@@ -18,7 +18,8 @@ class GroupApplicationProcessedEntity {
   bool isAgreeJoin;
 
   GroupApplicationProcessedEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     opReason = json['opReason'];
     isAgreeJoin = json['isAgreeJoin'];
