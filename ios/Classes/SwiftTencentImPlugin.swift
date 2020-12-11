@@ -636,7 +636,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 msg?.videoElem?.downloadVideo(path, progress: {
                     curSize, totalSize in
                     SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
-                        "msgId": msg!.msgID,
+                        "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
                     ])
@@ -656,7 +656,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 msg?.videoElem?.downloadSnapshot(path, progress: {
                     curSize, totalSize in
                     SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
-                        "msgId": msg!.msgID,
+                        "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
                     ])
@@ -676,7 +676,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 msg?.soundElem?.downloadSound(path, progress: {
                     curSize, totalSize in
                     SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
-                        "msgId": msg!.msgID,
+                        "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
                     ])

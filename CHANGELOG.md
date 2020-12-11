@@ -275,3 +275,6 @@
 
 ## 1.2.1
 * 增加 setMessageLocalCustomStr 和 setMessageLocalCustomInt 接口
+
+## 1.2.2
+* 修复下载进度出现Optiona的问题
