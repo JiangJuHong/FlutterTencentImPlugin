@@ -128,7 +128,7 @@ class MessageEntity {
     seq = json["seq"];
     note = json["note"];
     node = json["node"] == null
-        ? null
+        ? getMessageNodeByMessageElemListNodeType(json)
         : MessageElemTypeTool.getMessageNodeByMessageNodeType(
             elemType, json["node"]);
   }
@@ -165,4 +165,20 @@ class MessageEntity {
     if (this.note != null) data['note'] = this.note;
     return data;
   }
+
+  getMessageNodeByMessageElemListNodeType(Map<String, dynamic> json) {
+    if(json['elemList'] != null){
+      var elemList = json['elemList'];
+      if(null != elemList && elemList.isNotEmpty){
+        if(elemType == null){
+          elemType = MessageElemTypeEnum.Text;
+        }
+       return MessageElemTypeTool.getMessageNodeByMessageNodeType(
+            elemType, elemList[0]);
+      }
+    }
+    return null;
+  }
+
+
 }
