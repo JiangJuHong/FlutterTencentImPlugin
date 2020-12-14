@@ -1,6 +1,6 @@
 package top.huic.tencent_im_plugin;
 
-import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.v2.V2TIMCallback;
 
 import io.flutter.plugin.common.MethodChannel;
 
@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodChannel;
  *
  * @author 蒋具宏
  */
-public class VoidCallBack implements TIMCallBack {
+public class VoidCallBack implements V2TIMCallback {
     /**
      * 回调
      */

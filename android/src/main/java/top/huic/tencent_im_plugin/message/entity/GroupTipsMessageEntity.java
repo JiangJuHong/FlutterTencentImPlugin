@@ -1,17 +1,12 @@
 package top.huic.tencent_im_plugin.message.entity;
 
-import com.tencent.imsdk.TIMGroupMemberInfo;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMGroupTipsElemGroupInfo;
-import com.tencent.imsdk.TIMGroupTipsElemMemberInfo;
-import com.tencent.imsdk.TIMGroupTipsType;
-import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMGroupTipsElem;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import top.huic.tencent_im_plugin.entity.GroupMemberEntity;
 import top.huic.tencent_im_plugin.enums.MessageNodeType;
 
 /**
@@ -20,200 +15,110 @@ import top.huic.tencent_im_plugin.enums.MessageNodeType;
  * @author 蒋具宏
  */
 public class GroupTipsMessageEntity extends AbstractMessageEntity {
-    /**
-     * 被操作者群内资料
-     */
-    private Map<String, GroupMemberEntity> changedGroupMemberInfo;
 
     /**
-     * 被操作帐号的个人资料
+     * 群ID
      */
-    private Map<String, TIMUserProfile> changedUserInfo;
+    private String groupID;
 
     /**
-     * 群组ID
+     * 群事件通知类型
      */
-    private String groupId;
+    private int type;
 
     /**
-     * 群名称
+     * 操作用户
      */
-    private String groupName;
+    private V2TIMGroupMemberInfo opMember;
 
     /**
-     * 群资料变更列表信息 仅当tipsType值为TIMGroupTipsType.ModifyGroupInfo时有效
+     * 被操作人列表
      */
-    private List<TIMGroupTipsElemGroupInfo> groupInfoList;
+    private List<V2TIMGroupMemberInfo> memberList;
 
     /**
-     * 群成员变更信息列表，仅当tipsType值为TIMGroupTipsType.ModifyMemberInfo时有效
+     * 群资料变更信息列表，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE时有效
      */
-    private List<TIMGroupTipsElemMemberInfo> memberInfoList;
+    private List<V2TIMGroupChangeInfo> groupChangeInfoList	;
 
     /**
-     * 群成员数量
+     * 获取群成员变更信息列表，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE时有效
      */
-    private Long memberNum;
+    private List<V2TIMGroupMemberChangeInfo> memberChangeInfoList;
 
     /**
-     * 操作者群内信息
+     * 当前群成员数，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_JOIN, V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_QUIT, V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_KICKED的时候有效
      */
-    private TIMGroupMemberInfo opGroupMemberInfo;
-
-    /**
-     * 操作者ID
-     */
-    private String opUser;
-
-    /**
-     * 操作者群内资料
-     */
-    private TIMUserProfile opUserInfo;
-
-    /**
-     * 操作方平台资料
-     */
-    private String platform;
-
-    /**
-     * 群组事件通知类型
-     */
-    private TIMGroupTipsType tipsType;
-
-    /**
-     * 被操作的帐号列表
-     */
-    private List<String> userList;
+    private int memberCount;
 
     public GroupTipsMessageEntity() {
         super(MessageNodeType.GroupTips);
     }
 
-    public GroupTipsMessageEntity(TIMGroupTipsElem elem){
+    public GroupTipsMessageEntity(V2TIMGroupTipsElem elem){
         super(MessageNodeType.GroupTips);
-        if (elem.getChangedGroupMemberInfo() != null) {
-            Map<String, GroupMemberEntity> memberEntityMap = new HashMap<>();
-            for (String key : elem.getChangedGroupMemberInfo().keySet()) {
-                memberEntityMap.put(key, new GroupMemberEntity(elem.getChangedGroupMemberInfo().get(key)));
-            }
-            this.setChangedGroupMemberInfo(memberEntityMap);
-        }
-
-        this.setChangedUserInfo(elem.getChangedUserInfo());
-        this.setGroupId(elem.getGroupId());
-        this.setGroupName(elem.getGroupName());
-        this.setGroupInfoList(elem.getGroupInfoList());
-        this.setMemberInfoList(elem.getMemberInfoList());
-        this.setMemberNum(elem.getMemberNum());
-        this.setOpGroupMemberInfo(elem.getOpGroupMemberInfo());
-        this.setOpUser(elem.getOpUser());
-        this.setOpUserInfo(elem.getOpUserInfo());
-        this.setPlatform(elem.getPlatform());
-        this.setTipsType(elem.getTipsType());
-        this.setUserList(elem.getUserList());
+        this.groupID = elem.getGroupID();
+        this.type = elem.getType();
+        this.opMember = elem.getOpMember();
+        this.memberList = elem.getMemberList();
+        this.groupChangeInfoList = elem.getGroupChangeInfoList();
+        this.memberChangeInfoList = elem.getMemberChangeInfoList();
+        this.memberCount = elem.getMemberCount();
     }
 
-    public Map<String, GroupMemberEntity> getChangedGroupMemberInfo() {
-        return changedGroupMemberInfo;
+    public String getGroupID() {
+        return groupID;
     }
 
-    public void setChangedGroupMemberInfo(Map<String, GroupMemberEntity> changedGroupMemberInfo) {
-        this.changedGroupMemberInfo = changedGroupMemberInfo;
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
     }
 
-    public Map<String, TIMUserProfile> getChangedUserInfo() {
-        return changedUserInfo;
+    public int getType() {
+        return type;
     }
 
-    public void setChangedUserInfo(Map<String, TIMUserProfile> changedUserInfo) {
-        this.changedUserInfo = changedUserInfo;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public V2TIMGroupMemberInfo getOpMember() {
+        return opMember;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setOpMember(V2TIMGroupMemberInfo opMember) {
+        this.opMember = opMember;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public List<V2TIMGroupMemberInfo> getMemberList() {
+        return memberList;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setMemberList(List<V2TIMGroupMemberInfo> memberList) {
+        this.memberList = memberList;
     }
 
-    public List<TIMGroupTipsElemGroupInfo> getGroupInfoList() {
-        return groupInfoList;
+    public List<V2TIMGroupChangeInfo> getGroupChangeInfoList() {
+        return groupChangeInfoList;
     }
 
-    public void setGroupInfoList(List<TIMGroupTipsElemGroupInfo> groupInfoList) {
-        this.groupInfoList = groupInfoList;
+    public void setGroupChangeInfoList(List<V2TIMGroupChangeInfo> groupChangeInfoList) {
+        this.groupChangeInfoList = groupChangeInfoList;
     }
 
-    public List<TIMGroupTipsElemMemberInfo> getMemberInfoList() {
-        return memberInfoList;
+    public List<V2TIMGroupMemberChangeInfo> getMemberChangeInfoList() {
+        return memberChangeInfoList;
     }
 
-    public void setMemberInfoList(List<TIMGroupTipsElemMemberInfo> memberInfoList) {
-        this.memberInfoList = memberInfoList;
+    public void setMemberChangeInfoList(List<V2TIMGroupMemberChangeInfo> memberChangeInfoList) {
+        this.memberChangeInfoList = memberChangeInfoList;
     }
 
-    public Long getMemberNum() {
-        return memberNum;
+    public int getMemberCount() {
+        return memberCount;
     }
 
-    public void setMemberNum(Long memberNum) {
-        this.memberNum = memberNum;
-    }
-
-    public TIMGroupMemberInfo getOpGroupMemberInfo() {
-        return opGroupMemberInfo;
-    }
-
-    public void setOpGroupMemberInfo(TIMGroupMemberInfo opGroupMemberInfo) {
-        this.opGroupMemberInfo = opGroupMemberInfo;
-    }
-
-    public String getOpUser() {
-        return opUser;
-    }
-
-    public void setOpUser(String opUser) {
-        this.opUser = opUser;
-    }
-
-    public TIMUserProfile getOpUserInfo() {
-        return opUserInfo;
-    }
-
-    public void setOpUserInfo(TIMUserProfile opUserInfo) {
-        this.opUserInfo = opUserInfo;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public TIMGroupTipsType getTipsType() {
-        return tipsType;
-    }
-
-    public void setTipsType(TIMGroupTipsType tipsType) {
-        this.tipsType = tipsType;
-    }
-
-    public List<String> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<String> userList) {
-        this.userList = userList;
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
     }
 }

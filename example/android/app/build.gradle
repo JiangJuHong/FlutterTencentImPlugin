@@ -24,11 +24,6 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-//// 28 - 30 行为打包参数
-//def keystorePropertiesFile = rootProject.file("key.properties")
-//def keystoreProperties = new Properties()
-//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-//
 
 android {
     compileSdkVersion 28
@@ -40,31 +35,32 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "top.huic.tencent_im_plugin_example"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-//    // 51 - 58 行为打包参数
-//    signingConfigs {
-//        release {
-//            keyAlias keystoreProperties['keyAlias']
-//            keyPassword keystoreProperties['keyPassword']
-//            storeFile file(keystoreProperties['storeFile'])
-//            storePassword keystoreProperties['storePassword']
-//        }
-//    }
+    // 证书参数
+    signingConfigs {
+        config {
+            storeFile file('key.jks')
+            storePassword '123456'
+            keyAlias 'key'
+            keyPassword '123456'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+        }
+
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            // 打包时将 signingConfig signingConfigs.debug 更改为 signingConfig signingConfigs.release
-            signingConfig signingConfigs.debug
-//            signingConfig signingConfigs.release
-//
+            signingConfig signingConfigs.config
 //            // 开启混淆
 //            minifyEnabled true
 //            useProguard true
@@ -86,8 +82,9 @@ flutter {
 }
 
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
+
+apply plugin: 'com.huawei.agconnect'

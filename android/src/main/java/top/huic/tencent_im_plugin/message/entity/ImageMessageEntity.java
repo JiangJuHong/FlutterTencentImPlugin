@@ -1,6 +1,6 @@
 package top.huic.tencent_im_plugin.message.entity;
 
-import com.tencent.imsdk.TIMImage;
+import com.tencent.imsdk.v2.V2TIMImageElem;
 
 import java.util.List;
 
@@ -18,22 +18,18 @@ public class ImageMessageEntity extends AbstractMessageEntity {
     private String path;
 
     /**
-     * 图片类型
-     */
-    private Integer imageFormat;
-
-    /**
-     * 图片质量
-     */
-    private Integer level;
-
-    /**
      * 图片列表，根据类型分开
      */
-    private List<TIMImage> imageData;
+    private List<V2TIMImageElem.V2TIMImage> imageData;
 
     public ImageMessageEntity() {
         super(MessageNodeType.Image);
+    }
+
+    public ImageMessageEntity(V2TIMImageElem elem) {
+        super(MessageNodeType.Image);
+        this.setPath(elem.getPath());
+        this.setImageData(elem.getImageList());
     }
 
     public String getPath() {
@@ -44,27 +40,11 @@ public class ImageMessageEntity extends AbstractMessageEntity {
         this.path = path;
     }
 
-    public Integer getImageFormat() {
-        return imageFormat;
-    }
-
-    public void setImageFormat(Integer imageFormat) {
-        this.imageFormat = imageFormat;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public List<TIMImage> getImageData() {
+    public List<V2TIMImageElem.V2TIMImage> getImageData() {
         return imageData;
     }
 
-    public void setImageData(List<TIMImage> imageData) {
+    public void setImageData(List<V2TIMImageElem.V2TIMImage> imageData) {
         this.imageData = imageData;
     }
 }

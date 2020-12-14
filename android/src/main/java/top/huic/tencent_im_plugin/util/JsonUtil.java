@@ -10,7 +10,7 @@ import com.alibaba.fastjson.serializer.ValueFilter;
  */
 public class JsonUtil {
     /**
-     * 自定义数据过滤穷
+     * 自定义数据过滤器
      */
     private static final ValueFilter filter = new ValueFilter() {
         @Override

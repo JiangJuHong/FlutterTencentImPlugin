@@ -1,34 +1,29 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMCustomElem;
-import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.v2.V2TIMCustomElem;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMMessage;
 
 import top.huic.tencent_im_plugin.message.entity.CustomMessageEntity;
 
 /**
  * 自定义消息节点
  */
-public class CustomMessageNode extends AbstractMessageNode<TIMCustomElem, CustomMessageEntity> {
+public class CustomMessageNode extends AbstractMessageNode<V2TIMCustomElem, CustomMessageEntity> {
 
     @Override
-    protected TIMMessage getSendMessage(CustomMessageEntity entity) {
-        TIMMessage message = new TIMMessage();
-        TIMCustomElem customElem = new TIMCustomElem();
-        customElem.setData(entity.getData().getBytes());
-        message.addElement(customElem);
-        return message;
+    public V2TIMMessage getV2TIMMessage(CustomMessageEntity entity) {
+        return V2TIMManager.getMessageManager().createCustomMessage(entity.getData().getBytes());
     }
 
     @Override
-    public String getNote(TIMCustomElem elem) {
+    public String getNote(V2TIMCustomElem elem) {
         return "[其它消息]";
     }
 
     @Override
-    public CustomMessageEntity analysis(TIMCustomElem elem) {
-        CustomMessageEntity entity = new CustomMessageEntity();
-        entity.setData(new String((elem.getData())));
-        return entity;
+    public CustomMessageEntity analysis(V2TIMCustomElem elem) {
+        return new CustomMessageEntity(elem);
     }
 
     @Override

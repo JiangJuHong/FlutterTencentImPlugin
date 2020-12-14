@@ -6,96 +6,55 @@ import ImSDK
 //
 //  Created by 蒋具宏 on 2020/3/21.
 //  群体是消息实体
-public class GroupTipsMessageEntity : AbstractMessageEntity{
-    
-    /// 被操作者群内资料
-    var changedGroupMemberInfo : [String:GroupMemberEntity]?;
-    
-    /// 被操作者个人资料
-    var changedUserInfo : [String:UserInfoEntity]?;
-    
+public class GroupTipsMessageEntity: AbstractMessageEntity {
     /// 群ID
-    var groupId : String?;
-    
-    /// 群名称
-    var groupName : String?;
-    
-    /// 群资料变更列表信息 仅当tipsType值为TIMGroupTipsType.ModifyGroupInfo时有效
-    var groupInfoList : [GroupTipsElemGroupInfoEntity]?;
-    
-    /// 群成员变更信息列表，仅当tipsType值为TIMGroupTipsType.ModifyMemberInfo时有效
-    var memberInfoList : [GroupTipsElemMemberInfoEntity]?;
-    
-    /// 群成员数量
-    var memberNum : UInt32?;
-    
-    /// 操作者群内信息
-    var opGroupMemberInfo : GroupMemberEntity?;
-    
-    /// 操作者ID
-    var opUser : String?;
-    
-    /// 操作者群内资料
-    var opUserInfo : UserInfoEntity?;
-    
-    /// 操作方平台资料
-    var platform : String?;
-    
-    /// 群组事件通知类型
-    var tipsType : GroupTipsType?;
-    
-    /// 被操作的帐号列表
-    var userList : [String]?;
-    
+    var groupID: String?;
+
+    /// 操作类型
+    var type: Int?;
+
+    /// 操作者
+    var opMember: [String: Any]?;
+
+    /// 被操作人列表
+    var memberList: [[String: Any]]?;
+
+    /// 群资料变更信息列表，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE时有效
+    var groupChangeInfoList: [[String: Any]]?;
+
+    /// 群成员变更信息列表，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE时有效
+    var memberChangeInfoList: [[String: Any]]?;
+
+    /// 当前群成员数，仅当tipsType值为V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_JOIN, V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_QUIT, V2TIMGroupTipsElem#V2TIM_GROUP_TIPS_TYPE_KICKED的时候有效
+    var memberCount : UInt32?;
+
     override init() {
         super.init(MessageNodeType.GroupTips);
     }
-    
-    init(elem : TIMGroupTipsElem){
+
+    init(elem: V2TIMGroupTipsElem) {
         super.init(MessageNodeType.GroupTips);
-        if elem.changedGroupMemberInfo != nil{
-            self.changedGroupMemberInfo = [:];
-            for (key,value) in elem.changedGroupMemberInfo! {
-                self.changedGroupMemberInfo![key] = GroupMemberEntity(info: value);
-            }
+        self.groupID = elem.groupID;
+        self.type = elem.type.rawValue;
+        self.opMember = CustomGroupMemberFullInfoEntity.getDict(simpleInfo: elem.opMember);
+        var memberList : [[String: Any]] = [];
+        for var item in elem.memberList{
+            memberList.append(CustomGroupMemberFullInfoEntity.getDict(simpleInfo: item));
         }
-        
-        if elem.changedUserInfo != nil{
-            self.changedUserInfo = [:];
-            for (key,value) in elem.changedUserInfo! {
-                self.changedUserInfo![key] = UserInfoEntity(userProfile: value);
-            }
+        self.memberList = memberList;
+
+        var groupChangeInfoList : [[String: Any]] = [];
+        for var item in elem.groupChangeInfoList{
+            groupChangeInfoList.append(CustomGroupChangeInfoEntity.getDict(info: item));
         }
-        
-        self.groupId = elem.group;
-        self.groupName = elem.groupName;
-        
-        if elem.groupChangeList != nil{
-            self.groupInfoList = [];
-            for item in elem.groupChangeList!{
-                self.groupInfoList?.append(GroupTipsElemGroupInfoEntity(info: item));
-            }
+        self.groupChangeInfoList = groupChangeInfoList;
+
+        var memberChangeInfoList : [[String: Any]] = [];
+        for var item in elem.memberChangeInfoList{
+            memberChangeInfoList.append(CustomGroupMemberChangeInfoEntity.getDict(info: item));
         }
-        
-        if elem.memberChangeList != nil{
-            self.memberInfoList = [];
-            for item in elem.memberChangeList!{
-                self.memberInfoList?.append(GroupTipsElemMemberInfoEntity(info: item));
-            }
-        }
-        
-        self.memberNum = elem.memberNum;
-        
-        if elem.opGroupMemberInfo != nil{
-            self.opGroupMemberInfo = GroupMemberEntity(info: elem.opGroupMemberInfo!);
-        }
-        self.opUser = elem.opUser;
-        
-        if elem.opUserInfo != nil{
-            self.opUserInfo = UserInfoEntity(userProfile: elem.opUserInfo!);
-        }
-        self.platform = elem.platform;
-        self.tipsType = GroupTipsType.getByTIM_GROUP_TIPS_TYPE(type: elem.type)
-        self.userList = (elem.userList as! [String]);
+        self.memberChangeInfoList = groupChangeInfoList;
+
+        self.memberCount = elem.memberCount;
     }
 }

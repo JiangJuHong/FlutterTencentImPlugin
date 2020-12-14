@@ -1,14 +1,15 @@
 package top.huic.tencent_im_plugin.enums;
 
-import com.tencent.imsdk.TIMElemType;
+import com.tencent.imsdk.v2.V2TIMElem;
+import com.tencent.imsdk.v2.V2TIMMessage;
 
 import top.huic.tencent_im_plugin.message.AbstractMessageNode;
 import top.huic.tencent_im_plugin.message.CustomMessageNode;
+import top.huic.tencent_im_plugin.message.FaceMessageNode;
+import top.huic.tencent_im_plugin.message.FileMessageNode;
 import top.huic.tencent_im_plugin.message.GroupTipsMessageNode;
 import top.huic.tencent_im_plugin.message.ImageMessageNode;
 import top.huic.tencent_im_plugin.message.LocationMessageNode;
-import top.huic.tencent_im_plugin.message.OtherMessageNode;
-import top.huic.tencent_im_plugin.message.SnsTipsMessageNode;
 import top.huic.tencent_im_plugin.message.SoundMessageNode;
 import top.huic.tencent_im_plugin.message.TextMessageNode;
 import top.huic.tencent_im_plugin.message.VideoMessageNode;
@@ -20,49 +21,104 @@ import top.huic.tencent_im_plugin.message.VideoMessageNode;
  */
 public enum MessageNodeType {
     /**
-     * 文本消息
+     * 没有元素
      */
-    Text(new TextMessageNode()),
+    None(null) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return null;
+        }
+    },
 
     /**
-     * 图片
+     * 文本
      */
-    Image(new ImageMessageNode()),
-
-    /**
-     * 语音
-     */
-    Sound(new SoundMessageNode()),
-
-    /**
-     * 视频
-     */
-    Video(new VideoMessageNode()),
+    Text(new TextMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getTextElem();
+        }
+    },
 
     /**
      * 自定义
      */
-    Custom(new CustomMessageNode()),
+    Custom(new CustomMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getCustomElem();
+        }
+    },
+
+    /**
+     * 图片
+     */
+    Image(new ImageMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getImageElem();
+        }
+    },
+
+    /**
+     * 语音
+     */
+    Sound(new SoundMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getSoundElem();
+        }
+    },
+
+    /**
+     * 视频
+     */
+    Video(new VideoMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getVideoElem();
+        }
+    },
+
+    /**
+     * 文件
+     */
+    File(new FileMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getFileElem();
+        }
+    },
 
     /**
      * 位置
      */
-    Location(new LocationMessageNode()),
+    Location(new LocationMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getLocationElem();
+        }
+    },
+
+    /**
+     * 表情
+     */
+    Face(new FaceMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getFaceElem();
+        }
+    },
 
     /**
      * 群提示
      */
-    GroupTips(new GroupTipsMessageNode()),
-
-    /**
-     * 关系链相关操作后，后台push同步下来的消息元素
-     */
-    SnsTips(new SnsTipsMessageNode()),
-
-    /**
-     * 其它节点
-     */
-    Other(new OtherMessageNode());
+    GroupTips(new GroupTipsMessageNode()) {
+        @Override
+        public V2TIMElem getElemByMessage(V2TIMMessage message) {
+            return message.getGroupTipsElem();
+        }
+    };
 
     /**
      * 消息节点接口
@@ -74,37 +130,28 @@ public enum MessageNodeType {
         this.messageNodeInterface = messageNodeInterface;
     }
 
+    /**
+     * 获得消息节点接口
+     */
     public AbstractMessageNode getMessageNodeInterface() {
         return messageNodeInterface;
     }
 
     /**
-     * 根据腾讯云节点获得枚举对象
+     * 根据Message获得节点信息
      *
-     * @param elemType 腾讯云节点类型
-     * @return 枚举对象
+     * @param message 消息对象
+     * @return 节点对象
      */
-    public static MessageNodeType getTypeByTIMElemType(TIMElemType elemType) {
-        // 注: 此处之所以使用 switch，而不使用 valueOf ，是为了防止后期类型更改导致隐藏BUG
-        switch (elemType) {
-            case Text:
-                return MessageNodeType.Text;
-            case Image:
-                return MessageNodeType.Image;
-            case Sound:
-                return MessageNodeType.Sound;
-            case Custom:
-                return MessageNodeType.Custom;
-            case Video:
-                return MessageNodeType.Video;
-            case Location:
-                return MessageNodeType.Location;
-            case GroupTips:
-                return MessageNodeType.GroupTips;
-            case SNSTips:
-                return MessageNodeType.SnsTips;
-            default:
-                return MessageNodeType.Other;
-        }
+    public abstract V2TIMElem getElemByMessage(V2TIMMessage message);
+
+    /**
+     * 根据TIM V2版本的常量进行获取
+     *
+     * @param constant 常量值
+     * @return 结果
+     */
+    public static MessageNodeType getMessageNodeTypeByV2TIMConstant(int constant) {
+        return MessageNodeType.values()[constant];
     }
 }

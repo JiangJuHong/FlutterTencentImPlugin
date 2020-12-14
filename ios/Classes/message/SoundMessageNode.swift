@@ -6,28 +6,19 @@ import ImSDK
 //
 //  Created by 蒋具宏 on 2020/3/13.
 //  语音消息节点
-public class SoundMessageNode : AbstractMessageNode{
-    
-    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
-        let message = TIMMessage();
-        let soundElem = TIMSoundElem();
-        soundElem.path = getParam(params: params, paramKey: "path")!;
-        soundElem.second = getParam(params: params, paramKey: "duration")!
-        message.add(soundElem);
-        return message;
+public class SoundMessageNode: AbstractMessageNode {
+
+    override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {
+        let path: String = getParam(params: params, paramKey: "path")!;
+        let duration: Int32 = getParam(params: params, paramKey: "duration")!;
+        return V2TIMManager.sharedInstance().createSoundMessage(path, duration: duration)
     }
-    
-    override func getNote(elem: TIMElem) -> String {
-        return "[语音]";
+
+    override func getNote(elem: V2TIMElem) -> String {
+        "[语音]";
     }
-    
-    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
-        let soundElem = elem as! TIMSoundElem;
-        let entity = SoundMessageEntity();
-        entity.path = soundElem.path;
-        entity.dataSize = soundElem.dataSize;
-        entity.duration = soundElem.second;
-        entity.uuid = soundElem.uuid;
-        return entity;
+
+    override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
+        SoundMessageEntity(elem: elem as! V2TIMSoundElem);
     }
 }

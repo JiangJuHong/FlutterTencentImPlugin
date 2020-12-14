@@ -6,23 +6,38 @@ import ImSDK
 //
 //  Created by 蒋具宏 on 2020/3/13.
 //  文本消息节点
-public class TextMessageNode : AbstractMessageNode{
-    
-    override func getSendMessage(params: [String : Any]) -> TIMMessage? {
-        let message = TIMMessage();
-        let textElem = TIMTextElem();
-        textElem.text = getParam(params: params, paramKey: "content")!;
-        message.add(textElem);
-        return message;
+public class TextMessageNode: AbstractMessageNode {
+    override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {
+        let text: String = getParam(params: params, paramKey: "content")!;
+        let atUserList: Any? = getParam(params: params, paramKey: "atUserList");
+        let atAll: Any? = getParam(params: params, paramKey: "atAll");
+
+        // 有@用户或者@所有人则进入分支
+        if (atUserList != nil && !(atUserList is NSNull)) || (atAll != nil && atAll is NSNull && atAll as! Bool) {
+            var atList: [String] = [];
+
+            // 追加@的目标
+            if atUserList != nil && !(atUserList is NSNull) {
+                for item in atUserList as! [String] {
+                    atList.append(item);
+                }
+            }
+
+            // @所有人
+            if atAll != nil && atAll is NSNull && atAll as! Bool {
+                atList.append(kImSDK_MesssageAtALL);
+            }
+
+            return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atList as AnyObject as! NSArray).mutableCopy() as! NSMutableArray)
+        }
+        return V2TIMManager.sharedInstance().createTextMessage(text);
     }
-    
-    override func getNote(elem: TIMElem) -> String {
-        return (elem as! TIMTextElem).text!;
+
+    override func getNote(elem: V2TIMElem) -> String {
+        (elem as! V2TIMTextElem).text ?? "";
     }
-    
-    override func analysis(elem: TIMElem) -> AbstractMessageEntity {
-        let entity = TextMessageEntity();
-        entity.content = (elem as! TIMTextElem).text;
-        return entity;
+
+    override func analysis(elem: V2TIMElem) -> AbstractMessageEntity {
+        TextMessageEntity(elem: elem as! V2TIMTextElem)
     }
 }

@@ -173,3 +173,108 @@
 ## 0.2.28
 * 修复 setToken int 无法转换为 long 的问题
 * 离线推送注册增加文档说明
+
+## 0.2.30
+* 修复 Android Int 转换为 Long 时报错
+
+## 0.2.31
+* 创建群组的群成员设置为可选属性
+
+## 0.2.32
+* 修复IOS applyJoinGroup 包错问题
+* 修复Demo NewMessages 监听器添加数据失败
+
+## 0.2.33
+* 修复IOS申请加入群组闪退问题
+* 修改申请加入群组 reason 为必传
+
+## 0.2.34
+* 修复 Native 和 Flutter 模型参数不一致
+
+## 0.2.35
+* 解决群未决处理TIMGroupPendencyItem的selfIdentifier为空的问题
+
+## 0.2.36
+* 解决发送图片后可能出现的错误
+* createGroup 接口增加 customInfo 信息
+* 替换Demo中视频缩略图获取的方案
+* 解决IOS Pod Install 后会报错
+
+## 0.2.37
+* 更换离线推送Token字符串解析方式(原方式不支持APNS)
+
+## 0.2.38
+* 修改 android getConversation 传入非存在sessionId的时候闪退问题
+
+## 0.2.39
+* 增加 GroupSystem 节点解析
+
+## 0.2.40
+* 增加 TIMProfileSystemElem 节点解析
+
+## 0.2.41
+* 修复IOS设备下 deleteConversation 接口无法接收返回值的问题
+
+## 0.2.42
+* 修复IOS运行报错
+
+## 0.2.43
+* 修复 ValueCallBack 错误码和描述信息反了的问题
+* 对登录操作不再做 isEmpty 验证
+
+## 0.2.44
+* 优化文本节点隐晦出现BUG的问题
+
+## 1.0.0
+* 集成 SDK 5.1.1
+
+## 1.0.1
+* 优化Demo
+
+## 1.0.2
+* 修复回调调用异常的问题
+
+## 1.0.3
+* 修复对象解析错误异常
+
+## 1.0.4
+* 修复 getFriendGroups 接口参数为必传的问题
+
+## 1.0.5
+* 升级SDK到 5.1.2
+* 增加 getGroupOnlineMemberCount 接口
+
+## 1.0.6
+* 修复 C2CReadReceipt 回调异常的问题
+
+## 1.1.0
+* 优化会话相关接口，提供内部转换
+* 增加 getHistoryMessageList 和 markMessageAsRead 接口
+
+## 1.1.1
+* 修改混淆文件
+
+## 1.1.2
+* 修复 SignalingCommonEntity 实体转换失败的问题
+
+## 1.1.3
+* 修复消息发送进度回调数据转换异常的问题
+
+## 1.1.4
+* 修复 addFriend 添加好友异常的问题
+
+## 1.1.5
+* 修复 MessageRevoked 监听没有参数问题
+
+## 1.1.6
+* 增加 GroupTips 数据节点解析
+
+## 1.2.0
+* 1. Android 和 IOS 将所有监听器的参数二次转换为 json 取消
+* 2. 适配Flutter
+
+## 1.2.1
+* 增加 setMessageLocalCustomStr 和 setMessageLocalCustomInt 接口
+
+## 1.2.2
+* 修复下载进度出现Optiona的问题

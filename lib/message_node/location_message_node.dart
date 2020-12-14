@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tencent_im_plugin/enums/message_node_type.dart';
+import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 位置节点
@@ -17,10 +17,10 @@ class LocationMessageNode extends MessageNode {
     @required this.desc,
     @required this.longitude,
     @required this.latitude,
-  }) : super(MessageNodeType.Location);
+  }) : super(MessageElemTypeEnum.Location);
 
   LocationMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageNodeType.Location) {
+      : super(MessageElemTypeEnum.Location) {
     desc = json['desc'];
     longitude = json['longitude'];
     latitude = json['latitude'];
