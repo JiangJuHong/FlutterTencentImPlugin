@@ -88,4 +88,30 @@ class MessageElemTypeTool {
     }
     return null;
   }
+
+  static MessageElemTypeEnum getMessageNodeTypeToEnum(String nodeType) {
+    switch (nodeType) {
+      case "None":
+        return MessageElemTypeEnum.None;
+      case "Text":
+        return MessageElemTypeEnum.Text;
+      case "Custom":
+        return MessageElemTypeEnum.Custom;
+      case "Image":
+        return MessageElemTypeEnum.Image;
+      case "Sound":
+        return MessageElemTypeEnum.Sound;
+      case "Video":
+        return MessageElemTypeEnum.Video;
+      case "File":
+        return MessageElemTypeEnum.File;
+      case "Location":
+        return MessageElemTypeEnum.Location;
+      case "Face":
+        return MessageElemTypeEnum.Face;
+      case "GroupTips":
+        return MessageElemTypeEnum.GroupTips;
+    };
+    return MessageElemTypeEnum.None;
+  }
 }

@@ -103,7 +103,7 @@ class MessageEntity {
     Map<String, dynamic> json =
     data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
-    timestamp = json["timestamp"] ?? 0 ;
+    timestamp = json["timestamp"] ?? 0;
     sender = json["sender"];
     nickName = json["nickName"];
     friendRemark = json["friendRemark"];
@@ -171,7 +171,10 @@ class MessageEntity {
       var elemList = json['elemList'];
       if (null != elemList && elemList.isNotEmpty) {
         if (elemType == null) {
-          elemType = MessageElemTypeEnum.Text;
+          if (elemList[0]["nodeType"] is String) {
+            elemType = MessageElemTypeTool.getMessageNodeTypeToEnum(
+                elemList[0]["nodeType"]);
+          }
         }
         return MessageElemTypeTool.getMessageNodeByMessageNodeType(
             elemType, elemList[0]);
