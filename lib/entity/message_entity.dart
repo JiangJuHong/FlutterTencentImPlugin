@@ -101,9 +101,9 @@ class MessageEntity {
 
   MessageEntity.fromJson(data) {
     Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
-    timestamp = json["timestamp"];
+    timestamp = json["timestamp"] ?? 0 ;
     sender = json["sender"];
     nickName = json["nickName"];
     friendRemark = json["friendRemark"];
@@ -130,7 +130,7 @@ class MessageEntity {
     node = json["node"] == null
         ? getMessageNodeByMessageElemListNodeType(json)
         : MessageElemTypeTool.getMessageNodeByMessageNodeType(
-            elemType, json["node"]);
+        elemType, json["node"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -167,13 +167,13 @@ class MessageEntity {
   }
 
   getMessageNodeByMessageElemListNodeType(Map<String, dynamic> json) {
-    if(json['elemList'] != null){
+    if (json['elemList'] != null) {
       var elemList = json['elemList'];
-      if(null != elemList && elemList.isNotEmpty){
-        if(elemType == null){
+      if (null != elemList && elemList.isNotEmpty) {
+        if (elemType == null) {
           elemType = MessageElemTypeEnum.Text;
         }
-       return MessageElemTypeTool.getMessageNodeByMessageNodeType(
+        return MessageElemTypeTool.getMessageNodeByMessageNodeType(
             elemType, elemList[0]);
       }
     }
