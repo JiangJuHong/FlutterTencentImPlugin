@@ -1,5 +1,3 @@
-# tencent_im_plugin  来自早期仓库 https://gitee.com/yabeenet/FlutterTencentImPlugin.git
-
 <p align="center">
     <a href="https://pub.dartlang.org/packages/tencent_im_plugin"><img src="https://img.shields.io/pub/v/tencent_im_plugin.svg"/></a>
     &nbsp;
