@@ -4,6 +4,7 @@ import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
+import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 消息实体
 class MessageEntity {
@@ -101,9 +102,9 @@ class MessageEntity {
 
   MessageEntity.fromJson(data) {
     Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
-    timestamp = json["timestamp"];
+    timestamp = json["timestamp"] ?? 0;
     sender = json["sender"];
     nickName = json["nickName"];
     friendRemark = json["friendRemark"];
@@ -112,7 +113,16 @@ class MessageEntity {
     groupID = json["groupID"];
     userID = json["userID"];
     if (json["status"] != null)
-      status = MessageStatusTool.getByInt(json["status"]);
+      if(json["status"] is String){
+        for (var item in MessageStatusEnum.values) {
+          if (EnumUtil.getEnumName(item) == json['status']) {
+            status = item;
+            break;
+          }
+        }
+      }else{
+        status = MessageStatusTool.getByInt(json["status"]);
+      }
     if (json["elemType"] != null)
       elemType = MessageElemTypeTool.getByInt(json["elemType"]);
     localCustomData = json["localCustomData"];
@@ -128,9 +138,9 @@ class MessageEntity {
     seq = json["seq"];
     note = json["note"];
     node = json["node"] == null
-        ? null
+        ? getMessageNodeByMessageElemListNodeType(json)
         : MessageElemTypeTool.getMessageNodeByMessageNodeType(
-            elemType, json["node"]);
+        elemType, json["node"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -165,4 +175,22 @@ class MessageEntity {
     if (this.note != null) data['note'] = this.note;
     return data;
   }
+
+  getMessageNodeByMessageElemListNodeType(Map<String, dynamic> json) {
+    if (json['elemList'] != null) {
+      var elemList = json['elemList'];
+      if (null != elemList && elemList.isNotEmpty) {
+        if (elemType == null) {
+          if (elemList[0]["nodeType"] is String) {
+            elemType = EnumUtil.nameOf(MessageElemTypeEnum.values, elemList[0]["nodeType"]);
+          }
+        }
+        return MessageElemTypeTool.getMessageNodeByMessageNodeType(
+            elemType, elemList[0]);
+      }
+    }
+    return null;
+  }
+
+
 }
