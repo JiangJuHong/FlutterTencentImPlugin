@@ -4,6 +4,7 @@ import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/message_priority_enum.dart';
 import 'package:tencent_im_plugin/enums/message_status_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
+import 'package:tencent_im_plugin/utils/enum_util.dart';
 
 /// 消息实体
 class MessageEntity {
@@ -112,7 +113,16 @@ class MessageEntity {
     groupID = json["groupID"];
     userID = json["userID"];
     if (json["status"] != null)
-      status = MessageStatusTool.getByInt(json["status"]);
+      if(json["status"] is String){
+        for (var item in MessageStatusEnum.values) {
+          if (EnumUtil.getEnumName(item) == json['status']) {
+            status = item;
+            break;
+          }
+        }
+      }else{
+        status = MessageStatusTool.getByInt(json["status"]);
+      }
     if (json["elemType"] != null)
       elemType = MessageElemTypeTool.getByInt(json["elemType"]);
     localCustomData = json["localCustomData"];
@@ -172,8 +182,7 @@ class MessageEntity {
       if (null != elemList && elemList.isNotEmpty) {
         if (elemType == null) {
           if (elemList[0]["nodeType"] is String) {
-            elemType = MessageElemTypeTool.getMessageNodeTypeToEnum(
-                elemList[0]["nodeType"]);
+            elemType = EnumUtil.nameOf(MessageElemTypeEnum.values, elemList[0]["nodeType"]);
           }
         }
         return MessageElemTypeTool.getMessageNodeByMessageNodeType(

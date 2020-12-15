@@ -59,20 +59,4 @@ class MessageStatusTool {
     }
     throw ArgumentError("参数异常");
   }
-
-  static int ConvertMessageStatusToInt(String status) {
-    switch (status) {
-      case "Sending":
-        return MessageStatusEnum.Sending.index;
-      case "SendSucc":
-        return MessageStatusEnum.SendSucc.index;
-      case "SendFail":
-        return MessageStatusEnum.SendFail.index;
-      case "HasDeleted":
-        return MessageStatusEnum.HasDeleted.index;
-      case "HasRevoked":
-        return MessageStatusEnum.HasRevoked.index;
-    };
-    return MessageStatusEnum.Unknown.index;
-  }
 }
