@@ -162,7 +162,13 @@ public class JsonUtil {
             var result = "{";
             // 解析键值对
             for (key, value) in v as! Dictionary<AnyHashable, Any> {
-                result += "\(kv(key, value)),";
+                //result += "\(kv(key, value)),";
+                let v = unwrap(value);
+                // 未解码成功的值，则是nil
+                if !("\(type(of: v))".hasPrefix("Optional")) {
+                    result += kv(key, v);
+                    result += ",";
+                }
             }
             // 删除末尾逗号
             if result.hasSuffix(",") {
