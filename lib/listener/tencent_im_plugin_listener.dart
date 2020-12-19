@@ -45,12 +45,11 @@ class TencentImPluginListener {
       switch (methodCall.method) {
         case 'onListener':
           // 获得原始类型和参数
-          TencentImListenerTypeEnum type = EnumUtil.nameOf(
-              TencentImListenerTypeEnum.values, arguments['type']);
+          TencentImListenerTypeEnum type = EnumUtil.nameOf(TencentImListenerTypeEnum.values, arguments['type']);
           var originalParams = arguments['params'];
 
           // 封装回调类型和参数
-          var params;
+          var params = originalParams;
 
           try {
             switch (type) {
@@ -58,8 +57,7 @@ class TencentImPluginListener {
                 params = MessageEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.C2CReadReceipt:
-                params = ListUtil.generateOBJList<MessageReceiptEntity>(
-                    originalParams);
+                params = ListUtil.generateOBJList<MessageReceiptEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.MessageRevoked:
                 params = originalParams;
@@ -71,36 +69,30 @@ class TencentImPluginListener {
               case TencentImListenerTypeEnum.SyncServerFailed:
                 break;
               case TencentImListenerTypeEnum.NewConversation:
-                params = ListUtil.generateOBJList<ConversationEntity>(
-                    originalParams);
+                params = ListUtil.generateOBJList<ConversationEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.ConversationChanged:
-                params = ListUtil.generateOBJList<ConversationEntity>(
-                    originalParams);
+                params = ListUtil.generateOBJList<ConversationEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListAdded:
-                params = ListUtil.generateOBJList<FriendApplicationEntity>(
-                    originalParams);
+                params = ListUtil.generateOBJList<FriendApplicationEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListDeleted:
                 break;
               case TencentImListenerTypeEnum.FriendApplicationListRead:
                 break;
               case TencentImListenerTypeEnum.FriendListAdded:
-                params =
-                    ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
+                params = ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.FriendListDeleted:
                 break;
               case TencentImListenerTypeEnum.BlackListAdd:
-                params =
-                    ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
+                params = ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.BlackListDeleted:
                 break;
               case TencentImListenerTypeEnum.FriendInfoChanged:
-                params =
-                    ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
+                params = ListUtil.generateOBJList<FriendInfoEntity>(originalParams);
                 break;
               case TencentImListenerTypeEnum.MemberEnter:
                 params = GroupMemberEnterEntity.fromJson(originalParams);
@@ -109,12 +101,10 @@ class TencentImPluginListener {
                 params = GroupMemberLeaveEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.MemberInvited:
-                params =
-                    GroupMemberInvitedOrKickedEntity.fromJson(originalParams);
+                params = GroupMemberInvitedOrKickedEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.MemberKicked:
-                params =
-                    GroupMemberInvitedOrKickedEntity.fromJson(originalParams);
+                params = GroupMemberInvitedOrKickedEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.MemberInfoChanged:
                 params = GroupMemberChangedEntity.fromJson(originalParams);
@@ -122,23 +112,19 @@ class TencentImPluginListener {
               case TencentImListenerTypeEnum.GroupCreated:
                 break;
               case TencentImListenerTypeEnum.GroupDismissed:
-                params =
-                    GroupDismissedOrRecycledEntity.fromJson(originalParams);
+                params = GroupDismissedOrRecycledEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.GroupRecycled:
-                params =
-                    GroupDismissedOrRecycledEntity.fromJson(originalParams);
+                params = GroupDismissedOrRecycledEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.GroupInfoChanged:
                 params = GroupChangedEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.ReceiveJoinApplication:
-                params =
-                    GroupReceiveJoinApplicationEntity.fromJson(originalParams);
+                params = GroupReceiveJoinApplicationEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.ApplicationProcessed:
-                params =
-                    GroupApplicationProcessedEntity.fromJson(originalParams);
+                params = GroupApplicationProcessedEntity.fromJson(originalParams);
                 break;
               case TencentImListenerTypeEnum.GrantAdministrator:
                 params = GroupAdministratorOpEntity.fromJson(originalParams);
@@ -197,8 +183,7 @@ class TencentImPluginListener {
                 break;
             }
           } catch (err) {
-            _logger.e(err,
-                "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
+            _logger.e(err, "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
           }
 
           // 没有找到类型就返回
@@ -230,5 +215,4 @@ class TencentImPluginListener {
 }
 
 /// 监听器值模型
-typedef TencentImListenerValue<P> = void Function(
-    TencentImListenerTypeEnum type, P params);
+typedef TencentImListenerValue<P> = void Function(TencentImListenerTypeEnum type, P params);
