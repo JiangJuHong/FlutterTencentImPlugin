@@ -1,6 +1,6 @@
 name: tencent_im_plugin
 description: This plug-in integrates Tencent cloud 'imsdk', realizes cross platform im access, and is compatible with Android and IOS devices.
-version: 1.2.2
+version: 1.2.3
 homepage: https://www.yuque.com/jiangjuhong/tencent-im-flutter/zk6p14
 repository: https://github.com/JiangJuHong/FlutterTencentImPlugin
 

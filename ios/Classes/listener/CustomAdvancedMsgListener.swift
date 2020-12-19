@@ -15,7 +15,7 @@ class CustomAdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
     /// C2C已读回执
     func onRecvC2CReadReceipt(_ receiptList: [V2TIMMessageReceipt]!) {
         var data: [[String: Any]] = [];
-        for item in receiptList {
+        for item in receiptList! {
             data.append(CustomMessageReceiptEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.C2CReadReceipt, params: data)
@@ -23,6 +23,6 @@ class CustomAdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
 
     /// 消息撤回
     func onRecvMessageRevoked(_ msgID: String!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageRevoked, params: msgID)
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageRevoked, params: msgID!)
     }
 }

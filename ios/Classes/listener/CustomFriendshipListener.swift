@@ -15,7 +15,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      */
     func onFriendApplicationListAdded(_ applicationList: [V2TIMFriendApplication]!) {
         var data: [[String: Any]] = [];
-        for item in applicationList {
+        for item in applicationList! {
             data.append(CustomFriendApplicationEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendApplicationListAdded, params: data)
@@ -30,7 +30,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      * 申请加别人好友被拒绝
      */
     func onFriendApplicationListDeleted(_ userIDList: [Any]!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendApplicationListDeleted, params: userIDList)
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendApplicationListDeleted, params: userIDList!)
     }
 
 
@@ -46,7 +46,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      */
     func onFriendListAdded(_ infoList: [V2TIMFriendInfo]!) {
         var data: [[String: Any]] = [];
-        for item in infoList {
+        for item in infoList! {
             data.append(CustomFriendInfoEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendListAdded, params: data)
@@ -59,7 +59,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      * 好友把自己删除（双向删除会收到）
      */
     func onFriendListDeleted(_ userIDList: [Any]!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendListDeleted, params: userIDList)
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendListDeleted, params: userIDList!)
     }
 
     /**
@@ -67,7 +67,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      */
     func onBlackListAdded(_ infoList: [V2TIMFriendInfo]!) {
         var data: [[String: Any]] = [];
-        for item in infoList {
+        for item in infoList! {
             data.append(CustomFriendInfoEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.BlackListAdd, params: data)
@@ -78,7 +78,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      * 黑名单删除通知
      */
     func onBlackListDeleted(_ userIDList: [Any]!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.BlackListDeleted, params: userIDList)
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.BlackListDeleted, params: userIDList!)
     }
 
 
@@ -87,7 +87,7 @@ class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {
      */
     func onFriendProfileChanged(_ infoList: [V2TIMFriendInfo]!) {
         var data: [[String: Any]] = [];
-        for item in infoList {
+        for item in infoList! {
             data.append(CustomFriendInfoEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.FriendInfoChanged, params: data)

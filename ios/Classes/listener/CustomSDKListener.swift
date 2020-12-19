@@ -21,7 +21,7 @@ class CustomSDKListener: NSObject, V2TIMSDKListener {
     public func onConnectFailed(_ code: Int32, err: String!) {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ConnectFailed, params: [
             "code": code,
-            "err": err,
+            "err": err!,
         ])
     }
 
@@ -37,6 +37,6 @@ class CustomSDKListener: NSObject, V2TIMSDKListener {
 
     /// 当前用户的资料发生了更新
     public func onSelfInfoUpdated(_ Info: V2TIMUserFullInfo!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.SelfInfoUpdated, params: CustomUserEntity.getDict(info: Info))
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.SelfInfoUpdated, params: CustomUserEntity.getDict(info: Info!))
     }
 }

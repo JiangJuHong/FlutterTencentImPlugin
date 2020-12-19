@@ -25,7 +25,7 @@ class CustomConversationListener: NSObject, V2TIMConversationListener {
     /// 新会话
     func onNewConversation(_ conversationList: [V2TIMConversation]!) {
         var cs: [[String: Any]] = [];
-        for item in conversationList {
+        for item in conversationList! {
             cs.append(CustomConversationEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.NewConversation, params: cs)
@@ -34,7 +34,7 @@ class CustomConversationListener: NSObject, V2TIMConversationListener {
     /// 会话刷新
     func onConversationChanged(_ conversationList: [V2TIMConversation]!) {
         var cs: [[String: Any]] = [];
-        for item in conversationList {
+        for item in conversationList! {
             cs.append(CustomConversationEntity.getDict(info: item));
         }
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ConversationChanged, params: cs)
