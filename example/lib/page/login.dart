@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
     String sign = GenerateTestUserSig(
       sdkappid: 1400294314,
       key: "706da51f9280812611bcc80b5182b1c5554db8d053bc00b8a37ae8cba887f6a7",
-    ).genSig(identifier: _userName, expire: 24 * 60 * 1000);
+    ).genSig(identifier: _userName, expire: 1 * 60 * 1000);
 
     await TencentImPlugin.login(
       userID: _userName,
