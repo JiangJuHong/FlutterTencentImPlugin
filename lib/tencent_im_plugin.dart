@@ -429,7 +429,7 @@ class TencentImPlugin {
     @required FindMessageEntity message,
     @required String data,
   }) {
-    return _channel.invokeMethod('setMessageLocalCustomData', {
+    return _channel.invokeMethod('setMessageLocalCustomStr', {
       "message": jsonEncode(message),
       "data": data,
     });

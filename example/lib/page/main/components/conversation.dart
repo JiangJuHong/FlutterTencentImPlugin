@@ -38,16 +38,7 @@ class _ConversationState extends State<Conversation> {
   /// IM监听器
   _imListener(type, params) {
     if (type == TencentImListenerTypeEnum.ConversationChanged) {
-      List<ConversationEntity> change = params;
-      for (var i = 0; i < _data.conversationList.length; i++) {
-        var item = _data.conversationList[i];
-        for (var changeItem in change) {
-          if (item.conversationID == changeItem.conversationID) {
-            _data.conversationList[i] = changeItem;
-          }
-        }
-      }
-      this.setState(() {});
+      _onRefresh();
     }
   }
 
