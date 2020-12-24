@@ -288,3 +288,4 @@
 ## 1.2.4
 * 修复 setMessageLocalCustomStr 执行失败的问题
 * Demo增加发起会话
+* 修复 onReceiveNewInvitation 解包失败的问题

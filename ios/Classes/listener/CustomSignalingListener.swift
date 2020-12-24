@@ -9,13 +9,23 @@ import ImSDK
 class CustomSignalingListener: NSObject, V2TIMSignalingListener {
     ///收到新邀请时
     func onReceiveNewInvitation(_ inviteID: String!, inviter: String!, groupID: String!, inviteeList: [String]!, data: String!) {
-        SwiftTencentImPlugin.invokeListener(type: ListenerType.ReceiveNewInvitation, params: [
+        var params: [String: Any] = [
             "inviteID": inviteID!,
-            "inviter": inviter!,
-            "groupID": groupID!,
-            "inviteeList": inviteeList!,
             "data": data!,
-        ])
+        ];
+
+        if let temp = inviter {
+            params["inviter"] = temp;
+        }
+        if let temp = groupID {
+            params["groupID"] = temp;
+        }
+        if let temp = inviteeList {
+            params["inviteeList"] = temp;
+        }
+
+
+        SwiftTencentImPlugin.invokeListener(type: ListenerType.ReceiveNewInvitation, params: params)
     }
 
 

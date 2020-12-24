@@ -22,7 +22,6 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     super.initState();
-    TencentImPlugin.joinGroup(groupID: "123", message: "测试加入群");
   }
 
   /// 页面改变事件
@@ -42,7 +41,7 @@ class _MainState extends State<Main> {
       if (await showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-              title: Text("AlertDialog"),
+              title: Text("发起会话"),
               content: TextField(
                 onChanged: (_text) => text = _text,
                 decoration: InputDecoration(hintText: "请输入用户ID"),
