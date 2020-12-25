@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    TencentImPlugin.initSDK(appid: '1400294314');
+    TencentImPlugin.initSDK(appid: '1400306985');
   }
 
   @override

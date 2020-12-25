@@ -1294,9 +1294,14 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param params 参数
      */
     public static void invokeListener(ListenerTypeEnum type, Object params) {
-        Map<String, Object> resultParams = new HashMap<>(2, 1);
+        final Map<String, Object> resultParams = new HashMap<>(2, 1);
         resultParams.put("type", type);
         resultParams.put("params", params);
-        channel.invokeMethod("onListener", JsonUtil.toJSONString(resultParams));
+        CommonUtil.runMainThreadMethod(new Runnable() {
+            @Override
+            public void run() {
+                channel.invokeMethod("onListener", JsonUtil.toJSONString(resultParams));
+            }
+        });
     }
 }

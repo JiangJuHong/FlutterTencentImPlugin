@@ -62,4 +62,11 @@ public class CommonUtil {
             }
         });
     }
+
+    /**
+     * 运行主线程方法
+     */
+    public static void runMainThreadMethod(Runnable runnable){
+        MAIN_HANDLER.post(runnable);
+    }
 }

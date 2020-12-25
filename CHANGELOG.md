@@ -289,3 +289,6 @@
 * 修复 setMessageLocalCustomStr 执行失败的问题
 * Demo增加发起会话
 * 修复 onReceiveNewInvitation 解包失败的问题
+
+## 1.2.5
+* 修复回调非主线程闪退问题
