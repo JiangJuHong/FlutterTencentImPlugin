@@ -68,18 +68,11 @@ class _ConversationState extends State<Conversation> {
                   .map(
                     (item) => ListTile(
                       onTap: () => _onConversationClick(item),
-                      leading: CircleAvatar(
-                          backgroundImage:
-                              item.faceUrl == null || item.faceUrl == ''
-                                  ? null
-                                  : NetworkImage(item.faceUrl)),
+                      leading: CircleAvatar(backgroundImage: item.faceUrl == null || item.faceUrl == '' ? null : NetworkImage(item.faceUrl)),
                       title: RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
-                                text:
-                                    "[${item.groupID == null ? "私聊" : "群聊"}] ",
-                                style: TextStyle(color: Colors.grey)),
+                            TextSpan(text: "[${item.groupID == null ? "私聊" : "群聊"}] ", style: TextStyle(color: Colors.grey)),
                             TextSpan(text: item.showName),
                           ],
                           style: TextStyle(color: Colors.black),
@@ -88,13 +81,9 @@ class _ConversationState extends State<Conversation> {
                       subtitle: RichText(
                         text: TextSpan(
                           children: [
+                            TextSpan(text: item.draftText == null ? "" : "[草稿]", style: TextStyle(color: Colors.red)),
                             TextSpan(
-                                text: item.draftText == null ? "" : "[草稿]",
-                                style: TextStyle(color: Colors.red)),
-                            TextSpan(
-                              text: item.draftText ??
-                                  item.lastMessage?.note ??
-                                  "",
+                              text: item.draftText ?? item.lastMessage?.note ?? "",
                             ),
                           ],
                           style: TextStyle(color: Colors.black),

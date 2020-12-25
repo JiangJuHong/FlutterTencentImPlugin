@@ -954,8 +954,8 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      * @param result     返回结果对象
      */
     private void getConversationList(MethodCall methodCall, final Result result) {
-        int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");
-        int count = CommonUtil.getParam(methodCall, result, "count");
+        Long nextSeq = Long.parseLong(CommonUtil.getParam(methodCall, result, "nextSeq").toString());
+        Integer count = CommonUtil.getParam(methodCall, result, "count");
         V2TIMManager.getConversationManager().getConversationList(nextSeq, count, new ValueCallBack<V2TIMConversationResult>(result) {
             @Override
             public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
