@@ -27,7 +27,7 @@ public class FaceMessageEntity extends AbstractMessageEntity {
     public FaceMessageEntity(V2TIMFaceElem elem) {
         super(MessageNodeType.Face);
         this.setIndex(elem.getIndex());
-        this.setData(new String(elem.getData()));
+        this.setData(elem.getData() == null ? null : new String(elem.getData()));
     }
 
     public int getIndex() {
