@@ -295,3 +295,9 @@
 
 ## 1.2.6
 * 修复获得会话传递nextSeq异常的问题
+
+## 1.2.7
+* 修复Android端fastjson打包闪退的问题
+* DownloadProgress 回调增加 type 属性
+* 消息重发接口
+* IOS发送消息进度和失败消息的ID未解包的问题

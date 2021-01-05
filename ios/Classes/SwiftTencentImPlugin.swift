@@ -79,6 +79,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "sendMessage":
             self.sendMessage(call: call, result: result);
             break;
+        case "resendMessage":
+            self.resendMessage(call: call, result: result);
+            break;
         case "revokeMessage":
             self.revokeMessage(call: call, result: result);
             break;
@@ -440,19 +443,40 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
 
     /// 发送消息
     private func sendMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let receiver = ((call.arguments as! [String: Any])["receiver"]) as? String;
-        let groupID = ((call.arguments as! [String: Any])["groupID"]) as? String;
-        let localCustomInt = ((call.arguments as! [String: Any])["localCustomInt"]) as? Int32;
-        let localCustomStr = ((call.arguments as! [String: Any])["localCustomStr"]) as? String;
-        let offlinePushInfo = ((call.arguments as! [String: Any])["offlinePushInfo"]) as? String;
-        if let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String,
-           let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
-           let priority = CommonUtils.getParam(call: call, result: result, param: "priority") as? Int {
+        if let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String {
             // 将节点信息解析
             let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
 
             // 获得发送消息体
             let message: V2TIMMessage = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: node["nodeType"] as! Int).messageNodeInterface().getV2TIMMessage(params: node);
+            self._sendMessage(message: message, call: call, result: result);
+        }
+    }
+
+
+    /// 重发消息
+    public func resendMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let messageStr = CommonUtils.getParam(call: call, result: result, param: "message") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: messageStr, succ: {
+                (message: V2TIMMessage?) in
+                self._sendMessage(message: message!, call: call, result: result);
+            }, fail: TencentImUtils.returnErrorClosures(result: result));
+        }
+    }
+
+    /// 发送消息
+    /// - Parameters:
+    ///   - message: 消息对象
+    ///   - call: Flutter 方法调用对象
+    ///   - result: Flutter 返回结果对象
+    private func _sendMessage(message: V2TIMMessage, call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let receiver = ((call.arguments as! [String: Any])["receiver"]) as? String;
+        let groupID = ((call.arguments as! [String: Any])["groupID"]) as? String;
+        let localCustomInt = ((call.arguments as! [String: Any])["localCustomInt"]) as? Int32;
+        let localCustomStr = ((call.arguments as! [String: Any])["localCustomStr"]) as? String;
+        let offlinePushInfo = ((call.arguments as! [String: Any])["offlinePushInfo"]) as? String;
+        if let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool,
+           let priority = CommonUtils.getParam(call: call, result: result, param: "priority") as? Int {
             if localCustomInt != nil {
                 message.localCustomInt = localCustomInt!;
             }
@@ -460,13 +484,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 message.localCustomData = localCustomStr!.data(using: .utf8);
             }
 
-
             var msgId: [String?] = [nil];
             // 成功回调
             let _sendSuccess = {
-                TencentImUtils.getMessageByFindMessageEntity(dict: [
-                    "msgId": msgId[0]
-                ], succ: {
+                TencentImUtils.getMessageByFindMessageEntity(dict: ["msgId": msgId[0]], succ: {
                     (message: V2TIMMessage?) -> () in
                     SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendSucc, params: MessageEntity.init(message: message!))
                 }, fail: { (int32: Int32, s: String?) -> () in })
@@ -476,7 +497,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             let _progress = {
                 (p: UInt32) in
                 SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendProgress, params: [
-                    "msgId": msgId[0],
+                    "msgId": msgId[0]!,
                     "progress": p,
                 ])
             };
@@ -485,7 +506,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             let _fail = {
                 (code: Int32, desc: Optional<String>) -> Void in
                 SwiftTencentImPlugin.invokeListener(type: ListenerType.MessageSendFail, params: [
-                    "msgId": msgId[0],
+                    "msgId": msgId[0]!,
                     "code": code,
                     "desc": desc,
                 ])
@@ -496,7 +517,6 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             result(msgId[0]);
         }
     }
-
 
     /// 撤回消息
     public func revokeMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -639,6 +659,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                         "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
+                        "type": DownloadType.Video.rawValue,
                     ])
                 }, succ: {
                     result(path);
@@ -659,6 +680,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                         "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
+                        "type": DownloadType.VideoThumbnail.rawValue,
                     ])
                 }, succ: {
                     result(path);
@@ -679,6 +701,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                         "msgId": msg!.msgID!,
                         "currentSize": curSize,
                         "totalSize": totalSize,
+                        "type": DownloadType.Sound.rawValue,
                     ])
                 }, succ: {
                     result(path);

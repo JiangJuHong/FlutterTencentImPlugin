@@ -30,6 +30,7 @@
 | [getSignalingInfo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/tqezf5)                 | 获取信令信息                                                                   |
 | [addInvitedSignaling](https://www.yuque.com/jiangjuhong/tencent-im-flutter/pbcnge)              | 添加邀请信令（可以用于群离线推送消息触发的邀请信令）                                |
 | [sendMessage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/iwzxm0)                      | 发送消息                                                                       |
+| [resendMessage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/mg5k6b)                    | 重新发送消息                                                                   |
 | [revokeMessage](https://www.yuque.com/jiangjuhong/tencent-im-flutter/cmzefm)                    | 撤回消息                                                                       |
 | [getHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/pldzb9)            | 获得历史记录，此为 getC2CHistoryMessageList 和 getGroupHistoryMessageList 的封装 |
 | [getC2CHistoryMessageList](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zsgx99)         | 获取单聊历史消息                                                                |
@@ -43,8 +44,8 @@
 | [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/mqdwgy)                    | 下载视频                                                                       |
 | [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zr1thy)           | 下载视频缩略图                                                                 |
 | [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/exa4g6)                    | 下载语音                                                                       |
-| [setMessageLocalCustomStr](https://www.yuque.com/jiangjuhong/tencent-im-flutter/muz7ae)               | 设置消息本地Str                                                                |
-| [setMessageLocalCustomInt](https://www.yuque.com/jiangjuhong/tencent-im-flutter/od5caz)               | 设置消息本地Int                                                                |
+| [setMessageLocalCustomStr](https://www.yuque.com/jiangjuhong/tencent-im-flutter/muz7ae)         | 设置消息本地Str                                                                |
+| [setMessageLocalCustomInt](https://www.yuque.com/jiangjuhong/tencent-im-flutter/od5caz)         | 设置消息本地Int                                                                |
 | [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/xza7ly)                      | 创建群                                                                        |
 | [joinGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ckchss)                        | 加入群                                                                        |
 | [quitGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/rd1gpv)                        | 退出群                                                                        |

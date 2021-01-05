@@ -77,6 +77,12 @@ class _ChatState extends State<Chat> {
       });
     }
 
+    if (type == TencentImListenerTypeEnum.MessageSendProgress) {
+      print("===================");
+      print("消息发送进度更新:${params.msgId}");
+      print("===================");
+    }
+
     if (type == TencentImListenerTypeEnum.MessageSendSucc) {
       print("===================");
       print("消息发送成功");

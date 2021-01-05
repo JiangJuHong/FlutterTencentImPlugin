@@ -28,6 +28,11 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
      */
     private String msgId;
 
+    /**
+     * 下载类型
+     */
+    private DownloadTypeEnum type;
+
     public DownloadCallBack() {
     }
 
@@ -35,16 +40,18 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
         this.path = path;
     }
 
-    public DownloadCallBack(MethodChannel.Result result, String path, String msgId) {
+    public DownloadCallBack(MethodChannel.Result result, String path, String msgId,DownloadTypeEnum type) {
         this.result = result;
         this.path = path;
         this.msgId = msgId;
+        this.type = type;
     }
 
     @Override
     public void onProgress(final V2TIMElem.V2ProgressInfo v2ProgressInfo) {
         TencentImPlugin.invokeListener(ListenerTypeEnum.DownloadProgress, new HashMap<String, Object>() {
             {
+                put("type", type.getValue());
                 put("msgId", msgId);
                 put("currentSize", v2ProgressInfo.getCurrentSize());
                 put("totalSize", v2ProgressInfo.getTotalSize());
@@ -73,6 +80,39 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
     public void onError(int code, String desc) {
         if (this.result != null) {
             result.error(String.valueOf(code), desc, desc);
+        }
+    }
+
+    /**
+     * 下载类型枚举
+     */
+    public enum DownloadTypeEnum{
+        /**
+         * 语音
+         */
+        Sound(0),
+
+        /**
+         * 视频
+         */
+        Video(1),
+
+        /**
+         * 视频缩略图
+         */
+        VideoThumbnail(2);
+
+        /**
+         * 枚举对应的常量值
+         */
+        private Integer value;
+
+        DownloadTypeEnum(Integer value) {
+            this.value = value;
+        }
+
+        public Integer getValue() {
+            return value;
         }
     }
 }
