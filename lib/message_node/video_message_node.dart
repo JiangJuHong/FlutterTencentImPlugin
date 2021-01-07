@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
-/// 语音消息节点
+/// 适配消息节点
 class VideoMessageNode extends MessageNode {
   /// 视频路径
   String videoPath;

@@ -9,16 +9,16 @@ import ImSDK
 public class VideoMessageNode: AbstractMessageNode {
 
     override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {
-        let path: String = getParam(params: params, paramKey: "path")!;
+        let videoPath: String = getParam(params: params, paramKey: "videoPath")!;
         let duration: Int32 = getParam(params: params, paramKey: "duration")!;
         let snapshotPath: String = getParam(params: params, paramKey: "snapshotPath")!;
 
         var suffix: String = "";
-        if path.contains(".") {
-            let ss = path.split(separator: ".");
+        if videoPath.contains(".") {
+            let ss = videoPath.split(separator: ".");
             suffix = String(ss[ss.count - 1]);
         }
-        return V2TIMManager.sharedInstance().createVideoMessage(path, type: suffix, duration: duration, snapshotPath: snapshotPath)
+        return V2TIMManager.sharedInstance().createVideoMessage(videoPath, type: suffix, duration: duration, snapshotPath: snapshotPath)
     }
 
     override func getNote(elem: V2TIMElem) -> String {
