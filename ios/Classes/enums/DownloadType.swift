@@ -14,4 +14,7 @@ enum DownloadType: Int {
 
     /// 视频缩略图
     case VideoThumbnail = 2
+
+    /// 文件
+    case File = 3
 }

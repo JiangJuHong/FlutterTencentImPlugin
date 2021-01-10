@@ -24,7 +24,14 @@ public class TencentImUtils {
     public static func getMessageByFindMessageEntity(dict: [String: Any], succ: @escaping GetInfoSuc<V2TIMMessage?>, fail: @escaping V2TIMFail) {
         getMessageByFindMessageEntity(dict: [dict], succ: {
             (messages: [V2TIMMessage]?) in
-            succ(messages!.count >= 1 ? messages![0] : nil);
+
+            // 消息不存在
+            if messages == nil || messages!.count == 0{
+                fail(-1,"未找到消息对象!消息ID不存在");
+                return;
+            }
+
+            succ(messages![0]);
         }, fail: fail);
     }
 

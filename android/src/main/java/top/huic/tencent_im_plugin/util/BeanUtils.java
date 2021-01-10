@@ -1,6 +1,7 @@
 package top.huic.tencent_im_plugin.util;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +53,9 @@ public class BeanUtils {
                         continue;
                     }
 
-                    // 方法校验
+                    // 方法校验(非普通set参数(1个参数)) 或 不是公开方法，则不进行赋值确认
                     Method targetMethod = targetMethodMap.get(setMethodName);
-                    if (targetMethod.getParameterTypes() == null || targetMethod.getParameterTypes().length != 1) {
+                    if (targetMethod.getParameterTypes().length != 1 || targetMethod.getModifiers() != Modifier.PUBLIC) {
                         continue;
                     }
 

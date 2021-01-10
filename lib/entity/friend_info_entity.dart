@@ -43,4 +43,10 @@ class FriendInfoEntity {
       data['friendCustomInfo'] = this.friendCustomInfo;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FriendInfoEntity && runtimeType == other.runtimeType && userID == other.userID;
+
+  @override
+  int get hashCode => userID.hashCode;
 }

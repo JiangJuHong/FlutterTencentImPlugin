@@ -165,4 +165,10 @@ class MessageEntity {
     if (this.note != null) data['note'] = this.note;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MessageEntity && runtimeType == other.runtimeType && msgID == other.msgID;
+
+  @override
+  int get hashCode => msgID.hashCode;
 }

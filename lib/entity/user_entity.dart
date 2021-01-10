@@ -58,4 +58,10 @@ class UserEntity {
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is UserEntity && runtimeType == other.runtimeType && userID == other.userID;
+
+  @override
+  int get hashCode => userID.hashCode;
 }

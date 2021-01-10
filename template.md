@@ -44,8 +44,10 @@
 | [downloadVideo](https://www.yuque.com/jiangjuhong/tencent-im-flutter/mqdwgy)                    | 下载视频                                                                       |
 | [downloadVideoThumbnail](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zr1thy)           | 下载视频缩略图                                                                 |
 | [downloadSound](https://www.yuque.com/jiangjuhong/tencent-im-flutter/exa4g6)                    | 下载语音                                                                       |
+| [downloadFile](https://www.yuque.com/jiangjuhong/tencent-im-flutter/hli95n)                     | 下载文件                                                                       |
 | [setMessageLocalCustomStr](https://www.yuque.com/jiangjuhong/tencent-im-flutter/muz7ae)         | 设置消息本地Str                                                                |
 | [setMessageLocalCustomInt](https://www.yuque.com/jiangjuhong/tencent-im-flutter/od5caz)         | 设置消息本地Int                                                                |
+| [findMessages](https://www.yuque.com/jiangjuhong/tencent-im-flutter/uquk8p)                     | 查找消息对象                                                                   |
 | [createGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/xza7ly)                      | 创建群                                                                        |
 | [joinGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ckchss)                        | 加入群                                                                        |
 | [quitGroup](https://www.yuque.com/jiangjuhong/tencent-im-flutter/rd1gpv)                        | 退出群                                                                        |

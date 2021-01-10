@@ -115,11 +115,17 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "downloadSound":
             self.downloadSound(call: call, result: result);
             break;
+        case "downloadFile":
+            self.downloadFile(call: call, result: result);
+            break;
         case "setMessageLocalCustomStr":
             self.setMessageLocalCustomStr(call: call, result: result);
             break;
         case "setMessageLocalCustomInt":
             self.setMessageLocalCustomInt(call: call, result: result);
+            break;
+        case "findMessages":
+            self.findMessages(call: call, result: result);
             break;
         case "createGroup":
             self.createGroup(call: call, result: result);
@@ -710,6 +716,27 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// 下载文件
+    public func downloadFile(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
+           let path = CommonUtils.getParam(call: call, result: result, param: "path") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(json: message, succ: {
+                (msg: V2TIMMessage?) in
+                msg?.fileElem?.downloadFile(path, progress: {
+                    curSize, totalSize in
+                    SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
+                        "msgId": msg!.msgID!,
+                        "currentSize": curSize,
+                        "totalSize": totalSize,
+                        "type": DownloadType.File.rawValue,
+                    ])
+                }, succ: {
+                    result(path);
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
     /// 设置消息本地Str
     public func setMessageLocalCustomStr(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let message = CommonUtils.getParam(call: call, result: result, param: "message") as? String,
@@ -734,6 +761,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// 查找消息列表
+    public func findMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let messages = CommonUtils.getParam(call: call, result: result, param: "messages") as? String {
+            TencentImUtils.getMessageByFindMessageEntity(dict:JsonUtil.getArrayFromJSONString(jsonString: messages) as! [[String : Any]], succ: {
+                (ms: [V2TIMMessage]!) in
+                var res : [MessageEntity] = [];
+                for item in ms!{
+                    res.append(MessageEntity.init(message: item));
+                }
+                result(JsonUtil.toJson(res));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    
     /// 创建群
     public func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let memberList = ((call.arguments as! [String: Any])["memberList"]) as? String;

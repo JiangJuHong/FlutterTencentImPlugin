@@ -637,6 +637,23 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 下载文件
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void downloadFile(MethodCall methodCall, final Result result) {
+        final String path = CommonUtil.getParam(methodCall, result, "path");
+        String message = CommonUtil.getParam(methodCall, result, "message");
+        TencentImUtils.getMessageByFindMessageEntity(message, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                message.getFileElem().downloadFile(path, new DownloadCallBack(result, path, message.getMsgID(), DownloadCallBack.DownloadTypeEnum.File));
+            }
+        });
+    }
+
+    /**
      * 设置消息本地Str
      *
      * @param methodCall 方法调用对象
@@ -668,6 +685,26 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             public void onSuccess(V2TIMMessage message) {
                 message.setLocalCustomInt(data);
                 result.success(null);
+            }
+        });
+    }
+
+    /**
+     * 查找消息列表
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void findMessages(MethodCall methodCall, final Result result) {
+        String messages = CommonUtil.getParam(methodCall, result, "messages");
+        TencentImUtils.getMessageByFindMessageEntity(JSON.parseArray(messages, FindMessageEntity.class), new ValueCallBack<List<V2TIMMessage>>(result){
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<CustomMessageEntity> ms = new ArrayList<>(v2TIMMessages.size());
+                for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
+                    ms.add(new CustomMessageEntity(v2TIMMessage));
+                }
+                result.success(JsonUtil.toJSONString(ms));
             }
         });
     }

@@ -8,6 +8,9 @@ enum DownloadTypeEnum {
 
   /// 视频缩略图
   VideoThumbnail,
+
+  /// 文件对象
+  File,
 }
 
 class DownloadTypeTool {

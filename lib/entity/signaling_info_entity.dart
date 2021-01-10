@@ -81,4 +81,10 @@ class SignalingInfoEntity {
       data['onlineUserOnly'] = this.onlineUserOnly;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is SignalingInfoEntity && runtimeType == other.runtimeType && inviteID == other.inviteID;
+
+  @override
+  int get hashCode => inviteID.hashCode;
 }

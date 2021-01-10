@@ -26,4 +26,10 @@ class SignalingCommonEntity {
     inviteeList = json["inviteeList"]?.cast<String>();
     data = json["data"];
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is SignalingCommonEntity && runtimeType == other.runtimeType && inviteID == other.inviteID;
+
+  @override
+  int get hashCode => inviteID.hashCode;
 }

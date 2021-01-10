@@ -48,8 +48,7 @@ class ConversationEntity {
   List<GroupAtInfoEntity> groupAtInfoList;
 
   ConversationEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     conversationID = json['conversationID'];
     type = ConversationTypeTool.getByInt(json['type']);
     userID = json['userID'];
@@ -59,13 +58,15 @@ class ConversationEntity {
     recvOpt = GroupReceiveMessageOptTool.getByInt(json['recvOpt']);
     groupType = GroupTypeTool.getByString(json['groupType']);
     unreadCount = json['unreadCount'];
-    lastMessage = json['lastMessage'] == null
-        ? null
-        : MessageEntity.fromJson(json["lastMessage"]);
+    lastMessage = json['lastMessage'] == null ? null : MessageEntity.fromJson(json["lastMessage"]);
     draftText = json['draftText'];
     draftTimestamp = json['draftTimestamp'];
-    groupAtInfoList = json["groupAtInfoList"] == null
-        ? null
-        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
+    groupAtInfoList = json["groupAtInfoList"] == null ? null : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ConversationEntity && runtimeType == other.runtimeType && conversationID == other.conversationID;
+
+  @override
+  int get hashCode => conversationID.hashCode;
 }

@@ -40,7 +40,7 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
         this.path = path;
     }
 
-    public DownloadCallBack(MethodChannel.Result result, String path, String msgId,DownloadTypeEnum type) {
+    public DownloadCallBack(MethodChannel.Result result, String path, String msgId, DownloadTypeEnum type) {
         this.result = result;
         this.path = path;
         this.msgId = msgId;
@@ -86,7 +86,7 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
     /**
      * 下载类型枚举
      */
-    public enum DownloadTypeEnum{
+    public enum DownloadTypeEnum {
         /**
          * 语音
          */
@@ -100,7 +100,12 @@ public class DownloadCallBack implements V2TIMDownloadCallback {
         /**
          * 视频缩略图
          */
-        VideoThumbnail(2);
+        VideoThumbnail(2),
+
+        /**
+         * 视频缩略图
+         */
+        File(3);
 
         /**
          * 枚举对应的常量值

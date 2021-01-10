@@ -13,7 +13,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   # 图片选择(https://pub.dev/packages/image_picker)
-  image_picker: 0.6.7+12
+  image_picker: 0.6.7+21
   # 视频缩略图获取(https://pub.dev/packages/video_thumbnail)
   video_thumbnail: 0.2.4
   # 路径管理(https://pub.dev/packages/path_provider)

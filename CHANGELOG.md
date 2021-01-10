@@ -301,3 +301,10 @@
 * DownloadProgress 回调增加 type 属性
 * 消息重发接口
 * IOS发送消息进度和失败消息的ID未解包的问题
+
+## 1.2.8
+* 新增 downloadFile 接口
+* 新增 findMessages 接口
+* 对部分关键实体实体重写 == 操作符(非所有实体)
+* 修复IOS端不能发送视频的问题
+* 修复 BeanUtils 访问权限导致调用内部方法报错的问题

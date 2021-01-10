@@ -115,11 +115,15 @@ public class TencentImUtils {
      * @param data 查找消息对象实体
      * @param call 回调对象
      */
-    public static void getMessageByFindMessageEntity(FindMessageEntity data, final ValueCallBack<V2TIMMessage> call) {
+    public static void getMessageByFindMessageEntity(final FindMessageEntity data, final ValueCallBack<V2TIMMessage> call) {
         getMessageByFindMessageEntity(Collections.singletonList(data), new ValueCallBack<List<V2TIMMessage>>(null) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
-                call.onSuccess(v2TIMMessages.size() >= 1 ? v2TIMMessages.get(0) : null);
+                if (v2TIMMessages == null || v2TIMMessages.size() == 0) {
+                    call.onError(-1, "未找到消息对象!消息ID不存在");
+                    return;
+                }
+                call.onSuccess(v2TIMMessages.get(0));
             }
 
             @Override

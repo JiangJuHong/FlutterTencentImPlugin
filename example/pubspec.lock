@@ -127,7 +127,7 @@ packages:
       name: image_picker
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.6.7+12"
+    version: "0.6.7+21"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -272,7 +272,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.2.3"
+    version: "1.2.7"
   term_glyph:
     dependency: transitive
     description:

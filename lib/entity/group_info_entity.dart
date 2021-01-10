@@ -104,4 +104,10 @@ class GroupInfoEntity {
       data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is GroupInfoEntity && runtimeType == other.runtimeType && groupID == other.groupID;
+
+  @override
+  int get hashCode => groupID.hashCode;
 }
