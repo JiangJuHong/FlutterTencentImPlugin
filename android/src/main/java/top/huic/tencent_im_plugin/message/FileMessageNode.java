@@ -12,7 +12,7 @@ import top.huic.tencent_im_plugin.message.entity.FileMessageEntity;
 public class FileMessageNode extends AbstractMessageNode<V2TIMFileElem, FileMessageEntity> {
     @Override
     public V2TIMMessage getV2TIMMessage(FileMessageEntity entity) {
-        return V2TIMManager.getMessageManager().createFileMessage(entity.getFilePath(), entity.getFilePath());
+        return V2TIMManager.getMessageManager().createFileMessage(entity.getFilePath(), entity.getFileName());
     }
 
     @Override
