@@ -314,3 +314,6 @@
 
 ## 1.2.10
 * 修复发送文件FileName不生效的问题
+
+## 1.2.11
+* 修复 Android getGroupOnlineMemberCount 接口无法解析的问题

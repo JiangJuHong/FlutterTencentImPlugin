@@ -697,7 +697,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void findMessages(MethodCall methodCall, final Result result) {
         String messages = CommonUtil.getParam(methodCall, result, "messages");
-        TencentImUtils.getMessageByFindMessageEntity(JSON.parseArray(messages, FindMessageEntity.class), new ValueCallBack<List<V2TIMMessage>>(result){
+        TencentImUtils.getMessageByFindMessageEntity(JSON.parseArray(messages, FindMessageEntity.class), new ValueCallBack<List<V2TIMMessage>>(result) {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<CustomMessageEntity> ms = new ArrayList<>(v2TIMMessages.size());
@@ -855,7 +855,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void getGroupOnlineMemberCount(MethodCall methodCall, final Result result) {
         String groupID = CommonUtil.getParam(methodCall, result, "groupID");
-        V2TIMManager.getGroupManager().getGroupOnlineMemberCount(groupID, new ValueCallBack<Integer>(result));
+        V2TIMManager.getGroupManager().getGroupOnlineMemberCount(groupID, new ValueCallBack<Integer>(result) {
+            @Override
+            public void onSuccess(Integer data) {
+                result.success(data);
+            }
+        });
     }
 
     /**
