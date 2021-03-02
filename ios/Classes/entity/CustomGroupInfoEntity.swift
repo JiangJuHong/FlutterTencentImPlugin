@@ -29,6 +29,7 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
         if dict["groupAddOpt"] != nil {
             self.groupAddOpt = V2TIMGroupAddOpt.init(rawValue: (dict["groupAddOpt"] as! Int))!;
         }
+        self.customInfo = (dict["customInfo"] as? [String: Data]);
     }
 
     /// 根据对象获得字典对象
@@ -51,6 +52,7 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
         result["role"] = info.role.rawValue;
         result["recvOpt"] = info.recvOpt.rawValue;
         result["joinTime"] = info.joinTime;
+        result["customInfo"] = info.customInfo;
         return result;
     }
 }
