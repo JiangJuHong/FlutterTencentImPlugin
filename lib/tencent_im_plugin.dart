@@ -27,6 +27,7 @@ import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
 import 'package:tencent_im_plugin/enums/friend_application_agree_type_enum.dart';
 import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
+import 'package:tencent_im_plugin/enums/get_message_type_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_filter_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
@@ -286,18 +287,25 @@ class TencentImPlugin {
   /// [groupID] 群聊ID
   /// [count] 拉取消息的个数，不宜太多，会影响消息拉取的速度，这里建议一次拉取 20 个
   /// [lastMsg] 获取消息的起始消息，如果传 null，起始消息为会话的最新消息
+  /// [type] 拉取消息类型，可以设置拉取本地、云端更老或则更新的消息。
   static Future<List<MessageEntity>> getHistoryMessageList({
     String userID,
     String groupID,
     @required int count,
+    GetMessageTypeEnum type: GetMessageTypeEnum.GetCloudNewerMsg,
     FindMessageEntity lastMsg,
-  }) {
+  }) async {
     if (userID == null && groupID == null) throw ArgumentError("userID 和 groupID 不能同时为空!");
-    if (userID != null) {
-      return getC2CHistoryMessageList(userID: userID, count: count, lastMsg: lastMsg);
-    } else {
-      return getGroupHistoryMessageList(groupID: groupID, count: count, lastMsg: lastMsg);
-    }
+    return ListUtil.generateOBJList<MessageEntity>(jsonDecode(await _channel.invokeMethod(
+      'getHistoryMessageList',
+      {
+        "userID": userID,
+        "groupID": groupID,
+        "count": count,
+        "type": GetMessageTypeTool.toInt(type),
+        "lastMsg": lastMsg == null ? null : jsonEncode(lastMsg),
+      }..removeWhere((key, value) => value == null),
+    )));
   }
 
   /// 获得单聊历史记录

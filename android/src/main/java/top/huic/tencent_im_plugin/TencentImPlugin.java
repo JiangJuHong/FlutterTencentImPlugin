@@ -24,6 +24,7 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
@@ -551,6 +552,50 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
                 @Override
                 public void onSuccess(V2TIMMessage message) {
                     V2TIMManager.getMessageManager().getGroupHistoryMessageList(groupID, count, message, resultCallBack);
+                }
+            });
+        }
+    }
+
+    /**
+     * 获得消息记录
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getHistoryMessageList(MethodCall methodCall, final Result result) {
+        final String groupID = methodCall.argument("groupID");
+        final String userID = methodCall.argument("userID");
+        final int count = CommonUtil.getParam(methodCall, result, "count");
+        final int type = CommonUtil.getParam(methodCall, result, "type");
+        String lastMsgStr = methodCall.argument("lastMsg");
+
+        // 返回回调对象
+        final ValueCallBack<List<V2TIMMessage>> resultCallBack = new ValueCallBack<List<V2TIMMessage>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<CustomMessageEntity> resultData = new ArrayList<>(v2TIMMessages.size());
+                for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
+                    resultData.add(new CustomMessageEntity(v2TIMMessage));
+                }
+                result.success(JsonUtil.toJSONString(resultData));
+            }
+        };
+
+        // 根据是否传递最后一条消息进行特殊处理
+        final V2TIMMessageListGetOption opt = new V2TIMMessageListGetOption();
+        opt.setUserID(userID);
+        opt.setGroupID(groupID);
+        opt.setGetType(type);
+        opt.setCount(count);
+        if (lastMsgStr == null) {
+            V2TIMManager.getMessageManager().getHistoryMessageList(opt, resultCallBack);
+        } else {
+            TencentImUtils.getMessageByFindMessageEntity(lastMsgStr, new ValueCallBack<V2TIMMessage>(result) {
+                @Override
+                public void onSuccess(V2TIMMessage message) {
+                    opt.setLastMsg(message);
+                    V2TIMManager.getMessageManager().getHistoryMessageList(opt, resultCallBack);
                 }
             });
         }

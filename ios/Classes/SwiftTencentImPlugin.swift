@@ -97,6 +97,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "getGroupHistoryMessageList":
             self.getGroupHistoryMessageList(call: call, result: result);
             break;
+        case "getHistoryMessageList":
+            self.getHistoryMessageList(call: call, result: result);
+            break;
         case "markC2CMessageAsRead":
             self.markC2CMessageAsRead(call: call, result: result);
             break;
@@ -604,6 +607,47 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
                     (messages: V2TIMMessage?) in
                     V2TIMManager.sharedInstance().getGroupHistoryMessageList(groupID, count: count, lastMsg: messages!, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        }
+    }
+
+    /// 获得历史记录
+    public func getHistoryMessageList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
+        let groupID = ((call.arguments as! [String: Any])["groupID"]) as? String;
+        let userID = ((call.arguments as! [String: Any])["userID"]) as? String;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+           let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
+            // 返回结果对象
+            let resultCallBack = {
+                (messages: [V2TIMMessage]?) in
+                var resultData: [MessageEntity] = [];
+                for item in messages! {
+                    resultData.append(MessageEntity.init(message: item));
+                }
+                result(JsonUtil.toJson(resultData));
+            };
+
+            // 根据消息对象是否为null进行不同的操作
+            let opt = V2TIMMessageListGetOption();
+            if let v = userID {
+                opt.userID = v;
+            }
+            if let v = groupID {
+                opt.groupID = v;
+            }
+            opt.count = count;
+            opt.getType = V2TIMMessageGetType.init(rawValue: type)!;
+            if lastMsg == nil {
+                V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+            } else {
+                TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
+                    (messages: V2TIMMessage?) in
+                    if let v = messages {
+                        opt.lastMsg = messages!;
+                    }
+                    V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
                 }, fail: TencentImUtils.returnErrorClosures(result: result));
             }
         }
