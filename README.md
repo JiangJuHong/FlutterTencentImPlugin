@@ -7,15 +7,23 @@
 </p>
 
 # What is FlutterTencentIm ？
-💐💐 基于SDK 5.x 版本的 `1.0.x` 已经发布，可参考文档进行集成。💐💐  
 FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/product/im)服务进行的Flutter封装，为Flutter提供即时通讯服务.
 
+# Sdk Version
+
+| 平台    | SDK版本 |
+|:--------|:-------|
+| Android | 5.1.50 |
+| IOS     | 5.1.50 |
+
 # Notice
-💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md 上留下您的大名并超链到您的 Github 主页！
+💐💐 基于SDK 5.x 版本的 `1.x.x` 已经发布，可参考文档进行集成。💐💐  
+💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
+上留下您的大名并超链到您的 Github 主页！
 
 # Links
 
-* [api](https://pub.dev/documentation/tencent_im_plugin/latest/tencent_im_plugin/TencentImPlugin-class.html)
+* [Api](https://pub.dev/documentation/tencent_im_plugin/latest/tencent_im_plugin/TencentImPlugin-class.html)
 * [Document](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zk6p14)
 * [Chat](https://jq.qq.com/?_wv=1027&k=QxCWMlUf)
 * [Sponsor](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ygi582)
