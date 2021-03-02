@@ -74,6 +74,9 @@ class MessageEntity {
   /// 消息节点信息
   MessageNode node;
 
+  /// 消息随机码
+  int random;
+
   MessageEntity({
     this.msgID,
     this.timestamp,
@@ -97,11 +100,11 @@ class MessageEntity {
     this.seq,
     this.note,
     this.node,
+    this.random,
   });
 
   MessageEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
     timestamp = json["timestamp"];
     sender = json["sender"];
@@ -111,26 +114,20 @@ class MessageEntity {
     nameCard = json["nameCard"];
     groupID = json["groupID"];
     userID = json["userID"];
-    if (json["status"] != null)
-      status = MessageStatusTool.getByInt(json["status"]);
-    if (json["elemType"] != null)
-      elemType = MessageElemTypeTool.getByInt(json["elemType"]);
+    if (json["status"] != null) status = MessageStatusTool.getByInt(json["status"]);
+    if (json["elemType"] != null) elemType = MessageElemTypeTool.getByInt(json["elemType"]);
     localCustomData = json["localCustomData"];
     localCustomInt = json["localCustomInt"];
     if (json["self"] != null) self = json["self"];
     if (json["read"] != null) read = json["read"];
     if (json["peerRead"] != null) peerRead = json["peerRead"];
-    if (json["priority"] != null)
-      priority = MessagePriorityTool.getByInt(json["priority"]);
-    if (json["offlinePushInfo"] != null)
-      offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
+    if (json["priority"] != null) priority = MessagePriorityTool.getByInt(json["priority"]);
+    if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
     groupAtUserList = json["groupAtUserList"]?.cast<String>();
     seq = json["seq"];
     note = json["note"];
-    node = json["node"] == null
-        ? null
-        : MessageElemTypeTool.getMessageNodeByMessageNodeType(
-            elemType, json["node"]);
+    node = json["node"] == null ? null : MessageElemTypeTool.getMessageNodeByMessageNodeType(elemType, json["node"]);
+    random = json["random"];
   }
 
   Map<String, dynamic> toJson() {
@@ -144,25 +141,19 @@ class MessageEntity {
     if (this.nameCard != null) data['nameCard'] = this.nameCard;
     if (this.groupID != null) data['groupID'] = this.groupID;
     if (this.userID != null) data['userID'] = this.userID;
-    if (this.status != null)
-      data['status'] = MessageStatusTool.toInt(this.status);
-    if (this.elemType != null)
-      data['elemType'] = MessageElemTypeTool.toInt(this.elemType);
-    if (this.localCustomData != null)
-      data['localCustomData'] = this.localCustomData;
-    if (this.localCustomInt != null)
-      data['localCustomInt'] = this.localCustomInt;
+    if (this.status != null) data['status'] = MessageStatusTool.toInt(this.status);
+    if (this.elemType != null) data['elemType'] = MessageElemTypeTool.toInt(this.elemType);
+    if (this.localCustomData != null) data['localCustomData'] = this.localCustomData;
+    if (this.localCustomInt != null) data['localCustomInt'] = this.localCustomInt;
     if (this.self != null) data['self'] = this.self;
     if (this.read != null) data['read'] = this.read;
     if (this.peerRead != null) data['peerRead'] = this.peerRead;
-    if (this.priority != null)
-      data['priority'] = MessagePriorityTool.toInt(this.priority);
-    if (this.offlinePushInfo != null)
-      data['offlinePushInfo'] = this.offlinePushInfo.toJson();
-    if (this.groupAtUserList != null)
-      data['groupAtUserList'] = this.groupAtUserList;
+    if (this.priority != null) data['priority'] = MessagePriorityTool.toInt(this.priority);
+    if (this.offlinePushInfo != null) data['offlinePushInfo'] = this.offlinePushInfo.toJson();
+    if (this.groupAtUserList != null) data['groupAtUserList'] = this.groupAtUserList;
     if (this.seq != null) data['seq'] = this.seq;
     if (this.note != null) data['note'] = this.note;
+    if (this.random != null) data['random'] = this.random;
     return data;
   }
 

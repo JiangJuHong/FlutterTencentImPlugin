@@ -119,6 +119,9 @@ public class MessageEntity: NSObject {
      */
     var node: AbstractMessageEntity?;
 
+    /// 消息随机码
+    var random: UInt64?;
+
     override init() {
     }
 
@@ -145,6 +148,7 @@ public class MessageEntity: NSObject {
 //        self.offlinePushInfo
         self.groupAtUserList = (message.groupAtUserList as? [String]);
         self.seq = message.seq;
+        self.random = message.random;
 
         // 解析接口
         let nodeType = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: self.elemType!);

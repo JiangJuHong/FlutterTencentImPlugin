@@ -130,6 +130,11 @@ public class CustomMessageEntity implements Serializable {
      */
     private AbstractMessageEntity node;
 
+    /**
+     * 消息随机码
+     */
+    private long random;
+
     public CustomMessageEntity() {
     }
 
@@ -320,5 +325,13 @@ public class CustomMessageEntity implements Serializable {
 
     public void setNode(AbstractMessageEntity node) {
         this.node = node;
+    }
+
+    public long getRandom() {
+        return random;
+    }
+
+    public void setRandom(long random) {
+        this.random = random;
     }
 }
