@@ -33,7 +33,8 @@ class _LoginState extends State<Login> {
       userSig: sign,
     );
 
-    Navigator.pushNamedAndRemoveUntil(context, "/main", (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, "/main", (Route<dynamic> route) => false);
   }
 
   @override

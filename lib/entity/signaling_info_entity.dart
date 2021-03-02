@@ -83,7 +83,11 @@ class SignalingInfoEntity {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SignalingInfoEntity && runtimeType == other.runtimeType && inviteID == other.inviteID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SignalingInfoEntity &&
+          runtimeType == other.runtimeType &&
+          inviteID == other.inviteID;
 
   @override
   int get hashCode => inviteID.hashCode;

@@ -19,7 +19,8 @@ class CustomMessageNode extends MessageNode {
     this.ext,
   }) : super(MessageElemTypeEnum.Custom);
 
-  CustomMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Custom) {
+  CustomMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Custom) {
     data = json['data'];
     desc = json['desc'];
     ext = json['ext'];

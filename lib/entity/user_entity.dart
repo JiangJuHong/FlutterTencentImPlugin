@@ -44,7 +44,8 @@ class UserEntity {
   });
 
   UserEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     userID = json['userID'];
     nickName = json['nickName'];
     faceUrl = json['faceUrl'];
@@ -64,13 +65,18 @@ class UserEntity {
     if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender);
     if (this.role != null) data['role'] = this.role;
     if (this.level != null) data['level'] = this.level;
-    if (this.allowType != null) data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
+    if (this.allowType != null)
+      data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UserEntity && runtimeType == other.runtimeType && userID == other.userID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserEntity &&
+          runtimeType == other.runtimeType &&
+          userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;

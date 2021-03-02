@@ -320,3 +320,15 @@
 
 ## 1.2.12
 * 修复信令data为空的问题
+
+## 1.2.13
+* 修复unInit后再次init，会导致监听器重复的问题
+* 修复IOS上at列表为空时会导致闪退
+* 修复ios上at功能异常的问题
+* 增加getVersion、和getServerTime接口
+* 增加群自定义字段
+* 升级SDK为 5.1.50
+* 自定义节点增加 desc 和 ext 字段
+* 用户资料增加 role 和 level 字段
+* 更新getHistoryMessageList接口，增加type属性
+* 消息对象增加 random
