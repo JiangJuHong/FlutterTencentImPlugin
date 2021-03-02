@@ -15,6 +15,7 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 # Links
 
+* [api](https://pub.dev/documentation/tencent_im_plugin/latest/tencent_im_plugin/TencentImPlugin-class.html)
 * [Document](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zk6p14)
 * [Chat](https://jq.qq.com/?_wv=1027&k=QxCWMlUf)
 * [Sponsor](https://www.yuque.com/jiangjuhong/tencent-im-flutter/ygi582)

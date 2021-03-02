@@ -147,7 +147,7 @@ class _ChatState extends State<Chat> {
     if (text.trim() == '') {
       return;
     }
-    this._sendMessage(TextMessageNode(content: text));
+    this._sendMessage(TextMessageNode(content: text, atUserList: []));
     _textEditingController.text = "";
   }
 

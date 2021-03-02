@@ -24,11 +24,14 @@ public class TextMessageNode: AbstractMessageNode {
             }
 
             // @所有人
-            if atAll != nil && atAll is NSNull && atAll as! Bool {
+            if atAll != nil && !(atAll is NSNull) && (atAll as! Bool) {
                 atList.append(kImSDK_MesssageAtALL);
             }
 
-            return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atList as AnyObject as! NSArray).mutableCopy() as! NSMutableArray)
+            // @有内容则直接返回
+            if atList.count >= 1 {
+                return V2TIMManager.sharedInstance().createText(atMessage: text, atUserList: (atList as AnyObject as! NSArray).mutableCopy() as! NSMutableArray)
+            }
         }
         return V2TIMManager.sharedInstance().createTextMessage(text);
     }
