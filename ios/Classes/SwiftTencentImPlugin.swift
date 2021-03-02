@@ -307,7 +307,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: customSdkListener)
 
             // 绑定消息监听
-            V2TIMManager.sharedInstance().add(customAdvancedMsgListener)
+            V2TIMManager.sharedInstance()?.addAdvancedMsgListener(listener: customAdvancedMsgListener)
 
             // 绑定会话监听
             V2TIMManager.sharedInstance().setConversationListener(customConversationListener)

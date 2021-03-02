@@ -6,6 +6,8 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 class CustomMessageNode extends MessageNode {
   /// 自定义数据
   String data;
+  String desc;
+  String ext;
 
   CustomMessageNode({
     @required this.data,
@@ -14,12 +16,16 @@ class CustomMessageNode extends MessageNode {
   CustomMessageNode.fromJson(Map<String, dynamic> json)
       : super(MessageElemTypeEnum.Custom) {
     data = json['data'];
+    ext = json['ext'];
+    desc = json['desc'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data["data"] = this.data;
+    data["desc"] = this.desc;
+    data["ext"] = this.ext;
     return data;
   }
 }
