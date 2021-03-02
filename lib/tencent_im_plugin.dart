@@ -66,6 +66,14 @@ class TencentImPlugin {
   /// 反初始化SDK
   static unInitSDK() => _channel.invokeMethod('unInitSDK');
 
+  /// 获取SDK版本
+  /// [Return] SDK版本
+  static Future<String> getVersion() => _channel.invokeMethod('getVersion');
+
+  /// 获取服务器当前时间
+  /// [Return] 服务器时间，单位 s
+  static Future<int> getServerTime() => _channel.invokeMethod('getServerTime');
+
   /// 登录腾讯云IM
   /// [userID] 用户ID
   /// [userSig] 用户签名

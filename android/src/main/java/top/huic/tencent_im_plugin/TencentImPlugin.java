@@ -78,6 +78,36 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private static MethodChannel channel;
 
+    /**
+     * Sdk监听器
+     */
+    private final CustomSDKListener sdkListener = new CustomSDKListener();
+
+    /**
+     * 消息监听器
+     */
+    private final CustomAdvancedMsgListener advancedMsgListener = new CustomAdvancedMsgListener();
+
+    /**
+     * 会话监听器
+     */
+    private final CustomConversationListener conversationListener = new CustomConversationListener();
+
+    /**
+     * 群监听器
+     */
+    private final CustomGroupListener groupListener = new CustomGroupListener();
+
+    /**
+     * 关系链监听器
+     */
+    private final CustomFriendshipListener friendshipListener = new CustomFriendshipListener();
+
+    /**
+     * 信令监听器
+     */
+    private final CustomSignalingListener signalingListener = new CustomSignalingListener();
+
     public TencentImPlugin() {
     }
 
@@ -141,22 +171,22 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         if (logPrintLevel != null) {
             sdkConfig.setLogLevel(logPrintLevel);
         }
-        V2TIMManager.getInstance().initSDK(context, Integer.parseInt(appid), sdkConfig, new CustomSDKListener());
+        V2TIMManager.getInstance().initSDK(context, Integer.parseInt(appid), sdkConfig, sdkListener);
 
         // 绑定消息监听
-        V2TIMManager.getMessageManager().addAdvancedMsgListener(new CustomAdvancedMsgListener());
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(this.advancedMsgListener);
 
         // 绑定会话监听器
-        V2TIMManager.getConversationManager().setConversationListener(new CustomConversationListener());
+        V2TIMManager.getConversationManager().setConversationListener(this.conversationListener);
 
         // 绑定群监听器
-        V2TIMManager.getInstance().setGroupListener(new CustomGroupListener());
+        V2TIMManager.getInstance().setGroupListener(this.groupListener);
 
         // 绑定关系链监听器
-        V2TIMManager.getFriendshipManager().setFriendListener(new CustomFriendshipListener());
+        V2TIMManager.getFriendshipManager().setFriendListener(this.friendshipListener);
 
         // 绑定信令监听器
-        V2TIMManager.getSignalingManager().addSignalingListener(new CustomSignalingListener());
+        V2TIMManager.getSignalingManager().addSignalingListener(this.signalingListener);
 
         result.success(null);
     }
@@ -170,7 +200,29 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void unInitSDK(MethodCall methodCall, Result result) {
         V2TIMManager.getInstance().unInitSDK();
+        V2TIMManager.getMessageManager().removeAdvancedMsgListener(this.advancedMsgListener);
+        V2TIMManager.getSignalingManager().removeSignalingListener(this.signalingListener);
         result.success(null);
+    }
+
+    /**
+     * 获得SDK版本
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getVersion(MethodCall methodCall, Result result) {
+        result.success(V2TIMManager.getInstance().getVersion());
+    }
+
+    /**
+     * 获得服务器当前时间
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getServerTime(MethodCall methodCall, Result result) {
+        result.success(V2TIMManager.getInstance().getServerTime());
     }
 
     /**

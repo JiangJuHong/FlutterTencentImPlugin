@@ -43,6 +43,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "unInitSDK":
             self.unInitSDK(call: call, result: result)
             break
+        case "getVersion":
+            self.getVersion(call: call, result: result)
+            break
+        case "getServerTime":
+            self.getServerTime(call: call, result: result)
+            break
         case "login":
             self.login(call: call, result: result)
             break
@@ -332,7 +338,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 反初始化
     public func unInitSDK(call: FlutterMethodCall, result: @escaping FlutterResult) {
         V2TIMManager.sharedInstance().unInitSDK();
+        V2TIMManager.sharedInstance()?.remove(customAdvancedMsgListener)
+        V2TIMManager.sharedInstance()?.removeSignalingListener(listener: customSignalingListener)
         result(nil);
+    }
+
+    /// 获得SDK版本
+    public func getVersion(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(V2TIMManager.sharedInstance()?.getVersion()!);
+    }
+
+    /// 获取服务器当前时间
+    public func getServerTime(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(V2TIMManager.sharedInstance()?.getServerTime());
     }
 
     /// 登录
@@ -764,10 +782,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 查找消息列表
     public func findMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messages = CommonUtils.getParam(call: call, result: result, param: "messages") as? String {
-            TencentImUtils.getMessageByFindMessageEntity(dict:JsonUtil.getArrayFromJSONString(jsonString: messages) as! [[String : Any]], succ: {
+            TencentImUtils.getMessageByFindMessageEntity(dict: JsonUtil.getArrayFromJSONString(jsonString: messages) as! [[String: Any]], succ: {
                 (ms: [V2TIMMessage]!) in
-                var res : [MessageEntity] = [];
-                for item in ms!{
+                var res: [MessageEntity] = [];
+                for item in ms! {
                     res.append(MessageEntity.init(message: item));
                 }
                 result(JsonUtil.toJson(res));
@@ -775,7 +793,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    
+
     /// 创建群
     public func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let memberList = ((call.arguments as! [String: Any])["memberList"]) as? String;
