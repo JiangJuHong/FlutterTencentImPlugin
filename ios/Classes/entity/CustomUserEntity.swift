@@ -20,6 +20,12 @@ class CustomUserEntity: V2TIMUserFullInfo {
         if dict["gender"] != nil {
             self.gender = V2TIMGender.init(rawValue: (dict["gender"] as! Int))!;
         }
+        if dict["role"] != nil {
+            self.role = (dict["role"] as! UInt32);
+        }
+        if dict["level"] != nil {
+            self.level = (dict["level"] as! UInt32);
+        }
         if dict["allowType"] != nil {
             self.allowType = V2TIMFriendAllowType.init(rawValue: (dict["allowType"] as! Int))!;
         }
@@ -34,6 +40,8 @@ class CustomUserEntity: V2TIMUserFullInfo {
         result["faceUrl"] = info.faceURL;
         result["selfSignature"] = info.selfSignature;
         result["gender"] = info.gender.rawValue;
+        result["role"] = info.role;
+        result["level"] = info.level;
         result["allowType"] = info.allowType.rawValue;
         result["customInfo"] = info.customInfo;
         return result;
