@@ -13,7 +13,7 @@ public class CustomMessageNode extends AbstractMessageNode<V2TIMCustomElem, Cust
 
     @Override
     public V2TIMMessage getV2TIMMessage(CustomMessageEntity entity) {
-        return V2TIMManager.getMessageManager().createCustomMessage(entity.getData().getBytes());
+        return V2TIMManager.getMessageManager().createCustomMessage(entity.getData().getBytes(), entity.getDesc(), entity.getExt() == null ? null : entity.getExt().getBytes());
     }
 
     @Override

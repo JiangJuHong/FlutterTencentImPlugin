@@ -15,6 +15,16 @@ public class CustomMessageEntity extends AbstractMessageEntity {
      */
     private String data;
 
+    /**
+     * 描述
+     */
+    private String desc;
+
+    /**
+     * 扩展内容
+     */
+    private String ext;
+
     public CustomMessageEntity() {
         super(MessageNodeType.Custom);
     }
@@ -22,6 +32,8 @@ public class CustomMessageEntity extends AbstractMessageEntity {
     public CustomMessageEntity(V2TIMCustomElem elem) {
         super(MessageNodeType.Custom);
         this.data = new String(elem.getData());
+        this.desc = elem.getDescription();
+        this.ext = new String(elem.getExtension());
     }
 
     public String getData() {
@@ -30,5 +42,21 @@ public class CustomMessageEntity extends AbstractMessageEntity {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 }

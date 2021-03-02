@@ -13,6 +13,7 @@ import 'package:tencent_im_plugin/entity/find_message_entity.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/enums/tencent_im_listener_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
+import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/video_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
@@ -247,6 +248,11 @@ class _ChatState extends State<Chat> {
         ),
         child: Image.file(File(path)),
       );
+    }
+
+    if (message.elemType == MessageElemTypeEnum.Custom) {
+      CustomMessageNode node = message.node;
+      return Text("[自定义消息]data:${node.data}，desc:${node.desc}，ext:${node.ext}");
     }
 
     return Text("暂不支持的数据格式");
