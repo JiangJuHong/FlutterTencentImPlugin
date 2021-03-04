@@ -288,8 +288,8 @@ class TencentImPlugin {
     });
   }
 
-  /// 获得历史记录，此方法为 getC2CHistoryMessageList + getGroupHistoryMessageList 提供的统一封装方法，(userID 和 group) 不能都为空
-  /// [userId] 用户ID
+  /// 获取历史消息高级接口
+  /// [userID] 用户ID
   /// [groupID] 群聊ID
   /// [count] 拉取消息的个数，不宜太多，会影响消息拉取的速度，这里建议一次拉取 20 个
   /// [lastMsg] 获取消息的起始消息，如果传 null，起始消息为会话的最新消息
@@ -298,7 +298,7 @@ class TencentImPlugin {
     String userID,
     String groupID,
     @required int count,
-    GetMessageTypeEnum type: GetMessageTypeEnum.GetCloudNewerMsg,
+    GetMessageTypeEnum type: GetMessageTypeEnum.GetCloudOlderMsg,
     FindMessageEntity lastMsg,
   }) async {
     if (userID == null && groupID == null)
