@@ -68,6 +68,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/kxr224"><img src="https://avatars.githubusercontent.com/u/28681083?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cyrus</b></sub></a><br /><a href="https://github.com/JiangJuHong/FlutterTencentImPlugin/issues?q=author%3Akxr224" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/songjiabin"><img src="https://avatars.githubusercontent.com/u/13177100?v=4?s=100" width="100px;" alt=""/><br /><sub><b>宋佳宾</b></sub></a><br /><a href="https://github.com/JiangJuHong/FlutterTencentImPlugin/commits?author=songjiabin" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ligui-iOS"><img src="https://avatars.githubusercontent.com/u/20856361?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ligui-iOS</b></sub></a><br /><a href="https://github.com/JiangJuHong/FlutterTencentImPlugin/commits?author=ligui-iOS" title="Code">💻</a></td>
   </tr>
 </table>
 
