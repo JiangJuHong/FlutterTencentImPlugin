@@ -10,8 +10,8 @@ public class CustomMessageNode: AbstractMessageNode {
 
     override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {
         let data: String = getParam(params: params, paramKey: "data")!;
-        let desc: String? = getParam(params: params, paramKey: "description");
-        let ext: String? = getParam(params: params, paramKey: "extension");
+        let desc: String? = getParam(params: params, paramKey: "desc");
+        let ext: String? = getParam(params: params, paramKey: "ext");
         return V2TIMManager.sharedInstance().createCustomMessage(data.data(using: String.Encoding.utf8), desc: desc, extension: ext)
     }
 
