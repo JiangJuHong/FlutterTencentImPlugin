@@ -302,7 +302,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void inviteInGroup(MethodCall methodCall, final Result result) {
         String groupID = CommonUtil.getParam(methodCall, result, "groupID");
-        List<String> inviteeList = Arrays.asList(CommonUtil.getParam(methodCall, result, "inviteeList").toString().split(","));
+        List<String> inviteeList = new ArrayList<>(Arrays.asList(CommonUtil.getParam(methodCall, result, "inviteeList").toString().split(",")));
         String data = CommonUtil.getParam(methodCall, result, "data");
         Boolean onlineUserOnly = CommonUtil.getParam(methodCall, result, "onlineUserOnly");
         int timeout = CommonUtil.getParam(methodCall, result, "timeout");
