@@ -332,3 +332,9 @@
 * 用户资料增加 role 和 level 字段
 * 更新getHistoryMessageList接口，增加type属性
 * 消息对象增加 random
+
+## 1.2.14
+* fix "修复IOS环境下自定义节点 desc 和 ext 无法使用的问题"
+* fix "修复 inviteInGroup 接口在Android下会闪退的问题"
+* feat "更新内部依赖插件版本"
+* docs "更新文档"
