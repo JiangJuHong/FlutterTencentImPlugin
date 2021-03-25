@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "kxr224",
+      "name": "cyrus",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28681083?v=4",
+      "profile": "https://github.com/kxr224",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "FlutterTencentImPlugin",
+  "projectOwner": "JiangJuHong",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
