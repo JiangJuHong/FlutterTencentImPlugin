@@ -1,16 +1,12 @@
-<p align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-    <a href="#"><img src="https://img.shields.io/badge/Version-社区版-1"/></a>
-    &nbsp;    
-    <a href="https://pub.dartlang.org/packages/tencent_im_plugin"><img src="https://img.shields.io/pub/v/tencent_im_plugin.svg"/></a>
-    &nbsp;
-    <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/github/license/JiangJuHong/FlutterTencentImPlugin"/></a>
-    &nbsp;
-    <a href="https://jq.qq.com/?_wv=1027&k=QxCWMlUf"><img src="https://img.shields.io/badge/qq群-850923396-1"/></a>
-</p>
+<div align="center">
 
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![](https://img.shields.io/badge/Version-社区版-1)](#)
+[![](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
+[![](https://img.shields.io/github/license/JiangJuHong/FlutterTencentImPlugin)](https://www.apache.org/licenses/LICENSE-2.0)
+[![](https://img.shields.io/badge/qq群-850923396-1)](https://jq.qq.com/?_wv=1027&k=QxCWMlUf)
+
+</div>
 # What is FlutterTencentIm ？
 
 FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/product/im)服务进行的Flutter封装，为Flutter提供即时通讯服务.
