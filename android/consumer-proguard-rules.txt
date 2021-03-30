@@ -12,7 +12,4 @@
 -keepclassmembers class * implements java.io.Serializable { *; }
 
 # 忽略实体类
--keep class top.huic.tencent_im_plugin.TencentImPlugin {*;}
--keep class top.huic.tencent_im_plugin.**.*Entity { *; }
--keep class top.huic.tencent_im_plugin.entity.** { *; }
--keep class top.huic.tencent_im_plugin.message.entity.** { *; }
+-keep class top.huic.tencent_im_plugin.** {*;}
