@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 /// 群成员实体
 class GroupMemberEntity {
   /// 用户ID
-  String? userID;
+  late String userID;
 
   /// 用户昵称
   String? nickName;
@@ -31,7 +31,7 @@ class GroupMemberEntity {
   String? nameCard;
 
   GroupMemberEntity({
-    this.userID,
+    required this.userID,
     this.customInfo,
     this.nameCard,
   });
@@ -51,7 +51,7 @@ class GroupMemberEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.userID != null) data['userID'] = this.userID;
+    data['userID'] = this.userID;
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     if (this.nameCard != null) data['nameCard'] = this.nameCard;
     return data;

@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 /// 群成员离开通知实体
 class GroupMemberLeaveEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 群成员信息
-  GroupMemberEntity? member;
+  late GroupMemberEntity member;
 
   GroupMemberLeaveEntity.fromJson(data) {
     Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);

@@ -6,7 +6,7 @@ import 'package:tencent_im_plugin/enums/user_gender_enum.dart';
 /// 用户实体
 class UserEntity {
   /// ID
-  String? userID;
+  late String userID;
 
   /// 昵称
   String? nickName;

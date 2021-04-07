@@ -5,9 +5,7 @@ class MessageNode {
   /// 新消息节点类型
   MessageElemTypeEnum nodeType;
 
-  MessageNode(
-    this.nodeType,
-  );
+  MessageNode(this.nodeType);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -6,10 +6,10 @@ import 'package:tencent_im_plugin/enums/group_application_type_enum.dart';
 /// 群申请实体
 class GroupApplicationEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 获取请求者 ID，请求加群:请求者，邀请加群:邀请人
-  String? fromUser;
+  late String fromUser;
 
   /// 用户昵称
   String? fromUserNickName;
@@ -21,7 +21,7 @@ class GroupApplicationEntity {
   String? toUser;
 
   /// 获取群未决添加的时间，单位：秒
-  int? addTime;
+  late int addTime;
 
   /// 获取请求者添加的附加信息
   String? requestMsg;
@@ -30,7 +30,7 @@ class GroupApplicationEntity {
   String? handledMsg;
 
   /// 获取群未决请求类型
-  GroupApplicationTypeEnum? type;
+  late GroupApplicationTypeEnum type;
 
   /// 获取群未决处理状态
   GroupApplicationHandlerStatusEnum? handleStatus;

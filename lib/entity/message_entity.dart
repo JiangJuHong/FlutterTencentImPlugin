@@ -8,7 +8,7 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 消息实体
 class MessageEntity {
   /// 消息 ID
-  String? msgID;
+  late String msgID;
 
   /// 消息时间戳
   int? timestamp;
@@ -78,7 +78,7 @@ class MessageEntity {
   int? random;
 
   MessageEntity({
-    this.msgID,
+    required this.msgID,
     this.timestamp,
     this.sender,
     this.nickName,
@@ -132,7 +132,7 @@ class MessageEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.msgID != null) data['msgID'] = this.msgID;
+    data['msgID'] = this.msgID;
     if (this.timestamp != null) data['timestamp'] = this.timestamp;
     if (this.sender != null) data['sender'] = this.sender;
     if (this.nickName != null) data['nickName'] = this.nickName;

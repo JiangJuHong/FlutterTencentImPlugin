@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 文件消息节点
 class FileMessageNode extends MessageNode {
   /// 文件路径
-  String? filePath;
+  late String filePath;
 
   /// 文件名
-  String? fileName;
+  late String fileName;
 
   /// 文件ID
   String? _uuid;

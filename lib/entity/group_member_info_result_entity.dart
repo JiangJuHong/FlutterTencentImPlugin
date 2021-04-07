@@ -5,7 +5,7 @@ import 'package:tencent_im_plugin/list_util.dart';
 /// 群成员信息结果实体
 class GroupMemberInfoResultEntity {
   /// 获取分页拉取的 seq。如果为 0 表示拉取结束。
-  int? nextSeq;
+  late int nextSeq;
 
   /// 群信息
   List<GroupMemberEntity>? memberInfoList;

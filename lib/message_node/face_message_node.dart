@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 表情消息节点
 class FaceMessageNode extends MessageNode {
   /// 索引
-  int? index;
+  late int index;
 
   /// 数据
-  String? data;
+  late String data;
 
   FaceMessageNode({
     required this.index,

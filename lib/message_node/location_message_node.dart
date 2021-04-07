@@ -4,13 +4,13 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 位置节点
 class LocationMessageNode extends MessageNode {
   /// 位置描述
-  String? desc;
+  late String desc;
 
   /// 经度
-  double? longitude;
+  late double longitude;
 
   /// 纬度
-  double? latitude;
+  late double latitude;
 
   LocationMessageNode({
     required this.desc,

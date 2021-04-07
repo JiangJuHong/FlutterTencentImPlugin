@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 /// 群加入申请实体
 class GroupReceiveJoinApplicationEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 群成员
   GroupMemberEntity? member;

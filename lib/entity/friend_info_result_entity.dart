@@ -5,7 +5,7 @@ import 'package:tencent_im_plugin/enums/friend_relation_type_enum.dart';
 /// 好友信息结果实体
 class FriendInfoResultEntity {
   /// 结果码
-  int? resultCode;
+  late int resultCode;
 
   /// 结果信息`
   String? resultInfo;

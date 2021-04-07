@@ -3,7 +3,7 @@ import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 /// 好友添加申请实体
 class FriendAddApplicationEntity {
   /// 用户ID
-  String? userID;
+  String userID;
 
   /// 好友备注
   String? friendRemark;
@@ -15,19 +15,19 @@ class FriendAddApplicationEntity {
   String? addSource;
 
   /// 添加类型
-  FriendTypeEnum? addType;
+  FriendTypeEnum addType;
 
   FriendAddApplicationEntity({
-    this.userID,
+    required this.userID,
     this.friendRemark,
     this.addWording,
     this.addSource,
-    this.addType,
+    required this.addType,
   });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.userID != null) data['userID'] = this.userID;
+    data['userID'] = this.userID;
     if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
     if (this.addWording != null) data['addWording'] = this.addWording;
     if (this.addSource != null) data['addSource'] = this.addSource;

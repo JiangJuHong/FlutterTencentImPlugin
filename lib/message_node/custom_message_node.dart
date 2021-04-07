@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 自定义消息节点
 class CustomMessageNode extends MessageNode {
   /// 自定义数据
-  String? data;
+  late String data;
 
   /// 描述信息
   String? desc;

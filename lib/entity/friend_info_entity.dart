@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/entity/user_entity.dart';
 /// 好友信息实体
 class FriendInfoEntity {
   /// 用户ID
-  String? userID;
+  late String userID;
 
   /// 好友备注
   String? friendRemark;
@@ -35,7 +35,7 @@ class FriendInfoEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.userID != null) data['userID'] = this.userID;
+    data['userID'] = this.userID;
     if (this.friendRemark != null) data['friendRemark'] = this.friendRemark;
     if (this.friendCustomInfo != null) data['friendCustomInfo'] = this.friendCustomInfo;
     return data;

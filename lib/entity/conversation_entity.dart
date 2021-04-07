@@ -9,10 +9,10 @@ import 'dart:convert';
 /// 会话实体
 class ConversationEntity {
   /// 会话ID
-  String? conversationID;
+  late String conversationID;
 
   /// 会话类型
-  ConversationTypeEnum? type;
+  late ConversationTypeEnum type;
 
   /// 用户ID
   String? userID;

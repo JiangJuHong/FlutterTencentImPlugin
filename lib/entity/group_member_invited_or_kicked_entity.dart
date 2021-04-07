@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/list_util.dart';
 
-/// 群成员邀请或提出通知实体
+/// 群成员邀请或踢出通知实体
 class GroupMemberInvitedOrKickedEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 群成员列表信息
   List<GroupMemberEntity>? memberList;

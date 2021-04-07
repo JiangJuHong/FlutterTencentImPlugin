@@ -5,7 +5,7 @@ import 'package:tencent_im_plugin/list_util.dart';
 /// 群管理员操作通知实体
 class GroupAdministratorOpEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 群成员列表
   List<GroupMemberEntity>? changInfo;

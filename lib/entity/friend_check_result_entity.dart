@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/enums/friend_relation_type_enum.dart';
 /// 好友检测结果实体
 class FriendCheckResultEntity {
   /// 好友 id
-  String? userID;
+  late String userID;
 
   /// 返回结果码
-  int? resultCode;
+  late int resultCode;
 
   /// 返回结果描述
   String? resultInfo;

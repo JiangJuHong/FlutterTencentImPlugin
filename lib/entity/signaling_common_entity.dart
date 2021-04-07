@@ -3,7 +3,7 @@ import 'dart:convert';
 /// 信令通用实体
 class SignalingCommonEntity {
   /// 邀请ID
-  String? inviteID;
+  late String inviteID;
 
   /// 邀请人
   String? inviter;

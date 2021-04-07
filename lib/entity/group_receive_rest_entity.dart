@@ -3,7 +3,7 @@ import 'dart:convert';
 /// 群接收到REST自定义信息通知实体
 class GroupReceiveRESTEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 自定义数据
   String? customData;

@@ -10,7 +10,7 @@ class TextMessageNode extends MessageNode {
   List<String>? _atUserList;
 
   /// 是否需要@所有人
-  bool? _atAll;
+  late bool _atAll;
 
   TextMessageNode({
     required this.content,

@@ -3,7 +3,7 @@ import 'dart:convert';
 /// 错误实体
 class ErrorEntity {
   /// 错误码
-  int? code;
+  late int code;
 
   /// 错误描述
   String? error;

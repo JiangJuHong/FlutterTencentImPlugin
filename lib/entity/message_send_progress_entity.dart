@@ -3,10 +3,10 @@ import 'dart:convert';
 /// 消息发送进度实体
 class MessageSendProgressEntity {
   /// 消息ID
-  String? msgId;
+  late String msgId;
 
   /// 发送进度
-  int? progress;
+  late int progress;
 
   MessageSendProgressEntity.fromJson(data) {
     Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);

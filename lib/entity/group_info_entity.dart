@@ -7,7 +7,7 @@ import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 /// 群实体
 class GroupInfoEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 群类型
   GroupTypeEnum? groupType;
@@ -61,7 +61,7 @@ class GroupInfoEntity {
   Map<String, String>? customInfo;
 
   GroupInfoEntity({
-    this.groupID,
+    required this.groupID,
     this.groupType,
     this.groupName,
     this.notification,

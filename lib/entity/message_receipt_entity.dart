@@ -3,7 +3,7 @@ import 'dart:convert';
 /// 消息回执实体
 class MessageReceiptEntity {
   /// 用户ID
-  String? userID;
+  late String userID;
 
   /// 时间
   int? timestamp;

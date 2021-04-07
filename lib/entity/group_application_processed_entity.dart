@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 /// 群申请处理
 class GroupApplicationProcessedEntity {
   /// 群ID
-  String? groupID;
+  late String groupID;
 
   /// 操作用户
   GroupMemberEntity? opUser;
