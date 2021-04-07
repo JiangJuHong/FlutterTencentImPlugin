@@ -7,7 +7,7 @@ class SoundMessageNode extends MessageNode {
   String? _uuid;
 
   /// 路径
-  late String path;
+  String? path;
 
   /// 时长
   late int duration;

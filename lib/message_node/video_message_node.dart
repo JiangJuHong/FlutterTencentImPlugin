@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 适配消息节点
 class VideoMessageNode extends MessageNode {
   /// 视频路径
-  late String videoPath;
+  String? videoPath;
 
   /// 视频UUID
   String? _videoUuid;
@@ -16,7 +16,7 @@ class VideoMessageNode extends MessageNode {
   late int duration;
 
   /// 缩略图路径
-  late String snapshotPath;
+  String? snapshotPath;
 
   /// 缩略图UUID
   String? _snapshotUuid;
