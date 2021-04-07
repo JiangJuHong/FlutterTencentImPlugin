@@ -3,19 +3,19 @@ import 'dart:convert';
 /// 信令通用实体
 class SignalingCommonEntity {
   /// 邀请ID
-  String inviteID;
+  String? inviteID;
 
   /// 邀请人
-  String inviter;
+  String? inviter;
 
   /// 被邀请人
-  String invitee;
+  String? invitee;
 
   /// 被邀请人列表
-  List<String> inviteeList;
+  List<String>? inviteeList;
 
   /// 消息内容
-  String data;
+  String? data;
 
   SignalingCommonEntity.fromJson(data) {
     Map<String, dynamic> json =

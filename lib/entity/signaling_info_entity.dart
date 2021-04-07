@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 import 'package:uuid/uuid.dart';
@@ -8,43 +7,43 @@ import 'package:uuid/uuid.dart';
 /// 信令信息实体
 class SignalingInfoEntity {
   /// 邀请ID
-  String inviteID;
+  String? inviteID;
 
   /// 群ID
-  String groupID;
+  String? groupID;
 
   /// 邀请人
-  String inviter;
+  String? inviter;
 
   /// 被邀请人
-  List<String> inviteeList;
+  List<String>? inviteeList;
 
   /// 数据
-  String data;
+  String? data;
 
   /// 超时
-  int timeout;
+  int? timeout;
 
   /// 类型
-  SignalingActionTypeEnum actionType;
+  SignalingActionTypeEnum? actionType;
 
   /// ID
-  int businessID;
+  int? businessID;
 
   /// 是否仅在线用户
-  bool onlineUserOnly;
+  bool? onlineUserOnly;
 
   /// 离线推送信息
-  OfflinePushInfoEntity offlinePushInfo;
+  OfflinePushInfoEntity? offlinePushInfo;
 
   SignalingInfoEntity({
     this.inviteID,
     this.groupID,
-    @required this.inviter,
-    @required this.inviteeList,
-    @required this.data,
+    required this.inviter,
+    required this.inviteeList,
+    required this.data,
     this.timeout: 0,
-    @required this.actionType,
+    required this.actionType,
     this.businessID: 0,
     this.onlineUserOnly: false,
   });
@@ -75,7 +74,7 @@ class SignalingInfoEntity {
     if (this.data != null) data['data'] = this.data;
     if (this.timeout != null) data['timeout'] = this.timeout;
     if (this.actionType != null)
-      data['actionType'] = SignalingActionTypeTool.toInt(this.actionType);
+      data['actionType'] = SignalingActionTypeTool.toInt(this.actionType!);
     if (this.businessID != null) data['businessID'] = this.businessID;
     if (this.onlineUserOnly != null)
       data['onlineUserOnly'] = this.onlineUserOnly;

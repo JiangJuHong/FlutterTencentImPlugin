@@ -11,7 +11,7 @@ enum PendencyExamineTypeEnum {
 /// 枚举工具
 class PendencyExamineTypeEnumTool {
   /// 根据数标获得枚举
-  static PendencyExamineTypeEnum getEnumByIndex(index) {
+  static PendencyExamineTypeEnum? getEnumByIndex(index) {
     switch (index) {
       case 0:
         return PendencyExamineTypeEnum.AGREE;
@@ -25,7 +25,7 @@ class PendencyExamineTypeEnumTool {
   }
 
   /// 根据枚举获得数标
-  static int getIndexByEnum(e) {
+  static int? getIndexByEnum(e) {
     switch (e) {
       case PendencyExamineTypeEnum.AGREE:
         return 0;

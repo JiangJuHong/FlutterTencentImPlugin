@@ -23,11 +23,11 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RaisedButton(
+            OutlinedButton(
               onPressed: () => Navigator.pushNamed(context, "/interfaces_test"),
               child: Text("接口测试"),
             ),
-            RaisedButton(
+            OutlinedButton(
               onPressed: () => Navigator.pushNamed(context, "/login"),
               child: Text("进入Demo"),
             ),

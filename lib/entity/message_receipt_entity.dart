@@ -3,10 +3,10 @@ import 'dart:convert';
 /// 消息回执实体
 class MessageReceiptEntity {
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 时间
-  int timestamp;
+  int? timestamp;
 
   MessageReceiptEntity.fromJson(data) {
     Map<String, dynamic> json =

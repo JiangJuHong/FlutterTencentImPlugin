@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/enums/friend_application_type_enum.dart';
 
 /// 查找好友申请实体
@@ -10,8 +9,8 @@ class FindFriendApplicationEntity {
   FriendApplicationTypeEnum type;
 
   FindFriendApplicationEntity({
-    @required this.userID,
-    @required this.type,
+    required this.userID,
+    required this.type,
   });
 
   Map<String, dynamic> toJson() {

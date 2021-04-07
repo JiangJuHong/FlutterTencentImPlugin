@@ -19,7 +19,7 @@ class GroupTypeTool {
   /// 根据字符串类型值获得枚举
   /// [type] 字符串常量
   /// [Return] 枚举对象
-  static GroupTypeEnum getByString(String type) =>
+  static GroupTypeEnum? getByString(String type) =>
       EnumUtil.nameOf(GroupTypeEnum.values, type);
 
   /// 将枚举转换为整型

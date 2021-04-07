@@ -4,31 +4,31 @@ import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 /// 群成员实体
 class GroupMemberEntity {
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 用户昵称
-  String nickName;
+  String? nickName;
 
   /// 好友备注
-  String friendRemark;
+  String? friendRemark;
 
   /// 头像URL
-  String faceUrl;
+  String? faceUrl;
 
   /// 角色
-  GroupMemberRoleEnum role;
+  GroupMemberRoleEnum? role;
 
   /// 群成员禁言结束时间戳
-  int muteUntil;
+  int? muteUntil;
 
   /// 加入时间
-  int joinTime;
+  int? joinTime;
 
   /// 自定义字段
-  Map<String, String> customInfo;
+  Map<String, String>? customInfo;
 
   /// 群成员名片
-  String nameCard;
+  String? nameCard;
 
   GroupMemberEntity({
     this.userID,

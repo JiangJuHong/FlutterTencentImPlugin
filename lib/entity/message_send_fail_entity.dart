@@ -3,13 +3,13 @@ import 'dart:convert';
 /// 消息发送失败实体
 class MessageSendFailEntity {
   /// 消息ID
-  String msgId;
+  String? msgId;
 
   /// 错误码
-  int code;
+  int? code;
 
   /// 错误描述
-  String desc;
+  String? desc;
 
   MessageSendFailEntity.fromJson(data) {
     Map<String, dynamic> json =

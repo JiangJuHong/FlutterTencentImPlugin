@@ -47,11 +47,11 @@ class _MainState extends State<Main> {
                 decoration: InputDecoration(hintText: "请输入用户ID"),
               ),
               actions: [
-                FlatButton(
+                OutlinedButton(
                   child: Text("取消"),
                   onPressed: () => Navigator.pop(context, false),
                 ),
-                FlatButton(
+                OutlinedButton(
                   child: Text("确定"),
                   onPressed: () => Navigator.pop(context, true),
                 ),

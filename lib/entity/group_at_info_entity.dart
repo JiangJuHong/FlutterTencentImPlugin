@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/enums/group_at_type_enum.dart';
 /// 群@信息实体
 class GroupAtInfoEntity {
   /// Seq序列号
-  int seq;
+  int? seq;
 
   /// @类型
-  GroupAtTypeEnum atType;
+  GroupAtTypeEnum? atType;
 
   GroupAtInfoEntity.fromJson(data) {
     Map<String, dynamic> json =

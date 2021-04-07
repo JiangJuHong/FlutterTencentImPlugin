@@ -20,7 +20,7 @@ enum GroupSystemType {
 
 class GroupSystemTypeTool {
   /// 根据int值获得枚举类型
-  static GroupSystemType intToGroupSystemType(int value) {
+  static GroupSystemType? intToGroupSystemType(int value) {
     switch (value) {
       case 0:
         return GroupSystemType.INVALID;

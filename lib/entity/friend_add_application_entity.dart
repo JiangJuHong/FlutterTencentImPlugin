@@ -3,19 +3,19 @@ import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 /// 好友添加申请实体
 class FriendAddApplicationEntity {
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 好友备注
-  String friendRemark;
+  String? friendRemark;
 
   /// 申请描述
-  String addWording;
+  String? addWording;
 
   /// 添加来源
-  String addSource;
+  String? addSource;
 
   /// 添加类型
-  FriendTypeEnum addType;
+  FriendTypeEnum? addType;
 
   FriendAddApplicationEntity({
     this.userID,
@@ -32,7 +32,7 @@ class FriendAddApplicationEntity {
     if (this.addWording != null) data['addWording'] = this.addWording;
     if (this.addSource != null) data['addSource'] = this.addSource;
     if (this.addType != null)
-      data['addType'] = FriendTypeTool.toInt(this.addType);
+      data['addType'] = FriendTypeTool.toInt(this.addType!);
     return data;
   }
 }

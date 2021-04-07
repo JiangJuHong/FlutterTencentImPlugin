@@ -1,20 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 自定义消息节点
 class CustomMessageNode extends MessageNode {
   /// 自定义数据
-  String data;
+  String? data;
 
   /// 描述信息
-  String desc;
+  String? desc;
 
   /// 扩展信息
-  String ext;
+  String? ext;
 
   CustomMessageNode({
-    @required this.data,
+    required this.data,
     this.desc,
     this.ext,
   }) : super(MessageElemTypeEnum.Custom);

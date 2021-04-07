@@ -7,58 +7,58 @@ import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 /// 群实体
 class GroupInfoEntity {
   /// 群ID
-  String groupID;
+  String? groupID;
 
   /// 群类型
-  GroupTypeEnum groupType;
+  GroupTypeEnum? groupType;
 
   /// 群名称
-  String groupName;
+  String? groupName;
 
   /// 群公告
-  String notification;
+  String? notification;
 
   /// 群简介
-  String introduction;
+  String? introduction;
 
   /// 群头像
-  String faceUrl;
+  String? faceUrl;
 
   /// 是否设置了全员禁言
-  bool allMuted;
+  bool? allMuted;
 
   /// 群主ID
-  String owner;
+  String? owner;
 
   /// 创建时间
-  int createTime;
+  int? createTime;
 
   /// 加群审批类型。
-  GroupAddOptEnum groupAddOpt;
+  GroupAddOptEnum? groupAddOpt;
 
   /// 群最近一次群资料修改时间
-  int lastInfoTime;
+  int? lastInfoTime;
 
   /// 群最近一次发消息时间
-  int lastMessageTime;
+  int? lastMessageTime;
 
   /// 群成员总数量
-  int memberCount;
+  int? memberCount;
 
   /// 在线成员数量
-  int onlineCount;
+  int? onlineCount;
 
   /// 群成员角色
-  GroupMemberRoleEnum role;
+  GroupMemberRoleEnum? role;
 
   /// 当前用户在此群组中的消息接收选项
-  GroupReceiveMessageOptEnum recvOpt;
+  GroupReceiveMessageOptEnum? recvOpt;
 
   /// 当前用户在此群中的加入时间
-  int joinTime;
+  int? joinTime;
 
   /// 自定义字段
-  Map<String, String> customInfo;
+  Map<String, String>? customInfo;
 
   GroupInfoEntity({
     this.groupID,
@@ -100,14 +100,14 @@ class GroupInfoEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.groupID != null) data['groupID'] = this.groupID;
     if (this.groupType != null)
-      data['groupType'] = GroupTypeTool.toTypeString(this.groupType);
+      data['groupType'] = GroupTypeTool.toTypeString(this.groupType!);
     if (this.groupName != null) data['groupName'] = this.groupName;
     if (this.notification != null) data['notification'] = this.notification;
     if (this.introduction != null) data['introduction'] = this.introduction;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.allMuted != null) data['allMuted'] = this.allMuted;
     if (this.groupAddOpt != null)
-      data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
+      data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt!);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }

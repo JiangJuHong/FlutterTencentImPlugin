@@ -4,25 +4,25 @@ import 'package:tencent_im_plugin/enums/friend_application_type_enum.dart';
 /// 好友申请实体
 class FriendApplicationEntity {
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 用户昵称
-  String nickname;
+  String? nickname;
 
   /// 用户头像
-  String faceUrl;
+  String? faceUrl;
 
   /// 申请时间
-  int addTime;
+  int? addTime;
 
   /// 申请来源
-  String addSource;
+  String? addSource;
 
   /// 申请描述
-  String addWording;
+  String? addWording;
 
   /// 类型
-  FriendApplicationTypeEnum type;
+  FriendApplicationTypeEnum? type;
 
   FriendApplicationEntity.fromJson(data) {
     Map<String, dynamic> json =

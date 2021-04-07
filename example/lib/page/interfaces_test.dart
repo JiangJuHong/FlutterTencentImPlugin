@@ -12,7 +12,6 @@ import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
 import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
-import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 import 'package:logger/logger.dart';
 
@@ -335,7 +334,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
                 ? Text((_finishTestCount == _interfaces.length)
                     ? "测试完成"
                     : "正在测试:$_currentTestKey")
-                : RaisedButton(
+                : OutlinedButton(
                     onPressed: startTest,
                     child: Text("开始测试"),
                   ),

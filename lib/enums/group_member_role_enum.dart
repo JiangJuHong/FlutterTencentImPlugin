@@ -43,6 +43,5 @@ class GroupMemberRoleTool {
       case GroupMemberRoleEnum.Owner:
         return 400;
     }
-    throw ArgumentError("参数异常");
   }
 }

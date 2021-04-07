@@ -4,16 +4,16 @@ import 'package:tencent_im_plugin/enums/friend_relation_type_enum.dart';
 /// 好友检测结果实体
 class FriendCheckResultEntity {
   /// 好友 id
-  String userID;
+  String? userID;
 
   /// 返回结果码
-  int resultCode;
+  int? resultCode;
 
   /// 返回结果描述
-  String resultInfo;
+  String? resultInfo;
 
   /// 好友结果类型
-  FriendRelationTypeEnum resultType;
+  FriendRelationTypeEnum? resultType;
 
   FriendCheckResultEntity.fromJson(data) {
     Map<String, dynamic> json =

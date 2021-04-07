@@ -6,31 +6,31 @@ import 'package:tencent_im_plugin/enums/user_gender_enum.dart';
 /// 用户实体
 class UserEntity {
   /// ID
-  String userID;
+  String? userID;
 
   /// 昵称
-  String nickName;
+  String? nickName;
 
   /// 头像
-  String faceUrl;
+  String? faceUrl;
 
   /// 签名
-  String selfSignature;
+  String? selfSignature;
 
   /// 性别
-  UserGenderEnum gender;
+  UserGenderEnum? gender;
 
   /// 角色
-  int role;
+  int? role;
 
   /// 等级
-  int level;
+  int? level;
 
   /// 好友验证方式
-  UserAllowTypeEnum allowType;
+  UserAllowTypeEnum? allowType;
 
   /// 自定义字段
-  Map<String, String> customInfo;
+  Map<String, String>? customInfo;
 
   UserEntity({
     this.nickName,
@@ -62,11 +62,11 @@ class UserEntity {
     if (this.nickName != null) data['nickName'] = this.nickName;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
-    if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender);
+    if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender!);
     if (this.role != null) data['role'] = this.role;
     if (this.level != null) data['level'] = this.level;
     if (this.allowType != null)
-      data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
+      data['allowType'] = UserAllowTypeTool.toInt(this.allowType!);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }

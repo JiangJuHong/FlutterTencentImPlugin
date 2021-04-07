@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                 controller: _controller,
               ),
               Container(height: 20),
-              RaisedButton(
+              OutlinedButton(
                 onPressed: _userName.trim() == '' ? null : _onLogin,
                 child: Text("立即登录"),
               ),

@@ -46,7 +46,7 @@ class TencentImPluginListener {
         case 'onListener':
           // 获得原始类型和参数
           TencentImListenerTypeEnum type = EnumUtil.nameOf(
-              TencentImListenerTypeEnum.values, arguments['type']);
+              TencentImListenerTypeEnum.values, arguments['type'])!;
           var originalParams = arguments['params'];
 
           // 封装回调类型和参数
@@ -201,11 +201,6 @@ class TencentImPluginListener {
                 "$type 监听器错误:$err，请联系开发者进行处理！Github Issues: https://github.com/JiangJuHong/FlutterTencentImPlugin/issues");
           }
 
-          // 没有找到类型就返回
-          if (type == null) {
-            throw MissingPluginException();
-          }
-
           // 回调触发
           for (var item in listeners) {
             item(type, params);
@@ -231,4 +226,4 @@ class TencentImPluginListener {
 
 /// 监听器值模型
 typedef TencentImListenerValue<P> = void Function(
-    TencentImListenerTypeEnum type, P params);
+    TencentImListenerTypeEnum type, P? params);

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -20,7 +19,6 @@ import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/enums/image_type_enum.dart';
-import 'package:tencent_im_plugin/entity/friend_add_application_entity.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -427,10 +425,7 @@ class _ChatState extends State<Chat> {
                     ),
                   ),
                   Container(width: 8),
-                  RaisedButton(
-                    onPressed: _onSend,
-                    child: Text("发送"),
-                  ),
+                  OutlinedButton(onPressed: _onSend, child: Text("发送"))
                 ],
               ),
             ),

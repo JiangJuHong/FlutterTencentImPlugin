@@ -7,7 +7,7 @@ class EnumUtil {
   }
 
   /// 根据名字获得枚举
-  static T nameOf<T>(List<T> array, String name) {
+  static T? nameOf<T>(List<T> array, String name) {
     for (var item in array) {
       if (EnumUtil.getEnumName(item) == name) {
         return item;

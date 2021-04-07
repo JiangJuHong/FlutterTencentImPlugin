@@ -57,6 +57,5 @@ class MessageStatusTool {
       case MessageStatusEnum.HasRevoked:
         return 6;
     }
-    throw ArgumentError("参数异常");
   }
 }

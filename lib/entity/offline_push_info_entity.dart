@@ -3,25 +3,25 @@ import 'dart:convert';
 /// 离线推送信息实体
 class OfflinePushInfoEntity {
   /// 通知栏标题
-  String title;
+  String? title;
 
   /// 通知栏内容
-  String desc;
+  String? desc;
 
   /// 通知栏透传信息
-  String ext;
+  String? ext;
 
   /// 离线推送声音设置（仅对 iOS 生效）。 当 sound = IOS_OFFLINE_PUSH_NO_SOUND，表示接收时不会播放声音。 如果要自定义 iOSSound，需要先把语音文件链接进 Xcode 工程，然后把语音文件名（带后缀）设置给 iOSSound。
-  String iOSSound;
+  String? iOSSound;
 
   /// 离线推送忽略 badge 计数（仅对 iOS 生效）， 如果设置为 true，在 iOS 接收端，这条消息不会使 APP 的应用图标未读计数增加。
-  bool ignoreIOSBadge;
+  bool? ignoreIOSBadge;
 
   /// 离线推送设置 OPPO 手机 8.0 系统及以上的渠道 ID。
-  String androidOPPOChannelID;
+  String? androidOPPOChannelID;
 
   /// 获取是否关闭离线推送状态。
-  bool disablePush;
+  bool? disablePush;
 
   OfflinePushInfoEntity({
     this.title,

@@ -28,7 +28,7 @@ enum FriendStatusEnum {
 /// 枚举工具
 class FriendStatusEnumTool {
   /// 根据数标获得枚举
-  static FriendStatusEnum getEnumByIndex(index) {
+  static FriendStatusEnum? getEnumByIndex(index) {
     switch (index) {
       case 0:
         return FriendStatusEnum.SUCC;
@@ -52,7 +52,7 @@ class FriendStatusEnumTool {
   }
 
   /// 根据枚举获得数标
-  static int getIndexByEnum(e) {
+  static int? getIndexByEnum(e) {
     switch (e) {
       case FriendStatusEnum.SUCC:
         return 0;

@@ -1,24 +1,23 @@
-import 'package:flutter/material.dart';
 import 'package:tencent_im_plugin/enums/message_elem_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/message_node.dart';
 
 /// 文件消息节点
 class FileMessageNode extends MessageNode {
   /// 文件路径
-  String filePath;
+  String? filePath;
 
   /// 文件名
-  String fileName;
+  String? fileName;
 
   /// 文件ID
-  String _uuid;
+  String? _uuid;
 
   /// 文件大小
-  int _size;
+  int? _size;
 
   FileMessageNode({
-    @required this.filePath,
-    @required this.fileName,
+    required this.filePath,
+    required this.fileName,
   }) : super(MessageElemTypeEnum.File);
 
   FileMessageNode.fromJson(Map<String, dynamic> json)
@@ -30,10 +29,10 @@ class FileMessageNode extends MessageNode {
   }
 
   /// 获得UUID
-  String get uuid => _uuid;
+  String? get uuid => _uuid;
 
   /// 获得文件大小
-  int get size => _size;
+  int? get size => _size;
 
   @override
   Map<String, dynamic> toJson() {

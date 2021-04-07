@@ -13,7 +13,7 @@ enum PendencyTypeEnum {
 /// 枚举工具
 class PendencyTypeTool {
   /// 根据数标获得枚举
-  static PendencyTypeEnum getEnumByIndex(index) {
+  static PendencyTypeEnum? getEnumByIndex(index) {
     switch (index) {
       case 1:
         return PendencyTypeEnum.COME_IN;
@@ -27,7 +27,7 @@ class PendencyTypeTool {
   }
 
   /// 根据枚举获得数标
-  static int getIndexByEnum(e) {
+  static int? getIndexByEnum(e) {
     switch (e) {
       case PendencyTypeEnum.COME_IN:
         return 1;

@@ -20,7 +20,7 @@ import 'package:tencent_im_plugin/entity/user_entity.dart';
 import 'entity/conversation_entity.dart';
 
 class EntityFactory {
-  static T generateOBJ<T>(json) {
+  static T? generateOBJ<T>(json) {
     if (json is String) {
       json = jsonDecode(json);
     }

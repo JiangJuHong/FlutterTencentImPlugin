@@ -5,10 +5,10 @@ import 'package:tencent_im_plugin/list_util.dart';
 /// 群成员加入通知实体
 class GroupMemberEnterEntity {
   /// 群ID
-  String groupID;
+  String? groupID;
 
   /// 群成员列表
-  List<GroupMemberEntity> memberList;
+  List<GroupMemberEntity>? memberList;
 
   GroupMemberEnterEntity.fromJson(data) {
     Map<String, dynamic> json =
@@ -16,6 +16,6 @@ class GroupMemberEnterEntity {
     groupID = json['groupID'];
     if (json["memberList"] != null)
       memberList =
-          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']) as List<GroupMemberEntity>?;
   }
 }

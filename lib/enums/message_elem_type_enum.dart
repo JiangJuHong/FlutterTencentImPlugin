@@ -55,7 +55,7 @@ class MessageElemTypeTool {
   /// 根据消息节点类型获得消息节点
   /// [nodeType] 节点类型
   /// [json] json值
-  static MessageNode getMessageNodeByMessageNodeType(
+  static MessageNode? getMessageNodeByMessageNodeType(
       MessageElemTypeEnum nodeType, Map<String, dynamic> json) {
     switch (nodeType) {
       case MessageElemTypeEnum.None:
@@ -66,25 +66,18 @@ class MessageElemTypeTool {
         return CustomMessageNode.fromJson(json);
       case MessageElemTypeEnum.Image:
         return ImageMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.Sound:
         return SoundMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.Video:
         return VideoMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.File:
         return FileMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.Location:
         return LocationMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.Face:
         return FaceMessageNode.fromJson(json);
-        break;
       case MessageElemTypeEnum.GroupTips:
         return GroupTipsMessageNode.fromJson(json);
-        break;
     }
     return null;
   }

@@ -6,13 +6,13 @@ import 'package:tencent_im_plugin/list_util.dart';
 /// 会话结果实体
 class ConversationResultEntity {
   /// 下一次分页拉取的游标
-  int nextSeq;
+  int? nextSeq;
 
   /// 会话列表是否已经拉取完毕
-  bool finished;
+  bool? finished;
 
   /// 会话列表
-  List<ConversationEntity> conversationList;
+  List<ConversationEntity>? conversationList;
 
   ConversationResultEntity.fromJson(data) {
     Map<String, dynamic> json =
@@ -21,6 +21,6 @@ class ConversationResultEntity {
     nextSeq = json['nextSeq'];
     finished = json['finished'];
     conversationList =
-        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]);
+        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]) as List<ConversationEntity>?;
   }
 }

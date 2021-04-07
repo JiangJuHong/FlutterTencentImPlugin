@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/enums/operation_result_enum.dart';
 /// 群成员操作结果实体
 class GroupMemberOperationResultEntity {
   /// 操作结果
-  OperationResultEnum result;
+  OperationResultEnum? result;
 
   /// 群成员ID
-  String memberID;
+  String? memberID;
 
   GroupMemberOperationResultEntity.fromJson(data) {
     Map<String, dynamic> json =

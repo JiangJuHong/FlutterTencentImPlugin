@@ -5,13 +5,13 @@ import 'package:tencent_im_plugin/list_util.dart';
 /// 群成员邀请或提出通知实体
 class GroupMemberInvitedOrKickedEntity {
   /// 群ID
-  String groupID;
+  String? groupID;
 
   /// 群成员列表信息
-  List<GroupMemberEntity> memberList;
+  List<GroupMemberEntity>? memberList;
 
   /// 操作用户
-  GroupMemberEntity opUser;
+  GroupMemberEntity? opUser;
 
   GroupMemberInvitedOrKickedEntity.fromJson(data) {
     Map<String, dynamic> json =
@@ -19,7 +19,7 @@ class GroupMemberInvitedOrKickedEntity {
     groupID = json['groupID'];
     if (json["memberList"] != null)
       memberList =
-          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']) as List<GroupMemberEntity>?;
     if (json["opUser"] != null)
       opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }

@@ -43,6 +43,5 @@ class GroupMemberFilterTool {
       case GroupMemberFilterEnum.Common:
         return 4;
     }
-    throw ArgumentError("参数异常");
   }
 }

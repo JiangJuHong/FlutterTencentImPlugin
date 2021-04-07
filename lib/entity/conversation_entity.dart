@@ -9,43 +9,43 @@ import 'dart:convert';
 /// 会话实体
 class ConversationEntity {
   /// 会话ID
-  String conversationID;
+  String? conversationID;
 
   /// 会话类型
-  ConversationTypeEnum type;
+  ConversationTypeEnum? type;
 
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 群ID
-  String groupID;
+  String? groupID;
 
   /// 显示名称
-  String showName;
+  String? showName;
 
   /// 头像
-  String faceUrl;
+  String? faceUrl;
 
   /// 接收消息选项（群会话有效）
-  GroupReceiveMessageOptEnum recvOpt;
+  GroupReceiveMessageOptEnum? recvOpt;
 
   /// 群类型
-  GroupTypeEnum groupType;
+  GroupTypeEnum? groupType;
 
   /// 未读数量
-  int unreadCount;
+  int? unreadCount;
 
   /// 最后一条消息
-  MessageEntity lastMessage;
+  MessageEntity? lastMessage;
 
   /// 草稿文本
-  String draftText;
+  String? draftText;
 
   /// 草稿时间
-  int draftTimestamp;
+  int? draftTimestamp;
 
   /// @信息列表
-  List<GroupAtInfoEntity> groupAtInfoList;
+  List<GroupAtInfoEntity>? groupAtInfoList;
 
   ConversationEntity.fromJson(data) {
     Map<String, dynamic> json =
@@ -66,7 +66,7 @@ class ConversationEntity {
     draftTimestamp = json['draftTimestamp'];
     groupAtInfoList = json["groupAtInfoList"] == null
         ? null
-        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
+        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]) as List<GroupAtInfoEntity>?;
   }
 
   @override

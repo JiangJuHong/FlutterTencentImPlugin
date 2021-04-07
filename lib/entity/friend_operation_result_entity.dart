@@ -3,13 +3,13 @@ import 'dart:convert';
 /// 好友操作结果实体
 class FriendOperationResultEntity {
   /// 用户ID
-  String userID;
+  String? userID;
 
   /// 返回码
-  int resultCode;
+  int? resultCode;
 
   /// 返回信息
-  String resultInfo;
+  String? resultInfo;
 
   FriendOperationResultEntity.fromJson(data) {
     Map<String, dynamic> json =
