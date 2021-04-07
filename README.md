@@ -15,7 +15,7 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 # Notice
 
-💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`master-non-null-safety`💐💐  
+💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`sdk-5.1.x-non-null-safety`💐💐  
 💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
 上留下您的大名并超链到您的 Github 主页！
 
