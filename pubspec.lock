@@ -155,7 +155,7 @@ packages:
       name: uuid
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   vector_math:
     dependency: transitive
     description:
