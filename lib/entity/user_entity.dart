@@ -62,7 +62,8 @@ class UserEntity {
     if (this.nickName != null) data['nickName'] = this.nickName;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
-    if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender!);
+    if (this.gender != null)
+      data['gender'] = UserGenderTool.toInt(this.gender!);
     if (this.role != null) data['role'] = this.role;
     if (this.level != null) data['level'] = this.level;
     if (this.allowType != null)

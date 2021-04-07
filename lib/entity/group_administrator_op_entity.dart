@@ -18,8 +18,8 @@ class GroupAdministratorOpEntity {
         data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     groupID = json['groupID'];
     if (json["changInfo"] != null)
-      changInfo =
-          ListUtil.generateOBJList<GroupMemberEntity>(json['changInfo']) as List<GroupMemberEntity>?;
+      changInfo = ListUtil.generateOBJList<GroupMemberEntity>(json['changInfo'])
+          as List<GroupMemberEntity>?;
     if (json["opUser"] != null)
       opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }

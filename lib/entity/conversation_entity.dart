@@ -66,7 +66,8 @@ class ConversationEntity {
     draftTimestamp = json['draftTimestamp'];
     groupAtInfoList = json["groupAtInfoList"] == null
         ? null
-        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]) as List<GroupAtInfoEntity>?;
+        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"])
+            as List<GroupAtInfoEntity>?;
   }
 
   @override

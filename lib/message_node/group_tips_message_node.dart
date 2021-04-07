@@ -48,7 +48,8 @@ class GroupTipsMessageNode extends MessageNode {
     if (json["memberChangeInfoList"] != null)
       this.memberChangeInfoList =
           ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(
-              json["memberChangeInfoList"]) as List<GroupMemberChangedInfoEntity>?;
+                  json["memberChangeInfoList"])
+              as List<GroupMemberChangedInfoEntity>?;
     if (json["memberCount"] != null) this.memberCount = json["memberCount"];
   }
 }

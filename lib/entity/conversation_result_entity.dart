@@ -21,6 +21,7 @@ class ConversationResultEntity {
     nextSeq = json['nextSeq'];
     finished = json['finished'];
     conversationList =
-        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]) as List<ConversationEntity>?;
+        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"])
+            as List<ConversationEntity>?;
   }
 }

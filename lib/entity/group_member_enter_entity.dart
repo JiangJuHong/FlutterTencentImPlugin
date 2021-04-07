@@ -16,6 +16,7 @@ class GroupMemberEnterEntity {
     groupID = json['groupID'];
     if (json["memberList"] != null)
       memberList =
-          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']) as List<GroupMemberEntity>?;
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList'])
+              as List<GroupMemberEntity>?;
   }
 }

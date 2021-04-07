@@ -16,7 +16,8 @@ class GroupChangedEntity {
     groupID = json['groupID'];
     if (json["changInfo"] != null)
       changInfo =
-          ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']) as List<GroupChangedInfoEntity>?;
+          ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo'])
+              as List<GroupChangedInfoEntity>?;
   }
 }
 

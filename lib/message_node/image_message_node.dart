@@ -15,7 +15,8 @@ class ImageMessageNode extends MessageNode {
     required this.path,
   }) : super(MessageElemTypeEnum.Image);
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Image) {
+  ImageMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Image) {
     path = json['path'];
     if (json['imageData'] != null) {
       _imageData = Map();
@@ -67,7 +68,8 @@ class ImageEntity {
   });
 
   ImageEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     size = json['size'];
     width = json['width'];
     type = ImageTypeTool.getByInt(json["type"]);

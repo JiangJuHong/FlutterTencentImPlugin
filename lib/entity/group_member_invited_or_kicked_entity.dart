@@ -19,7 +19,8 @@ class GroupMemberInvitedOrKickedEntity {
     groupID = json['groupID'];
     if (json["memberList"] != null)
       memberList =
-          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']) as List<GroupMemberEntity>?;
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList'])
+              as List<GroupMemberEntity>?;
     if (json["opUser"] != null)
       opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }

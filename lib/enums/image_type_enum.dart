@@ -18,7 +18,7 @@ class ImageTypeTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static ImageTypeEnum getByInt(int/*!*/ index) {
+  static ImageTypeEnum getByInt(int /*!*/ index) {
     // 单独解析Android
     if (Platform.isAndroid) {
       return ImageTypeEnum.values[index];
