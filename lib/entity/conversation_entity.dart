@@ -61,7 +61,7 @@ class ConversationEntity {
     if (json['lastMessage'] != null) lastMessage = MessageEntity.fromJson(json["lastMessage"]);
     if (json['draftText'] != null) draftText = json['draftText'];
     if (json['draftTimestamp'] != null) draftTimestamp = json['draftTimestamp'];
-    if (json['groupAtInfoList'] != null) groupAtInfoList = ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]) as List<GroupAtInfoEntity>?;
+    if (json['groupAtInfoList'] != null) groupAtInfoList = ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]);
   }
 
   @override

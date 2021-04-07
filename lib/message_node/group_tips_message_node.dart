@@ -36,8 +36,8 @@ class GroupTipsMessageNode extends MessageNode {
     if (json["type"] != null) this.type = GroupTipsTypeTool.getByInt(json["type"]);
     if (json["opMember"] != null) this.opMember = GroupMemberEntity.fromJson(json["opMember"]);
     if (json["memberList"] != null) this.memberList = ListUtil.generateOBJList<GroupMemberEntity>(json["memberList"]);
-    if (json["groupChangeInfoList"] != null) this.groupChangeInfoList = ListUtil.generateOBJList<GroupChangedInfoEntity>(json["groupChangeInfoList"]) as List<GroupChangedInfoEntity>?;
-    if (json["memberChangeInfoList"] != null) this.memberChangeInfoList = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(json["memberChangeInfoList"]) as List<GroupMemberChangedInfoEntity>?;
+    if (json["groupChangeInfoList"] != null) this.groupChangeInfoList = ListUtil.generateOBJList<GroupChangedInfoEntity>(json["groupChangeInfoList"]);
+    if (json["memberChangeInfoList"] != null) this.memberChangeInfoList = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(json["memberChangeInfoList"]);
     if (json["memberCount"] != null) this.memberCount = json["memberCount"];
   }
 }

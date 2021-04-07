@@ -96,7 +96,7 @@ class GroupInfoEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.groupID != null) data['groupID'] = this.groupID;
+    data['groupID'] = this.groupID;
     if (this.groupType != null) data['groupType'] = GroupTypeTool.toTypeString(this.groupType!);
     if (this.groupName != null) data['groupName'] = this.groupName;
     if (this.notification != null) data['notification'] = this.notification;

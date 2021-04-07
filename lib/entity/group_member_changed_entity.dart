@@ -12,7 +12,7 @@ class GroupMemberChangedEntity {
   GroupMemberChangedEntity.fromJson(data) {
     Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
-    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(json['changInfo']) as List<GroupMemberChangedInfoEntity>;
+    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupMemberChangedInfoEntity>(json['changInfo']);
   }
 }
 
