@@ -14,9 +14,13 @@ class GroupMemberInvitedOrKickedEntity {
   GroupMemberEntity? opUser;
 
   GroupMemberInvitedOrKickedEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
-    if (json["memberList"] != null) memberList = ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
-    if (json["opUser"] != null) opUser = GroupMemberEntity.fromJson(json["opUser"]);
+    if (json["memberList"] != null)
+      memberList =
+          ListUtil.generateOBJList<GroupMemberEntity>(json['memberList']);
+    if (json["opUser"] != null)
+      opUser = GroupMemberEntity.fromJson(json["opUser"]);
   }
 }

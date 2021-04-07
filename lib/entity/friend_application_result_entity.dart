@@ -11,8 +11,11 @@ class FriendApplicationResultEntity {
   late List<FriendApplicationEntity> friendApplicationList;
 
   FriendApplicationResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['unreadCount'] != null) unreadCount = json['unreadCount'];
-    if (json['friendApplicationList'] != null) friendApplicationList = ListUtil.generateOBJList<FriendApplicationEntity>(json['friendApplicationList']);
+    if (json['friendApplicationList'] != null)
+      friendApplicationList = ListUtil.generateOBJList<FriendApplicationEntity>(
+          json['friendApplicationList']);
   }
 }

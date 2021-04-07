@@ -20,7 +20,8 @@ class SoundMessageNode extends MessageNode {
     required this.duration,
   }) : super(MessageElemTypeEnum.Sound);
 
-  SoundMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Sound) {
+  SoundMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Sound) {
     if (json['uuid'] != null) _uuid = json['uuid'];
     if (json['path'] != null) path = json['path'];
     if (json['duration'] != null) duration = json['duration'];

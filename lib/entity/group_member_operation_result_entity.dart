@@ -10,8 +10,10 @@ class GroupMemberOperationResultEntity {
   late String memberID;
 
   GroupMemberOperationResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    if (json['result'] != null) result = OperationResultTool.getByInt(json['result']);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['result'] != null)
+      result = OperationResultTool.getByInt(json['result']);
     if (json['memberID'] != null) memberID = json['memberID'];
   }
 }

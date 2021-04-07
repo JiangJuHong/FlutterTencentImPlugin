@@ -17,7 +17,8 @@ class DownloadProgressEntity {
   late DownloadTypeEnum type;
 
   DownloadProgressEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['msgId'] != null) msgId = json["msgId"];
     if (json['currentSize'] != null) currentSize = json["currentSize"];
     if (json['totalSize'] != null) totalSize = json["totalSize"];

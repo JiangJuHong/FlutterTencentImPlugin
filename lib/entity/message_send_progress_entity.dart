@@ -9,7 +9,8 @@ class MessageSendProgressEntity {
   late int progress;
 
   MessageSendProgressEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['msgId'] != null) msgId = json["msgId"];
     if (json['progress'] != null) progress = json["progress"];
   }

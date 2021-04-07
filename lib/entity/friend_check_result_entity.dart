@@ -16,10 +16,12 @@ class FriendCheckResultEntity {
   FriendRelationTypeEnum? resultType;
 
   FriendCheckResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['userID'] != null) userID = json['userID'];
     if (json['resultCode'] != null) resultCode = json['resultCode'];
     if (json['resultInfo'] != null) resultInfo = json['resultInfo'];
-    if (json['resultType'] != null) resultType = FriendRelationTypeTool.getByInt(json['resultType']);
+    if (json['resultType'] != null)
+      resultType = FriendRelationTypeTool.getByInt(json['resultType']);
   }
 }

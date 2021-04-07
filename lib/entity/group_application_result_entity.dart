@@ -11,8 +11,11 @@ class GroupApplicationResultEntity {
   late List<GroupApplicationEntity> groupApplicationList;
 
   GroupApplicationResultEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['unreadCount'] != null) unreadCount = json['unreadCount'];
-    if (json['groupApplicationList'] != null) groupApplicationList = ListUtil.generateOBJList<GroupApplicationEntity>(json['groupApplicationList']);
+    if (json['groupApplicationList'] != null)
+      groupApplicationList = ListUtil.generateOBJList<GroupApplicationEntity>(
+          json['groupApplicationList']);
   }
 }

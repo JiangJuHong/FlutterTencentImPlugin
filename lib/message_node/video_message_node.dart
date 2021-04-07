@@ -36,7 +36,8 @@ class VideoMessageNode extends MessageNode {
     required this.snapshotPath,
   }) : super(MessageElemTypeEnum.Video);
 
-  VideoMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Video) {
+  VideoMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Video) {
     if (json['videoPath'] != null) videoPath = json["videoPath"];
     if (json['videoUuid'] != null) _videoUuid = json["videoUuid"];
     if (json['videoSize'] != null) _videoSize = json["videoSize"];
@@ -45,7 +46,8 @@ class VideoMessageNode extends MessageNode {
     if (json['snapshotUuid'] != null) _snapshotUuid = json["snapshotUuid"];
     if (json['snapshotSize'] != null) _snapshotSize = json["snapshotSize"];
     if (json['snapshotWidth'] != null) _snapshotWidth = json["snapshotWidth"];
-    if (json['snapshotHeight'] != null) _snapshotHeight = json["snapshotHeight"];
+    if (json['snapshotHeight'] != null)
+      _snapshotHeight = json["snapshotHeight"];
   }
 
   /// 获得视频UUID

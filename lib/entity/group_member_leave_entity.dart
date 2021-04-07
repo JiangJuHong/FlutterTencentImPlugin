@@ -10,8 +10,10 @@ class GroupMemberLeaveEntity {
   late GroupMemberEntity member;
 
   GroupMemberLeaveEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
-    if (json["member"] != null) member = GroupMemberEntity.fromJson(json["member"]);
+    if (json["member"] != null)
+      member = GroupMemberEntity.fromJson(json["member"]);
   }
 }

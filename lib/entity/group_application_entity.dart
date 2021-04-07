@@ -39,17 +39,25 @@ class GroupApplicationEntity {
   GroupApplicationHandlerResultEnum? handleResult;
 
   GroupApplicationEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
     if (json['fromUser'] != null) fromUser = json['fromUser'];
-    if (json['fromUserNickName'] != null) fromUserNickName = json['fromUserNickName'];
-    if (json['fromUserFaceUrl'] != null) fromUserFaceUrl = json['fromUserFaceUrl'];
+    if (json['fromUserNickName'] != null)
+      fromUserNickName = json['fromUserNickName'];
+    if (json['fromUserFaceUrl'] != null)
+      fromUserFaceUrl = json['fromUserFaceUrl'];
     if (json['toUser'] != null) toUser = json['toUser'];
     if (json['addTime'] != null) addTime = json['addTime'];
     if (json['requestMsg'] != null) requestMsg = json['requestMsg'];
     if (json['handledMsg'] != null) handledMsg = json['handledMsg'];
-    if (json['type'] != null) type = GroupApplicationTypeTool.getByInt(json['type']);
-    if (json['handleStatus'] != null) handleStatus = GroupApplicationHandlerStatusTool.getByInt(json['handleStatus']);
-    if (json['handleResult'] != null) handleResult = GroupApplicationHandlerResultTool.getByInt(json['handleResult']);
+    if (json['type'] != null)
+      type = GroupApplicationTypeTool.getByInt(json['type']);
+    if (json['handleStatus'] != null)
+      handleStatus =
+          GroupApplicationHandlerStatusTool.getByInt(json['handleStatus']);
+    if (json['handleResult'] != null)
+      handleResult =
+          GroupApplicationHandlerResultTool.getByInt(json['handleResult']);
   }
 }

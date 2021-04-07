@@ -20,7 +20,8 @@ class TextMessageNode extends MessageNode {
         this._atAll = atAll,
         super(MessageElemTypeEnum.Text);
 
-  TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
+  TextMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.Text) {
     if (json['content'] != null) content = json['content'];
   }
 

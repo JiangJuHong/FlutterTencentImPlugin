@@ -20,7 +20,8 @@ class FileMessageNode extends MessageNode {
     required this.fileName,
   }) : super(MessageElemTypeEnum.File);
 
-  FileMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.File) {
+  FileMessageNode.fromJson(Map<String, dynamic> json)
+      : super(MessageElemTypeEnum.File) {
     if (json['filePath'] != null) this.filePath = json["filePath"];
     if (json['fileName'] != null) this.fileName = json["fileName"];
     if (json['uuid'] != null) this._uuid = json["uuid"];

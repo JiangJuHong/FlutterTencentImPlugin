@@ -9,7 +9,8 @@ class GroupReceiveRESTEntity {
   String? customData;
 
   GroupReceiveRESTEntity.fromJson(data) {
-    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json =
+        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
     if (json['customData'] != null) customData = json['customData'];
   }
