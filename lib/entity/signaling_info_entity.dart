@@ -49,20 +49,17 @@ class SignalingInfoEntity {
   });
 
   SignalingInfoEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    inviteID = json["inviteID"];
-    groupID = json["groupID"];
-    inviter = json["inviter"];
-    inviteeList = json["inviteeList"];
-    data = json["data"];
-    timeout = json["timeout"];
-    if (json["actionType"] != null)
-      actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
-    businessID = json["businessID"];
-    onlineUserOnly = json["onlineUserOnly"];
-    if (json["offlinePushInfo"] != null)
-      offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['inviteID'] != null) inviteID = json["inviteID"];
+    if (json['groupID'] != null) groupID = json["groupID"];
+    if (json['inviter'] != null) inviter = json["inviter"];
+    if (json['inviteeList'] != null) inviteeList = json["inviteeList"];
+    if (json['data'] != null) this.data = json["data"];
+    if (json['timeout'] != null) timeout = json["timeout"];
+    if (json['actionType'] != null) if (json["actionType"] != null) actionType = SignalingActionTypeTool.getByInt(json["actionType"]);
+    if (json['businessID'] != null) businessID = json["businessID"];
+    if (json['onlineUserOnly'] != null) onlineUserOnly = json["onlineUserOnly"];
+    if (json["offlinePushInfo"] != null) offlinePushInfo = OfflinePushInfoEntity.fromJson(json["offlinePushInfo"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -73,20 +70,14 @@ class SignalingInfoEntity {
     if (this.inviteeList != null) data['inviteeList'] = this.inviteeList;
     if (this.data != null) data['data'] = this.data;
     if (this.timeout != null) data['timeout'] = this.timeout;
-    if (this.actionType != null)
-      data['actionType'] = SignalingActionTypeTool.toInt(this.actionType!);
+    if (this.actionType != null) data['actionType'] = SignalingActionTypeTool.toInt(this.actionType!);
     if (this.businessID != null) data['businessID'] = this.businessID;
-    if (this.onlineUserOnly != null)
-      data['onlineUserOnly'] = this.onlineUserOnly;
+    if (this.onlineUserOnly != null) data['onlineUserOnly'] = this.onlineUserOnly;
     return data;
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SignalingInfoEntity &&
-          runtimeType == other.runtimeType &&
-          inviteID == other.inviteID;
+  bool operator ==(Object other) => identical(this, other) || other is SignalingInfoEntity && runtimeType == other.runtimeType && inviteID == other.inviteID;
 
   @override
   int get hashCode => inviteID.hashCode;

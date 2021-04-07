@@ -12,10 +12,9 @@ class MessageSendFailEntity {
   String? desc;
 
   MessageSendFailEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    msgId = json["msgId"];
-    code = json["code"];
-    desc = json["desc"];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['msgId'] != null) msgId = json["msgId"];
+    if (json['code'] != null) code = json["code"];
+    if (json['desc'] != null) desc = json["desc"];
   }
 }

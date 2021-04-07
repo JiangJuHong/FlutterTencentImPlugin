@@ -37,18 +37,16 @@ class GroupMemberEntity {
   });
 
   GroupMemberEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    userID = json['userID'];
-    nickName = json['nickName'];
-    friendRemark = json['friendRemark'];
-    faceUrl = json['faceUrl'];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['userID'] != null) userID = json['userID'];
+    if (json['nickName'] != null) nickName = json['nickName'];
+    if (json['friendRemark'] != null) friendRemark = json['friendRemark'];
+    if (json['faceUrl'] != null) faceUrl = json['faceUrl'];
     if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json['role']);
-    muteUntil = json['muteUntil'];
-    joinTime = json['joinTime'];
-    if (json['customInfo'] != null)
-      customInfo = (json['customInfo'] as Map).cast<String, String>();
-    nameCard = json['nameCard'];
+    if (json['muteUntil'] != null) muteUntil = json['muteUntil'];
+    if (json['joinTime'] != null) joinTime = json['joinTime'];
+    if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
+    if (json['nameCard'] != null) nameCard = json['nameCard'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,11 +58,7 @@ class GroupMemberEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GroupMemberEntity &&
-          runtimeType == other.runtimeType &&
-          userID == other.userID;
+  bool operator ==(Object other) => identical(this, other) || other is GroupMemberEntity && runtimeType == other.runtimeType && userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;

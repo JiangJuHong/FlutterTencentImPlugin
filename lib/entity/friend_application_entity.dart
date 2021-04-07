@@ -25,14 +25,13 @@ class FriendApplicationEntity {
   FriendApplicationTypeEnum? type;
 
   FriendApplicationEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    userID = json['userID'];
-    nickname = json['nickname'];
-    faceUrl = json['faceUrl'];
-    addTime = json['addTime'];
-    addSource = json['addSource'];
-    addWording = json['addWording'];
-    type = FriendApplicationTypeTool.getByInt(json['type']);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['userID'] != null) userID = json['userID'];
+    if (json['nickname'] != null) nickname = json['nickname'];
+    if (json['faceUrl'] != null) faceUrl = json['faceUrl'];
+    if (json['addTime'] != null) addTime = json['addTime'];
+    if (json['addSource'] != null) addSource = json['addSource'];
+    if (json['addWording'] != null) addWording = json['addWording'];
+    if (json['type'] != null) type = FriendApplicationTypeTool.getByInt(json['type']);
   }
 }

@@ -48,34 +48,24 @@ class ConversationEntity {
   List<GroupAtInfoEntity>? groupAtInfoList;
 
   ConversationEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    conversationID = json['conversationID'];
-    type = ConversationTypeTool.getByInt(json['type']);
-    userID = json['userID'];
-    groupID = json['groupID'];
-    showName = json['showName'];
-    faceUrl = json['faceUrl'];
-    recvOpt = GroupReceiveMessageOptTool.getByInt(json['recvOpt']);
-    groupType = GroupTypeTool.getByString(json['groupType']);
-    unreadCount = json['unreadCount'];
-    lastMessage = json['lastMessage'] == null
-        ? null
-        : MessageEntity.fromJson(json["lastMessage"]);
-    draftText = json['draftText'];
-    draftTimestamp = json['draftTimestamp'];
-    groupAtInfoList = json["groupAtInfoList"] == null
-        ? null
-        : ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"])
-            as List<GroupAtInfoEntity>?;
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['conversationID'] != null) conversationID = json['conversationID'];
+    if (json['type'] != null) type = ConversationTypeTool.getByInt(json['type']);
+    if (json['userID'] != null) userID = json['userID'];
+    if (json['groupID'] != null) groupID = json['groupID'];
+    if (json['showName'] != null) showName = json['showName'];
+    if (json['faceUrl'] != null) faceUrl = json['faceUrl'];
+    if (json['recvOpt'] != null) recvOpt = GroupReceiveMessageOptTool.getByInt(json['recvOpt']);
+    if (json['groupType'] != null) groupType = GroupTypeTool.getByString(json['groupType']);
+    if (json['unreadCount'] != null) unreadCount = json['unreadCount'];
+    if (json['lastMessage'] != null) lastMessage = MessageEntity.fromJson(json["lastMessage"]);
+    if (json['draftText'] != null) draftText = json['draftText'];
+    if (json['draftTimestamp'] != null) draftTimestamp = json['draftTimestamp'];
+    if (json['groupAtInfoList'] != null) groupAtInfoList = ListUtil.generateOBJList<GroupAtInfoEntity>(json["groupAtInfoList"]) as List<GroupAtInfoEntity>?;
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ConversationEntity &&
-          runtimeType == other.runtimeType &&
-          conversationID == other.conversationID;
+  bool operator ==(Object other) => identical(this, other) || other is ConversationEntity && runtimeType == other.runtimeType && conversationID == other.conversationID;
 
   @override
   int get hashCode => conversationID.hashCode;

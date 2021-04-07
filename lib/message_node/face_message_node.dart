@@ -14,10 +14,9 @@ class FaceMessageNode extends MessageNode {
     required this.data,
   }) : super(MessageElemTypeEnum.Face);
 
-  FaceMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Face) {
-    this.index = json["index"];
-    this.data = json["data"];
+  FaceMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Face) {
+    if (json['index'] != null) this.index = json["index"];
+    if (json['data'] != null) this.data = json["data"];
   }
 
   @override

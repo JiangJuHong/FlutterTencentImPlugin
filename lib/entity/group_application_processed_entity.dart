@@ -16,12 +16,10 @@ class GroupApplicationProcessedEntity {
   bool? isAgreeJoin;
 
   GroupApplicationProcessedEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    groupID = json['groupID'];
-    opReason = json['opReason'];
-    isAgreeJoin = json['isAgreeJoin'];
-    if (json["opUser"] != null)
-      opUser = GroupMemberEntity.fromJson(json['opUser']);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['groupID'] != null) groupID = json['groupID'];
+    if (json['opReason'] != null) opReason = json['opReason'];
+    if (json['isAgreeJoin'] != null) isAgreeJoin = json['isAgreeJoin'];
+    if (json["opUser"] != null) opUser = GroupMemberEntity.fromJson(json['opUser']);
   }
 }

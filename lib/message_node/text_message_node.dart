@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 文本消息节点
 class TextMessageNode extends MessageNode {
   /// 文本内容
-  String? content;
+  late String content;
 
   /// @的用户列表，只在群聊中有效
   List<String>? _atUserList;
@@ -20,9 +20,8 @@ class TextMessageNode extends MessageNode {
         this._atAll = atAll,
         super(MessageElemTypeEnum.Text);
 
-  TextMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Text) {
-    content = json['content'];
+  TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
+    if (json['content'] != null) content = json['content'];
   }
 
   /// 设置@列表

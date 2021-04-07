@@ -36,17 +36,16 @@ class VideoMessageNode extends MessageNode {
     required this.snapshotPath,
   }) : super(MessageElemTypeEnum.Video);
 
-  VideoMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Video) {
-    videoPath = json["videoPath"];
-    _videoUuid = json["videoUuid"];
-    _videoSize = json["videoSize"];
-    duration = json["duration"];
-    snapshotPath = json["snapshotPath"];
-    _snapshotUuid = json["snapshotUuid"];
-    _snapshotSize = json["snapshotSize"];
-    _snapshotWidth = json["snapshotWidth"];
-    _snapshotHeight = json["snapshotHeight"];
+  VideoMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Video) {
+    if (json['videoPath'] != null) videoPath = json["videoPath"];
+    if (json['videoUuid'] != null) _videoUuid = json["videoUuid"];
+    if (json['videoSize'] != null) _videoSize = json["videoSize"];
+    if (json['duration'] != null) duration = json["duration"];
+    if (json['snapshotPath'] != null) snapshotPath = json["snapshotPath"];
+    if (json['snapshotUuid'] != null) _snapshotUuid = json["snapshotUuid"];
+    if (json['snapshotSize'] != null) _snapshotSize = json["snapshotSize"];
+    if (json['snapshotWidth'] != null) _snapshotWidth = json["snapshotWidth"];
+    if (json['snapshotHeight'] != null) _snapshotHeight = json["snapshotHeight"];
   }
 
   /// 获得视频UUID

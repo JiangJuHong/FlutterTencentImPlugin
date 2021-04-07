@@ -17,11 +17,10 @@ class FriendInfoResultEntity {
   FriendInfoEntity? friendInfo;
 
   FriendInfoResultEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    resultCode = json['resultCode'];
-    resultInfo = json['resultInfo'];
-    relation = FriendRelationTypeTool.getByInt(json['relation']);
-    friendInfo = FriendInfoEntity.fromJson(json['friendInfo']);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['resultCode'] != null) resultCode = json['resultCode'];
+    if (json['resultInfo'] != null) resultInfo = json['resultInfo'];
+    if (json['relation'] != null) relation = FriendRelationTypeTool.getByInt(json['relation']);
+    if (json['friendInfo'] != null) friendInfo = FriendInfoEntity.fromJson(json['friendInfo']);
   }
 }

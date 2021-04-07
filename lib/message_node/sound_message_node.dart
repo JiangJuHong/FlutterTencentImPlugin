@@ -20,12 +20,11 @@ class SoundMessageNode extends MessageNode {
     required this.duration,
   }) : super(MessageElemTypeEnum.Sound);
 
-  SoundMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Sound) {
-    _uuid = json['uuid'];
-    path = json['path'];
-    duration = json['duration'];
-    _dataSize = json['dataSize'];
+  SoundMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Sound) {
+    if (json['uuid'] != null) _uuid = json['uuid'];
+    if (json['path'] != null) path = json['path'];
+    if (json['duration'] != null) duration = json['duration'];
+    if (json['dataSize'] != null) _dataSize = json['dataSize'];
   }
 
   /// 获得语音ID

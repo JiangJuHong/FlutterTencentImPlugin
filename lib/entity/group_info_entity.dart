@@ -73,51 +73,43 @@ class GroupInfoEntity {
   });
 
   GroupInfoEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    groupID = json['groupID'];
-    groupType = GroupTypeTool.getByString(json["groupType"]);
-    groupName = json['groupName'];
-    notification = json['notification'];
-    introduction = json['introduction'];
-    faceUrl = json['faceUrl'];
-    allMuted = json['allMuted'];
-    owner = json['owner'];
-    createTime = json['createTime'];
-    groupAddOpt = GroupAddOptTool.getByInt(json["groupAddOpt"]);
-    lastInfoTime = json['lastInfoTime'];
-    lastMessageTime = json['lastMessageTime'];
-    memberCount = json['memberCount'];
-    onlineCount = json['onlineCount'];
-    role = GroupMemberRoleTool.getByInt(json["role"]);
-    recvOpt = GroupReceiveMessageOptTool.getByInt(json["recvOpt"]);
-    joinTime = json['joinTime'];
-    if (json['customInfo'] != null)
-      customInfo = (json['customInfo'] as Map).cast<String, String>();
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['groupID'] != null) groupID = json['groupID'];
+    if (json['groupType'] != null) groupType = GroupTypeTool.getByString(json["groupType"]);
+    if (json['groupName'] != null) groupName = json['groupName'];
+    if (json['notification'] != null) notification = json['notification'];
+    if (json['introduction'] != null) introduction = json['introduction'];
+    if (json['faceUrl'] != null) faceUrl = json['faceUrl'];
+    if (json['allMuted'] != null) allMuted = json['allMuted'];
+    if (json['owner'] != null) owner = json['owner'];
+    if (json['createTime'] != null) createTime = json['createTime'];
+    if (json['groupAddOpt'] != null) groupAddOpt = GroupAddOptTool.getByInt(json["groupAddOpt"]);
+    if (json['lastInfoTime'] != null) lastInfoTime = json['lastInfoTime'];
+    if (json['lastMessageTime'] != null) lastMessageTime = json['lastMessageTime'];
+    if (json['memberCount'] != null) memberCount = json['memberCount'];
+    if (json['onlineCount'] != null) onlineCount = json['onlineCount'];
+    if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json["role"]);
+    if (json['recvOpt'] != null) recvOpt = GroupReceiveMessageOptTool.getByInt(json["recvOpt"]);
+    if (json['joinTime'] != null) joinTime = json['joinTime'];
+    if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.groupID != null) data['groupID'] = this.groupID;
-    if (this.groupType != null)
-      data['groupType'] = GroupTypeTool.toTypeString(this.groupType!);
+    if (this.groupType != null) data['groupType'] = GroupTypeTool.toTypeString(this.groupType!);
     if (this.groupName != null) data['groupName'] = this.groupName;
     if (this.notification != null) data['notification'] = this.notification;
     if (this.introduction != null) data['introduction'] = this.introduction;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.allMuted != null) data['allMuted'] = this.allMuted;
-    if (this.groupAddOpt != null)
-      data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt!);
+    if (this.groupAddOpt != null) data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt!);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GroupInfoEntity &&
-          runtimeType == other.runtimeType &&
-          groupID == other.groupID;
+  bool operator ==(Object other) => identical(this, other) || other is GroupInfoEntity && runtimeType == other.runtimeType && groupID == other.groupID;
 
   @override
   int get hashCode => groupID.hashCode;

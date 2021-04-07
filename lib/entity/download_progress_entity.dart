@@ -17,11 +17,10 @@ class DownloadProgressEntity {
   DownloadTypeEnum? type;
 
   DownloadProgressEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    msgId = json["msgId"];
-    currentSize = json["currentSize"];
-    totalSize = json["totalSize"];
-    type = DownloadTypeTool.getByInt(json["type"]);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['msgId'] != null) msgId = json["msgId"];
+    if (json['currentSize'] != null) currentSize = json["currentSize"];
+    if (json['totalSize'] != null) totalSize = json["totalSize"];
+    if (json['type'] != null) type = DownloadTypeTool.getByInt(json["type"]);
   }
 }

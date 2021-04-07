@@ -15,13 +15,9 @@ class ConversationResultEntity {
   List<ConversationEntity>? conversationList;
 
   ConversationResultEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-
-    nextSeq = json['nextSeq'];
-    finished = json['finished'];
-    conversationList =
-        ListUtil.generateOBJList<ConversationEntity>(json["conversationList"])
-            as List<ConversationEntity>?;
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['nextSeq'] != null) nextSeq = json['nextSeq'];
+    if (json['finished'] != null) finished = json['finished'];
+    if (json['conversationList'] != null) conversationList = ListUtil.generateOBJList<ConversationEntity>(json["conversationList"]) as List<ConversationEntity>?;
   }
 }

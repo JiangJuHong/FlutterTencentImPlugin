@@ -15,9 +15,8 @@ class ImageMessageNode extends MessageNode {
     required this.path,
   }) : super(MessageElemTypeEnum.Image);
 
-  ImageMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Image) {
-    path = json['path'];
+  ImageMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Image) {
+    if (json['path'] != null) path = json['path'];
     if (json['imageData'] != null) {
       _imageData = Map();
       (json['imageData'] as List).forEach((v) {
@@ -68,13 +67,12 @@ class ImageEntity {
   });
 
   ImageEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    size = json['size'];
-    width = json['width'];
-    type = ImageTypeTool.getByInt(json["type"]);
-    uuid = json['uUID'];
-    url = json['url'];
-    height = json['height'];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['size'] != null) size = json['size'];
+    if (json['width'] != null) width = json['width'];
+    if (json['type'] != null) type = ImageTypeTool.getByInt(json["type"]);
+    if (json['uUID'] != null) uuid = json['uUID'];
+    if (json['url'] != null) url = json['url'];
+    if (json['height'] != null) height = json['height'];
   }
 }

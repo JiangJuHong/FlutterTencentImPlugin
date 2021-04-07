@@ -14,8 +14,8 @@ class FriendOperationResultEntity {
   FriendOperationResultEntity.fromJson(data) {
     Map<String, dynamic> json =
         data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    userID = json['userID'];
-    resultCode = json['resultCode'];
-    resultInfo = json['resultInfo'];
+    if (json['userID'] != null) userID = json['userID'];
+    if (json['resultCode'] != null) resultCode = json['resultCode'];
+    if (json['resultInfo'] != null) resultInfo = json['resultInfo'];
   }
 }

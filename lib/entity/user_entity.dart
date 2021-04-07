@@ -44,17 +44,16 @@ class UserEntity {
   });
 
   UserEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    userID = json['userID'];
-    nickName = json['nickName'];
-    faceUrl = json['faceUrl'];
-    selfSignature = json['selfSignature'];
-    gender = UserGenderTool.getByInt(json['gender']);
-    role = json['role'];
-    level = json['level'];
-    allowType = UserAllowTypeTool.getByInt(json['allowType']);
-    customInfo = json['customInfo']?.cast<String, String>();
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['userID'] != null) userID = json['userID'];
+    if (json['nickName'] != null) nickName = json['nickName'];
+    if (json['faceUrl'] != null) faceUrl = json['faceUrl'];
+    if (json['selfSignature'] != null) selfSignature = json['selfSignature'];
+    if (json['gender'] != null) gender = UserGenderTool.getByInt(json['gender']);
+    if (json['role'] != null) role = json['role'];
+    if (json['level'] != null) level = json['level'];
+    if (json['allowType'] != null) allowType = UserAllowTypeTool.getByInt(json['allowType']);
+    if (json['customInfo'] != null) customInfo = json['customInfo']?.cast<String, String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -62,22 +61,16 @@ class UserEntity {
     if (this.nickName != null) data['nickName'] = this.nickName;
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
-    if (this.gender != null)
-      data['gender'] = UserGenderTool.toInt(this.gender!);
+    if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender!);
     if (this.role != null) data['role'] = this.role;
     if (this.level != null) data['level'] = this.level;
-    if (this.allowType != null)
-      data['allowType'] = UserAllowTypeTool.toInt(this.allowType!);
+    if (this.allowType != null) data['allowType'] = UserAllowTypeTool.toInt(this.allowType!);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserEntity &&
-          runtimeType == other.runtimeType &&
-          userID == other.userID;
+  bool operator ==(Object other) => identical(this, other) || other is UserEntity && runtimeType == other.runtimeType && userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;

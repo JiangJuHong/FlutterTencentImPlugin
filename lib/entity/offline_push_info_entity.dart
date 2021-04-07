@@ -34,15 +34,14 @@ class OfflinePushInfoEntity {
   });
 
   OfflinePushInfoEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    title = json["title"];
-    desc = json["desc"];
-    ext = json["ext"];
-    iOSSound = json["iOSSound"];
-    ignoreIOSBadge = json["ignoreIOSBadge"];
-    androidOPPOChannelID = json["androidOPPOChannelID"];
-    disablePush = json["disablePush"];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['title'] != null) title = json["title"];
+    if (json['desc'] != null) desc = json["desc"];
+    if (json['ext'] != null) ext = json["ext"];
+    if (json['iOSSound'] != null) iOSSound = json["iOSSound"];
+    if (json['ignoreIOSBadge'] != null) ignoreIOSBadge = json["ignoreIOSBadge"];
+    if (json['androidOPPOChannelID'] != null) androidOPPOChannelID = json["androidOPPOChannelID"];
+    if (json['disablePush'] != null) disablePush = json["disablePush"];
   }
 
   Map<String, dynamic> toJson() {
@@ -51,10 +50,8 @@ class OfflinePushInfoEntity {
     if (this.desc != null) data['desc'] = this.desc;
     if (this.ext != null) data['ext'] = this.ext;
     if (this.iOSSound != null) data['iOSSound'] = this.iOSSound;
-    if (this.ignoreIOSBadge != null)
-      data['ignoreIOSBadge'] = this.ignoreIOSBadge;
-    if (this.androidOPPOChannelID != null)
-      data['androidOPPOChannelID'] = this.androidOPPOChannelID;
+    if (this.ignoreIOSBadge != null) data['ignoreIOSBadge'] = this.ignoreIOSBadge;
+    if (this.androidOPPOChannelID != null) data['androidOPPOChannelID'] = this.androidOPPOChannelID;
     return data;
   }
 }

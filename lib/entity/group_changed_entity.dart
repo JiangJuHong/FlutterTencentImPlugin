@@ -11,13 +11,9 @@ class GroupChangedEntity {
   List<GroupChangedInfoEntity>? changInfo;
 
   GroupChangedEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    groupID = json['groupID'];
-    if (json["changInfo"] != null)
-      changInfo =
-          ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo'])
-              as List<GroupChangedInfoEntity>?;
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['groupID'] != null) groupID = json['groupID'];
+    if (json["changInfo"] != null) changInfo = ListUtil.generateOBJList<GroupChangedInfoEntity>(json['changInfo']) as List<GroupChangedInfoEntity>?;
   }
 }
 
@@ -33,10 +29,9 @@ class GroupChangedInfoEntity {
   String? value;
 
   GroupChangedInfoEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    type = GroupInfoChangedTypeTool.getByInt(json['type']);
-    key = json['key'];
-    value = json['value'];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['type'] != null) type = GroupInfoChangedTypeTool.getByInt(json['type']);
+    if (json['key'] != null) key = json['key'];
+    if (json['value'] != null) value = json['value'];
   }
 }

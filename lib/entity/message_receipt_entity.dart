@@ -9,9 +9,8 @@ class MessageReceiptEntity {
   int? timestamp;
 
   MessageReceiptEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
-    userID = json["userID"];
-    timestamp = json["timestamp"];
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    if (json['userID'] != null) userID = json["userID"];
+    if (json['timestamp'] != null) timestamp = json["timestamp"];
   }
 }
