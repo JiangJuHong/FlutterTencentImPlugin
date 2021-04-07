@@ -1,6 +1,6 @@
 <div align="center">
 
-[![](https://img.shields.io/badge/flutter2.0-null safety-1)](#)
+[![](https://img.shields.io/badge/flutter2.0-NullSafety-1)](#)
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 [![](https://img.shields.io/badge/Version-社区版-1)](#)
 [![](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
