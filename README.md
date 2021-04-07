@@ -1,6 +1,5 @@
 <div align="center">
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 [![](https://img.shields.io/badge/Version-社区版-1)](#)
 [![](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
 [![](https://img.shields.io/github/license/JiangJuHong/FlutterTencentImPlugin)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -26,7 +25,7 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 # Notice
 
-💐💐 基于SDK 5.x 版本的 `1.x.x` 已经发布，可参考文档进行集成。💐💐  
+💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`master-non-null-safety`💐💐  
 💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
 上留下您的大名并超链到您的 Github 主页！
 

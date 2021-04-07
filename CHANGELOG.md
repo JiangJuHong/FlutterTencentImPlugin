@@ -338,3 +338,6 @@
 * fix "修复 inviteInGroup 接口在Android下会闪退的问题"
 * feat "更新内部依赖插件版本"
 * docs "更新文档"
+
+## 2.0.0
+* feat 增加空安全
