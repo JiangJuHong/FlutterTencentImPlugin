@@ -1,4 +1,6 @@
 <div align="center">
+[![](https://img.shields.io/badge/flutter2.0-null safety-1)](#)
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 [![](https://img.shields.io/badge/Version-社区版-1)](#)
 [![](https://img.shields.io/pub/v/tencent_im_plugin.svg)](https://pub.dartlang.org/packages/tencent_im_plugin)
@@ -11,7 +13,13 @@
 
 FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/product/im)服务进行的Flutter封装，为Flutter提供即时通讯服务.
 
-## 官方版和社区版的区别
+# Notice
+
+💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`master-non-null-safety`💐💐  
+💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
+上留下您的大名并超链到您的 Github 主页！
+
+# 官方版和社区版的区别
 * 两者的区别：本质上官方版和社区版都是基于IM的SDK进行封装，官方版的更偏向三端写法类似(Android、IOS、Flutter)，社区版则提供更便捷的使用方式(1分钟上手即用)(例: FlutterImPlugin.login)。
 * 该如何选择：根据个人编码习惯选择即可。
 * 维护的周期：社区版和官方版均在持续迭代，发现异常将会在第一时间进行修复。
@@ -22,12 +30,6 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 |:--------|:-------|
 | Android | 5.1.50 |
 | IOS     | 5.1.50 |
-
-# Notice
-
-💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`master-non-null-safety`💐💐  
-💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
-上留下您的大名并超链到您的 Github 主页！
 
 # Links
 
