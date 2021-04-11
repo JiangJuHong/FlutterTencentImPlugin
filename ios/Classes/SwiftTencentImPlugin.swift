@@ -439,26 +439,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
            let ol = CommonUtils.getParam(call: call, result: result, param: "ol") as? Bool {
             // 将节点信息解析
             let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+            var offlinePushInfo : TIMOfflinePushInfo?;
+            if offlineStr != nil {
+                let offlineDict = JsonUtil.getDictionaryFromJSONString(jsonString: offlineStr!);
+                offlinePushInfo = TIMOfflinePushInfo();
+                offlinePushInfo!.desc = offlineDict["desc"] as? String;
 
+                let androidConfig = TIMAndroidOfflinePushConfig();
+                androidConfig.title = offlineDict["title"] as? String;
+                offlinePushInfo!.androidConfig = androidConfig;
+
+                let iosConfig = TIMIOSOfflinePushConfig();
+                iosConfig.ignoreBadge = true;
+                offlinePushInfo!.iosConfig = iosConfig;
+            }
             // 通过多态发送消息
-            MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().send(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, ol: ol, onCallback: {
+            MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().send(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, offline: offlinePushInfo, ol: ol, onCallback: {
                 (message) -> Void in
-
-                if offlineStr != nil {
-                    var offlineDict = JsonUtil.getDictionaryFromJSONString(jsonString: offlineStr!);
-                    var offlinePushInfo = TIMOfflinePushInfo();
-                    offlinePushInfo.desc = offlineDict["desc"] as! String;
-
-                    var androidConfig = TIMAndroidOfflinePushConfig();
-                    androidConfig.title = offlineDict["title"] as! String;
-                    offlinePushInfo.androidConfig = androidConfig;
-
-                    var iosConfig = TIMIOSOfflinePushConfig();
-                    iosConfig.ignoreBadge = true;
-                    offlinePushInfo.iosConfig = iosConfig;
-                    message.setOfflinePushInfo(offlinePushInfo)
-                }
-
                 // 处理消息结果并返回
                 TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {
                     (array) -> Void in

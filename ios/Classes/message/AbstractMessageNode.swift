@@ -24,8 +24,12 @@ public class AbstractMessageNode {
      * @param params       参数
      * @param ol           是否在线消息
      */
-    func send(conversation : TIMConversation, params : [String:Any], ol : Bool, onCallback : @escaping GetInfoSuc,onFailCalback :  @escaping GetInfoFail){
-        sendMessage(conversation: conversation, message: getSendMessage(params: params)!, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback)
+    func send(conversation : TIMConversation, params : [String:Any], offline: TIMOfflinePushInfo?, ol : Bool, onCallback : @escaping GetInfoSuc,onFailCalback :  @escaping GetInfoFail){
+        let message = getSendMessage(params: params)!;
+        if let offlinePushConfig = offline {
+            message.setOfflinePushInfo(offlinePushConfig);
+        }
+        sendMessage(conversation: conversation, message: message, ol: ol, onCallback: onCallback, onFailCalback: onFailCalback)
     }
     
     /**
