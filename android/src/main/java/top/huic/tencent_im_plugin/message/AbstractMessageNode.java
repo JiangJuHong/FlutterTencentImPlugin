@@ -2,6 +2,7 @@ package top.huic.tencent_im_plugin.message;
 
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMMessageOfflinePushSettings;
 
 import top.huic.tencent_im_plugin.ValueCallBack;
 import top.huic.tencent_im_plugin.message.entity.AbstractMessageEntity;
@@ -23,13 +24,18 @@ public abstract class AbstractMessageNode<N, E extends AbstractMessageEntity> {
     /**
      * 发送消息
      *
-     * @param conversation 会话
-     * @param onCallback   结果回调
-     * @param entity       实体
-     * @param ol           是否在线消息
+     * @param conversation        会话
+     * @param onCallback          结果回调
+     * @param entity              实体
+     * @param offlinePushSettings 离线推送配置
+     * @param ol                  是否在线消息
      */
-    public void send(TIMConversation conversation, E entity, boolean ol, ValueCallBack<TIMMessage> onCallback) {
-        sendMessage(conversation, getSendMessage(entity), ol, onCallback);
+    public void send(TIMConversation conversation, E entity, TIMMessageOfflinePushSettings offlinePushSettings, boolean ol, ValueCallBack<TIMMessage> onCallback) {
+        TIMMessage message = getSendMessage(entity);
+        if (offlinePushSettings != null) {
+            message.setOfflinePushSettings(offlinePushSettings);
+        }
+        sendMessage(conversation, message, ol, onCallback);
     }
 
     /**

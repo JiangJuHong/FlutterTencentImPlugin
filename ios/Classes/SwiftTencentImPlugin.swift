@@ -432,6 +432,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
      * @param result     返回结果对象
      */
     private func sendMessage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let offlineStr = ((call.arguments as! [String: Any])["offline"]) as? String;
         if let sessionId = CommonUtils.getParam(call: call, result: result, param: "sessionId") as? String,
            let sessionType = CommonUtils.getParam(call: call, result: result, param: "sessionType") as? String,
            let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String,
@@ -442,6 +443,21 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin, TIMUserStatusListene
             // 通过多态发送消息
             MessageNodeType.valueOf(name: node["nodeType"] as! String)?.messageNodeInterface().send(conversation: TencentImUtils.getSession(sessionId: sessionId, sessionTypeStr: sessionType, result: result)!, params: node, ol: ol, onCallback: {
                 (message) -> Void in
+
+                if offlineStr != nil {
+                    var offlineDict = JsonUtil.getDictionaryFromJSONString(jsonString: offlineStr!);
+                    var offlinePushInfo = TIMOfflinePushInfo();
+                    offlinePushInfo.desc = offlineDict["desc"] as! String;
+
+                    var androidConfig = TIMAndroidOfflinePushConfig();
+                    androidConfig.title = offlineDict["title"] as! String;
+                    offlinePushInfo.androidConfig = androidConfig;
+
+                    var iosConfig = TIMIOSOfflinePushConfig();
+                    iosConfig.ignoreBadge = true;
+                    offlinePushInfo.iosConfig = iosConfig;
+                    message.setOfflinePushInfo(offlinePushInfo)
+                }
 
                 // 处理消息结果并返回
                 TencentImUtils.getMessageInfo(timMessages: [message], onSuccess: {

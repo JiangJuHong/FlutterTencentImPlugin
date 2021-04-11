@@ -18,6 +18,7 @@ import com.tencent.imsdk.TIMGroupMemberInfo;
 import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMMessageOfflinePushSettings;
 import com.tencent.imsdk.TIMOfflinePushSettings;
 import com.tencent.imsdk.TIMOfflinePushToken;
 import com.tencent.imsdk.TIMSdkConfig;
@@ -595,11 +596,31 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String sessionType = this.getParam(methodCall, result, "sessionType");
         String sessionId = this.getParam(methodCall, result, "sessionId");
         boolean ol = this.getParam(methodCall, result, "ol");
+        final String offlineStr = methodCall.argument("offline");
+
+        TIMMessageOfflinePushSettings offlinePushSettings = null;
+        if (offlineStr != null && !"".equals(offlineStr)) {
+            Map offlineMap = JSON.parseObject(offlineStr, Map.class);
+            String title = offlineMap.get("title").toString();
+            String desc = offlineMap.get("desc").toString();
+
+            offlinePushSettings = new TIMMessageOfflinePushSettings();
+            offlinePushSettings.setDescr(desc);
+
+            TIMMessageOfflinePushSettings.AndroidSettings androidSettings = new TIMMessageOfflinePushSettings.AndroidSettings();
+            androidSettings.setTitle(title);
+            offlinePushSettings.setAndroidSettings(androidSettings);
+
+            TIMMessageOfflinePushSettings.IOSSettings iosSettings = new TIMMessageOfflinePushSettings.IOSSettings();
+            iosSettings.setTitle(title);
+            iosSettings.setBadgeEnabled(false);
+            offlinePushSettings.setIosSettings(iosSettings);
+        }
 
         // 发送消息
         AbstractMessageNode messageNode = MessageNodeType.valueOf(node.get("nodeType").toString()).getMessageNodeInterface();
         AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
-        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), messageEntity, ol, new ValueCallBack<TIMMessage>(result) {
+        messageNode.send(TencentImUtils.getSession(sessionId, sessionType), messageEntity, offlinePushSettings, ol, new ValueCallBack<TIMMessage>(result) {
             @Override
             public void onSuccess(TIMMessage message) {
                 TencentImUtils.getMessageInfo(Collections.singletonList(message), new ValueCallBack<List<MessageEntity>>(result) {
