@@ -17,19 +17,33 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
 
     init(dict: [String: Any]) {
         super.init();
-        self.groupID = (dict["groupID"] as? String);
-        self.groupType = (dict["groupType"] as? String);
-        self.groupName = (dict["groupName"] as? String);
-        self.notification = (dict["notification"] as? String);
-        self.introduction = (dict["introduction"] as? String);
-        self.faceURL = (dict["faceUrl"] as? String);
+        if dict["groupID"] != nil{
+            self.groupID = (dict["groupID"] as? String);
+        }
+        if dict["groupType"] != nil{
+            self.groupType = (dict["groupType"] as? String);
+        }
+        if dict["groupName"] != nil{
+            self.groupName = (dict["groupName"] as? String);
+        }
+        if dict["notification"] != nil{
+            self.notification = (dict["notification"] as? String);
+        }
+        if dict["introduction"] != nil{
+            self.introduction = (dict["introduction"] as? String);
+        }
+        if dict["faceURL"] != nil{
+            self.faceURL = (dict["faceURL"] as? String);
+        }
         if dict["allMuted"] != nil {
             self.allMuted = (dict["allMuted"] as! Bool);
         }
         if dict["groupAddOpt"] != nil {
             self.groupAddOpt = V2TIMGroupAddOpt.init(rawValue: (dict["groupAddOpt"] as! Int))!;
         }
-        self.customInfo = (dict["customInfo"] as? [String: Data]);
+        if dict["customInfo"] != nil {
+            self.customInfo = (dict["customInfo"] as? [String: Data]);
+        }
     }
 
     /// 根据对象获得字典对象

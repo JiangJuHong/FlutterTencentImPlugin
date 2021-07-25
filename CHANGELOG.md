@@ -352,3 +352,4 @@
 * fix 修复android调用createGroup返回的群ID中含有字符串的问题
 * feat Demo中增加创建群聊
 * feat 升级SDK版本为 5.1.62
+* fix 修复IOS setGroupInfo 接口会清空其它字段的问题
