@@ -14,9 +14,15 @@ class CustomUserEntity: V2TIMUserFullInfo {
 
     init(dict: [String: Any]) {
         super.init();
-        self.nickName = (dict["nickName"] as? String);
-        self.faceURL = (dict["faceUrl"] as? String);
-        self.selfSignature = (dict["selfSignature"] as? String);
+        if dict["nickName"] != nil{
+            self.nickName = (dict["nickName"] as? String);
+        }
+        if dict["faceURL"] != nil{
+            self.faceURL = (dict["faceURL"] as? String);
+        }
+        if dict["selfSignature"] != nil{
+            self.selfSignature = (dict["selfSignature"] as? String);
+        }
         if dict["gender"] != nil {
             self.gender = V2TIMGender.init(rawValue: (dict["gender"] as! Int))!;
         }
@@ -29,7 +35,9 @@ class CustomUserEntity: V2TIMUserFullInfo {
         if dict["allowType"] != nil {
             self.allowType = V2TIMFriendAllowType.init(rawValue: (dict["allowType"] as! Int))!;
         }
-        self.customInfo = (dict["customInfo"] as? [String: Data]);
+        if dict["customInfo"] != nil {
+            self.customInfo = (dict["customInfo"] as? [String: Data]);
+        }
     }
 
     /// 根据对象获得字典对象

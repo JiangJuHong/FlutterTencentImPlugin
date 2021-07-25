@@ -938,7 +938,7 @@ class TencentImPlugin {
     }))));
   }
 
-  /// 修改个人资料
+  /// 修改个人资料，注意：此接口调用后马上调用 getUsersInfo 可能会刷新不及时，可以使用Future.
   /// [info] 资料对象
   static setSelfInfo({
     required UserEntity info,
