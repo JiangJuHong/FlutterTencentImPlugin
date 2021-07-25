@@ -61,11 +61,12 @@ class _GroupState extends State<Group> {
                   title: RichText(
                     text: TextSpan(
                       children: [
-                        TextSpan(text: item.groupName),
+                        TextSpan(text: "${item.groupName}"),
                       ],
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
+                  subtitle: Text(item.introduction ?? ""),
                 ),
               )
               .toList(),

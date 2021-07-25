@@ -80,6 +80,18 @@ class GroupInfoEntity {
     this.introduction,
   });
 
+  /// 更新群聊信息快速方法
+  GroupInfoEntity.update({
+    required this.groupID,
+    this.groupName,
+    this.notification,
+    this.introduction,
+    this.faceUrl,
+    this.allMuted,
+    this.groupAddOpt,
+    this.customInfo,
+  });
+
   GroupInfoEntity.fromJson(data) {
     Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['groupID'] != null) groupID = json['groupID'];
