@@ -637,7 +637,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             if let v = groupID {
                 opt.groupID = v;
             }
-            opt.count = count;
+            opt.count = UInt(count);
             opt.getType = V2TIMMessageGetType.init(rawValue: type)!;
             if lastMsg == nil {
                 V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))

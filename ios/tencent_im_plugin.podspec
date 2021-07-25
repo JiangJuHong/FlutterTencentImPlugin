@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = '**/*.framework'
 
   # SDK 依赖
-  s.dependency 'TXIMSDK_iOS', '5.1.50'
+  s.dependency 'TXIMSDK_iOS', '5.1.60'
 
   # alibaba json 序列化库(https://github.com/alibaba/HandyJSON)
   s.dependency 'HandyJSON'
