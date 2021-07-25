@@ -523,7 +523,7 @@ class TencentImPlugin {
     }));
   }
 
-  /// 创建群
+  /// 创建群，[info]对象建议使用[GroupInfoEntity.create]，进行创建
   /// [info] 群信息对象
   /// [memberList] 指定初始的群成员（直播群 AVChatRoom 不支持指定初始群成员，memberList 请传 null）
   /// [Return] 群ID

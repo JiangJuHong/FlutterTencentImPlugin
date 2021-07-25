@@ -347,3 +347,7 @@
 
 ## 2.0.2
 * 优化空安全
+
+## 2.0.3
+* fix 修复android调用createGroup返回的群ID中含有字符串的问题
+* feat Demo中增加创建群聊

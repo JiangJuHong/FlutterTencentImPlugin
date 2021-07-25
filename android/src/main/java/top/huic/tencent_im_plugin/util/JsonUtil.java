@@ -29,6 +29,7 @@ public class JsonUtil {
      * @return 解析结果
      */
     public static String toJSONString(Object data) {
+        if (data instanceof String) return data.toString();
         return JSON.toJSONString(data, filter);
     }
 }

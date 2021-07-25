@@ -20,6 +20,8 @@ dependencies:
   path_provider: ^2.0.1
   # 视频播放器和信息获取(https://pub.flutter-io.cn/packages/video_player)
   video_player: ^2.1.1
+  # 群提示
+  fluttertoast: ^8.0.7
 
 dev_dependencies:
   flutter_test:
