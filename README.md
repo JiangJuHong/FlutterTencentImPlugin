@@ -13,6 +13,12 @@
 
 FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/product/im)服务进行的Flutter封装，为Flutter提供即时通讯服务.
 
+# 3. X has arrived?
+最新计划为3.x，大致更改内容如下:
+* 保持基础接口不变
+* SDK从原有标准版升级为增强版
+* 增加增强版所有功能
+
 # Notice
 
 💐💐 新版插件支持空安全(`null-safety`)，如需查看非空安全版本，请切换分支到:`sdk-5.1.x-non-null-safety`💐💐  
