@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1315,7 +1316,12 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void checkFriend(MethodCall methodCall, final Result result) {
         String userID = CommonUtil.getParam(methodCall, result, "userID");
         int checkType = CommonUtil.getParam(methodCall, result, "checkType");
-        V2TIMManager.getFriendshipManager().checkFriend(userID, checkType, new ValueCallBack<V2TIMFriendCheckResult>(result));
+        V2TIMManager.getFriendshipManager().checkFriend(Collections.singletonList(userID), checkType, new ValueCallBack<List<V2TIMFriendCheckResult>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMFriendCheckResult> v2TIMFriendCheckResults) {
+                result.success(v2TIMFriendCheckResults.size() == 0 ? null : JsonUtil.toJSONString(v2TIMFriendCheckResults.get(0)));
+            }
+        });
     }
 
     /**
