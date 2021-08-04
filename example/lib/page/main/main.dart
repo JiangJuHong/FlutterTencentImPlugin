@@ -6,7 +6,9 @@ import 'package:tencent_im_plugin_example/page/main/components/friend.dart';
 import 'package:tencent_im_plugin_example/page/main/components/group.dart';
 import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:tencent_im_plugin/entity/group_info_entity.dart';
+import 'package:tencent_im_plugin/entity/friend_add_application_entity.dart';
 import 'package:tencent_im_plugin/enums/group_type_enum.dart';
+import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 
 /// 用户主页
@@ -41,6 +43,8 @@ class _MainState extends State<Main> {
       this._startConversation();
     } else if (value == 1) {
       this._startGroupChat();
+    } else if (value == 2) {
+      this._startAddFriend();
     }
   }
 
@@ -81,6 +85,27 @@ class _MainState extends State<Main> {
     if (result && text != '' && type != null) {
       String id = await TencentImPlugin.createGroup(info: GroupInfoEntity.create(groupName: text, groupType: GroupTypeEnum.Public));
       Fluttertoast.showToast(msg: "群聊创建成功，群ID:$id");
+    }
+  }
+
+  /// 添加好友
+  void _startAddFriend() async {
+    String text = "";
+    var result = await this._showDialog(
+      "添加好友",
+      TextField(
+        onChanged: (_text) => text = _text,
+        decoration: InputDecoration(hintText: "请输入用户ID"),
+      ),
+    );
+
+    // 执行操作
+    if (result && text.trim() != '') {
+      TencentImPlugin.addFriend(info: FriendAddApplicationEntity(userID: text, addType: FriendTypeEnum.Both)).then((res) {
+        Fluttertoast.showToast(msg: "好友申请发送成功!");
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: "好友申请发送失败!");
+      });
     }
   }
 
@@ -129,6 +154,13 @@ class _MainState extends State<Main> {
                   children: <Widget>[Text('创建群聊')],
                 ),
                 value: 1,
+              ),
+              PopupMenuItem(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[Text('添加好友')],
+                ),
+                value: 2,
               ),
             ],
           ),
