@@ -85,15 +85,18 @@ class _FriendState extends State<Friend> {
                                 Row(
                                   children: [
                                     RaisedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Future result = TencentImPlugin.acceptFriendApplication(application: FindFriendApplicationEntity.fromFriendApplicationEntity(item), responseType: FriendApplicationAgreeTypeEnum.AgreeAndAdd);
-                                        result.then((value) => Fluttertoast.showToast(msg: "处理成功!")).catchError((e) => Fluttertoast.showToast(msg: "处理失败!"));
+                                        await result.then((value) => Fluttertoast.showToast(msg: "处理成功!")).catchError((e) => Fluttertoast.showToast(msg: "处理失败!"));
+                                        if (this.mounted) this.setState(() {});
                                       },
                                       child: Text("同意"),
                                     ),
                                     RaisedButton(
-                                      onPressed: () {
-                                        TencentImPlugin.refuseFriendApplication(application: FindFriendApplicationEntity.fromFriendApplicationEntity(item));
+                                      onPressed: () async {
+                                        Future result = TencentImPlugin.refuseFriendApplication(application: FindFriendApplicationEntity.fromFriendApplicationEntity(item));
+                                        await result.then((value) => Fluttertoast.showToast(msg: "处理成功!")).catchError((e) => Fluttertoast.showToast(msg: "处理失败!"));
+                                        if (this.mounted) this.setState(() {});
                                       },
                                       child: Text("拒绝"),
                                     ),
