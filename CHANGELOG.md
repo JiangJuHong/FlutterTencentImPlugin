@@ -354,3 +354,6 @@
 * feat 升级SDK版本为 5.1.62
 * fix 修复ios setGroupInfo 接口会清空其它字段的问题
 * fix 修复ios setSelfInfo 无效的问题
+
+## 2.0.4
+* feat 增加FindFriendApplicationEntity 快速创建方法
