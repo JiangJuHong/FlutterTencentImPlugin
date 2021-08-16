@@ -357,3 +357,6 @@
 
 ## 2.0.4
 * feat 增加FindFriendApplicationEntity 快速创建方法
+
+## 2.0.5
+* feat FileMessageNode 节点中，filePath 和 fileName 增加可为空选择

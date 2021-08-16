@@ -4,10 +4,10 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 文件消息节点
 class FileMessageNode extends MessageNode {
   /// 文件路径
-  late String filePath;
+  String? filePath;
 
   /// 文件名
-  late String fileName;
+  String? fileName;
 
   /// 文件ID
   String? _uuid;
@@ -20,8 +20,7 @@ class FileMessageNode extends MessageNode {
     required this.fileName,
   }) : super(MessageElemTypeEnum.File);
 
-  FileMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.File) {
+  FileMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.File) {
     if (json['filePath'] != null) this.filePath = json["filePath"];
     if (json['fileName'] != null) this.fileName = json["fileName"];
     if (json['uuid'] != null) this._uuid = json["uuid"];
