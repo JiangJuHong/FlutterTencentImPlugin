@@ -20,6 +20,7 @@ import 'package:tencent_im_plugin/entity/group_info_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_info_result_entity.dart';
 import 'package:tencent_im_plugin/entity/group_member_operation_result_entity.dart';
+import 'package:tencent_im_plugin/entity/message_search_param.dart';
 import 'package:tencent_im_plugin/entity/offline_push_info_entity.dart';
 import 'package:tencent_im_plugin/entity/signaling_info_entity.dart';
 import 'package:tencent_im_plugin/entity/user_entity.dart';
@@ -1157,6 +1158,11 @@ class TencentImPlugin {
       "groupName": groupName,
       "userIDList": userIDList.join(","),
     }))));
+  }
+
+  /// 根据[param] 消息搜索参数对象 搜索本地消息
+  static Future<void> searchLocalMessages({required MessageSearchParam param}) {
+    return _channel.invokeListMethod("searchLocalMessages", param.toJson());
   }
 
   /// 添加消息监听

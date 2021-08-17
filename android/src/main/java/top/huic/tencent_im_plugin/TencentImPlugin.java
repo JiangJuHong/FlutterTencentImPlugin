@@ -25,6 +25,8 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
+import com.tencent.imsdk.v2.V2TIMMessageSearchParam;
+import com.tencent.imsdk.v2.V2TIMMessageSearchResult;
 import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
 import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
@@ -1490,6 +1492,28 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         String groupName = CommonUtil.getParam(methodCall, result, "groupName");
         String userIDList = CommonUtil.getParam(methodCall, result, "userIDList");
         V2TIMManager.getFriendshipManager().deleteFriendsFromFriendGroup(groupName, Arrays.asList(userIDList.split(",")), new ValueCallBack<List<V2TIMFriendOperationResult>>(result));
+    }
+
+    /**
+     * 搜索本地消息
+     */
+    private void searchLocalMessages(MethodCall call, final Result result) {
+        V2TIMMessageSearchParam param = new V2TIMMessageSearchParam();
+        param.setConversationID(call.<String>argument("conversationId"));
+        param.setKeywordList(call.<List<String>>argument("keyword"));
+        param.setKeywordListMatchType(call.<Integer>argument("keywordMatchType"));
+        param.setSenderUserIDList(call.<List<String>>argument("senderUserIds"));
+        param.setMessageTypeList(call.<List<Integer>>argument("messageTypes"));
+        param.setSearchTimePosition(call.<Long>argument("searchTimePosition"));
+        param.setSearchTimePeriod(call.<Long>argument("searchTimePeriod"));
+        param.setPageSize(call.<Integer>argument("pageSize"));
+        param.setPageIndex(call.<Integer>argument("pageIndex"));
+        V2TIMManager.getMessageManager().searchLocalMessages(param, new ValueCallBack<V2TIMMessageSearchResult>(result) {
+            @Override
+            public void onSuccess(V2TIMMessageSearchResult v2TIMMessageSearchResult) {
+
+            }
+        });
     }
 
     /**
