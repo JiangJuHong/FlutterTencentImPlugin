@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义SDK监听器
 class CustomSDKListener: NSObject, V2TIMSDKListener {

@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 群申请结果实体
 class CustomGroupApplicationResultEntity: V2TIMGroupApplicationResult {

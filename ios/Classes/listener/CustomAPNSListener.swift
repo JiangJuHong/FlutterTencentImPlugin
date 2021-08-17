@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义APNS监听器
 class CustomAPNSListener: NSObject, V2TIMAPNSListener {

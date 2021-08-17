@@ -1,4 +1,4 @@
-import ImSDK
+import ImSDK_Plus
 
 //  Created by 蒋具宏 on 2020/2/10.
 //  图片实体

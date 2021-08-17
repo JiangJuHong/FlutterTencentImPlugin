@@ -1,4 +1,4 @@
-import ImSDK
+import ImSDK_Plus
 
 //  Created by 蒋具宏 on 2020/3/15.
 //  自定义消息实体

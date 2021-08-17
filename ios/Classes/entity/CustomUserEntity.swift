@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义用户实体
 class CustomUserEntity: V2TIMUserFullInfo {

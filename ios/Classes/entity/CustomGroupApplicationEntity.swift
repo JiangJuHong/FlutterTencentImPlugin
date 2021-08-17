@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群申请实体
 class CustomGroupApplicationEntity: V2TIMGroupApplication {

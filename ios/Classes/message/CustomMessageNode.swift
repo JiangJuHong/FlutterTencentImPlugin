@@ -1,4 +1,4 @@
-import ImSDK
+import ImSDK_Plus
 
 //
 //  TextMessageNode.swift

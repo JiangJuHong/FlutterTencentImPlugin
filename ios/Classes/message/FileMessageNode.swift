@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 class FileMessageNode: AbstractMessageNode {
     override func getV2TIMMessage(params: [String: Any]) -> V2TIMMessage {

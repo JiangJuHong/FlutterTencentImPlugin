@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群创建群成员实体
 class CustomCreateGroupMemberEntity: V2TIMCreateGroupMemberInfo {

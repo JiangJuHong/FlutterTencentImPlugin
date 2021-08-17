@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 表情消息实体
 class FaceMessageNode: AbstractMessageNode {

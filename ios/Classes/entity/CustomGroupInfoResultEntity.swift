@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群信息结果实体
 class CustomGroupInfoResultEntity: V2TIMGroupInfoResult {

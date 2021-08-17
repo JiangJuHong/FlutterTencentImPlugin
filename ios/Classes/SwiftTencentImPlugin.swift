@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
-import ImSDK
 import HandyJSON
+import ImSDK_Plus
 
 public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public static var channel: FlutterMethodChannel?;
@@ -157,8 +157,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "setGroupInfo":
             self.setGroupInfo(call: call, result: result);
             break;
-        case "setReceiveMessageOpt":
-            self.setReceiveMessageOpt(call: call, result: result);
+        case "setGroupReceiveMessageOpt":
+            self.setGroupReceiveMessageOpt(call: call, result: result);
+            break;
+        case "setC2CReceiveMessageOpt":
+            self.setC2CReceiveMessageOpt(call: call, result: result);
+            break;
+        case "getC2CReceiveMessageOpt":
+            self.getC2CReceiveMessageOpt(call: call, result: result);
             break;
         case "initGroupAttributes":
             self.initGroupAttributes(call: call, result: result);
@@ -644,7 +650,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             } else {
                 TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
                     (messages: V2TIMMessage?) in
-                    if let v = messages {
+                    if messages != nil {
                         opt.lastMsg = messages!;
                     }
                     V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -724,7 +730,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 msg?.videoElem?.downloadVideo(path, progress: {
                     curSize, totalSize in
                     SwiftTencentImPlugin.invokeListener(type: ListenerType.DownloadProgress, params: [
-                        "msgId": msg!.msgID!,
+                        "msgId": msg!.msgID,
                         "currentSize": curSize,
                         "totalSize": totalSize,
                         "type": DownloadType.Video.rawValue,
@@ -927,13 +933,35 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     }
 
     /// 修改群消息接收选项
-    public func setReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    public func setGroupReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let opt = CommonUtils.getParam(call: call, result: result, param: "opt") as? Int {
-            V2TIMManager.sharedInstance().setReceiveMessageOpt(groupID, opt: V2TIMGroupReceiveMessageOpt.init(rawValue: opt)!, succ: {
+            V2TIMManager.sharedInstance().setGroupReceiveMessageOpt(groupID, opt: V2TIMReceiveMessageOpt.init(rawValue: opt)!, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
+    }
+    
+    /// 修改用户消息接收选项
+    public func setC2CReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? [String],
+           let opt = CommonUtils.getParam(call: call, result: result, param: "opt") as? Int {
+            V2TIMManager.sharedInstance().setC2CReceiveMessageOpt(ids, opt: V2TIMReceiveMessageOpt.init(rawValue: opt)!, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+    
+    /// 获得用户消息接收选项
+    public func getC2CReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getC2CReceiveMessageOpt(call.arguments as? [String], succ: {
+            array in
+            var res : Dictionary<String,Int> = [:]
+            for item in array! {
+                res[item.userID] = item.receiveOpt.rawValue
+            }
+            result(res);
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
 
     /// 初始化群属性，会清空原有的群属性列表
@@ -1318,10 +1346,14 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 检查好友关系
     public func checkFriend(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
-           let _ = CommonUtils.getParam(call: call, result: result, param: "checkType") as? Int {
-            V2TIMManager.sharedInstance().checkFriend(userID, succ: {
+           let checkType = CommonUtils.getParam(call: call, result: result, param: "checkType") as? Int {
+            V2TIMManager.sharedInstance().checkFriend([userID], check: V2TIMFriendType.init(rawValue: checkType)!, succ: {
                 info in
-                result(JsonUtil.toJson(CustomFriendCheckResultEntity.getDict(info: info!)));
+                if info == nil || info?.count == 0 {
+                    result(nil)
+                    return;
+                }
+                result(JsonUtil.toJson(CustomFriendCheckResultEntity.getDict(info: info!.first!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result));
         }
     }

@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群@信息实体
 class CustomGroupAtInfoEntity: V2TIMGroupAtInfo {

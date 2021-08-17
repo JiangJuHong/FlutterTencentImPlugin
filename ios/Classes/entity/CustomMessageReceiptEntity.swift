@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义消息响应实体
 class CustomMessageReceiptEntity: V2TIMMessageReceipt {

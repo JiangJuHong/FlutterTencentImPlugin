@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义离线推送数据实体
 class CustomOfflinePushInfoEntity: V2TIMOfflinePushInfo {

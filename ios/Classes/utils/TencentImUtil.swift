@@ -1,4 +1,4 @@
-import ImSDK
+import ImSDK_Plus
 
 //  腾讯云工具类
 //  Created by 蒋具宏 on 2020/2/10.
@@ -6,7 +6,7 @@ public class TencentImUtils {
     /**
      * 返回[错误返回闭包]，腾讯云IM通用格式
      */
-    public static func returnErrorClosures(result: @escaping FlutterResult) -> TIMFail {
+    public static func returnErrorClosures(result: @escaping FlutterResult) -> V2TIMFail {
         return {
             (code: Int32, desc: Optional<String>) -> Void in
             result(

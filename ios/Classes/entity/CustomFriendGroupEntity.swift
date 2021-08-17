@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义好友分组实体
 class CustomFriendGroupEntity: V2TIMFriendGroup {

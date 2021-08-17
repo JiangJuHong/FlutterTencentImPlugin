@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 群监听器
 class CustomGroupListener: NSObject, V2TIMGroupListener {

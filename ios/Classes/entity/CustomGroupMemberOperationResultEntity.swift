@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群成员操作结果
 class CustomGroupMemberOperationResultEntity: V2TIMGroupMemberOperationResult {

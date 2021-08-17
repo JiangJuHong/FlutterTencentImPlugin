@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 class CustomFriendInfoResultEntity: V2TIMFriendInfoResult {
 

@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义会话结果实体
 class CustomConversationResultEntity: NSObject {

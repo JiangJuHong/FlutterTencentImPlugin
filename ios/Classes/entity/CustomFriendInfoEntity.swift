@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义好友信息实体
 class CustomFriendInfoEntity: V2TIMFriendInfo {

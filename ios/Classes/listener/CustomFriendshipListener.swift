@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 关系链相关监听器
 class CustomFriendshipListener: NSObject, V2TIMFriendshipListener {

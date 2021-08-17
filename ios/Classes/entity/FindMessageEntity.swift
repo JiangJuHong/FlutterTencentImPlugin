@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 查找消息实体
 class FindMessageEntity: NSObject {

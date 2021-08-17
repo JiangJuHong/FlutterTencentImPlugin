@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 消息相关监听器
 class CustomAdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {

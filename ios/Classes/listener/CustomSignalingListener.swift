@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义信令监听
 class CustomSignalingListener: NSObject, V2TIMSignalingListener {

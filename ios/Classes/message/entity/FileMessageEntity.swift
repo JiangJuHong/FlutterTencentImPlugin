@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 文件消息实体
 class FileMessageEntity: AbstractMessageEntity {

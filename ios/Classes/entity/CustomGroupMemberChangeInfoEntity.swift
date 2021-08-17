@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义群信息实体
 class CustomGroupMemberChangeInfoEntity: V2TIMGroupMemberChangeInfo {

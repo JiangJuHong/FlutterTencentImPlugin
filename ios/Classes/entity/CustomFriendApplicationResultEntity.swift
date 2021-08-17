@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 好友申请结果实体
 class CustomFriendApplicationResultEntity: V2TIMFriendApplicationResult {

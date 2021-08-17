@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 自定义信令信息实体
 class CustomSignalingInfoEntity: V2TIMSignalingInfo {

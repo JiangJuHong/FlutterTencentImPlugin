@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 class CustomGroupMemberInfoResultEntity: NSObject {
     /// 获取分页拉取的 seq。如果为 0 表示拉取结束。

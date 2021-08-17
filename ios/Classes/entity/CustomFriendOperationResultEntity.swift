@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import ImSDK
+import ImSDK_Plus
 
 /// 好友操作结果实体
 class CustomFriendOperationResultEntity: V2TIMFriendOperationResult {
