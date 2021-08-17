@@ -41,8 +41,8 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 | 平台     | SDK版本 |
 |:--------|:-------|
-| Android | 5.4.666 |
-| IOS     | 5.4.666 |
+| Android | 5.5.897 |
+| IOS     | 5.5.897 |
 
 # Links
 

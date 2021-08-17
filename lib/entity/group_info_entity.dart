@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:tencent_im_plugin/enums/group_add_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
-import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_type_enum.dart';
 
 /// 群实体
@@ -52,7 +52,7 @@ class GroupInfoEntity {
   GroupMemberRoleEnum? role;
 
   /// 当前用户在此群组中的消息接收选项
-  GroupReceiveMessageOptEnum? recvOpt;
+  ReceiveMessageOptEnum? recvOpt;
 
   /// 当前用户在此群中的加入时间
   int? joinTime;
@@ -109,7 +109,7 @@ class GroupInfoEntity {
     if (json['memberCount'] != null) memberCount = json['memberCount'];
     if (json['onlineCount'] != null) onlineCount = json['onlineCount'];
     if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json["role"]);
-    if (json['recvOpt'] != null) recvOpt = GroupReceiveMessageOptTool.getByInt(json["recvOpt"]);
+    if (json['recvOpt'] != null) recvOpt = ReceiveMessageOptTool.getByInt(json["recvOpt"]);
     if (json['joinTime'] != null) joinTime = json['joinTime'];
     if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
   }

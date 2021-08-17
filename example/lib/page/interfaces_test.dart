@@ -10,7 +10,7 @@ import 'package:tencent_im_plugin/entity/friend_info_entity.dart';
 import 'package:tencent_im_plugin/entity/friend_add_application_entity.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
 import 'package:tencent_im_plugin/enums/signaling_action_type_enum.dart';
-import 'package:tencent_im_plugin/enums/group_receive_message_opt_enum.dart';
+import 'package:tencent_im_plugin/enums/receive_message_opt_enum.dart';
 import 'package:tencent_im_plugin/enums/group_member_role_enum.dart';
 import 'package:tencent_im_plugin/enums/friend_type_enum.dart';
 import 'package:logger/logger.dart';
@@ -107,7 +107,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
         ),
     "setReceiveMessageOpt": () async => TencentImPlugin.setReceiveMessageOpt(
           groupID: _groupId,
-          opt: GroupReceiveMessageOptEnum.ReceiveAndNotify,
+          opt: ReceiveMessageOptEnum.ReceiveAndNotify,
         ),
     "initGroupAttributes": () async => TencentImPlugin.initGroupAttributes(
           groupID: _avGroupId,

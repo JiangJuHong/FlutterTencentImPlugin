@@ -27,6 +27,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
 import com.tencent.imsdk.v2.V2TIMOfflinePushConfig;
 import com.tencent.imsdk.v2.V2TIMOfflinePushInfo;
+import com.tencent.imsdk.v2.V2TIMReceiveMessageOptInfo;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
@@ -886,15 +887,43 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 修改C2C消息接收选项
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void setC2CReceiveMessageOpt(MethodCall methodCall, final Result result) {
+        List<String> ids = CommonUtil.getParam(methodCall, result, "ids");
+        int opt = CommonUtil.getParam(methodCall, result, "opt");
+        V2TIMManager.getMessageManager().setC2CReceiveMessageOpt(ids, opt, new VoidCallBack(result));
+    }
+
+    /**
      * 修改群消息接收选项
      *
      * @param methodCall 方法调用对象
      * @param result     返回结果对象
      */
-    private void setReceiveMessageOpt(MethodCall methodCall, final Result result) {
+    private void setGroupReceiveMessageOpt(MethodCall methodCall, final Result result) {
         String groupID = CommonUtil.getParam(methodCall, result, "groupID");
         int opt = CommonUtil.getParam(methodCall, result, "opt");
-        V2TIMManager.getGroupManager().setReceiveMessageOpt(groupID, opt, new VoidCallBack(result));
+        V2TIMManager.getMessageManager().setGroupReceiveMessageOpt(groupID, opt, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得C2C消息接收选项
+     */
+    private void getC2CReceiveMessageOpt(MethodCall call, final Result result) {
+        V2TIMManager.getMessageManager().getC2CReceiveMessageOpt(call.<List<String>>arguments(), new ValueCallBack<List<V2TIMReceiveMessageOptInfo>>(result) {
+            @Override
+            public void onSuccess(List<V2TIMReceiveMessageOptInfo> v2TIMReceiveMessageOptInfos) {
+                Map<String, Integer> res = new HashMap<>(v2TIMReceiveMessageOptInfos.size(), 1);
+                for (V2TIMReceiveMessageOptInfo item : v2TIMReceiveMessageOptInfos) {
+                    res.put(item.getUserID(), item.getC2CReceiveMessageOpt());
+                }
+                result.success(res);
+            }
+        });
     }
 
     /**

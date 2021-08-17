@@ -1,10 +1,9 @@
 package top.huic.tencent_im_plugin.message;
 
-import com.tencent.imsdk.TIMGroupAtInfo;
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMTextElem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class TextMessageNode extends AbstractMessageNode<V2TIMTextElem, TextMess
             List<String> atList = new ArrayList<>();
             // @所有人
             if (entity.getAtAll() != null && entity.getAtAll()) {
-                atList.add(TIMGroupAtInfo.AT_ALL_TAG);
+                atList.add(V2TIMGroupAtInfo.AT_ALL_TAG);
             }
 
             // @目标用户

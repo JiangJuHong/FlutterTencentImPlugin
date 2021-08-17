@@ -362,4 +362,6 @@
 * feat FileMessageNode 节点中，filePath 和 fileName 增加可为空选择
 
 ## 3.0.0
-* feat 升级版本到最新增强版 `5.4.666`
+* feat 调整所有空返回值结果为明确指定
+* feat 升级版本到最新增强版 `5.5.897`
+* feat 移除 `setReceiveMessageOpt` 接口，增加 `setGroupReceiveMessageOpt`、`setC2CReceiveMessageOpt`、`getC2CReceiveMessageOpt`
