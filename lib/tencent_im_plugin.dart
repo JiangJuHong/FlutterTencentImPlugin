@@ -586,7 +586,7 @@ class TencentImPlugin {
   /// 修改群消息接收选项
   /// [ids] 用户ID列表
   /// [opt] 消息接收选项
-  static Future<void> setC2CReceiveMessageOpt({required String ids, required ReceiveMessageOptEnum opt}) async {
+  static Future<void> setC2CReceiveMessageOpt({required List<String> ids, required ReceiveMessageOptEnum opt}) async {
     return _channel.invokeMethod('setC2CReceiveMessageOpt', {"ids": ids, "opt": ReceiveMessageOptTool.toInt(opt)});
   }
 

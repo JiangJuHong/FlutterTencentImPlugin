@@ -40,22 +40,11 @@ class _InterfacesTestState extends State<InterfacesTest> {
   Map<String, TestCallback> _interfaces = {
     "getLoginStatus": () => TencentImPlugin.getLoginStatus(),
     "getLoginUser": () => TencentImPlugin.getLoginUser(),
-    "invite": () =>
-        TencentImPlugin.invite(data: "邀请你进行视频通话1", invitee: _friendId),
-    "inviteInGroup": () => TencentImPlugin.inviteInGroup(
-        data: "邀请你进行视频通话2", groupID: _groupId, inviteeList: [_friendId]),
-    "cancel": () async => TencentImPlugin.cancel(
-        inviteID: await TencentImPlugin.invite(
-            data: "邀请你进行视频通话3", invitee: _friendId),
-        data: "123"),
-    "accept": () async => TencentImPlugin.accept(
-        inviteID: await TencentImPlugin.invite(
-            data: "邀请你进行视频通话4", invitee: _friendId),
-        data: "123"),
-    "reject": () async => TencentImPlugin.reject(
-        inviteID: await TencentImPlugin.invite(
-            data: "邀请你进行视频通话5", invitee: _friendId),
-        data: "123"),
+    "invite": () => TencentImPlugin.invite(data: "邀请你进行视频通话1", invitee: _friendId),
+    "inviteInGroup": () => TencentImPlugin.inviteInGroup(data: "邀请你进行视频通话2", groupID: _groupId, inviteeList: [_friendId]),
+    "cancel": () async => TencentImPlugin.cancel(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话3", invitee: _friendId), data: "123"),
+    "accept": () async => TencentImPlugin.accept(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话4", invitee: _friendId), data: "123"),
+    "reject": () async => TencentImPlugin.reject(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话5", invitee: _friendId), data: "123"),
     // "getSignalingInfo": () async => TencentImPlugin.getSignalingInfo(inviteID: await TencentImPlugin.invite(data: "邀请你进行视频通话", invitee: _friendId), data: "123"),
     "addInvitedSignaling": () async => TencentImPlugin.addInvitedSignaling(
           info: SignalingInfoEntity(
@@ -65,22 +54,15 @@ class _InterfacesTestState extends State<InterfacesTest> {
             inviteeList: ["dev"],
           ),
         ),
-    "sendMessage": () async => TencentImPlugin.sendMessage(
-        receiver: _friendId, node: TextMessageNode(content: "1433223")),
+    "sendMessage": () async => TencentImPlugin.sendMessage(receiver: _friendId, node: TextMessageNode(content: "1433223")),
     // "revokeMessage": () async => TencentImPlugin.revokeMessage(receiver: "dev", node: TextMessageNode(content: "1433223")),
-    "getC2CHistoryMessageList": () async =>
-        TencentImPlugin.getC2CHistoryMessageList(userID: _friendId, count: 100),
-    "getGroupHistoryMessageList": () async =>
-        TencentImPlugin.getGroupHistoryMessageList(
-            groupID: _groupId, count: 100),
-    "markC2CMessageAsRead": () async =>
-        TencentImPlugin.markC2CMessageAsRead(userID: _friendId),
-    "markGroupMessageAsRead": () async =>
-        TencentImPlugin.markGroupMessageAsRead(groupID: _groupId),
+    "getC2CHistoryMessageList": () async => TencentImPlugin.getC2CHistoryMessageList(userID: _friendId, count: 100),
+    "getGroupHistoryMessageList": () async => TencentImPlugin.getGroupHistoryMessageList(groupID: _groupId, count: 100),
+    "markC2CMessageAsRead": () async => TencentImPlugin.markC2CMessageAsRead(userID: _friendId),
+    "markGroupMessageAsRead": () async => TencentImPlugin.markGroupMessageAsRead(groupID: _groupId),
     // "deleteMessageFromLocalStorage": () async => TencentImPlugin.deleteMessageFromLocalStorage(groupID: _groupId),
     // "deleteMessages": () async => TencentImPlugin.deleteMessages(groupID: _groupId),
-    "insertGroupMessageToLocalStorage": () async =>
-        TencentImPlugin.insertGroupMessageToLocalStorage(
+    "insertGroupMessageToLocalStorage": () async => TencentImPlugin.insertGroupMessageToLocalStorage(
           node: TextMessageNode(content: "1433223"),
           groupID: _groupId,
           sender: _friendId,
@@ -97,18 +79,22 @@ class _InterfacesTestState extends State<InterfacesTest> {
     // "quitGroup": () async => TencentImPlugin.quitGroup(groupID: _groupId),
     // "dismissGroup": () async => TencentImPlugin.dismissGroup(groupID: _groupId),
     "getJoinedGroupList": () async => TencentImPlugin.getJoinedGroupList(),
-    "getGroupsInfo": () async =>
-        TencentImPlugin.getGroupsInfo(groupIDList: [_groupId]),
+    "getGroupsInfo": () async => TencentImPlugin.getGroupsInfo(groupIDList: [_groupId]),
     "setGroupInfo": () async => TencentImPlugin.setGroupInfo(
           info: GroupInfoEntity(
             groupID: _groupId,
             groupName: "${DateTime.now()}",
           ),
         ),
-    "setReceiveMessageOpt": () async => TencentImPlugin.setReceiveMessageOpt(
+    "setGroupReceiveMessageOpt": () async => TencentImPlugin.setGroupReceiveMessageOpt(
           groupID: _groupId,
           opt: ReceiveMessageOptEnum.ReceiveAndNotify,
         ),
+    "setC2CReceiveMessageOpt": () async => TencentImPlugin.setC2CReceiveMessageOpt(
+          ids: [_friendId],
+          opt: ReceiveMessageOptEnum.ReceiveAndNotify,
+        ),
+    "getC2CReceiveMessageOpt": () async => await TencentImPlugin.getC2CReceiveMessageOpt(ids: [_friendId]),
     "initGroupAttributes": () async => TencentImPlugin.initGroupAttributes(
           groupID: _avGroupId,
           attributes: {
@@ -123,14 +109,10 @@ class _InterfacesTestState extends State<InterfacesTest> {
             "d": "4",
           },
         ),
-    "deleteGroupAttributes": () async =>
-        TencentImPlugin.deleteGroupAttributes(groupID: _avGroupId, keys: ["b"]),
-    "getGroupAttributes": () async =>
-        TencentImPlugin.getGroupAttributes(groupID: _avGroupId),
-    "getGroupMemberList": () async =>
-        TencentImPlugin.getGroupMemberList(groupID: _groupId),
-    "getGroupMembersInfo": () async => TencentImPlugin.getGroupMembersInfo(
-        groupID: _groupId, memberList: [_friendId]),
+    "deleteGroupAttributes": () async => TencentImPlugin.deleteGroupAttributes(groupID: _avGroupId, keys: ["b"]),
+    "getGroupAttributes": () async => TencentImPlugin.getGroupAttributes(groupID: _avGroupId),
+    "getGroupMemberList": () async => TencentImPlugin.getGroupMemberList(groupID: _groupId),
+    "getGroupMembersInfo": () async => TencentImPlugin.getGroupMembersInfo(groupID: _groupId, memberList: [_friendId]),
     "setGroupMemberInfo": () async => TencentImPlugin.setGroupMemberInfo(
           groupID: _groupId,
           info: GroupMemberEntity(
@@ -163,38 +145,23 @@ class _InterfacesTestState extends State<InterfacesTest> {
     // "getGroupApplicationList": () async => TencentImPlugin.getGroupApplicationList(),
     // "acceptGroupApplication": () async => TencentImPlugin.acceptGroupApplication(),
     // "refuseGroupApplication": () async => TencentImPlugin.refuseGroupApplication(),
-    "setGroupApplicationRead": () async =>
-        TencentImPlugin.setGroupApplicationRead(),
+    "setGroupApplicationRead": () async => TencentImPlugin.setGroupApplicationRead(),
     "getConversationList": () async => TencentImPlugin.getConversationList(),
-    "getConversation": () async => TencentImPlugin.getConversation(
-        conversationID: (await TencentImPlugin.getConversationList())
-            .conversationList[0]
-            .conversationID),
-    "deleteConversation": () async => TencentImPlugin.deleteConversation(
-        conversationID: (await TencentImPlugin.getConversationList())
-            .conversationList[0]
-            .conversationID),
+    "getConversation": () async => TencentImPlugin.getConversation(conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID),
+    "deleteConversation": () async => TencentImPlugin.deleteConversation(conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID),
     "setConversationDraft": () async => TencentImPlugin.setConversationDraft(
-          conversationID: (await TencentImPlugin.getConversationList())
-              .conversationList[0]
-              .conversationID,
+          conversationID: (await TencentImPlugin.getConversationList()).conversationList[0].conversationID,
           draftText: "测试会话草稿",
         ),
-    "getUsersInfo": () async =>
-        TencentImPlugin.getUsersInfo(userIDList: [_friendId]),
-    "setSelfInfo": () async => TencentImPlugin.setSelfInfo(
-        info: UserEntity(nickName: "${DateTime.now()}")),
-    "addToBlackList": () async =>
-        TencentImPlugin.addToBlackList(userIDList: [_friendId]),
+    "getUsersInfo": () async => TencentImPlugin.getUsersInfo(userIDList: [_friendId]),
+    "setSelfInfo": () async => TencentImPlugin.setSelfInfo(info: UserEntity(nickName: "${DateTime.now()}")),
+    "addToBlackList": () async => TencentImPlugin.addToBlackList(userIDList: [_friendId]),
     "getBlackList": () async => TencentImPlugin.getBlackList(),
-    "deleteFromBlackList": () async =>
-        TencentImPlugin.deleteFromBlackList(userIDList: [_friendId]),
-    "setOfflinePushConfig": () async => TencentImPlugin.setOfflinePushConfig(
-        bussid: 10301, token: "请输入您的Token"),
+    "deleteFromBlackList": () async => TencentImPlugin.deleteFromBlackList(userIDList: [_friendId]),
+    "setOfflinePushConfig": () async => TencentImPlugin.setOfflinePushConfig(bussid: 10301, token: "请输入您的Token"),
     "setUnreadBadge": () async => TencentImPlugin.setUnreadBadge(number: 10),
     "getFriendList": () async => TencentImPlugin.getFriendList(),
-    "getFriendsInfo": () async =>
-        TencentImPlugin.getFriendsInfo(userIDList: [_friendId]),
+    "getFriendsInfo": () async => TencentImPlugin.getFriendsInfo(userIDList: [_friendId]),
     "setFriendInfo": () async => TencentImPlugin.setFriendInfo(
           info: FriendInfoEntity(
             userID: _friendId,
@@ -210,31 +177,19 @@ class _InterfacesTestState extends State<InterfacesTest> {
             addType: FriendTypeEnum.Both,
           ),
         ),
-    "deleteFromFriendList": () async => TencentImPlugin.deleteFromFriendList(
-        deleteType: FriendTypeEnum.Both, userIDList: [_friendId]),
-    "checkFriend": () async => TencentImPlugin.checkFriend(
-        userID: _friendId, checkType: FriendTypeEnum.Both),
-    "getFriendApplicationList": () async =>
-        TencentImPlugin.getFriendApplicationList(),
+    "deleteFromFriendList": () async => TencentImPlugin.deleteFromFriendList(deleteType: FriendTypeEnum.Both, userIDList: [_friendId]),
+    "checkFriend": () async => TencentImPlugin.checkFriend(userID: _friendId, checkType: FriendTypeEnum.Both),
+    "getFriendApplicationList": () async => TencentImPlugin.getFriendApplicationList(),
     // "acceptFriendApplication": () async => TencentImPlugin.acceptFriendApplication(),
     // "refuseFriendApplication": () async => TencentImPlugin.refuseFriendApplication(),
     // "deleteFriendApplication": () async => TencentImPlugin.deleteFriendApplication(),
-    "setFriendApplicationRead": () async =>
-        TencentImPlugin.setFriendApplicationRead(),
-    "createFriendGroup": () async => TencentImPlugin.createFriendGroup(
-        userIDList: [_friendId], groupName: "测试分组"),
-    "getFriendGroups": () async =>
-        TencentImPlugin.getFriendGroups(groupNameList: ["测试分组"]),
-    "renameFriendGroup": () async =>
-        TencentImPlugin.renameFriendGroup(oldName: "测试分组", newName: "test"),
-    "addFriendsToFriendGroup": () async =>
-        TencentImPlugin.addFriendsToFriendGroup(
-            groupName: "test", userIDList: [_friendId]),
-    "deleteFriendsFromFriendGroup": () async =>
-        TencentImPlugin.deleteFriendsFromFriendGroup(
-            groupName: "test", userIDList: [_friendId]),
-    "deleteFriendGroup": () async =>
-        TencentImPlugin.deleteFriendGroup(groupNameList: ["test"]),
+    "setFriendApplicationRead": () async => TencentImPlugin.setFriendApplicationRead(),
+    "createFriendGroup": () async => TencentImPlugin.createFriendGroup(userIDList: [_friendId], groupName: "测试分组"),
+    "getFriendGroups": () async => TencentImPlugin.getFriendGroups(groupNameList: ["测试分组"]),
+    "renameFriendGroup": () async => TencentImPlugin.renameFriendGroup(oldName: "测试分组", newName: "test"),
+    "addFriendsToFriendGroup": () async => TencentImPlugin.addFriendsToFriendGroup(groupName: "test", userIDList: [_friendId]),
+    "deleteFriendsFromFriendGroup": () async => TencentImPlugin.deleteFriendsFromFriendGroup(groupName: "test", userIDList: [_friendId]),
+    "deleteFriendGroup": () async => TencentImPlugin.deleteFriendGroup(groupNameList: ["test"]),
   };
 
   /// 当前正在测试的Key
@@ -261,8 +216,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
     TencentImPlugin.addListener(_listener);
     TencentImPlugin.login(
       userID: "dev",
-      userSig:
-          "eJwtzEELgjAYxvHvsnPIu7U5EzoEQRDWITWqW7KVr8MaS8Yi*u6Zenx*D-w-pMjyyGtHUsIiILNho9KPDm84sNJ*4pcyV2tRkZRyALbgc8rHRweLTvcuhGAAMGqH7d9iEAKSWMipgve*ulZS1vKoT83uXO6rkAWzaoqtgVAdNpecu9Y-38aXtE6W5PsDr9ExPw__",
+      userSig: "eJwtzEELgjAYxvHvsnPIu7U5EzoEQRDWITWqW7KVr8MaS8Yi*u6Zenx*D-w-pMjyyGtHUsIiILNho9KPDm84sNJ*4pcyV2tRkZRyALbgc8rHRweLTvcuhGAAMGqH7d9iEAKSWMipgve*ulZS1vKoT83uXO6rkAWzaoqtgVAdNpecu9Y-38aXtE6W5PsDr9ExPw__",
     );
   }
 
@@ -275,8 +229,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
 
   /// 监听器对象
   _listener(type, params) {
-    _callResult
-        .add("${_getDateTime()}-[${EnumUtil.getEnumName(type)}]:$params");
+    _callResult.add("${_getDateTime()}-[${EnumUtil.getEnumName(type)}]:$params");
     if (this.mounted) {
       this.setState(() {});
     }
@@ -320,20 +273,14 @@ class _InterfacesTestState extends State<InterfacesTest> {
                 style: TextStyle(color: Colors.black),
                 children: [
                   TextSpan(text: "，已通过:"),
-                  TextSpan(
-                      text: "${_finishTestCount - _failInterfaces.length}",
-                      style: TextStyle(color: Colors.green)),
+                  TextSpan(text: "${_finishTestCount - _failInterfaces.length}", style: TextStyle(color: Colors.green)),
                   TextSpan(text: "，未通过:"),
-                  TextSpan(
-                      text: "${_failInterfaces.length}",
-                      style: TextStyle(color: Colors.red)),
+                  TextSpan(text: "${_failInterfaces.length}", style: TextStyle(color: Colors.red)),
                 ],
               ),
             ),
             _start
-                ? Text((_finishTestCount == _interfaces.length)
-                    ? "测试完成"
-                    : "正在测试:$_currentTestKey")
+                ? Text((_finishTestCount == _interfaces.length) ? "测试完成" : "正在测试:$_currentTestKey")
                 : OutlinedButton(
                     onPressed: startTest,
                     child: Text("开始测试"),
@@ -347,9 +294,7 @@ class _InterfacesTestState extends State<InterfacesTest> {
                     (e) => RichText(
                       text: TextSpan(
                         text: e,
-                        style: TextStyle(
-                            color:
-                                e.contains("测试通过") ? Colors.green : Colors.red),
+                        style: TextStyle(color: e.contains("测试通过") ? Colors.green : Colors.red),
                       ),
                     ),
                   )
