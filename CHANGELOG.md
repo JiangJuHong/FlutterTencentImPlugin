@@ -360,3 +360,6 @@
 
 ## 2.0.5
 * feat FileMessageNode 节点中，filePath 和 fileName 增加可为空选择
+
+## 3.0.0
+* feat 升级版本到最新增强版 `5.4.666`

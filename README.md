@@ -20,7 +20,7 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 | 功能列表                 | 进度 |
 |:-----------------------|:-----|
 | 保持基础接口不变          | ✅   |
-| SDK从原有标准版升级为增强版 | ☑️   |
+| SDK从原有标准版升级为增强版 | ✅   |
 | 增加增强版所有功能         | ☑️   |
 
 # Notice
@@ -41,8 +41,8 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 | 平台     | SDK版本 |
 |:--------|:-------|
-| Android | 5.1.62 |
-| IOS     | 5.1.60 |
+| Android | 5.4.666 |
+| IOS     | 5.4.666 |
 
 # Links
 
