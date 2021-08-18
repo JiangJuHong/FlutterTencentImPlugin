@@ -73,7 +73,6 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 | Flutter | [FlutterClipboardListener](https://github.com/JiangJuHong/FlutterClipboardListener)             | 粘贴板监听器                | [![pub package](https://img.shields.io/pub/v/clipboard_listener.svg)](https://pub.dartlang.org/packages/clipboard_listener)         |
 | Flutter | [FlutterQiniucloudLivePlugin](https://github.com/JiangJuHong/FlutterQiniucloudLivePlugin)       | Flutter 七牛云直播云插件     | 暂未发布，通过 git 集成                                                                                                                |
 
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people
