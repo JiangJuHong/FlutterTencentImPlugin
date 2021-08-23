@@ -15,6 +15,9 @@ enum MessageStatusEnum {
   /// 删除
   HasDeleted,
 
+  /// 导入到本地的消息
+  Imported,
+
   /// 已撤回
   HasRevoked,
 }
@@ -35,6 +38,8 @@ class MessageStatusTool {
         return MessageStatusEnum.SendFail;
       case 4:
         return MessageStatusEnum.HasDeleted;
+      case 5:
+        return MessageStatusEnum.Imported;
       case 6:
         return MessageStatusEnum.HasRevoked;
     }
@@ -54,6 +59,8 @@ class MessageStatusTool {
         return 3;
       case MessageStatusEnum.HasDeleted:
         return 4;
+      case MessageStatusEnum.Imported:
+        return 5;
       case MessageStatusEnum.HasRevoked:
         return 6;
     }
