@@ -83,7 +83,7 @@ class _MainState extends State<Main> {
     );
 
     if (result && text != '' && type != null) {
-      String id = await TencentImPlugin.createGroup(info: GroupInfoEntity.create(groupName: text, groupType: GroupTypeEnum.Public));
+      String id = await TencentImPlugin.createGroup(info: GroupInfoEntity.create(groupName: text, groupType: type));
       Fluttertoast.showToast(msg: "群聊创建成功，群ID:$id");
     }
   }
