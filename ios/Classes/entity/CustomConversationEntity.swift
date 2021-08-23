@@ -21,7 +21,7 @@ class CustomConversationEntity: V2TIMConversation {
         result["recvOpt"] = info.recvOpt.rawValue;
         result["groupType"] = info.groupType;
         result["unreadCount"] = info.unreadCount;
-        result["lastMessage"] = MessageEntity.init(message: info.lastMessage);
+        result["lastMessage"] = info.lastMessage == nil ? nil : MessageEntity.init(message: info.lastMessage);
         result["draftText"] = info.draftText;
         result["draftText"] = info.draftText;
         result["draftTimestamp"] = info.draftTimestamp;
