@@ -366,3 +366,4 @@
 * feat 升级版本到最新增强版 `5.5.897`
 * feat 移除 `setReceiveMessageOpt` 接口，增加 `setGroupReceiveMessageOpt`、`setC2CReceiveMessageOpt`、`getC2CReceiveMessageOpt`
 * feat 增加 `searchLocalMessages` 接口
+* feat `MessageStatusEnum` 增加 Imported 属性
