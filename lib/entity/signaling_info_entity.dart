@@ -54,7 +54,7 @@ class SignalingInfoEntity {
     if (json['inviteID'] != null) inviteID = json["inviteID"];
     if (json['groupID'] != null) groupID = json["groupID"];
     if (json['inviter'] != null) inviter = json["inviter"];
-    if (json['inviteeList'] != null) inviteeList = json["inviteeList"];
+    if (json['inviteeList'] != null) inviteeList = json["inviteeList"].cast();
     if (json['data'] != null) this.data = json["data"];
     if (json['timeout'] != null) timeout = json["timeout"];
     if (json['actionType'] != null) if (json["actionType"] != null)
