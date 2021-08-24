@@ -368,3 +368,4 @@
 * feat 增加 `searchLocalMessages` 接口
 * feat `MessageStatusEnum` 增加 Imported 属性
 * fix 修复 SignalingInfoEntity 反序列化报错的问题
+* fix 修复信令邀请回调没有群ID的问题

@@ -8,8 +8,8 @@ class SignalingCommonEntity {
   /// 邀请人
   String? inviter;
 
-  /// 被邀请人
-  String? invitee;
+  /// 群ID
+  String? groupID;
 
   /// 被邀请人列表
   List<String>? inviteeList;
@@ -18,22 +18,16 @@ class SignalingCommonEntity {
   String? data;
 
   SignalingCommonEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['inviteID'] != null) inviteID = json["inviteID"];
     if (json['inviter'] != null) inviter = json["inviter"];
-    if (json['invitee'] != null) invitee = json["invitee"];
-    if (json['inviteeList'] != null)
-      inviteeList = json["inviteeList"]?.cast<String>();
+    if (json['groupID'] != null) groupID = json["groupID"];
+    if (json['inviteeList'] != null) inviteeList = json["inviteeList"]?.cast<String>();
     if (json['data'] != null) this.data = json["data"];
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SignalingCommonEntity &&
-          runtimeType == other.runtimeType &&
-          inviteID == other.inviteID;
+  bool operator ==(Object other) => identical(this, other) || other is SignalingCommonEntity && runtimeType == other.runtimeType && inviteID == other.inviteID;
 
   @override
   int get hashCode => inviteID.hashCode;
