@@ -367,3 +367,4 @@
 * feat 移除 `setReceiveMessageOpt` 接口，增加 `setGroupReceiveMessageOpt`、`setC2CReceiveMessageOpt`、`getC2CReceiveMessageOpt`
 * feat 增加 `searchLocalMessages` 接口
 * feat `MessageStatusEnum` 增加 Imported 属性
+* fix 修复 SignalingInfoEntity 反序列化报错的问题
