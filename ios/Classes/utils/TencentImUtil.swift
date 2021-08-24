@@ -10,7 +10,7 @@ public class TencentImUtils {
         return {
             (code: Int32, desc: Optional<String>) -> Void in
             result(
-                    FlutterError(code: "\(code)", message: desc!, details: desc!)
+                    FlutterError(code: "\(code)", message: desc ?? "", details: desc ?? "")
             );
         };
     }
