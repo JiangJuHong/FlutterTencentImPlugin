@@ -25,7 +25,7 @@ class SignalingCommonEntity {
     if (json['inviteID'] != null) inviteID = json["inviteID"];
     if (json['inviter'] != null) inviter = json["inviter"];
     if (json['groupID'] != null) groupID = json["groupID"];
-    if (json['invitee'] != null) groupID = json["invitee"];
+    if (json['invitee'] != null) invitee = json["invitee"];
     if (json['inviteeList'] != null) inviteeList = json["inviteeList"]?.cast<String>();
     if (json['data'] != null) this.data = json["data"];
   }
