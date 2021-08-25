@@ -34,7 +34,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.InviteeAccepted, params: [
             "inviteID": inviteID!,
             "invitee": invitee!,
-            "data": data,
+            "data": data!,
         ])
     }
 
@@ -43,7 +43,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.InviteeRejected, params: [
             "inviteID": inviteID!,
             "invitee": invitee!,
-            "data": data,
+            "data": data!,
         ])
     }
 
@@ -52,7 +52,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.InvitationCancelled, params: [
             "inviteID": inviteID!,
             "inviter": inviter!,
-            "data": data,
+            "data": data!,
         ])
     }
 

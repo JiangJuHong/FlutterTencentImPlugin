@@ -11,6 +11,9 @@ class SignalingCommonEntity {
   /// 群ID
   String? groupID;
 
+  /// 受邀人，一般是拒绝/接受时此内容才会有值
+  String? invitee;
+
   /// 被邀请人列表
   List<String>? inviteeList;
 
@@ -22,6 +25,7 @@ class SignalingCommonEntity {
     if (json['inviteID'] != null) inviteID = json["inviteID"];
     if (json['inviter'] != null) inviter = json["inviter"];
     if (json['groupID'] != null) groupID = json["groupID"];
+    if (json['invitee'] != null) groupID = json["invitee"];
     if (json['inviteeList'] != null) inviteeList = json["inviteeList"]?.cast<String>();
     if (json['data'] != null) this.data = json["data"];
   }
