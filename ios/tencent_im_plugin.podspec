@@ -29,9 +29,4 @@ Pod::Spec.new do |s|
 
   # alibaba json 序列化库(https://github.com/alibaba/HandyJSON)
   s.dependency 'HandyJSON'
-
-  # 默认关闭Bitcode
-  s.xcconfig = {
-    'ENABLE_BITCODE' => 'NO',
-  }
 end
