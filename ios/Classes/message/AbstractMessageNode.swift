@@ -33,7 +33,7 @@ public class AbstractMessageNode {
     /// 获得参数
     func getParam<T>(params: [AnyHashable: Any], paramKey: AnyHashable) -> T? {
         if let value = params[paramKey] {
-            return (value as! T);
+            return (value as? T);
         }
         return nil;
     }
