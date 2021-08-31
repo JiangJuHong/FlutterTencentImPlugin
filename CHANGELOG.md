@@ -370,3 +370,5 @@
 * fix 修复 SignalingInfoEntity 反序列化报错的问题
 * fix 修复信令邀请回调没有群ID的问题
 * fix 修复IOS信令相关接口闪退的问题
+* fix 修复Android CustomMessageEntity 创建抛出空指针问题
+* fix 修复Android getGroupMemberList 接口nextSeq传递无效的问题

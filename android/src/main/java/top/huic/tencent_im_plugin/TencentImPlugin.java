@@ -1001,7 +1001,7 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void getGroupMemberList(MethodCall methodCall, final Result result) {
         String groupID = CommonUtil.getParam(methodCall, result, "groupID");
         int filter = CommonUtil.getParam(methodCall, result, "filter");
-        int nextSeq = CommonUtil.getParam(methodCall, result, "nextSeq");
+        long nextSeq = Long.parseLong(CommonUtil.getParam(methodCall, result, "nextSeq").toString());
         V2TIMManager.getGroupManager().getGroupMemberList(groupID, filter, nextSeq, new ValueCallBack<V2TIMGroupMemberInfoResult>(result));
     }
 
