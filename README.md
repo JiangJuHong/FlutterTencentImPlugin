@@ -31,22 +31,8 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 💐 FlutterTencentIm 开放 Pull Request，merge 成功后会在 README.md
 上留下您的大名并超链到您的 Github 主页！
 
-# 官方版和社区版的区别
-
-* 两者的区别：本质上官方版和社区版都是基于IM的SDK进行封装，官方版的更偏向三端写法类似(Android、IOS、Flutter)，社区版则提供更便捷的使用方式(1分钟上手即用)(例:
-  FlutterImPlugin.login)。
-* 该如何选择：根据个人编码习惯选择即可。
-* 维护的周期：社区版和官方版均在持续迭代，发现异常将会在第一时间进行修复。
-
-# Sdk Version
-
-| 平台     | SDK版本 |
-|:--------|:-------|
-| Android | 5.5.897 |
-| IOS     | 5.5.897 |
-
 # 💐💐Flutter v2.5 模拟器无法运行解决方案💐💐
-修改 ``ios/Podfile``文件，example对应路径为:``example/ios/Podfile``  
+修改 ``ios/Podfile``文件，example对应路径为:``example/ios/Podfile``
 1. 将 ``platform :ios, '9.0'`` 修改为 ``platform :ios, '11.0'``
 2. 增加模拟器 arm64 支持
 ````
@@ -69,6 +55,21 @@ post_install do |installer|
 end
 ````
 3. Run: ``flutter clean & flutter run``
+
+
+# 官方版和社区版的区别
+
+* 两者的区别：本质上官方版和社区版都是基于IM的SDK进行封装，官方版的更偏向三端写法类似(Android、IOS、Flutter)，社区版则提供更便捷的使用方式(1分钟上手即用)(例:
+  FlutterImPlugin.login)。
+* 该如何选择：根据个人编码习惯选择即可。
+* 维护的周期：社区版和官方版均在持续迭代，发现异常将会在第一时间进行修复。
+
+# Sdk Version
+
+| 平台     | SDK版本 |
+|:--------|:-------|
+| Android | 5.5.897 |
+| IOS     | 5.5.897 |
 
 # Links
 
