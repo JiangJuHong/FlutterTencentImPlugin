@@ -33,7 +33,7 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 
 # 💐💐Flutter v2.5 模拟器无法运行解决方案💐💐
 修改 ``ios/Podfile``文件，example对应路径为:``example/ios/Podfile``
-1. 将 ``platform :ios, '9.0'`` 修改为 ``platform :ios, '11.0'``
+1. 将 ``platform :ios, '9.0'`` 修改为 ``platform :ios, '11.0'``，其中 ``11.0``不是绝对的，具体根据您项目最低需求版本决定。
 2. 增加模拟器 arm64 支持
 ````
 post_install do |installer|
