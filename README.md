@@ -45,6 +45,31 @@ FlutterTencentIM是基于[腾讯云即时通讯](https://cloud.tencent.com/produ
 | Android | 5.5.897 |
 | IOS     | 5.5.897 |
 
+# 💐💐Flutter v2.5 模拟器无法运行解决方案💐💐
+修改 ``ios/Podfile``文件，example对应路径为:``example/ios/Podfile``  
+1. 将 ``platform :ios, '9.0'`` 修改为 ``platform :ios, '11.0'``
+2. 增加模拟器 arm64 支持
+````
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
+
+修改为
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      # 模拟器使用 arm64
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
+  end
+end
+````
+3. Run: ``flutter clean & flutter run``
+
 # Links
 
 * [Document](https://www.yuque.com/jiangjuhong/tencent-im-flutter/zk6p14)
