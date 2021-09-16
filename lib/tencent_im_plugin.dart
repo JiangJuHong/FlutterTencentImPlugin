@@ -730,6 +730,10 @@ class TencentImPlugin {
     return _channel.invokeMethod('pinConversation', {"conversationID": _getConversationID(conversationID: conversationID, userID: userID, groupID: groupID), "isPinned": isPinned});
   }
 
+  /// 获得会话总未读数
+  /// 未读总数会减去设置为免打扰的会话的未读数，即消息接收选项设置为 V2TIMMessage.V2TIM_NOT_RECEIVE_MESSAGE 的会话。
+  static Future<int> getTotalUnreadMessageCount() async => await _channel.invokeMethod('getTotalUnreadMessageCount');
+
   /// 获取用户资料
   /// [userList] 用户ID列表
   static Future<List<UserEntity>> getUsersInfo({required List<String> userIDList}) async {
