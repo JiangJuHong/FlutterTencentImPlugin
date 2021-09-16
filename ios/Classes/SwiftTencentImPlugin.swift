@@ -229,6 +229,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "setConversationDraft":
             self.setConversationDraft(call: call, result: result);
             break;
+        case "pinConversation":
+            self.pinConversation(call: call, result: result);
+            break;
+        case "getTotalUnreadMessageCount":
+            self.getTotalUnreadMessageCount(call: call, result: result);
+            break;
         case "getUsersInfo":
             self.getUsersInfo(call: call, result: result);
             break;
@@ -1195,6 +1201,23 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
+    }
+
+    /// 会话置顶
+    public func pinConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String,
+           let isPinned = CommonUtils.getParam(call: call, result: result, param: "isPinned") as? Bool{
+            V2TIMManager.sharedInstance().pinConversation(conversationID, isPinned: isPinned, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+    
+    /// 获得会话总未读数
+    public func getTotalUnreadMessageCount(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        V2TIMManager.sharedInstance().getTotalUnreadMessageCount({number in
+            result(number);
+        }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
 
     /// 获得用户资料
