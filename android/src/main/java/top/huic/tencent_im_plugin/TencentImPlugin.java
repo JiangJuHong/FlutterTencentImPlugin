@@ -1206,6 +1206,28 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     /**
+     * 会话置顶
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void pinConversation(MethodCall methodCall, final Result result) {
+        String conversationID = CommonUtil.getParam(methodCall, result, "conversationID");
+        boolean isPinned = methodCall.argument("isPinned");
+        V2TIMManager.getConversationManager().pinConversation(conversationID, isPinned, new VoidCallBack(result));
+    }
+
+    /**
+     * 获得未读会话总数
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void getTotalUnreadMessageCount(MethodCall methodCall, final Result result) {
+        V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new ValueCallBack<Long>(result));
+    }
+
+    /**
      * 获得用户信息
      *
      * @param methodCall 方法调用对象
