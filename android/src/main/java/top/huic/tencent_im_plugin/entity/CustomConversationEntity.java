@@ -73,6 +73,11 @@ public class CustomConversationEntity {
     Long draftTimestamp;
 
     /**
+     * 是否置顶
+     */
+    boolean pinned;
+
+    /**
      * \@信息列表
      */
     List<V2TIMGroupAtInfo> groupAtInfoList;
@@ -189,5 +194,13 @@ public class CustomConversationEntity {
 
     public void setGroupAtInfoList(List<V2TIMGroupAtInfo> groupAtInfoList) {
         this.groupAtInfoList = groupAtInfoList;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 }

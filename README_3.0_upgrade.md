@@ -10,6 +10,7 @@
 * 新增 ``ReceiveMessageOptEnum`` 接收消息选项枚举类
 * 新增 ``pinConversation`` 置顶会话接口
 * 新增 ``getTotalUnreadMessageCount`` 获得会话总未读数接口
+* 新增 ``conversation`` 增加 ``pinned`` 会话是否置顶属性
 
 ## 移除内容
 * 移除 ``setReceiveMessageOpt`` 接口

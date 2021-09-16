@@ -25,6 +25,7 @@ class CustomConversationEntity: V2TIMConversation {
         result["draftText"] = info.draftText;
         result["draftText"] = info.draftText;
         result["draftTimestamp"] = info.draftTimestamp;
+        result["pinned"] = info.isPinned;
         result["test"] = nil;
         if info.groupAtInfolist != nil {
             var groupAtInfoList: [[String: Any]] = [];
