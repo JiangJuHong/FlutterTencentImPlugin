@@ -15,7 +15,14 @@ class CustomGroupMemberFullInfoEntity: V2TIMGroupMemberFullInfo {
     init(dict: [String: Any]) {
         super.init();
         self.userID = (dict["userID"] as? String);
-        self.customInfo = (dict["customInfo"] as? [String: Data]);
+
+        if dict["customInfo"] != nil {
+            self.customInfo = [:];
+            for (k, v) in (dict["customInfo"] as! [String: String]) {
+                self.customInfo[k] = v.data(using: .utf8)
+            }
+        }
+
         self.nameCard = (dict["nameCard"] as? String);
     }
 

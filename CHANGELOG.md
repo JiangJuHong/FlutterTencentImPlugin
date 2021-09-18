@@ -364,11 +364,18 @@
 ## 3.0.0
 * feat 调整所有空返回值结果为明确指定
 * feat 升级版本到最新增强版 `5.5.897`
-* feat 移除 `setReceiveMessageOpt` 接口，增加 `setGroupReceiveMessageOpt`、`setC2CReceiveMessageOpt`、`getC2CReceiveMessageOpt`
-* feat 增加 `searchLocalMessages` 接口
+* feat ``setGroupReceiveMessageOpt`` 设置群接收消息选项接口
+* feat ``setC2CReceiveMessageOpt`` 设置C2C接收消息选项接口
+* feat ``ReceiveMessageOptEnum`` 接收消息选项枚举类
+* feat ``pinConversation`` 置顶会话接口
+* feat ``getTotalUnreadMessageCount`` 获得会话总未读数接口
+* feat ``conversation`` 增加 ``pinned`` 会话是否置顶属性
 * feat `MessageStatusEnum` 增加 Imported 属性
+* Remove ``setReceiveMessageOpt`` 接口
+* Remove ``GroupReceiveMessageOptEnum`` 枚举
 * fix 修复 SignalingInfoEntity 反序列化报错的问题
 * fix 修复信令邀请回调没有群ID的问题
 * fix 修复IOS信令相关接口闪退的问题
 * fix 修复Android CustomMessageEntity 创建抛出空指针问题
 * fix 修复Android getGroupMemberList 接口nextSeq传递无效的问题
+* fix 修复部分接口在ios设置自定义字段无效

@@ -36,7 +36,10 @@ class CustomUserEntity: V2TIMUserFullInfo {
             self.allowType = V2TIMFriendAllowType.init(rawValue: (dict["allowType"] as! Int))!;
         }
         if dict["customInfo"] != nil {
-            self.customInfo = (dict["customInfo"] as? [String: Data]);
+            self.customInfo = [:];
+            for (k, v) in (dict["customInfo"] as! [String: String]) {
+                self.customInfo[k] = v.data(using: .utf8)
+            }
         }
     }
 

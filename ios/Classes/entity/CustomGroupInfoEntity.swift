@@ -17,22 +17,22 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
 
     init(dict: [String: Any]) {
         super.init();
-        if dict["groupID"] != nil{
+        if dict["groupID"] != nil {
             self.groupID = (dict["groupID"] as? String);
         }
-        if dict["groupType"] != nil{
+        if dict["groupType"] != nil {
             self.groupType = (dict["groupType"] as? String);
         }
-        if dict["groupName"] != nil{
+        if dict["groupName"] != nil {
             self.groupName = (dict["groupName"] as? String);
         }
-        if dict["notification"] != nil{
+        if dict["notification"] != nil {
             self.notification = (dict["notification"] as? String);
         }
-        if dict["introduction"] != nil{
+        if dict["introduction"] != nil {
             self.introduction = (dict["introduction"] as? String);
         }
-        if dict["faceURL"] != nil{
+        if dict["faceURL"] != nil {
             self.faceURL = (dict["faceURL"] as? String);
         }
         if dict["allMuted"] != nil {
@@ -42,7 +42,10 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
             self.groupAddOpt = V2TIMGroupAddOpt.init(rawValue: (dict["groupAddOpt"] as! Int))!;
         }
         if dict["customInfo"] != nil {
-            self.customInfo = (dict["customInfo"] as? [String: Data]);
+            self.customInfo = [:];
+            for (k, v) in (dict["customInfo"] as! [String: String]) {
+                self.customInfo[k] = v.data(using: .utf8)
+            }
         }
     }
 
