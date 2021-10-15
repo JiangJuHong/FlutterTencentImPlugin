@@ -16,7 +16,12 @@ class CustomFriendInfoEntity: V2TIMFriendInfo {
         super.init();
         self.userID = (dict["userID"] as? String);
         self.friendRemark = (dict["friendRemark"] as? String);
-        self.friendCustomInfo = (dict["friendCustomInfo"] as? [String: Data]);
+        if dict["friendCustomInfo"] != nil {
+            self.friendCustomInfo = [:];
+            for (k, v) in (dict["friendCustomInfo"] as! [String: String]) {
+                self.friendCustomInfo[k] = v.data(using: .utf8)
+            }
+        }
     }
 
     /// 根据对象获得字典对象
