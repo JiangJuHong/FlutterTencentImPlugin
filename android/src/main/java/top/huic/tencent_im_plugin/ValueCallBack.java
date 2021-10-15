@@ -28,7 +28,11 @@ public class ValueCallBack<T> implements V2TIMValueCallback<T> {
     @Override
     public void onSuccess(T t) {
         if (result != null) {
-            result.success(JsonUtil.toJSONString(t));
+            if(t instanceof Number || t instanceof String || t instanceof Boolean){
+                result.success(t);
+            }else{
+                result.success(JsonUtil.toJSONString(t));
+            }
         }
     }
 
