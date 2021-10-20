@@ -10,7 +10,7 @@ class TextMessageNode extends MessageNode {
   List<String>? _atUserList;
 
   /// 是否需要@所有人
-  late bool _atAll;
+  bool _atAll = false;
 
   TextMessageNode({
     required this.content,
@@ -20,8 +20,7 @@ class TextMessageNode extends MessageNode {
         this._atAll = atAll,
         super(MessageElemTypeEnum.Text);
 
-  TextMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Text) {
+  TextMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Text) {
     if (json['content'] != null) content = json['content'];
   }
 
