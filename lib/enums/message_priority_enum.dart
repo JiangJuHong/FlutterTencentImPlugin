@@ -8,14 +8,15 @@ enum MessagePriorityEnum {
   Normal,
   // 低优先级，一般用于点赞消息
   Low,
+  // 未知，保留状态，Android部分场景会出现
+  Unknown,
 }
 
 class MessagePriorityTool {
   /// 根据Int类型值获得枚举
   /// [index] Int常量
   /// [Return] 枚举对象
-  static MessagePriorityEnum getByInt(int index) =>
-      MessagePriorityEnum.values[index];
+  static MessagePriorityEnum getByInt(int index) => MessagePriorityEnum.values[index];
 
   /// 将枚举转换为整型
   static int toInt(MessagePriorityEnum level) => level.index;
