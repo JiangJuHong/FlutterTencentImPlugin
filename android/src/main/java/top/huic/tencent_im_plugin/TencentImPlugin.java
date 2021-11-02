@@ -686,6 +686,32 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
         });
     }
 
+
+    /**
+     * 向群组消息列表中添加一条消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void insertC2CMessageToLocalStorage(MethodCall methodCall, final Result result) {
+        String userID = CommonUtil.getParam(methodCall, result, "userID");
+        String sender = CommonUtil.getParam(methodCall, result, "sender");
+        String nodeStr = CommonUtil.getParam(methodCall, result, "node");
+        Map node = JSON.parseObject(nodeStr, Map.class);
+
+        // 获得消息对象
+        AbstractMessageNode messageNode = MessageNodeType.getMessageNodeTypeByV2TIMConstant(Integer.valueOf(node.get("nodeType").toString())).getMessageNodeInterface();
+        AbstractMessageEntity messageEntity = (AbstractMessageEntity) JSON.parseObject(nodeStr, messageNode.getEntityClass());
+
+        // 添加消息
+        V2TIMManager.getMessageManager().insertC2CMessageToLocalStorage(messageNode.getV2TIMMessage(messageEntity), userID, sender, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage message) {
+                result.success(null);
+            }
+        });
+    }
+
     /**
      * 下载视频
      *

@@ -368,6 +368,18 @@ class TencentImPlugin {
     });
   }
 
+  /// 向用户消息列表中添加一条消息
+  /// [userID] 用户ID
+  /// [sender] 发送人
+  /// [message] 消息对象
+  static Future<void> insertC2CMessageToLocalStorage({required String userID, required String sender, required MessageNode node}) {
+    return _channel.invokeMethod('insertC2CMessageToLocalStorage', {
+      "userID": userID,
+      "sender": sender,
+      "node": jsonEncode(node),
+    });
+  }
+
   /// 下载视频
   /// [message] 消息对象
   /// [path] 下载路径

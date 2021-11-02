@@ -115,6 +115,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "insertGroupMessageToLocalStorage":
             self.insertGroupMessageToLocalStorage(call: call, result: result);
             break;
+        case "insertC2CMessageToLocalStorage":
+            self.insertC2CMessageToLocalStorage(call: call, result: result);
+            break;
         case "downloadVideo":
             self.downloadVideo(call: call, result: result);
             break;
@@ -722,6 +725,25 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
 
             // 添加到列表
             V2TIMManager.sharedInstance().insertGroupMessage(toLocalStorage: message, to: groupID, sender: sender, succ: {
+                result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+    
+    /// 向群组消息列表中添加一条消息
+    public func insertC2CMessageToLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
+           let sender = CommonUtils.getParam(call: call, result: result, param: "sender") as? String,
+           let nodeStr = CommonUtils.getParam(call: call, result: result, param: "node") as? String {
+
+            // 将节点信息解析
+            let node = JsonUtil.getDictionaryFromJSONString(jsonString: nodeStr);
+
+            // 获得消息体
+            let message: V2TIMMessage = MessageNodeType.getMessageNodeTypeByV2TIMConstant(constant: node["nodeType"] as! Int).messageNodeInterface().getV2TIMMessage(params: node);
+
+            // 添加到列表
+            V2TIMManager.sharedInstance().insertC2CMessage(toLocalStorage: message, to: userID, sender: sender, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
