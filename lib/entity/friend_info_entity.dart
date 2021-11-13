@@ -29,13 +29,7 @@ class FriendInfoEntity {
     if (json['userID'] != null) userID = json['userID'];
     if (json['friendRemark'] != null) friendRemark = json['friendRemark'];
     if (json['friendGroups'] != null) friendGroups = json['friendGroups']?.cast<String>();
-    if (json['friendCustomInfo'] != null) {
-      Map<String, String> _customInfo = {};
-      (json['friendCustomInfo'] as Map).cast<String, String>().forEach((key, value) {
-        _customInfo[key.replaceAll("Tag_Profile_Custom_", "")] = value;
-      });
-      friendCustomInfo = _customInfo;
-    }
+    if (json['friendCustomInfo'] != null) friendCustomInfo = json['friendCustomInfo']?.cast<String, String>();
     if (json['userProfile'] != null) userProfile = UserEntity.fromJson(json['userProfile']);
   }
 

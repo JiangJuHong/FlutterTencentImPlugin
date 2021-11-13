@@ -53,13 +53,7 @@ class UserEntity {
     if (json['role'] != null) role = json['role'];
     if (json['level'] != null) level = json['level'];
     if (json['allowType'] != null) allowType = UserAllowTypeTool.getByInt(json['allowType']);
-    if (json['customInfo'] != null) {
-      Map<String, String> _customInfo = {};
-      (json['customInfo'] as Map).cast<String, String>().forEach((key, value) {
-        _customInfo[key.replaceAll("Tag_Profile_Custom_", "")] = value;
-      });
-      customInfo = _customInfo;
-    }
+    if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
   }
 
   Map<String, dynamic> toJson() {
