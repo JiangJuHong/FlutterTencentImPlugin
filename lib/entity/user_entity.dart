@@ -56,7 +56,7 @@ class UserEntity {
     if (json['customInfo'] != null) {
       Map<String, String> _customInfo = {};
       (json['customInfo'] as Map).cast<String, String>().forEach((key, value) {
-        _customInfo[key] = (value ?? "").replaceAll("Tag_Profile_Custom_", "");
+        _customInfo[key.replaceAll("Tag_Profile_Custom_", "")] = value;
       });
       customInfo = _customInfo;
     }
