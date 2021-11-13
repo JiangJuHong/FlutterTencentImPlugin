@@ -46,8 +46,13 @@ class GroupMemberEntity {
     if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json['role']);
     if (json['muteUntil'] != null) muteUntil = json['muteUntil'];
     if (json['joinTime'] != null) joinTime = json['joinTime'];
-    if (json['customInfo'] != null)
-      customInfo = (json['customInfo'] as Map).cast<String, String>();
+    if (json['customInfo'] != null) {
+      Map<String, String> _customInfo = {};
+      (json['customInfo'] as Map).cast<String, String>().forEach((key, value) {
+        _customInfo[key] = (value ?? "").replaceAll("Tag_Profile_Custom_", "");
+      });
+      customInfo = _customInfo;
+    }
     if (json['nameCard'] != null) nameCard = json['nameCard'];
   }
 

@@ -379,3 +379,4 @@
 * fix 修复Android CustomMessageEntity 创建抛出空指针问题
 * fix 修复Android getGroupMemberList 接口nextSeq传递无效的问题
 * fix 修复部分接口在ios设置自定义字段无效
+* fix 修复Android和IOS Tag_Profile_Custom_ 不统一问题

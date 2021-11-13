@@ -111,7 +111,13 @@ class GroupInfoEntity {
     if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json["role"]);
     if (json['recvOpt'] != null) recvOpt = ReceiveMessageOptTool.getByInt(json["recvOpt"]);
     if (json['joinTime'] != null) joinTime = json['joinTime'];
-    if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
+    if (json['customInfo'] != null) {
+      Map<String, String> _customInfo = {};
+      (json['customInfo'] as Map).cast<String, String>().forEach((key, value) {
+        _customInfo[key] = (value ?? "").replaceAll("Tag_Profile_Custom_", "");
+      });
+      customInfo = _customInfo;
+    }
   }
 
   Map<String, dynamic> toJson() {
