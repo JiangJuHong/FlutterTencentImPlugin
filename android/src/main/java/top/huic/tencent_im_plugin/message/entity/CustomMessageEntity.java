@@ -31,9 +31,13 @@ public class CustomMessageEntity extends AbstractMessageEntity {
 
     public CustomMessageEntity(V2TIMCustomElem elem) {
         super(MessageNodeType.Custom);
-        this.data = new String(elem.getData());
+        if (elem.getData() != null && elem.getData().length == 0) {
+            this.data = "";
+        } else {
+            this.data = new String(elem.getData());
+        }
         this.desc = elem.getDescription();
-        if(elem.getExtension() != null){
+        if (elem.getExtension() != null) {
             this.ext = new String(elem.getExtension());
         }
     }
