@@ -37,8 +37,7 @@ class GroupMemberEntity {
   });
 
   GroupMemberEntity.fromJson(data) {
-    Map<String, dynamic> json =
-        data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
+    Map<String, dynamic> json = data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     if (json['userID'] != null) userID = json['userID'];
     if (json['nickName'] != null) nickName = json['nickName'];
     if (json['friendRemark'] != null) friendRemark = json['friendRemark'];
@@ -46,8 +45,7 @@ class GroupMemberEntity {
     if (json['role'] != null) role = GroupMemberRoleTool.getByInt(json['role']);
     if (json['muteUntil'] != null) muteUntil = json['muteUntil'];
     if (json['joinTime'] != null) joinTime = json['joinTime'];
-    if (json['customInfo'] != null)
-      customInfo = (json['customInfo'] as Map).cast<String, String>();
+    if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
     if (json['nameCard'] != null) nameCard = json['nameCard'];
   }
 
@@ -60,11 +58,7 @@ class GroupMemberEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GroupMemberEntity &&
-          runtimeType == other.runtimeType &&
-          userID == other.userID;
+  bool operator ==(Object other) => identical(this, other) || other is GroupMemberEntity && runtimeType == other.runtimeType && userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;
