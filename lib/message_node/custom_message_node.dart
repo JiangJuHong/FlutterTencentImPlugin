@@ -4,7 +4,7 @@ import 'package:tencent_im_plugin/message_node/message_node.dart';
 /// 自定义消息节点
 class CustomMessageNode extends MessageNode {
   /// 自定义数据
-  late String data;
+  String? data;
 
   /// 描述信息
   String? desc;
@@ -18,8 +18,7 @@ class CustomMessageNode extends MessageNode {
     this.ext,
   }) : super(MessageElemTypeEnum.Custom);
 
-  CustomMessageNode.fromJson(Map<String, dynamic> json)
-      : super(MessageElemTypeEnum.Custom) {
+  CustomMessageNode.fromJson(Map<String, dynamic> json) : super(MessageElemTypeEnum.Custom) {
     if (json['data'] != null) data = json['data'];
     if (json['desc'] != null) desc = json['desc'];
     if (json['ext'] != null) ext = json['ext'];
