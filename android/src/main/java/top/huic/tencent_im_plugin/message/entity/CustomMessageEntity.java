@@ -37,7 +37,7 @@ public class CustomMessageEntity extends AbstractMessageEntity {
             this.data = new String(elem.getData());
         }
         this.desc = elem.getDescription();
-        if (elem.getExtension() != null || elem.getExtension().length == 0) {
+        if (elem.getExtension() != null && elem.getExtension().length != 0) {
             this.ext = new String(elem.getExtension());
         }
     }
