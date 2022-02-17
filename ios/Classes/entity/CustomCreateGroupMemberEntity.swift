@@ -18,7 +18,7 @@ class CustomCreateGroupMemberEntity: V2TIMCreateGroupMemberInfo {
         super.init();
         self.userID = (dict["userID"] as? String);
         if dict["role"] != nil {
-            self.role = V2TIMGroupMemberRole.init(rawValue: (dict["role"] as! Int))!;
+            self.role = (dict["role"] as! UInt32);
         }
     }
 }

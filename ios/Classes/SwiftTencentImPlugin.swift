@@ -729,7 +729,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /// 向群组消息列表中添加一条消息
     public func insertC2CMessageToLocalStorage(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
@@ -969,7 +969,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /// 修改用户消息接收选项
     public func setC2CReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let ids = CommonUtils.getParam(call: call, result: result, param: "ids") as? [String],
@@ -979,12 +979,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /// 获得用户消息接收选项
     public func getC2CReceiveMessageOpt(call: FlutterMethodCall, result: @escaping FlutterResult) {
         V2TIMManager.sharedInstance().getC2CReceiveMessageOpt(call.arguments as? [String], succ: {
             array in
-            var res : Dictionary<String,Int> = [:]
+            var res: Dictionary<String, Int> = [:]
             for item in array! {
                 res[item.userID] = item.receiveOpt.rawValue
             }
@@ -1046,9 +1046,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得群成员列表
     public func getGroupMemberList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
-           let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? Int,
+           let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? UInt32,
            let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64 {
-            V2TIMManager.sharedInstance().getGroupMemberList(groupID, filter: V2TIMGroupMemberFilter.init(rawValue: filter)!, nextSeq: nextSeq, succ: {
+            V2TIMManager.sharedInstance().getGroupMemberList(groupID, filter: filter, nextSeq: nextSeq, succ: {
                 nextSeq, infos in
                 result(JsonUtil.toJson(CustomGroupMemberInfoResultEntity.init(nextSeq: nextSeq, infos: infos!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -1126,8 +1126,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func setGroupMemberRole(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
-           let role = CommonUtils.getParam(call: call, result: result, param: "role") as? Int {
-            V2TIMManager.sharedInstance().setGroupMemberRole(groupID, member: userID, newRole: V2TIMGroupMemberRole.init(rawValue: role)!, succ: {
+           let role = CommonUtils.getParam(call: call, result: result, param: "role") as? UInt32 {
+            V2TIMManager.sharedInstance().setGroupMemberRole(groupID, member: userID, newRole: role, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
@@ -1228,16 +1228,16 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 会话置顶
     public func pinConversation(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let conversationID = CommonUtils.getParam(call: call, result: result, param: "conversationID") as? String,
-           let isPinned = CommonUtils.getParam(call: call, result: result, param: "isPinned") as? Bool{
+           let isPinned = CommonUtils.getParam(call: call, result: result, param: "isPinned") as? Bool {
             V2TIMManager.sharedInstance().pinConversation(conversationID, isPinned: isPinned, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }
-    
+
     /// 获得会话总未读数
     public func getTotalUnreadMessageCount(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        V2TIMManager.sharedInstance().getTotalUnreadMessageCount({number in
+        V2TIMManager.sharedInstance().getTotalUnreadMessageCount({ number in
             result(number);
         }, fail: TencentImUtils.returnErrorClosures(result: result))
     }
@@ -1308,11 +1308,13 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 设置离线推送
     public func setOfflinePushConfig(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let token = CommonUtils.getParam(call: call, result: result, param: "token") as? String,
-           let bussid = CommonUtils.getParam(call: call, result: result, param: "bussid") as? Int32 {
+           let bussid = CommonUtils.getParam(call: call, result: result, param: "bussid") as? Int32,
+           let tpns = CommonUtils.getParam(call: call, result: result, param: "tpns") as? Bool {
 
             let config = V2TIMAPNSConfig();
             config.token = CommonUtils.dataWithHexString(hex: token);
             config.businessID = bussid;
+            config.isTPNSToken = tpns;
 
             V2TIMManager.sharedInstance().setAPNS(config, succ: {
                 result(nil);

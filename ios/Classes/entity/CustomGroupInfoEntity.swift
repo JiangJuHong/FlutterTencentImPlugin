@@ -66,7 +66,7 @@ class CustomGroupInfoEntity: V2TIMGroupInfo {
         result["lastMessageTime"] = info.lastMessageTime;
         result["memberCount"] = info.memberCount;
         result["onlineCount"] = info.onlineCount;
-        result["role"] = info.role.rawValue;
+        result["role"] = info.role;
         result["recvOpt"] = info.recvOpt.rawValue;
         result["joinTime"] = info.joinTime;
         result["customInfo"] = info.customInfo;

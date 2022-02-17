@@ -15,6 +15,7 @@
 * 新增 ``getTotalUnreadMessageCount`` 获得会话总未读数接口
 * 新增 ``conversation`` 增加 ``pinned`` 会话是否置顶属性
 * 新增 ``insertC2CMessageToLocalStorage`` 添加C2C会话接口
+* 新增 ``setOfflinePushConfig`` 接口增加 tpns 参数
 
 ## 移除内容
 

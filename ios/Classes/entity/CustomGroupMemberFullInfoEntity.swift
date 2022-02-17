@@ -33,7 +33,7 @@ class CustomGroupMemberFullInfoEntity: V2TIMGroupMemberFullInfo {
         result["nickName"] = info.nickName;
         result["friendRemark"] = info.friendRemark;
         result["faceUrl"] = info.faceURL;
-        result["role"] = info.role.rawValue;
+        result["role"] = info.role;
         result["muteUntil"] = info.muteUntil;
         result["joinTime"] = info.joinTime;
         result["customInfo"] = info.customInfo;
