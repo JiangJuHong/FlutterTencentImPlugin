@@ -1312,7 +1312,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
            let tpns = CommonUtils.getParam(call: call, result: result, param: "tpns") as? Bool {
 
             let config = V2TIMAPNSConfig();
-            config.token = CommonUtils.dataWithHexString(hex: token);
+            config.token = token.data(using: .utf8);
             config.businessID = bussid;
             config.isTPNSToken = tpns;
 
