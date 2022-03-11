@@ -160,6 +160,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "setGroupInfo":
             self.setGroupInfo(call: call, result: result);
             break;
+        case "searchGroups":
+            self.searchGroups(call: call, result: result);
+            break;
+        case "searchGroupMembers":
+            self.searchGroupMembers(call: call, result: result);
+            break;
         case "setGroupReceiveMessageOpt":
             self.setGroupReceiveMessageOpt(call: call, result: result);
             break;
@@ -956,6 +962,52 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         if let info = CommonUtils.getParam(call: call, result: result, param: "info") as? String {
             V2TIMManager.sharedInstance().setGroupInfo(CustomGroupInfoEntity.init(json: info), succ: {
                 result(nil);
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 搜索群
+    public func searchGroups(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let keywordList = CommonUtils.getParam(call: call, result: result, param: "keywordList") as? [String],
+           let isSearchGroupID = CommonUtils.getParam(call: call, result: result, param: "isSearchGroupID") as? Bool,
+           let isSearchGroupName = CommonUtils.getParam(call: call, result: result, param: "isSearchGroupName") as? Bool {
+            let param = V2TIMGroupSearchParam();
+            param.keywordList = keywordList;
+            param.isSearchGroupID = isSearchGroupID;
+            param.isSearchGroupName = isSearchGroupName;
+            V2TIMManager.sharedInstance().searchGroups(param, succ: {
+                infos in
+                var resultData: [[String: Any]] = [];
+                for item in infos! {
+                    resultData.append(CustomGroupInfoEntity.getDict(info: item))
+                }
+                result(JsonUtil.toJson(resultData));
+            }, fail: TencentImUtils.returnErrorClosures(result: result))
+        }
+    }
+
+    /// 搜索群成员
+    public func searchGroupMembers(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let keywordList = CommonUtils.getParam(call: call, result: result, param: "keywordList") as? [String],
+           let groupIDList = CommonUtils.getParam(call: call, result: result, param: "groupIDList") as? [String],
+           let isSearchMemberNameCard = CommonUtils.getParam(call: call, result: result, param: "isSearchMemberNameCard") as? Bool,
+           let isSearchMemberUserID = CommonUtils.getParam(call: call, result: result, param: "isSearchMemberUserID") as? Bool,
+           let isSearchMemberRemark = CommonUtils.getParam(call: call, result: result, param: "isSearchMemberRemark") as? Bool,
+           let isSearchMemberNickName = CommonUtils.getParam(call: call, result: result, param: "isSearchMemberNickName") as? Bool {
+            let param = V2TIMGroupMemberSearchParam();
+            param.keywordList = keywordList;
+            param.groupIDList = groupIDList;
+            param.isSearchMemberNameCard = isSearchMemberNameCard;
+            param.isSearchMemberUserID = isSearchMemberUserID;
+            param.isSearchMemberRemark = isSearchMemberRemark;
+            param.isSearchMemberNickName = isSearchMemberNickName;
+            V2TIMManager.sharedInstance().searchGroupMembers(param, succ: {
+                data in
+                var resultData: [String: [V2TIMGroupMemberFullInfo]] = [];
+                for item in data! {
+                    print(1)
+                }
+                result(JsonUtil.toJson(resultData));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }
     }

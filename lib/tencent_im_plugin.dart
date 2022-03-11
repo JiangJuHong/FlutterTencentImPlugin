@@ -509,6 +509,45 @@ class TencentImPlugin {
     });
   }
 
+  /// 搜索群列表
+  ///
+  /// [keywordList] 关键字列表
+  /// [isSearchGroupID] 是否根据群ID搜索
+  /// [isSearchGroupName] 是否根据群名称搜索
+  static Future<List<GroupInfoResultEntity>> searchGroups({required List<String> keywordList, bool isSearchGroupID: false, bool isSearchGroupName: false}) async {
+    return ListUtil.generateOBJList<GroupInfoResultEntity>(jsonDecode(await (_channel.invokeMethod('searchGroups', {
+      "keywordList": keywordList,
+      "isSearchGroupID": isSearchGroupID,
+      "isSearchGroupName": isSearchGroupName,
+    }))));
+  }
+
+  /// 搜索群成员列表
+  ///
+  /// [keywordList] 关键字列表
+  /// [groupIDList] 群ID列表
+  /// [isSearchMemberNameCard] 是否根据群名片搜索
+  /// [isSearchMemberUserID] 是否根据群用户ID搜索
+  /// [isSearchMemberRemark] 是否根据群用户备注搜索
+  /// [isSearchMemberNickName] 是否根据群用户昵称搜索
+  static Future<void> searchGroupMembers({
+    required List<String> keywordList,
+    required List<String> groupIDList,
+    bool isSearchMemberNameCard: false,
+    bool isSearchMemberUserID: false,
+    bool isSearchMemberRemark: false,
+    bool isSearchMemberNickName: false,
+  }) async {
+    return _channel.invokeMethod('searchGroupMembers', {
+      "keywordList": keywordList,
+      "groupIDList": groupIDList,
+      "isSearchMemberNameCard": isSearchMemberNameCard,
+      "isSearchMemberUserID": isSearchMemberUserID,
+      "isSearchMemberRemark": isSearchMemberRemark,
+      "isSearchMemberNickName": isSearchMemberNickName,
+    });
+  }
+
   /// 修改群消息接收选项
   /// [ids] 用户ID列表
   /// [opt] 消息接收选项

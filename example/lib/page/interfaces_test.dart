@@ -86,6 +86,19 @@ class _InterfacesTestState extends State<InterfacesTest> {
             groupName: "${DateTime.now()}",
           ),
         ),
+    "searchGroups": () async => TencentImPlugin.searchGroups(
+          keywordList: ["1", "2"],
+          isSearchGroupID: true,
+          isSearchGroupName: true,
+        ),
+    "searchGroupMembers": () async => TencentImPlugin.searchGroupMembers(
+          keywordList: ["1", "2"],
+          groupIDList: [_groupId],
+          isSearchMemberNameCard: true,
+          isSearchMemberUserID: true,
+          isSearchMemberRemark: true,
+          isSearchMemberNickName: true,
+        ),
     "setGroupReceiveMessageOpt": () async => TencentImPlugin.setGroupReceiveMessageOpt(
           groupID: _groupId,
           opt: ReceiveMessageOptEnum.ReceiveAndNotify,

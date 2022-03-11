@@ -22,6 +22,8 @@ import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
+import com.tencent.imsdk.v2.V2TIMGroupMemberSearchParam;
+import com.tencent.imsdk.v2.V2TIMGroupSearchParam;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageListGetOption;
@@ -912,6 +914,51 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
     private void setGroupInfo(MethodCall methodCall, final Result result) {
         String info = CommonUtil.getParam(methodCall, result, "info");
         V2TIMManager.getGroupManager().setGroupInfo(JSON.parseObject(info, V2TIMGroupInfo.class), new VoidCallBack(result));
+    }
+
+    /**
+     * 搜索群
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void searchGroups(MethodCall methodCall, final Result result) {
+        List<String> keywordList = CommonUtil.getParam(methodCall, result, "keywordList");
+        Boolean isSearchGroupID = CommonUtil.getParam(methodCall, result, "isSearchGroupID");
+        Boolean isSearchGroupName = CommonUtil.getParam(methodCall, result, "isSearchGroupName");
+
+        // 群搜索
+        V2TIMGroupSearchParam param = new V2TIMGroupSearchParam();
+        param.setKeywordList(keywordList);
+        param.setSearchGroupName(isSearchGroupName);
+        param.setSearchGroupID(isSearchGroupID);
+        V2TIMManager.getGroupManager().searchGroups(param, new ValueCallBack<List<V2TIMGroupInfo>>(result));
+    }
+
+    /**
+     * 搜索群成员
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void searchGroupMembers(MethodCall methodCall, final Result result) {
+        List<String> keywordList = CommonUtil.getParam(methodCall, result, "keywordList");
+        List<String> groupIDList = CommonUtil.getParam(methodCall, result, "groupIDList");
+        Boolean isSearchMemberNameCard = CommonUtil.getParam(methodCall, result, "isSearchMemberNameCard");
+        Boolean isSearchMemberUserID = CommonUtil.getParam(methodCall, result, "isSearchMemberUserID");
+        Boolean isSearchMemberRemark = CommonUtil.getParam(methodCall, result, "isSearchMemberRemark");
+        Boolean isSearchMemberNickName = CommonUtil.getParam(methodCall, result, "isSearchMemberNickName");
+
+        // 搜索群成员
+        V2TIMGroupMemberSearchParam param = new V2TIMGroupMemberSearchParam();
+        param.setKeywordList(keywordList);
+        param.setGroupIDList(groupIDList);
+        param.setSearchMemberNameCard(isSearchMemberNameCard);
+        param.setSearchMemberUserID(isSearchMemberUserID);
+        param.setSearchMemberRemark(isSearchMemberRemark);
+        param.setSearchMemberNickName(isSearchMemberNickName);
+
+        V2TIMManager.getGroupManager().searchGroupMembers(param, new ValueCallBack<HashMap<String, List<V2TIMGroupMemberFullInfo>>>(result));
     }
 
     /**

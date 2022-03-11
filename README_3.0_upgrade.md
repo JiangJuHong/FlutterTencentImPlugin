@@ -16,6 +16,8 @@
 * 新增 ``conversation`` 增加 ``pinned`` 会话是否置顶属性
 * 新增 ``insertC2CMessageToLocalStorage`` 添加C2C会话接口
 * 新增 ``setOfflinePushConfig`` 接口增加 tpns 参数
+* 新增 ``searchGroups`` 搜索群接口
+* 新增 ``searchGroupMembers`` 搜索群成员接口
 
 ## 移除内容
 
