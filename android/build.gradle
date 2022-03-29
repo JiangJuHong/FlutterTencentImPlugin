@@ -43,7 +43,7 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.tencent.imsdk:imsdk-plus:6.0.1992'
+        api 'com.tencent.imsdk:imsdk-plus:6.1.2155'
         api 'com.alibaba:fastjson:1.1.72.android'
     }
 }
