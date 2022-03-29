@@ -18,6 +18,7 @@
 * 新增 ``setOfflinePushConfig`` 接口增加 tpns 参数
 * 新增 ``searchGroups`` 搜索群接口
 * 新增 ``searchGroupMembers`` 搜索群成员接口
+* 新增 ``UserEntity`` 增加 生日(birthday) 属性
 
 ## 移除内容
 

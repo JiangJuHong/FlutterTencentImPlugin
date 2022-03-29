@@ -26,6 +26,9 @@ class UserEntity {
   /// 等级
   int? level;
 
+  /// 生日
+  int? birthday;
+
   /// 好友验证方式
   UserAllowTypeEnum? allowType;
 
@@ -52,6 +55,7 @@ class UserEntity {
     if (json['gender'] != null) gender = UserGenderTool.getByInt(json['gender']);
     if (json['role'] != null) role = json['role'];
     if (json['level'] != null) level = json['level'];
+    if (json['birthday'] != null) birthday = json['birthday'];
     if (json['allowType'] != null) allowType = UserAllowTypeTool.getByInt(json['allowType']);
     if (json['customInfo'] != null) customInfo = (json['customInfo'] as Map).cast<String, String>();
   }
@@ -64,6 +68,7 @@ class UserEntity {
     if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender!);
     if (this.role != null) data['role'] = this.role;
     if (this.level != null) data['level'] = this.level;
+    if (this.birthday != null) data['birthday'] = this.birthday;
     if (this.allowType != null) data['allowType'] = UserAllowTypeTool.toInt(this.allowType!);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
