@@ -1098,9 +1098,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 获得群成员列表
     public func getGroupMemberList(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
-           let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? Int,
+           let filter = CommonUtils.getParam(call: call, result: result, param: "filter") as? UInt32,
            let nextSeq = CommonUtils.getParam(call: call, result: result, param: "nextSeq") as? UInt64 {
-            V2TIMManager.sharedInstance().getGroupMemberList(groupID, filter: V2TIMGroupMemberFilter.init(rawValue: filter)!, nextSeq: nextSeq, succ: {
+            V2TIMManager.sharedInstance().getGroupMemberList(groupID, filter: filter, nextSeq: nextSeq, succ: {
                 nextSeq, infos in
                 result(JsonUtil.toJson(CustomGroupMemberInfoResultEntity.init(nextSeq: nextSeq, infos: infos!)));
             }, fail: TencentImUtils.returnErrorClosures(result: result))
@@ -1178,8 +1178,8 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     public func setGroupMemberRole(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let groupID = CommonUtils.getParam(call: call, result: result, param: "groupID") as? String,
            let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String,
-           let role = CommonUtils.getParam(call: call, result: result, param: "role") as? Int {
-            V2TIMManager.sharedInstance().setGroupMemberRole(groupID, member: userID, newRole: V2TIMGroupMemberRole.init(rawValue: role)!, succ: {
+           let role = CommonUtils.getParam(call: call, result: result, param: "role") as? UInt32 {
+            V2TIMManager.sharedInstance().setGroupMemberRole(groupID, member: userID, newRole: role, succ: {
                 result(nil);
             }, fail: TencentImUtils.returnErrorClosures(result: result))
         }

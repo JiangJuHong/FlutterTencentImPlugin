@@ -234,12 +234,12 @@ packages:
     source: hosted
     version: "1.11.1"
   platform:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: platform
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.0"
+    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
