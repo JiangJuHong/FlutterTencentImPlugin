@@ -114,7 +114,7 @@ class CustomGroupListener: NSObject, V2TIMGroupListener {
             "groupID": groupID!,
             "opUser": CustomGroupMemberFullInfoEntity.getDict(simpleInfo: opUser!),
             "isAgreeJoin": isAgreeJoin,
-            "opReason": opReason!,
+            "opReason": opReason,
         ])
     }
 
