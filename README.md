@@ -15,7 +15,7 @@
 ## 致所有FlutterTencentIm贡献者及用户
 ````
 即日起，FlutterTencentIm停止维护，永久保留仓库代码。感谢所有贡献者的帮助，同时感谢所有用户长期以来的支持。
-如果您的项目中还需要集成TIM服务，请移至: [https://pub.dev/packages/tencent_trtc_cloud](https://cloud.tencent.com/document/product/269/51940) 或 [https://github.com/TencentCloud/chat-sdk-flutter/tree/main/example](https://github.com/TencentCloud/chat-sdk-flutter/tree/main/example)。
+如果您的项目中还需要集成TIM服务，请移至: https://cloud.tencent.com/document/product/269/51940 或 https://github.com/TencentCloud/chat-sdk-flutter/tree/main/example。
 关闭说明:
     1. 腾讯终于推出了官方SDK，维护更稳定，推荐使用
 
